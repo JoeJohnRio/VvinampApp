@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.vvinampapp"
+    namespace = "com.example.presentation"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.vvinampapp"
-        minSdk = 24
-        targetSdk = 34
+        applicationId = "com.example.presentation"
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = compileSdk
         versionCode = 1
         versionName = "1.0"
 
@@ -29,25 +29,33 @@ android {
             )
         }
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
 
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
+    flavorDimensions.add("environment")
+
+    productFlavors {
+        create("prod") {
+            applicationIdSuffix = ".prod"
+            isDefault = true
+        }
+        create("mock") {
+            applicationIdSuffix = ".mock"
+        }
     }
     buildFeatures {
         compose = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+
+    }
+
+    kotlinOptions {
+        freeCompilerArgs += listOf("-Xjvm-default=all")
+    }
 }
 
 dependencies {
-
-
     implementation(project(":data"))
     testImplementation(project(":core-test"))
 
