@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.entities
+package com.example.presentation.entities
 
 sealed class MusicListItem {
     data class Music(

@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.main
+package com.example.presentation.ui.main
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,8 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.compose.rememberNavController
-import com.example.youtubemusicclone.di.AppSettingsSharedPreference
-import com.example.youtubemusicclone.ui.theme.AppTheme
+import com.example.presentation.di.AppSettingsSharedPreference
+import com.example.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+//        enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             var darkMode by remember { mutableStateOf(isDarkModeEnabled()) }

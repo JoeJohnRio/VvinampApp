@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.util
+package com.example.presentation.util
 
 import android.annotation.SuppressLint
 import androidx.compose.runtime.Composable

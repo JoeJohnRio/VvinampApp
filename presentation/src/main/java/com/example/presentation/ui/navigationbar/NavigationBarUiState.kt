@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.navigationbar
+package com.example.presentation.ui.navigationbar
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Explore
@@ -6,7 +6,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.youtubemusicclone.navigation.Page
+import com.example.presentation.navigation.Page
 
 data class NavigationBarUiState(
     val bottomItems: List<BottomNavigationBarItem> = listOf(

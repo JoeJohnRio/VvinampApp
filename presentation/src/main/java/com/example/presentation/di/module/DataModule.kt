@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.di.module
+package com.example.presentation.di.module
 
 import android.content.Context
 import com.example.data.api.MusicApi

@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.widget
+package com.example.presentation.ui.widget
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box

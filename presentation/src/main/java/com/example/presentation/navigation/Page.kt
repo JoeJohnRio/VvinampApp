@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.navigation
+package com.example.presentation.navigation
 
 import kotlinx.serialization.Serializable
 
@@ -22,7 +22,10 @@ sealed class Page {
     data object Search : Page()
 
     @Serializable
-    data class MusicDetails(val movieId: Int) : Page()
+    data class MusicDetails(val musicId: Int) : Page()
+
+    @Serializable
+    data object Register : Page()
 }
 
 sealed class Graph {

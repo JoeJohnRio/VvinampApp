@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.navigationbar
+package com.example.presentation.ui.navigationbar
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,10 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.example.youtubemusicclone.navigation.route
-import com.example.youtubemusicclone.ui.main.MainRouter
-import com.example.youtubemusicclone.ui.widget.BottomNavigationBar
-import com.example.youtubemusicclone.ui.widget.TopBar
+import com.example.presentation.navigation.route
+import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.ui.widget.BottomNavigationBar
+import com.example.presentation.ui.widget.TopBar
 
 @Composable
 fun NavigationBarScreen(

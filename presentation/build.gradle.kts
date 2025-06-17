@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.presentation"
-    compileSdk = 35
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.example.presentation"
@@ -47,12 +47,15 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
-
     }
 
     kotlinOptions {
         freeCompilerArgs += listOf("-Xjvm-default=all")
     }
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jdk.get().toInt())
 }
 
 dependencies {

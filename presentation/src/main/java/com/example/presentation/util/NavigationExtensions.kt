@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.util
+package com.example.presentation.util
 
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -12,10 +12,10 @@ inline fun <reified T : Any> NavGraphBuilder.composableHorizontalSlide(
     noinline content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
     composable<T>(
-        enterTransition = { slideIntoContainer(SlideDirection.Start, animationSpec = tween(0)) },
-        exitTransition = { slideOutOfContainer(SlideDirection.Start, animationSpec = tween(0)) },
-        popEnterTransition = { slideIntoContainer(SlideDirection.End, animationSpec = tween(0)) },
-        popExitTransition = { slideOutOfContainer(SlideDirection.End, animationSpec = tween(0)) },
+        enterTransition = { slideIntoContainer(SlideDirection.Start, animationSpec = tween(100)) },
+        exitTransition = { slideOutOfContainer(SlideDirection.Start, animationSpec = tween(100)) },
+        popEnterTransition = { slideIntoContainer(SlideDirection.End, animationSpec = tween(100)) },
+        popExitTransition = { slideOutOfContainer(SlideDirection.End, animationSpec = tween(100)) },
         content = content
     )
 }

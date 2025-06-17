@@ -1,7 +1,7 @@
-package com.example.youtubemusicclone.util.preview
+package com.example.presentation.util.preview
 
 import androidx.compose.runtime.Composable
-import com.example.youtubemusicclone.ui.theme.AppTheme
+import com.example.presentation.ui.theme.AppTheme
 
 @Composable
 fun PreviewContainer(

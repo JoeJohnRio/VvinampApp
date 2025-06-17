@@ -1,7 +1,7 @@
-package com.example.youtubemusicclone.mapper
+package com.example.presentation.mapper
 
 import com.example.domain.entity.MusicEntity
-import com.example.youtubemusicclone.entities.MusicListItem
+import com.example.presentation.entities.MusicListItem
 
 
 fun MusicEntity.toPresentation() = MusicListItem.Music(

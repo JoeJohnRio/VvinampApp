@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.di
+package com.example.presentation.di
 
 import javax.inject.Qualifier
 

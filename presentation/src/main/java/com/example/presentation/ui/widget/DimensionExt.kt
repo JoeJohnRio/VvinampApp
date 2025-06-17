@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.widget
+package com.example.presentation.ui.widget
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration

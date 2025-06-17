@@ -1,10 +1,10 @@
-package com.example.youtubemusicclone.di.module
+package com.example.presentation.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.data.util.DiskExecutor
 import com.example.data.util.NetworkMonitorImpl
-import com.example.youtubemusicclone.di.AppSettingsSharedPreference
+import com.example.presentation.di.AppSettingsSharedPreference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

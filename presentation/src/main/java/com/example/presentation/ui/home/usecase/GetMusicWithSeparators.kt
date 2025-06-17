@@ -1,10 +1,10 @@
-package com.example.youtubemusicclone.ui.home.usecase
+package com.example.presentation.ui.home.usecase
 
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.example.domain.repository.MusicRepository
-import com.example.youtubemusicclone.entities.MusicListItem
-import com.example.youtubemusicclone.mapper.toPresentation
+import com.example.presentation.entities.MusicListItem
+import com.example.presentation.mapper.toPresentation
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

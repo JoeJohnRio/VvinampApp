@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.home
+package com.example.presentation.ui.home
 
 data class HomeUiState(
     val showLoading: Boolean = true,

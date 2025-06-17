@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.navigationbar
+package com.example.presentation.ui.navigationbar
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -6,12 +6,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.example.youtubemusicclone.navigation.Page
-import com.example.youtubemusicclone.ui.home.HomePage
-import com.example.youtubemusicclone.ui.home.HomeViewModel
-import com.example.youtubemusicclone.ui.main.MainRouter
-import com.example.youtubemusicclone.util.composableHorizontalSlide
-import com.example.youtubemusicclone.util.sharedViewModel
+import com.example.presentation.navigation.Page
+import com.example.presentation.ui.home.HomePage
+import com.example.presentation.ui.home.HomeViewModel
+import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.util.composableHorizontalSlide
+import com.example.presentation.util.sharedViewModel
 import kotlin.reflect.KClass
 
 @Composable

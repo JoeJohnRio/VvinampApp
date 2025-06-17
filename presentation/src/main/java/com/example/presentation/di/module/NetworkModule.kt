@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.di.module
+package com.example.presentation.di.module
 
 import com.example.data.api.MusicApi
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory

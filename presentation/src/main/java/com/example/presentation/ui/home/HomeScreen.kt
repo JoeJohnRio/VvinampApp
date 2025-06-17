@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.home
+package com.example.presentation.ui.home
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -14,16 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.youtubemusicclone.entities.MusicListItem
-import com.example.youtubemusicclone.navigation.Page
-import com.example.youtubemusicclone.ui.main.MainRouter
-import com.example.youtubemusicclone.ui.home.HomeNavigationState.MusicDetails
-import com.example.youtubemusicclone.ui.navigationbar.NavigationBarSharedViewModel
-import com.example.youtubemusicclone.ui.widget.LoaderFullScreen
-import com.example.youtubemusicclone.ui.widget.MusicList
-import com.example.youtubemusicclone.ui.widget.PullToRefresh
-import com.example.youtubemusicclone.util.collectAsEffectJoel
-import com.example.youtubemusicclone.util.preview.PreviewContainer
+import com.example.presentation.entities.MusicListItem
+import com.example.presentation.navigation.Page
+import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.ui.home.HomeNavigationState.MusicDetails
+import com.example.presentation.ui.navigationbar.NavigationBarSharedViewModel
+import com.example.presentation.ui.widget.LoaderFullScreen
+import com.example.presentation.ui.widget.MusicList
+import com.example.presentation.ui.widget.PullToRefresh
+import com.example.presentation.util.collectAsEffectJoel
+import com.example.presentation.util.preview.PreviewContainer
 import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalMaterialApi::class)

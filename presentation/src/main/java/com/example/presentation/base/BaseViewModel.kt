@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.base
+package com.example.presentation.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

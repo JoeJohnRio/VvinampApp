@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.widget
+package com.example.presentation.ui.widget
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.animateFloatAsState
@@ -40,10 +40,10 @@ import androidx.paging.compose.LazyPagingItems
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
-import com.example.youtubemusicclone.R
-import com.example.youtubemusicclone.entities.MusicListItem
-import com.example.youtubemusicclone.ui.theme.colors
-import com.example.youtubemusicclone.util.preview.PreviewContainer
+import com.example.presentation.R
+import com.example.presentation.entities.MusicListItem
+import com.example.presentation.ui.theme.colors
+import com.example.presentation.util.preview.PreviewContainer
 import kotlinx.coroutines.delay
 
 

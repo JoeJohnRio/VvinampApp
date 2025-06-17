@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.theme
+package com.example.presentation.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

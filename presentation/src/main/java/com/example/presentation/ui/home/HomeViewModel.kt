@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.home
+package com.example.presentation.ui.home
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.CombinedLoadStates
@@ -6,10 +6,10 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.domain.util.NetworkMonitor
-import com.example.youtubemusicclone.base.BaseViewModel
-import com.example.youtubemusicclone.entities.MusicListItem
-import com.example.youtubemusicclone.util.singleSharedFlowJoel
-import com.example.youtubemusicclone.ui.home.usecase.GetMoviesWithSeparators
+import com.example.presentation.base.BaseViewModel
+import com.example.presentation.entities.MusicListItem
+import com.example.presentation.util.singleSharedFlowJoel
+import com.example.presentation.ui.home.usecase.GetMoviesWithSeparators
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow

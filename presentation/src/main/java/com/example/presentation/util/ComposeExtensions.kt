@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.util
+package com.example.presentation.util
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

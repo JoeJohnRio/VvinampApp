@@ -1,4 +1,4 @@
-package com.example.youtubemusicclone.ui.widget
+package com.example.presentation.ui.widget
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.youtubemusicclone.ui.theme.colors
+import com.example.presentation.ui.theme.colors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

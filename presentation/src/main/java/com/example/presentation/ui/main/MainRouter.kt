@@ -1,7 +1,7 @@
-package com.example.youtubemusicclone.ui.main
+package com.example.presentation.ui.main
 
 import androidx.navigation.NavHostController
-import com.example.youtubemusicclone.navigation.Page
+import com.example.presentation.navigation.Page
 
 class MainRouter(
     private val mainNavController: NavHostController

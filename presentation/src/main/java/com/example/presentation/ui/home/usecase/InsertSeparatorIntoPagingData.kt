@@ -1,8 +1,8 @@
-package com.example.youtubemusicclone.ui.home.usecase
+package com.example.presentation.ui.home.usecase
 
 import androidx.paging.PagingData
 import androidx.paging.insertSeparators
-import com.example.youtubemusicclone.entities.MusicListItem
+import com.example.presentation.entities.MusicListItem
 import javax.inject.Inject
 
 

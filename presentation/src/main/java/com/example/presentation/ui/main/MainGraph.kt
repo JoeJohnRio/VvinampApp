@@ -1,16 +1,23 @@
-package com.example.youtubemusicclone.ui.main
+package com.example.presentation.ui.main
 
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.youtubemusicclone.navigation.Graph
-import com.example.youtubemusicclone.navigation.Page
-import com.example.youtubemusicclone.ui.navigationbar.NavigationBarNestedGraph
-import com.example.youtubemusicclone.ui.navigationbar.NavigationBarScreen
-import com.example.youtubemusicclone.util.composableHorizontalSlide
-import com.example.youtubemusicclone.util.sharedViewModel
+import com.example.presentation.navigation.Graph
+import com.example.presentation.navigation.Page
+import com.example.presentation.ui.auth.AuthPage
+import com.example.presentation.ui.navigationbar.NavigationBarNestedGraph
+import com.example.presentation.ui.navigationbar.NavigationBarScreen
+import com.example.presentation.util.composableHorizontalSlide
+import com.example.presentation.util.sharedViewModel
+import com.example.presentation.util.toast
 
 @Composable
 fun MainGraph(
@@ -18,9 +25,10 @@ fun MainGraph(
     darkMode: Boolean,
     onThemeUpdated: () -> Unit
 ) {
+    val context = LocalContext.current
     NavHost(
         navController = mainNavController,
-        startDestination = Page.NavigationBar,
+        startDestination = Page.Register,
         route = Graph.Main::class
     ) {
         composableHorizontalSlide<Page.NavigationBar> { backStack ->
@@ -38,6 +46,16 @@ fun MainGraph(
                     parentRoute = Graph.Main::class
                 )
             }
+        }
+
+        composable<Page.Register>(
+        ) {
+            BackHandler {
+                // Do something when back is pressed
+                // For example, show a dialog or prevent leaving the screen
+                toast(context, "test")
+            }
+            AuthPage()
         }
     }
 }
