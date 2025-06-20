@@ -52,7 +52,7 @@ fun MusicList(
     movies: LazyPagingItems<MusicListItem>,
     onMovieClick: (movieId: Int) -> Unit,
     lazyGridState: LazyGridState = rememberLazyGridState(),
-    config: MovieSpanSizeConfig = MovieSpanSizeConfig(3),
+    config: MovieSpanSizeConfig = MovieSpanSizeConfig(4),
 ) {
     val imageSize = ImageSize.getImageFixedSize()
     LazyVerticalGrid(

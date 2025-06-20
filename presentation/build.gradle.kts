@@ -123,6 +123,7 @@ dependencies {
     debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.wheel.picker.compose)
 
     // Coil
     implementation(libs.coil.compose)

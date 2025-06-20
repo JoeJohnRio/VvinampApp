@@ -12,10 +12,10 @@ inline fun <reified T : Any> NavGraphBuilder.composableHorizontalSlide(
     noinline content: @Composable AnimatedVisibilityScope.(NavBackStackEntry) -> Unit
 ) {
     composable<T>(
-        enterTransition = { slideIntoContainer(SlideDirection.Start, animationSpec = tween(100)) },
-        exitTransition = { slideOutOfContainer(SlideDirection.Start, animationSpec = tween(100)) },
-        popEnterTransition = { slideIntoContainer(SlideDirection.End, animationSpec = tween(100)) },
-        popExitTransition = { slideOutOfContainer(SlideDirection.End, animationSpec = tween(100)) },
+        enterTransition = { slideIntoContainer(SlideDirection.Start, animationSpec = tween(300)) },
+        exitTransition = { slideOutOfContainer(SlideDirection.Start, animationSpec = tween(300)) },
+        popEnterTransition = { slideIntoContainer(SlideDirection.End, animationSpec = tween(300)) },
+        popExitTransition = { slideOutOfContainer(SlideDirection.End, animationSpec = tween(300)) },
         content = content
     )
 }

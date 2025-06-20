@@ -13,6 +13,7 @@ subprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
     // Apply Detekt plugin for all modules (presentation, data, domain)
     apply(from = "$rootDir/detekt.gradle")

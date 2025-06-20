@@ -26,6 +26,30 @@ sealed class Page {
 
     @Serializable
     data object Register : Page()
+
+    @Serializable
+    data object RegisterEmail : Page()
+
+    @Serializable
+    data object RegisterPassword : Page()
+
+    @Serializable
+    data object RegisterBirthDate : Page()
+
+    @Serializable
+    data object RegisterGender : Page()
+
+    @Serializable
+    data object RegisterName : Page()
+
+    @Serializable
+    data object RegisterMethodSelection : Page()
+
+    @Serializable
+    data object LoginEmail : Page()
+
+    @Serializable
+    data object LoginMethodSelection : Page()
 }
 
 sealed class Graph {

@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">Vvinamp</string>
+
+    <!--/_____LABEL-->
+    <string name="label_continue_with_email">Continue with email</string>
+    <string name="label_continue_with_phone">Continue with phone number</string>
+    <string name="label_continue_with_google">Continue with Google</string>
+    <string name="label_continue_with_facebook">Continue with Facebook</string>
+    <string name="label_already_have_account">Already have an account?</string>
+    <string name="label_sign_up_free">Sign up free</string>
+    <string name="label_log_in">Log in</string>
+    <string name="label_you_need_to_confirm_this">You\'ll need to confirm this email later.</string>
+    <string name="label_this_appears_on_your">This appears on your Vvinamp profile.</string>
+    <string name="label_atleast_10_characters">Use at least 10 characters.</string>
+    <string name="label_continue">Next</string>
+    <string name="label_female">Female</string>
+    <string name="label_male">Male</string>
+    <string name="label_non_binary">Non-Binary</string>
+    <string name="label_other">Other</string>
+    <string name="label_prefer_not_to_say">Prefer not to say</string>
+    <string name="label_by_tapping_create_account_terms_of_use">By tapping "Create account", you agree to the Vvinamp Terms of Use.</string>
+    <string name="label_by_tapping_create_account_privacy_policy">By tapping "Create account", you agree to the Vvinamp Privacy Policy.</string>
+    <string name="label_terms_of_use">Terms of Use</string>
+    <string name="label_privacy_policy">Privacy Policy</string>
+    <string name="label_i_would_prefer_not">I would prefer not to receive marketing messages from Vvinamp.</string>
+    <string name="label_share_my_registration_data">Share my registration data with Vvinamp\'s content providers for marketing purposes.</string>
+    <string name="label_login_without_password">Log in without password</string>
+
+    <!--/_____TITLE-->
+    <string name="title_millions_of_songs">Millions of songs.\nFor Free.</string>
+    <string name="title_sign_up_to_start_listening">Sign up to start listening</string>
+    <string name="title_login_to_vvinamp">Sign up to start listening</string>
+    <string name="title_create_account">Create account</string>
+    <string name="title_what_is_your_email">What\'s your email?</string>
+    <string name="title_email_or_username">Email or username</string>
+    <string name="title_what_is_your_name">What\'s your name?</string>
+    <string name="title_password">Password</string>
+    <string name="title_create_a_password">Create a password</string>
+    <string name="title_what_is_your_date_of_birth">What\'s your date of birth?</string>
+    <string name="title_what_is_your_gender">What\'s your gender?</string>
+
 </resources>
