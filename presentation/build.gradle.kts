@@ -59,8 +59,10 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":data"))
+    api(project(":data"))
     testImplementation(project(":core-test"))
+    debugImplementation(libs.chucker.debug)
+    releaseImplementation(libs.chucker.release)
 
     // Kover Coverage (All Modules)
     kover(project(":data"))
@@ -94,8 +96,8 @@ dependencies {
     ksp(libs.room.compiler)
 
     // Hilt
-    implementation(libs.hilt.dagger.android)
-    implementation(libs.hilt.work)
+    api(libs.hilt.dagger.android)
+    api(libs.hilt.work)
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
 

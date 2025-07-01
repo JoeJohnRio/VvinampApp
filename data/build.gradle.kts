@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
 }
 
@@ -12,6 +13,9 @@ android {
         minSdk = libs.versions.minSdk.get().toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"https://movies-mock-server.vercel.app/\"")
+        buildConfigField("String", "BASE_URL_NGROK", "\"https://83e1-2001-448a-2075-379-d013-feea-3dd6-53d1.ngrok-free.app\"")
+        buildConfigField("String", "BASE_URL_GRAPHQL", "\"/v1/graphql\"")
+
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -52,7 +56,15 @@ kotlin {
 
 dependencies {
     api(project(":domain"))
+    api(project(":graphql"))
     testImplementation(project(":core-test"))
+    debugImplementation(libs.chucker.debug)
+    releaseImplementation(libs.chucker.release)
+    // Hilt
+    api(libs.hilt.dagger.android)
+    api(libs.hilt.work)
+    ksp(libs.hilt.dagger.compiler)
+    ksp(libs.hilt.compiler)
 
     // Room
     implementation(libs.room.runtime)

@@ -29,7 +29,7 @@ fun MainGraph(
 ) {
     NavHost(
         navController = mainNavController,
-        startDestination = Page.NavigationBar,
+        startDestination = Page.RegisterName,
         route = Graph.Main::class
     ) {
         composableHorizontalSlide<Page.NavigationBar> { backStack ->

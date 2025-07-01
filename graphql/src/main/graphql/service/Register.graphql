@@ -1,0 +1,19 @@
+mutation Register {
+    register(
+        input: {
+            username: "pepekkkk"
+            profilePicture: "cwqcqw"
+            email: "cwqwcqwc"
+            password: "cwqwqc"
+            name: "pepekkkk"
+            avatar: "cwqcwq"
+            roles: ["cwqcq", "cqwcwq"]
+        }
+    ) {
+        user {
+            id
+            username
+            email
+        }
+    }
+}

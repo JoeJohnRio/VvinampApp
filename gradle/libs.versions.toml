@@ -47,7 +47,7 @@ espressoCore = "3.6.1"
 material = "1.12.0"
 composeCompiler = "1.5.11"
 wheelPickerCompose = "1.1.11"
-flowlayout = "0.26.1-alpha"
+apollo = "3.8.6"
 
 [libraries]
 wheel-picker-compose = { module = "com.github.commandiron:WheelPickerCompose", version.ref = "wheelPickerCompose"}
@@ -67,6 +67,13 @@ lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx
 logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+
+# Chucker
+chucker-debug = { module = "com.github.chuckerteam.chucker:library", version = "4.0.0" }
+chucker-release = { module = "com.github.chuckerteam.chucker:library-no-op", version = "4.0.0" }
+
+# Apollo
+apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
 
 # Retrofit
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -126,4 +133,5 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltGradlePlugin"
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationGradlePlugin" }
-compose-compiler = { id = "androidx.compose.compiler", version.ref = "composeCompiler" }
+apollo = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+

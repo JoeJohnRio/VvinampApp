@@ -1,12 +1,17 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.apollo)
+}
+
+apollo {
+    service("service") {
+        packageName.set("com.example.graphql")
+    }
 }
 
 android {
-    namespace = "com.example.domain"
+    namespace = "com.example.graphql"
     compileSdk = 34
 
     defaultConfig {
@@ -35,10 +40,6 @@ android {
 }
 
 dependencies {
-    // Hilt
-    api(libs.hilt.dagger.android)
-    api(libs.hilt.work)
-    ksp(libs.hilt.dagger.compiler)
-    ksp(libs.hilt.compiler)
-    implementation(libs.paging.common.ktx)
+    // Apollo
+    api(libs.apollo.runtime)
 }
