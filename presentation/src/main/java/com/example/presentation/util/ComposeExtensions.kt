@@ -5,16 +5,16 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
+import com.example.presentation.navigation.NavigationState
 
-@Composable
-inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
-    navController: NavHostController,
-): T {
-    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
-
-    val parentEntry = remember(this) {
-        navController.getBackStackEntry(route = navGraphRoute)
-    }
-    return hiltViewModel(parentEntry)
-}
+//@Composable
+//inline fun <reified T : ViewModel> NavBackStackEntry.sharedViewModel(
+//    navigationState: NavigationState,
+//): T {
+//    val navGraphRoute = destination.parent?.route ?: return hiltViewModel()
+//
+//    val parentEntry = remember(this) {
+//        navigationState.getBackStackEntry(route = navGraphRoute)
+//    }
+//    return hiltViewModel(parentEntry)
+//}

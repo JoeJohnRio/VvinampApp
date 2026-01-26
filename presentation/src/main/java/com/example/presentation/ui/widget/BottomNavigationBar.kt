@@ -5,23 +5,22 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.presentation.navigation.route
+import com.example.presentation.navigation.NavigationState
 import com.example.presentation.ui.navigationbar.BottomNavigationBarItem
 
 @Composable
 fun BottomNavigationBar(
     items: List<BottomNavigationBarItem>,
-    navController: NavController,
+    navigationState: NavigationState,
     onItemClick: (BottomNavigationBarItem) -> Unit
 ) {
-    val backStackEntry = navController.currentBackStackEntryAsState()
     NavigationBar {
         items.forEach { item ->
-            val selected = item.page.route() == backStackEntry.value?.destination?.route
+            val isSelected = item == navigationState.topLevelRoute
+
             NavigationBarItem(
-                selected = selected,
+                selected = isSelected,
                 onClick = { onItemClick(item) },
                 icon = {
                     Icon(imageVector = item.imageVector, contentDescription = null)

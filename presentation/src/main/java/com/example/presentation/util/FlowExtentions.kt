@@ -18,7 +18,7 @@ fun <T> singleSharedFlowJoel() = MutableSharedFlow<T>(
 
 @SuppressLint("ComposableNaming")
 @Composable
-fun <T> Flow<T>.collectAsEffectJoel(effect: suspend (T) -> Unit) {
+fun <T> Flow<T>.collectAsEffect(effect: suspend (T) -> Unit) {
     LaunchedEffect(key1 = Unit) {
         onEach(effect).launchIn(this)
     }

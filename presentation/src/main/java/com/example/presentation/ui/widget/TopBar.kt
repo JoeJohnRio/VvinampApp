@@ -38,12 +38,11 @@ import com.example.presentation.ui.theme.colors
 @Composable
 fun TopBar(
     title: String,
-    darkMode: Boolean,
     fontFamily: FontFamily = FontFamily.Cursive,
     fontSize: TextUnit = 25.sp,
     fontWeight: FontWeight = FontWeight.SemiBold,
-    onThemeUpdated: () -> Unit,
-    onSearchClick: () -> Unit
+    onSearchClick: () -> Unit,
+    onSettingsClick: () -> Unit = {}
 ) {
     Column {
         TopAppBar(
@@ -63,14 +62,11 @@ fun TopBar(
                     Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
                 }
                 IconButton(
-                    onClick = { onThemeUpdated() }
-                ) {
-                    val icon = if (darkMode) {
-                        Filled.DarkMode
-                    } else {
-                        Outlined.DarkMode
+                    onClick = {
+                        onSettingsClick()
                     }
-                    Icon(imageVector = icon, contentDescription = "Dark Mode")
+                ) {
+                    Icon(painter = painterResource(R.drawable.ic_settings), contentDescription = "Dark Mode")
                 }
             }
         )

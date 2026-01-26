@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.androidTestImplementation
+import org.gradle.kotlin.dsl.testImplementation
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin)
@@ -12,7 +15,7 @@ apollo {
 
 android {
     namespace = "com.example.graphql"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -42,4 +45,13 @@ android {
 dependencies {
     // Apollo
     api(libs.apollo.runtime)
+
+    // AndroidX test APIs
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.2")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+
+    // JUnit
+    testImplementation("junit:junit:4.13.2")
 }

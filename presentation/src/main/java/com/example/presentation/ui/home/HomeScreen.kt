@@ -1,84 +1,115 @@
 package com.example.presentation.ui.home
 
-import androidx.compose.foundation.lazy.grid.LazyGridState
+import android.widget.Toast
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Surface
+import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.presentation.entities.MusicListItem
-import com.example.presentation.navigation.Page
-import com.example.presentation.ui.main.MainRouter
-import com.example.presentation.ui.home.HomeNavigationState.MusicDetails
-import com.example.presentation.ui.navigationbar.NavigationBarSharedViewModel
-import com.example.presentation.ui.widget.LoaderFullScreen
-import com.example.presentation.ui.widget.MusicList
-import com.example.presentation.ui.widget.PullToRefresh
-import com.example.presentation.util.collectAsEffectJoel
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.entity.ListeningHistory
+import com.example.presentation.ui.home.history.ListeningHistoryGrid
+import com.example.presentation.navigation.router.MainRouter
+import com.example.presentation.ui.main.MainUiEvent
+import com.example.presentation.ui.widget.SnackbarStyledHost
+import com.example.presentation.util.UiState
 import com.example.presentation.util.preview.PreviewContainer
-import kotlinx.coroutines.flow.flowOf
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomePage(
     mainRouter: MainRouter,
-    viewModel: HomeViewModel,
-    sharedViewModel: NavigationBarSharedViewModel,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val musicPaging = viewModel.movies.collectAsLazyPagingItems()
-    val uiState by viewModel.uiState.collectAsState()
-    val pullToRefreshState = rememberPullRefreshState(uiState.showLoading, { viewModel.onRefresh() })
     val lazyGridState = rememberLazyGridState()
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+    val getListRecentHistory by viewModel.getListeningHistory.collectAsState()
 
-    viewModel.navigationState.collectAsEffectJoel { navigationState ->
-        when (navigationState) {
-            is MusicDetails -> mainRouter.navigateToMovieDetails(navigationState.movieId)
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is HomeUiEvent.NavigateToArtistPage -> {
+                    mainRouter.navigateToArtistPage(event.history)
+                }
+            }
         }
     }
-    viewModel.refreshListState.collectAsEffectJoel {
-        musicPaging.refresh()
-    }
 
-    sharedViewModel.bottomItem.collectAsEffectJoel {
-        if (it.page == Page.Music) {
-            lazyGridState.animateScrollToItem(0)
+    LaunchedEffect(getListRecentHistory) {
+        when (getListRecentHistory) {
+            is UiState.Error -> {
+                Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
+
+                viewModel.setLoading(false)
+            }
+
+            UiState.Idle -> {
+                viewModel.setLoading(false)
+            }
+
+            UiState.Loading -> {
+                viewModel.setLoading(true)
+            }
+
+            is UiState.Success -> {
+                viewModel.setLoading(false)
+
+                Toast.makeText(context, "Jalan nih", Toast.LENGTH_SHORT).show()
+                val data = (getListRecentHistory as UiState.Success<List<ListeningHistory>>).data
+            }
         }
     }
 
-    LaunchedEffect(key1 = musicPaging.loadState) {
-        viewModel.onLoadStateUpdate(musicPaging.loadState)
-    }
-
-    PullToRefresh(state = pullToRefreshState, refresh = uiState.showLoading) {
-        HomeScreen(
-            movies = musicPaging,
-            uiState = uiState,
-            lazyGridState = lazyGridState,
-            onMovieClick = viewModel::onMovieClicked
-        )
-    }
+    HomeScreen()
 }
 
 @Composable
 private fun HomeScreen(
-    movies: LazyPagingItems<MusicListItem>,
-    uiState: HomeUiState,
-    lazyGridState: LazyGridState,
-    onMovieClick: (movieId: Int) -> Unit
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    Surface {
-        if (uiState.showLoading) {
-            LoaderFullScreen()
-        } else {
-            MusicList(movies, onMovieClick, lazyGridState)
+    val historyState by viewModel.getListeningHistory.collectAsState()
+    val historyList =
+        if (historyState is UiState.Success) (historyState as UiState.Success<List<ListeningHistory>>).data else emptyList()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.getListeningHistory()
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarStyledHost(snackbarHostState)
+        },
+        backgroundColor = MaterialTheme.colorScheme.onPrimary,
+    ) { contentPadding ->
+
+        Column(
+            modifier = Modifier
+                .padding(contentPadding)
+                .background(MaterialTheme.colorScheme.onPrimary)
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            ListeningHistoryGrid(
+                historyList = historyList,
+            )
         }
     }
 }
@@ -86,30 +117,7 @@ private fun HomeScreen(
 @Preview(device = Devices.PIXEL_3, showSystemUi = true)
 @Composable
 private fun HomeScreenPreview() {
-    val movies = flowOf(
-        PagingData.from(
-            listOf<MusicListItem>(
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-                MusicListItem.Music(9, "", ""),
-            )
-        )
-    ).collectAsLazyPagingItems()
     PreviewContainer {
-        HomeScreen(
-            movies = movies,
-            uiState = HomeUiState(
-                showLoading = false,
-                errorMessage = null,
-            ),
-            lazyGridState = rememberLazyGridState(),
-            onMovieClick = {}
-        )
+        HomeScreen()
     }
 }

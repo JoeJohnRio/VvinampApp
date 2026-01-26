@@ -15,9 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,23 +23,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.commandiron.wheel_picker_compose.WheelDatePicker
 import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
+import com.example.data.util.toLocalDate
 import com.example.presentation.R
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.ui.auth.viewmodel.AuthViewModel
+import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
 import com.example.presentation.ui.widget.TopBarCustom
+import com.example.presentation.util.auth.isAtLeast17YearsOld
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterBirthDatePage(
-    mainRouter: MainRouter
+    authRouter: AuthRouter,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
-    var isBirthDateValid by remember { mutableStateOf(true) }
-
+    val currentLocalDate by remember {
+        mutableStateOf(viewModel.user.birthDate.toLocalDate())
+    }
     Scaffold(
         backgroundColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
@@ -49,7 +53,7 @@ fun RegisterBirthDatePage(
                 title = stringResource(R.string.title_create_account),
                 icon = painterResource(R.drawable.ic_back_arrow),
                 onBackClick = {
-                    mainRouter.navigateBack()
+                    authRouter.navigateBack()
                 }
             )
         }
@@ -75,6 +79,7 @@ fun RegisterBirthDatePage(
                 horizontalArrangement = Arrangement.Center
             ) {
                 WheelDatePicker (
+                    startDate = currentLocalDate,
                     size = DpSize(300.dp, 150.dp),
                     rowCount = 3,
                     textStyle = MaterialTheme.typography.labelMedium
@@ -84,7 +89,11 @@ fun RegisterBirthDatePage(
                     selectorProperties = WheelPickerDefaults.selectorProperties(
                         enabled = false,
                     )
-                ){ snappedDateTime -> }
+                ){ snappedDateTime ->
+                    viewModel.user = viewModel.user.copy(
+                        birthDate = snappedDateTime.toString()
+                    )
+                }
             }
 
             Row(
@@ -96,9 +105,12 @@ fun RegisterBirthDatePage(
                     modifierText = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(R.string.label_continue),
                     containerColor = MaterialTheme.colorScheme.onBackground,
-                    enabled = isBirthDateValid,
+                    enabled = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld(),
                     onClick = {
-                        mainRouter.navigateToRegisterGenderPage()
+                        val isValid = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld()
+                        if (isValid) {
+                            authRouter.navigateToRegisterGenderPage()
+                        }
                     }
                 )
             }
@@ -113,10 +125,8 @@ fun RegisterBirthDatePage(
 private fun PagePreview() {
     PreviewTheme {
         RegisterBirthDatePage(
-            mainRouter = MainRouter(
-                NavHostController(
-                    LocalContext.current
-                )
+            authRouter = AuthRouter(
+                navigatorDummy()
             )
         )
     }

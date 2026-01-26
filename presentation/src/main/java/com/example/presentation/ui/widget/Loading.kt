@@ -24,6 +24,13 @@ fun LoadingOverlay(isVisible: Boolean) {
     }
 }
 
-fun isAnyLoading(vararg states: UiState<*>): Boolean {
+fun isAnyLoading(vararg states: UiState<Any>): Boolean {
     return states.any { it is UiState.Loading }
+}
+
+@Composable
+fun LoadingScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
 }

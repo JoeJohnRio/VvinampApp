@@ -40,6 +40,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.util.auth.isValidPassword
 
 @Composable
 fun TextFieldNormal(
@@ -47,12 +48,15 @@ fun TextFieldNormal(
     modifier: Modifier = Modifier.fillMaxWidth(),
     shape: Shape = RoundedCornerShape(4.dp),
     onValueChanged: (String) -> Unit = { },
-    textFieldInfo: String? = null
+    textFieldInfo: String? = null,
+    isError: () -> Boolean = { false }
 ) {
     Column {
         TextField(
             value = text,
-            textStyle = TSDisplayMediumWhite(),
+            textStyle = TSDisplayMediumWhite().copy(
+                color = if (isError()) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.inversePrimary
+            ),
             onValueChange = {
                 onValueChanged(it)
             },
@@ -64,7 +68,10 @@ fun TextFieldNormal(
                 unfocusedIndicatorColor = Color.Transparent,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                errorContainerColor = MaterialTheme.colorScheme.onErrorContainer,
+                errorTextColor = MaterialTheme.colorScheme.onError
             ),
+            isError = isError()
         )
 
         textFieldInfo?.let {
@@ -88,7 +95,7 @@ fun TextFieldPassword(
     onValueChanged: (String) -> Unit = { },
     textFieldInfo: String? = null,
     isError: () -> Boolean = {
-        text.length < 10
+        false
     }
 ) {
     var passwordHidden by remember { mutableStateOf(true) }
@@ -98,7 +105,7 @@ fun TextFieldPassword(
             value = text,
             textStyle = TSDisplayMediumWhite()
                 .copy(
-                    color = if (isError()) Color.Red else MaterialTheme.colorScheme.inversePrimary
+                    color = if (isError()) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.inversePrimary
                 ),
             onValueChange = {
                 onValueChanged(it)
@@ -126,7 +133,6 @@ fun TextFieldPassword(
                     else
                         Icons.Filled.VisibilityOff
 
-                    // Please provide localized description for accessibility services
                     val description = if (passwordHidden)
                         "Show password"
                     else

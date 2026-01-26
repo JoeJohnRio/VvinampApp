@@ -6,24 +6,27 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.example.presentation.navigation.Page
+import com.example.presentation.navigation.graph.BottomNavDestination
+import com.example.presentation.navigation.graph.MainDestination
 
 data class NavigationBarUiState(
     val bottomItems: List<BottomNavigationBarItem> = listOf(
-        BottomNavigationBarItem.Feed,
-        BottomNavigationBarItem.Samples,
-        BottomNavigationBarItem.Explore,
-        BottomNavigationBarItem.Library
+        BottomNavigationBarItem.Home,
+        BottomNavigationBarItem.Search,
+        BottomNavigationBarItem.Library,
+        BottomNavigationBarItem.Premium,
+        BottomNavigationBarItem.Create
     )
 )
 
 sealed class BottomNavigationBarItem(
     val tabName: String,
     val imageVector: ImageVector,
-    val page: Page,
+    val page: MainDestination,
 ) {
-    data object Feed : BottomNavigationBarItem("Feed", imageVector = Icons.Default.Home, Page.Music)
-    data object Samples : BottomNavigationBarItem("Samples", imageVector = Icons.Default.PlayArrow, Page.Samples)
-    data object Explore : BottomNavigationBarItem("Explore", imageVector = Icons.Default.Explore, Page.Explore)
-    data object Library : BottomNavigationBarItem("Library", imageVector = Icons.Default.LibraryMusic, Page.Library)
+    data object Home : BottomNavigationBarItem("Home", imageVector = Icons.Default.Home, BottomNavDestination.Home)
+    data object Search : BottomNavigationBarItem("Search", imageVector = Icons.Default.PlayArrow, BottomNavDestination.Search)
+    data object Library : BottomNavigationBarItem("Library", imageVector = Icons.Default.Explore, BottomNavDestination.Library)
+    data object Premium : BottomNavigationBarItem("Premium", imageVector = Icons.Default.LibraryMusic, BottomNavDestination.Premium)
+    data object Create : BottomNavigationBarItem("Create", imageVector = Icons.Default.LibraryMusic, BottomNavDestination.Create)
 }

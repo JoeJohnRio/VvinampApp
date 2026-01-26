@@ -11,27 +11,29 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.entity.Gender
 import com.example.presentation.R
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.ui.auth.viewmodel.AuthViewModel
+import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.widget.ButtonListWithState
 import com.example.presentation.ui.widget.TopBarCustom
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterGenderPage(
-    mainRouter: MainRouter
+    authRouter: AuthRouter,
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
-
     Scaffold(
         backgroundColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
@@ -39,7 +41,7 @@ fun RegisterGenderPage(
                 title = stringResource(R.string.title_create_account),
                 icon = painterResource(R.drawable.ic_back_arrow),
                 onBackClick = {
-                    mainRouter.navigateBack()
+                    authRouter.navigateBack()
                 }
             )
         }
@@ -73,8 +75,11 @@ fun RegisterGenderPage(
                 outlineColor = AppColours.Outline,
                 textColor = AppColours.OffWhite,
                 containerColor = AppColours.OnPrimaryBlack,
-                onClick = {
-                    mainRouter.navigateToRegisterNamePage()
+                onClick = { gender ->
+                    viewModel.user = viewModel.user.copy(
+                        gender = Gender.fromDisplayName(gender)
+                    )
+                    authRouter.navigateToRegisterNamePage()
                 }
             )
         }
@@ -86,9 +91,9 @@ fun RegisterGenderPage(
 private fun PagePreview() {
     PreviewTheme {
         RegisterGenderPage(
-            mainRouter = MainRouter(NavHostController(
-                LocalContext.current
-            ))
+            authRouter = AuthRouter(
+                navigatorDummy()
+            )
         )
     }
 }

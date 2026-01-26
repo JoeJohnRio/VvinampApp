@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.compose)
+    kotlin("kapt")
 }
 
 android {
@@ -46,7 +48,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+        kotlinCompilerExtensionVersion = libs.versions.kotlinGradlePlugin.get()
     }
 
     kotlinOptions {
@@ -69,7 +71,7 @@ dependencies {
     kover(project(":domain"))
 
     // Kotlin
-    implementation(libs.kotlin.stdlib.jdk7)
+    implementation(libs.kotlin.stdlib.jdk8)
 
     // AndroidX
     implementation(libs.appcompat)
@@ -98,8 +100,8 @@ dependencies {
     // Hilt
     api(libs.hilt.dagger.android)
     api(libs.hilt.work)
-    ksp(libs.hilt.dagger.compiler)
-    ksp(libs.hilt.compiler)
+    kapt(libs.hilt.dagger.compiler)
+    kapt(libs.hilt.compiler)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -133,6 +135,11 @@ dependencies {
     // Navigation
     implementation(libs.navigation.compose)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.navigation.runtime)
+    implementation(libs.navigation.ui)
+    implementation(libs.navigation.viewmodel)
+    implementation(libs.navigation.adaptive)
+
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)

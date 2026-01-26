@@ -4,65 +4,75 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import com.example.presentation.navigation.Page
+import androidx.navigation3.runtime.EntryProviderScope
+import androidx.navigation3.runtime.NavKey
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.ui.NavDisplay
+import com.example.presentation.navigation.NavigationState
+import com.example.presentation.navigation.Navigator
+import com.example.presentation.navigation.graph.BottomNavDestination
+import com.example.presentation.navigation.graph.MainDestination
+import com.example.presentation.navigation.router.MainRouter
 import com.example.presentation.ui.home.HomePage
 import com.example.presentation.ui.home.HomeViewModel
-import com.example.presentation.ui.main.MainRouter
-import com.example.presentation.util.composableHorizontalSlide
-import com.example.presentation.util.sharedViewModel
-import kotlin.reflect.KClass
+import com.example.presentation.navigation.toEntries
 
 @Composable
-fun NavigationBarNestedGraph(
-    navController: NavHostController,
-    mainNavController: NavHostController,
-    parentRoute: KClass<*>?
+fun MainNavDisplay(
+    navigationState: NavigationState,
+    navigator: Navigator,
+    mainRouter: MainRouter
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Page.Music,
-        route = parentRoute
-    ) {
-        composableHorizontalSlide<Page.Music> { backStack ->
-            Text(
-                text = "Feed",
-                fontSize = 100.sp
-            )
+    val entryProvider = entryProvider {
+        BottomNavigationViewGraph(
+            mainRouter = mainRouter
+        )
+    }
+    NavDisplay(
+        entries = navigationState.toEntries(entryProvider),
+        onBack = {
+            navigator.goBack()
+        },
+    )
+}
 
-            val viewModel = hiltViewModel<HomeViewModel>()
-            HomePage(
-                mainRouter = MainRouter(mainNavController),
-                viewModel = viewModel,
-                sharedViewModel = backStack.sharedViewModel(navController = mainNavController)
-            )
-        }
-        composableHorizontalSlide<Page.Samples> {
-            Text(
-                text = "Favorites",
-                fontSize = 100.sp
-            )
-//            val viewModel = hiltViewModel<FavoritesViewModel>()
-//            FavoritesPage(
-//                mainRouter = MainRouter(mainNavController),
-//                viewModel = viewModel,
-//            )
-        }
+@Composable
+fun EntryProviderScope<NavKey>.BottomNavigationViewGraph(
+    mainRouter: MainRouter
+) {
+    val viewModel: HomeViewModel = hiltViewModel()
+    entry<BottomNavDestination.Home> {
+        HomePage(
+            mainRouter = mainRouter,
+            viewModel = viewModel,
+        )
+    }
 
+    entry<BottomNavDestination.Search> {
+        Text(
+            text = "Search",
+            fontSize = 100.sp
+        )
+    }
 
-        composableHorizontalSlide<Page.Explore> {
-            Text(
-                text = "Explore",
-                fontSize = 100.sp
-            )
-        }
+    entry<BottomNavDestination.Library> {
+        Text(
+            text = "Library",
+            fontSize = 100.sp
+        )
+    }
 
-        composableHorizontalSlide<Page.Library> {
-            Text(
-                text = "Library",
-                fontSize = 100.sp
-            )
-        }
+    entry<BottomNavDestination.Premium> {
+        Text(
+            text = "Premium",
+            fontSize = 100.sp
+        )
+    }
+
+    entry<BottomNavDestination.Create> {
+        Text(
+            text = "Create",
+            fontSize = 100.sp
+        )
     }
 }

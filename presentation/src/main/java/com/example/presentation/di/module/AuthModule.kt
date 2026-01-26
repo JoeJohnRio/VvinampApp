@@ -1,13 +1,16 @@
 package com.example.presentation.di.module
 
 import com.example.data.repository.auth.AuthRepositoryImpl
+import com.example.data.repository.history.HistoryRepositoryImpl
 import com.example.domain.repository.AuthRepository
+import com.example.domain.repository.HistoryRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+//joel123 check if its used
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class AuthModule {

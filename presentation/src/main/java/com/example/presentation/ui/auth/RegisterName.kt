@@ -12,7 +12,6 @@ import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,17 +22,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.presentation.R
 import com.example.presentation.ui.auth.viewmodel.AuthViewModel
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
@@ -45,12 +42,15 @@ import com.example.presentation.ui.widget.TopBarCustom
 import com.example.presentation.ui.widget.isAnyLoading
 import com.example.presentation.util.UiState
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterNamePage(mainRouter: MainRouter) {
-    val viewModel = hiltViewModel<AuthViewModel>()
+fun RegisterNamePage(
+    authRouter: AuthRouter,
+    viewModel: AuthViewModel = hiltViewModel()
+) {
     val registerState by viewModel.registerState.collectAsState()
     var nameValue by remember { mutableStateOf("") }
     var isUserReceiveMarketing by remember { mutableStateOf(false) }
@@ -60,7 +60,6 @@ fun RegisterNamePage(mainRouter: MainRouter) {
     LaunchedEffect(registerState) {
         when (registerState) {
             is UiState.Error -> {
-                Log.d("joel123", "Error")
                 val error = (registerState as UiState.Error).exception
                 snackbarHostState.showSnackbar(
                     message = error.message ?: "Unknown error occurred",
@@ -72,7 +71,9 @@ fun RegisterNamePage(mainRouter: MainRouter) {
                 Log.d("joel123", "Loading ${isAnyLoading(registerState)}")
             }
 
-            is UiState.Success -> mainRouter.navigateToNavigationBar()
+            is UiState.Success -> {
+                viewModel.resetAndPopBackStack(authRouter)
+            }
         }
     }
 
@@ -87,7 +88,7 @@ fun RegisterNamePage(mainRouter: MainRouter) {
                     title = stringResource(R.string.title_create_account),
                     icon = painterResource(R.drawable.ic_back_arrow),
                     onBackClick = {
-                        mainRouter.navigateBack()
+                        authRouter.navigateBack()
                     }
                 )
             },
@@ -105,7 +106,12 @@ fun RegisterNamePage(mainRouter: MainRouter) {
                     .padding(contentPadding)
                     .fillMaxSize(),
                 nameValue = nameValue,
-                onNameChange = { nameValue = it },
+                onNameChange = {
+                    nameValue = it
+                    viewModel.user = viewModel.user.copy(
+                        name = it
+                    )
+                },
                 isUserReceiveMarketing = isUserReceiveMarketing,
                 onMarketingChecked = { isUserReceiveMarketing = it },
                 isUserShareRegistrationData = isUserShareRegistrationData,
@@ -240,10 +246,8 @@ fun RegisterNameBottom(
 private fun PagePreview() {
     PreviewTheme {
         RegisterNamePage(
-            mainRouter = MainRouter(
-                NavHostController(
-                    LocalContext.current
-                )
+            authRouter = AuthRouter(
+                navigatorDummy()
             )
         )
     }

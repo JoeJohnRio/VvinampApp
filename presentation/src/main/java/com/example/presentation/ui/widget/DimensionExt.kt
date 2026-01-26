@@ -25,5 +25,12 @@ class ImageSize(
             val imageHeight = imageWidth * aspectRatio
             return ImageSize(imageWidth, imageHeight)
         }
+
+        @Composable
+        fun getImageListeningHistorySize(): ImageSize {
+            val imageWidth = 56.dp
+            val imageHeight = 56.dp
+            return ImageSize(imageWidth, imageHeight)
+        }
     }
 }

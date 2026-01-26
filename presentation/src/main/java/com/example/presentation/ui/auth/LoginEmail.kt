@@ -1,5 +1,6 @@
 package com.example.presentation.ui.auth
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,47 +13,89 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.domain.entity.User
 import com.example.presentation.R
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.ui.auth.viewmodel.AuthViewModel
+import com.example.presentation.navigation.router.AuthRouter
+import com.example.presentation.navigation.router.MainRouter
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableOutlined
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
+import com.example.presentation.ui.widget.SnackbarStyledHost
 import com.example.presentation.ui.widget.TextFieldNormal
 import com.example.presentation.ui.widget.TextFieldPassword
 import com.example.presentation.ui.widget.TopBarCustom
-import com.example.presentation.util.checkPassword
+import com.example.presentation.ui.widget.isAnyLoading
+import com.example.presentation.util.UiState
+import com.example.presentation.util.auth.isValidEmail
+import com.example.presentation.util.auth.isValidPassword
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginEmailPage(
-    mainRouter: MainRouter
+    authRouter: AuthRouter,
+    parentMainRouter: MainRouter,
+    viewModel: AuthViewModel = hiltViewModel(),
 ) {
+    val loginState by viewModel.loginState.collectAsState()
+    val session by viewModel.session.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val token: String? = session?.accessToken
+
+    LaunchedEffect(loginState) {
+        when (loginState) {
+            is UiState.Error -> {
+                val error = (loginState as UiState.Error).exception
+                snackbarHostState.showSnackbar(
+                    message = error.message ?: "Unknown error occurred",
+                )
+            }
+
+            is UiState.Idle -> Log.d("joel123", "Idle")
+            is UiState.Loading -> {
+                Log.d("joel123", "Loading ${isAnyLoading(loginState)}")
+            }
+
+            is UiState.Success -> {
+                snackbarHostState.showSnackbar(
+                    message = "Login Success ${token}",
+                )
+            }
+        }
+    }
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarStyledHost(snackbarHostState)
+        },
         backgroundColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(R.string.title_create_account),
+                title = stringResource(R.string.title_login),
                 icon = painterResource(R.drawable.ic_back_arrow),
                 onBackClick = {
-                    mainRouter.navigateBack()
+                    authRouter.navigateBack()
                 }
             )
         }
@@ -99,6 +142,9 @@ fun LoginEmailPage(
                 onValueChanged = {
                     password = it
                 },
+                isError = {
+                    !isValidPassword(password)
+                }
             )
 
             Row(
@@ -110,9 +156,14 @@ fun LoginEmailPage(
                     modifierText = Modifier.padding(horizontal = 16.dp),
                     text = stringResource(R.string.label_log_in),
                     containerColor = MaterialTheme.colorScheme.onBackground,
-                    enabled = email.isNotEmpty() && password.checkPassword(),
+                    enabled = isValidEmail(email) && isValidPassword(password),
                     onClick = {
-                        mainRouter.navigateToNavigationBar()
+//                        mainRouter.navigateToNavigationBar()
+
+                        viewModel.login(userCred = User(
+                            email = email,
+                            password = password
+                        ))
                     }
                 )
             }
@@ -130,7 +181,9 @@ fun LoginEmailPage(
                     containerColor = MaterialTheme.colorScheme.onPrimary,
                     enabled = email.isNotEmpty(),
                     onClick = {
-//                        mainRouter.navigateToNavigationBar()
+                        Log.d("joel123", "token $token")
+
+                        parentMainRouter.navigateToRootNav()
                     },
                     contentPadding = PaddingValues(horizontal = 12.dp),
                     buttonHeight = 24.dp
@@ -146,10 +199,11 @@ fun LoginEmailPage(
 private fun PagePreview() {
     PreviewTheme {
         LoginEmailPage(
-            mainRouter = MainRouter(
-                NavHostController(
-                    LocalContext.current
-                )
+            authRouter = AuthRouter(
+                navigatorDummy()
+            ),
+            parentMainRouter = MainRouter(
+                navigatorDummy()
             )
         )
     }

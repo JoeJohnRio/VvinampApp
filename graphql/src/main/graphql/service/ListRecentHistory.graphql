@@ -1,0 +1,14 @@
+query ListRecentHistory {
+    listRecentHistory(limit: 8) {
+        id
+        user {
+            username
+        }
+        contentId
+        contentType
+        contentImage
+        contentName
+        playedAt
+        progress
+    }
+}

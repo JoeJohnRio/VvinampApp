@@ -1,6 +1,7 @@
 package com.example.presentation.ui.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,25 +11,24 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.presentation.R
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.widget.ButtonOutlined
 import com.example.presentation.ui.widget.ButtonSolid
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 @Composable
 fun LoginMethodSelectionPage(
-    mainRouter: MainRouter
+    authRouter: AuthRouter
 ) {
     Column(
         modifier = Modifier
@@ -49,7 +49,7 @@ fun LoginMethodSelectionPage(
                 .weight(0.5f)
         ) {
             LoginSelectionButtons(
-                mainRouter
+                authRouter
             )
         }
     }
@@ -57,7 +57,7 @@ fun LoginMethodSelectionPage(
 
 @Composable
 fun LoginSelectionButtons(
-    mainRouter: MainRouter
+    mainRouter: AuthRouter
 ) {
     ButtonSolid(
         modifier = Modifier
@@ -107,6 +107,11 @@ fun LoginSelectionButtons(
     Text(
         modifier = Modifier
             .padding(bottom = 24.dp)
+            .clickable(
+                onClick = {
+                    mainRouter.navigateToLoginEmailPage()
+                }
+            )
             .fillMaxWidth(),
         text = stringResource(R.string.label_log_in),
         style = TSBodyMediumWhite().copy(
@@ -122,10 +127,8 @@ fun LoginSelectionButtons(
 private fun PagePreview() {
     PreviewTheme {
         LoginMethodSelectionPage(
-            mainRouter = MainRouter(
-                NavHostController(
-                    LocalContext.current
-                )
+            authRouter = AuthRouter(
+                navigatorDummy()
             )
         )
     }

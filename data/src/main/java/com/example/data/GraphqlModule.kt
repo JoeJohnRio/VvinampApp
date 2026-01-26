@@ -1,7 +1,9 @@
 package com.example.data
 
-import com.example.data.api.AuthApi
-import com.example.data.api.AuthApiImpl
+import com.example.data.api.auth.AuthApi
+import com.example.data.api.auth.AuthApiImpl
+import com.example.data.api.history.HistoryApi
+import com.example.data.api.history.HistoryApiImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ abstract class GraphqlModule {
     abstract fun bindAuthApi(
         impl: AuthApiImpl
     ): AuthApi
+
+    @Binds
+    @Singleton
+    abstract fun bindHistoryApi(
+        impl: HistoryApiImpl
+    ): HistoryApi
 }

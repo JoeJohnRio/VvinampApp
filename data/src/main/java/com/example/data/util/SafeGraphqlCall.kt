@@ -1,9 +1,12 @@
 package com.example.data.util
 
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.api.Mutation
-import com.apollographql.apollo3.api.Query
-import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Mutation
+import com.apollographql.apollo.api.Query
+import com.apollographql.apollo.exception.ApolloException
+import com.apollographql.apollo.exception.ApolloGraphQLException
+import com.apollographql.apollo.exception.DefaultApolloException
+import com.example.graphql.RegisterMutation
 
 suspend fun <D : Mutation.Data, T> ApolloClient.safeMutation(
     mutation: Mutation<D>,
@@ -14,11 +17,11 @@ suspend fun <D : Mutation.Data, T> ApolloClient.safeMutation(
 
         when {
             response.hasErrors() -> Result.failure(
-                ApolloException("GraphQL Error: ${response.errors?.firstOrNull()?.message}")
+                ApolloGraphQLException(response.errors.orEmpty())
             )
 
             response.data == null -> Result.failure(
-                ApolloException("Mutation returned null data")
+                ApolloGraphQLException(response.errors.orEmpty())
             )
 
             else -> {
@@ -26,7 +29,7 @@ suspend fun <D : Mutation.Data, T> ApolloClient.safeMutation(
                 if (extracted != null) {
                     Result.success(extracted)
                 } else {
-                    Result.failure(ApolloException("Failed to extract data"))
+                    Result.failure(DefaultApolloException(message = "Failed to extract data"))
                 }
             }
         }
@@ -44,11 +47,11 @@ suspend fun <D : Query.Data, T> ApolloClient.safeQuery(
 
         when {
             response.hasErrors() -> Result.failure(
-                ApolloException("GraphQL Error: ${response.errors?.firstOrNull()?.message}")
+                ApolloGraphQLException(response.errors.orEmpty())
             )
 
             response.data == null -> Result.failure(
-                ApolloException("Query returned null data")
+                ApolloGraphQLException(response.errors.orEmpty())
             )
 
             else -> {
@@ -56,7 +59,7 @@ suspend fun <D : Query.Data, T> ApolloClient.safeQuery(
                 if (extracted != null) {
                     Result.success(extracted)
                 } else {
-                    Result.failure(ApolloException("Failed to extract data"))
+                    Result.failure(DefaultApolloException(message = "Failed to extract data"))
                 }
             }
         }

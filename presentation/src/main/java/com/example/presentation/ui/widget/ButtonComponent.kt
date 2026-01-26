@@ -98,6 +98,55 @@ fun ButtonSolid(
 }
 
 @Composable
+fun ButtonSolidCloseIconAndText(
+    text: String = "",
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
+    icon: Painter? = null,
+    iconTint: Color = MaterialTheme.colorScheme.onPrimary,
+    contentDescription: String? = null,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier
+            .height(50.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            disabledContainerColor = disabledContainerColor
+        ),
+        shape = RoundedCornerShape(25.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            icon?.let {
+                Icon(
+                    painter = it,
+                    contentDescription = contentDescription,
+                    tint = iconTint,
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .size(24.dp)
+                )
+            }
+
+            Text(
+                text = text,
+                style = TSBodyMediumWhite().copy(color = textColor)
+            )
+        }
+    }
+}
+
+@Composable
 fun ButtonVariableSizeSolid(
     text: String = "",
     modifier: Modifier = Modifier,
@@ -334,6 +383,14 @@ private fun ButtonsPreview() {
                 iconTint = AppColours.OnPrimaryBlack
             )
 
+            ButtonSolidCloseIconAndText(
+                modifier = Modifier.padding(top = 12.dp),
+                text = "Logout",
+                textColor = AppColours.error,
+                containerColor = AppColours.errorContainer,
+                icon = painterResource(R.drawable.ic_logout),
+                iconTint = AppColours.error
+            )
             ButtonOutlined(
                 text = "Continue with phone number",
                 modifier = Modifier.padding(top = 12.dp),

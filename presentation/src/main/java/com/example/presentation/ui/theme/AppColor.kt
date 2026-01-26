@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 //}
 
 object AppColours {
-    val PrimaryGreen = Color(0xFF1DB954)
+    val PrimaryGreen = Color(0xFFBB741D)
     val OnPrimaryBlack = Color(0xff121212)
     val Outline = Color(0xFF808080)
     val OffWhite = Color(0xFFF5F5F5)
@@ -22,6 +22,10 @@ object AppColours {
     val GradientBottom = Color(0xFF000000)
     val SurfaceContainerHighBlack = Color(0xFF252525)
     val SurfaceContainerHighestBlack = Color(0xFF777777)
+    val error = Color(0xFFC62828)
+    val errorContainer = Color(0xFF270708)
+    val onError = Color(0xFFC62828)
+    val onErrorContainer = Color(0xFFF5F5F5)
 
     val Black100 = Color(0xFF121212)
     val Black150 = Color(0xFF121212)

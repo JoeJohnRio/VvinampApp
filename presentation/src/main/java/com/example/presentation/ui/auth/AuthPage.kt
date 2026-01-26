@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -20,19 +19,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
+import androidx.navigation3.runtime.rememberNavBackStack
 import com.example.presentation.R
-import com.example.presentation.ui.main.MainRouter
+import com.example.presentation.navigation.graph.AuthDestination
+import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.ui.theme.Gotham
 import com.example.presentation.ui.theme.whiteBlackGradientBackground
 import com.example.presentation.ui.widget.ButtonOutlined
 import com.example.presentation.ui.widget.ButtonSolid
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.preview.navigatorDummy
 
 @Composable
 fun AuthPage(
-    mainRouter: MainRouter,
+    authRouter: AuthRouter,
 ) {
+    val backStack = rememberNavBackStack(AuthDestination.AuthRoot)
     Column(
         modifier = Modifier
             .whiteBlackGradientBackground(),
@@ -56,14 +58,14 @@ fun AuthPage(
                     .padding(horizontal = 32.dp)
                     .padding(bottom = 12.dp),
                 onClick = {
-                    mainRouter.navigateToAuthMethodSelectionPage()
+                    authRouter.navigateToAuthMethodSelectionPage()
                 }
             )
             ButtonOutlined(
                 text = "Log in",
                 modifier = Modifier.padding(horizontal = 32.dp),
                 onClick = {
-                    mainRouter.navigateToLoginMethodSelectionPage()
+                    authRouter.navigateToLoginMethodSelectionPage()
                 }
             )
         }
@@ -103,15 +105,13 @@ fun ImageTextRegister(
 }
 
 
-@Preview(apiLevel = 33)
+@Preview(apiLevel = 36)
 @Composable
 private fun PagePreview() {
     PreviewTheme {
         AuthPage(
-            mainRouter = MainRouter(
-                NavHostController(
-                    LocalContext.current
-                )
+            authRouter = AuthRouter(
+                navigatorDummy()
             )
         )
     }
