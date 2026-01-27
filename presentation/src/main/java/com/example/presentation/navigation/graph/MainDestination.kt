@@ -1,7 +1,7 @@
 package com.example.presentation.navigation.graph
 
 import androidx.navigation3.runtime.NavKey
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import kotlinx.serialization.Serializable
 
 sealed interface MainDestination: NavKey {
@@ -9,7 +9,7 @@ sealed interface MainDestination: NavKey {
     data object NavigationBar : MainDestination
 
     @Serializable
-    data class Artist(val history: ListeningHistory) : MainDestination
+    data class Artist(val history: ListeningHistoryDomain) : MainDestination
 
     @Serializable
     data object Root : MainDestination

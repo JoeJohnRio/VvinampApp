@@ -1,0 +1,35 @@
+query GetArtistScreenData($artistId: ID!) {
+  getArtistScreenData(artistId: $artistId) {
+    artistProfile {
+      id
+      name
+      bio
+      profileImage
+      verified
+      monthlyListeners
+    }
+    topSongs {
+      success
+      error
+      tracks {
+        id
+        title
+        duration
+        streamCount
+        explicit
+        releaseDate
+        audioFileUrl
+      }
+    }
+    topReleases {
+      success
+      error
+      albums {
+        id
+        title
+        releaseDate
+        coverArt
+      }
+    }
+  }
+}

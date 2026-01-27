@@ -5,7 +5,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
@@ -46,9 +46,6 @@ class HomeViewModel @Inject constructor(
     private val _refreshListState: MutableSharedFlow<Unit> = singleSharedFlowJoel()
     val refreshListState = _refreshListState.asSharedFlow()
 
-    private val _getListeningHistory = MutableStateFlow<UiState<List<ListeningHistory>>>(UiState.Idle)
-    val getListeningHistory = _getListeningHistory.asStateFlow()
-
     fun onEvent(event: HomeEvent) {
         when (event) {
             is HomeEvent.OnHistoryClicked -> {
@@ -83,6 +80,10 @@ class HomeViewModel @Inject constructor(
         _uiState.update { it.copy(error = null) }
     }
 
+    fun updateListHistory(list: UiState<List<ListeningHistoryDomain>>) {
+        _uiState.update { it.copy(listHistory = list) }
+    }
+
     private fun observeNetworkStatus() {
         networkMonitor.networkState
             .onEach { if (it.shouldRefresh) onRefresh() }
@@ -102,8 +103,8 @@ class HomeViewModel @Inject constructor(
 
     fun getListeningHistory() {
         viewModelScope.launch {
-            _getListeningHistory.value = UiState.Loading
-            _getListeningHistory.value = historyUseCase.getListRecentHistoryUseCase.invoke().toUiState()
+            updateListHistory(UiState.Loading)
+            updateListHistory(historyUseCase.getListRecentHistoryUseCase.invoke().toUiState())
         }
     }
     fun onRefresh() = launch {

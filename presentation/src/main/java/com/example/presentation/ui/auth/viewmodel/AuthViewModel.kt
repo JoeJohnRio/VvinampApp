@@ -59,7 +59,11 @@ class AuthViewModel @Inject constructor(
                 val user = result.getOrNull()
                 // Assuming RegisteredUser data class has accessToken and refreshToken properties
                 user?.let {
-                    authStore.saveTokens(it.accessToken, it.refreshToken)
+                    //joel123 change
+                    authStore.saveTokens(it.accessToken
+//                            + "test"
+                        ,
+                        it.refreshToken)
                 }
             }
         }

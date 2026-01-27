@@ -1,15 +1,15 @@
 package com.example.data.api.history
 
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.graphql.ListRecentHistoryQuery
 import com.example.graphql.type.ContentType
 import com.example.domain.entity.enum.ContentType as DomainContentType
 
 
-fun List<ListRecentHistoryQuery.ListRecentHistory?>.toDomain(): List<ListeningHistory> {
+fun List<ListRecentHistoryQuery.ListRecentHistory?>.toDomain(): List<ListeningHistoryDomain> {
     return this.mapNotNull { data ->
         data?.let {
-            ListeningHistory(
+            ListeningHistoryDomain(
                 id = data.id,
                 playedAt = data.playedAt.toString(),
                 progress = data.progress ?: 0,

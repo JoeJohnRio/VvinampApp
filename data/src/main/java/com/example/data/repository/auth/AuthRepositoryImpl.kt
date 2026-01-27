@@ -31,8 +31,6 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout() {
         authStore.clear() // Just call your existing clear function
         var x = authStore.getAccessToken()
-
-        Log.d("joel123", x.toString())
     }
 
 }

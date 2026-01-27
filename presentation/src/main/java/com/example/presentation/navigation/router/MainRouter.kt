@@ -1,6 +1,6 @@
 package com.example.presentation.navigation.router
 
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.MainDestination
 
@@ -16,7 +16,7 @@ class MainRouter(
     }
 
     fun navigateToArtistPage(
-        history: ListeningHistory
+        history: ListeningHistoryDomain
     ) {
         mainNavigator.navigate(MainDestination.Artist(history))
     }

@@ -38,7 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import coil.size.Scale
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.presentation.ui.home.HomeEvent
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.ui.theme.TSBodyMediumWhite
@@ -49,7 +49,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun ListeningHistoryCard(
-    history: ListeningHistory,
+    history: ListeningHistoryDomain,
     modifier: Modifier = Modifier,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -139,7 +139,7 @@ private fun HistoryHomeItem(
 
 @Composable
 fun ListeningHistoryGrid(
-    historyList: List<ListeningHistory>,
+    historyList: List<ListeningHistoryDomain> = emptyList()
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),

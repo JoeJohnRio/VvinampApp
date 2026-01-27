@@ -13,7 +13,6 @@ import javax.inject.Inject
 class AuthApiImpl @Inject constructor(
     private val apolloClient: ApolloClient
 ) : AuthApi {
-
     override suspend fun register(user: User): Result<RegisterMutation.Register> {
         return apolloClient.safeMutation(
             RegisterMutation(

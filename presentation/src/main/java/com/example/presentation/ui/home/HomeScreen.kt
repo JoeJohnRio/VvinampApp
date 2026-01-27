@@ -21,11 +21,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.presentation.ui.home.history.ListeningHistoryGrid
 import com.example.presentation.navigation.router.MainRouter
-import com.example.presentation.ui.main.MainUiEvent
+import com.example.presentation.ui.widget.LoadingScreen
 import com.example.presentation.ui.widget.SnackbarStyledHost
+import com.example.presentation.util.Render
 import com.example.presentation.util.UiState
 import com.example.presentation.util.preview.PreviewContainer
 
@@ -35,43 +36,12 @@ fun HomePage(
     mainRouter: MainRouter,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
-    val lazyGridState = rememberLazyGridState()
-    val context = LocalContext.current
-    val uiState by viewModel.uiState.collectAsState()
-    val getListRecentHistory by viewModel.getListeningHistory.collectAsState()
-
-
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HomeUiEvent.NavigateToArtistPage -> {
                     mainRouter.navigateToArtistPage(event.history)
                 }
-            }
-        }
-    }
-
-    LaunchedEffect(getListRecentHistory) {
-        when (getListRecentHistory) {
-            is UiState.Error -> {
-                Toast.makeText(context, "error", Toast.LENGTH_SHORT).show()
-
-                viewModel.setLoading(false)
-            }
-
-            UiState.Idle -> {
-                viewModel.setLoading(false)
-            }
-
-            UiState.Loading -> {
-                viewModel.setLoading(true)
-            }
-
-            is UiState.Success -> {
-                viewModel.setLoading(false)
-
-                Toast.makeText(context, "Jalan nih", Toast.LENGTH_SHORT).show()
-                val data = (getListRecentHistory as UiState.Success<List<ListeningHistory>>).data
             }
         }
     }
@@ -83,14 +53,15 @@ fun HomePage(
 private fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val historyState by viewModel.getListeningHistory.collectAsState()
-    val historyList =
-        if (historyState is UiState.Success) (historyState as UiState.Success<List<ListeningHistory>>).data else emptyList()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+    val currentState = viewModel.uiState.value.listHistory
 
     LaunchedEffect(Unit) {
-        viewModel.getListeningHistory()
+        if (currentState !is UiState.Success) {
+            viewModel.getListeningHistory()
+        }
     }
 
     Scaffold(
@@ -107,8 +78,16 @@ private fun HomeScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            ListeningHistoryGrid(
-                historyList = historyList,
+            uiState.listHistory.Render(
+                onSuccess = {
+                    ListeningHistoryGrid(it)
+                },
+                onLoading = {
+                    LoadingScreen()
+                },
+                onError = {
+                    Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+                }
             )
         }
     }

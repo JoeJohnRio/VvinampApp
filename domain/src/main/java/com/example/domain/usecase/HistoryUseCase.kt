@@ -1,6 +1,6 @@
 package com.example.domain.usecase
 
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.repository.HistoryRepository
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ class HistoryUseCase @Inject constructor(
 class GetListRecentHistoryUseCase @Inject constructor(
     private val historyRepository: HistoryRepository
 ) {
-    suspend operator fun invoke(): Result<List<ListeningHistory>> {
+    suspend operator fun invoke(): Result<List<ListeningHistoryDomain>> {
         return historyRepository.listRecentHistory()
     }
 }

@@ -23,3 +23,7 @@ type UserFollow {
   user: User!
   artist: Artist!
 }
+
+extend type Query {
+  me: User!
+}

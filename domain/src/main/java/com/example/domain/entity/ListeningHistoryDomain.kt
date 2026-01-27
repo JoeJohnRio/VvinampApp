@@ -4,7 +4,7 @@ import com.example.domain.entity.enum.ContentType
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ListeningHistory(
+data class ListeningHistoryDomain(
     val id: String,
     val playedAt: String,
     val progress: Int,

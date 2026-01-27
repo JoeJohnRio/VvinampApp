@@ -42,7 +42,7 @@ class NetworkModule {
     @Provides
     fun provideApolloClient(client: OkHttpClient): ApolloClient {
         return ApolloClient.Builder()
-            .serverUrl(BuildConfig.BASE_URL + BuildConfig.BASE_URL_GRAPHQL) // Your GraphQL endpoint
+            .serverUrl(BuildConfig.BASE_URL + BuildConfig.BASE_URL_GRAPHQL)
             .okHttpClient(client)
             .build()
     }

@@ -1,7 +1,7 @@
 package com.example.domain.repository
 
-import com.example.domain.entity.ListeningHistory
+import com.example.domain.entity.ListeningHistoryDomain
 
 interface HistoryRepository {
-    suspend fun listRecentHistory(): Result<List<ListeningHistory>>
+    suspend fun listRecentHistory(): Result<List<ListeningHistoryDomain>>
 }
