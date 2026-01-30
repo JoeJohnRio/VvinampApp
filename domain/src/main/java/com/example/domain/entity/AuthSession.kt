@@ -3,5 +3,5 @@ package com.example.domain.entity
 data class AuthSession(
     val accessToken: String,
     val refreshToken: String?,
-    val isLoggedIn: Boolean = true
+    val expiresAt: String
 )

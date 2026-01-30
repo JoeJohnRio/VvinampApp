@@ -23,12 +23,14 @@ class DataStoreAuthStore @Inject constructor(
     private companion object {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        val EXPIRES_AT = stringPreferencesKey("expires_at")
     }
 
-    override suspend fun saveTokens(access: String, refresh: String?) {
+    override suspend fun saveTokens(access: String, refresh: String?, expiresAt: String) {
         context.dataStore.edit { preferences ->
-            preferences[ACCESS_TOKEN] = access
+            preferences[ACCESS_TOKEN] = access + "joel123"
             refresh?.let { preferences[REFRESH_TOKEN] = it }
+            preferences[EXPIRES_AT] = expiresAt
         }
     }
 
@@ -40,13 +42,18 @@ class DataStoreAuthStore @Inject constructor(
         return context.dataStore.data.first()[REFRESH_TOKEN]
     }
 
+    override suspend fun getExpiresAt(): String? {
+        return context.dataStore.data.first()[EXPIRES_AT]
+    }
+
     override fun getSession(): Flow<AuthSession?> {
         return context.dataStore.data.map { preferences ->
             val access = preferences[ACCESS_TOKEN]
             val refresh = preferences[REFRESH_TOKEN]
+            val expiresAt = preferences[EXPIRES_AT]
 
-            if (access != null) {
-                AuthSession(access, refresh)
+            if (access != null && expiresAt != null) {
+                AuthSession(access, refresh, expiresAt)
             } else null
         }
     }

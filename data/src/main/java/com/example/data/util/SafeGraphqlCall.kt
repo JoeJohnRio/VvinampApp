@@ -45,8 +45,6 @@ suspend fun <D : Query.Data, T> ApolloClient.safeQuery(
 ): Result<T> {
     return try {
         val response = this.query(query).execute()
-//joel123 change
-        Log.d("joel123 1", response.errors.toString())
         when {
             response.hasErrors() -> Result.failure(
                 ApolloGraphQLException(response.errors.orEmpty())
@@ -66,7 +64,6 @@ suspend fun <D : Query.Data, T> ApolloClient.safeQuery(
             }
         }
     } catch (e: Exception) {
-        Log.d("joel123 2", e.toString())
         Result.failure(e)
     }
 }

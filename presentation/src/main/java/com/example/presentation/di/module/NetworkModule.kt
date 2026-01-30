@@ -18,6 +18,7 @@ import com.apollographql.apollo.network.okHttpClient
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.data.api.auth.AuthInterceptor
+import com.example.data.api.auth.TokenAuthenticator
 import com.example.data.datasource.local.DataStoreAuthStore
 import com.example.data.repository.auth.AuthStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -51,7 +52,8 @@ class NetworkModule {
     @Singleton
     fun provideOkHttpClient(
         @ApplicationContext context: Context,
-        authInterceptor: AuthInterceptor // Inject here
+        authInterceptor: AuthInterceptor,
+        tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient {
         val chucker = ChuckerInterceptor.Builder(context)
             .collector(ChuckerCollector(context))
@@ -59,6 +61,7 @@ class NetworkModule {
 
         return OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
+            .authenticator(tokenAuthenticator)
             .addInterceptor(chucker)
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()

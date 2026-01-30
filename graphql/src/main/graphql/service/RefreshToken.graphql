@@ -1,0 +1,9 @@
+mutation RefreshToken($refreshToken: String!) {
+  refreshToken(refreshToken: $refreshToken) {
+        session {
+            accessToken
+            refreshToken
+            expiresAt
+        }
+    }
+}

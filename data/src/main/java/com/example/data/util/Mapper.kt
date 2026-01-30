@@ -18,6 +18,6 @@ fun LoginQuery.Login.toDomain(): AuthSession {
     return AuthSession(
         accessToken = session.accessToken,
         refreshToken = session.refreshToken,
-        isLoggedIn = true
+        expiresAt = session.expiresAt
     )
 }
