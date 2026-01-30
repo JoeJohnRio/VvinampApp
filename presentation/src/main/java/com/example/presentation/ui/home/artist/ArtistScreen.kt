@@ -1,6 +1,5 @@
 package com.example.presentation.ui.home.artist
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,41 +33,57 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.entity.ListeningHistoryDomain
-import com.example.presentation.util.UiState
+import com.example.domain.entity.artist.ArtistProfileDomain
+import com.example.domain.entity.song.TopReleasesDomain
+import com.example.domain.entity.song.TopSongsDomain
+import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.util.orErrorNoText
+import kotlinx.coroutines.delay
 
 @Composable
-fun SpotifyArtistScreen(
+fun ArtistScreen(
     viewModel: ArtistViewModel = hiltViewModel(),
     history: ListeningHistoryDomain,
     onBackClick: () -> Unit
 ) {
-    val scrollState = rememberLazyListState()
-    val headerHeightPx = with(LocalDensity.current) { 300.dp.toPx() }
-    val artistScreenData by viewModel.getArtistScreenData.collectAsState()
-    val context = LocalContext.current
-
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(history) {
+        viewModel.clearUiState()
         viewModel.getArtistScreenData(history.contentId)
     }
 
-    when (val state = artistScreenData) {
-        UiState.Idle -> {}
-        UiState.Loading -> {}
-        is UiState.Success -> {
-            Toast.makeText(context, state.data.artistProfile?.name, Toast.LENGTH_SHORT).show()
+    ScreenWrapper(
+        isLoading = uiState.isLoading,
+        error = uiState.error,
+        content = {
+            uiState.artistProfile?.let {
+                ArtistProfileContent(
+                    artistProfile = it,
+                    topSongs = uiState.topSongs,
+                    topReleases = uiState.topReleases,
+                    onBackClick = onBackClick
+                )
+            }
         }
-        is UiState.Error -> {
-            Toast.makeText(context, state.exception.message, Toast.LENGTH_SHORT).show()
-        }
-    }
+    )
+}
+
+@Composable
+fun ArtistProfileContent(
+    artistProfile: ArtistProfileDomain,
+    topSongs: TopSongsDomain?,
+    topReleases: TopReleasesDomain?,
+    onBackClick: () -> Unit
+) {
+    val scrollState = rememberLazyListState()
+    val headerHeightPx = with(LocalDensity.current) { 300.dp.toPx() }
 
     val collapseFraction by remember {
         derivedStateOf {
@@ -76,15 +91,18 @@ fun SpotifyArtistScreen(
             else (scrollState.firstVisibleItemScrollOffset / headerHeightPx).coerceIn(0f, 1f)
         }
     }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.systemBars
     ) { innerPadding ->
-        Box(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()) {
+        Box(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+        ) {
             ArtistImage(
-                imageUrl = history.contentImage,
+                imageUrl = artistProfile.profileImage.orErrorNoText(),
                 modifier = Modifier
                     .height(300.dp)
                     .graphicsLayer {
@@ -113,7 +131,7 @@ fun SpotifyArtistScreen(
             }
 
             TopNavigation(
-                title = history.contentName,
+                title = artistProfile.name.orErrorNoText(),
                 alpha = collapseFraction,
                 onBackClick = {
                     onBackClick()

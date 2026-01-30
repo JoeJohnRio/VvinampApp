@@ -6,7 +6,7 @@ import androidx.navigation3.runtime.NavKey
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.MainDestination
 import com.example.presentation.navigation.router.MainRouter
-import com.example.presentation.ui.home.artist.SpotifyArtistScreen
+import com.example.presentation.ui.home.artist.ArtistScreen
 import com.example.presentation.ui.settings.SettingsScreen
 
 
@@ -26,7 +26,7 @@ fun EntryProviderScope<NavKey>.MainGraph(
     }
 
     entry<MainDestination.Artist> { key ->
-        SpotifyArtistScreen(
+        ArtistScreen(
             history = key.history,
             onBackClick = mainRouter::navigateBack
         )
