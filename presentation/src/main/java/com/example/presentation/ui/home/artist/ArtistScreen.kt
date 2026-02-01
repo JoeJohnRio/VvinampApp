@@ -3,6 +3,7 @@ package com.example.presentation.ui.home.artist
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -29,6 +30,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -43,8 +45,10 @@ import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.theme.TSHeadlineMediumWhite
+import com.example.presentation.util.ListenerUtils
 import com.example.presentation.util.orErrorNoText
-import kotlinx.coroutines.delay
 
 @Composable
 fun ArtistScreen(
@@ -64,6 +68,9 @@ fun ArtistScreen(
         error = uiState.error,
         content = {
             uiState.artistProfile?.let {
+//                SpotifyArtistScreen(
+//                    artistProfile = it.profileImage.orErrorNoText()
+//                )
                 ArtistProfileContent(
                     artistProfile = it,
                     topSongs = uiState.topSongs,
@@ -83,7 +90,43 @@ fun ArtistProfileContent(
     onBackClick: () -> Unit
 ) {
     val scrollState = rememberLazyListState()
-    val headerHeightPx = with(LocalDensity.current) { 300.dp.toPx() }
+    val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
+    val density = LocalDensity.current
+    val topBarJourney: Pair<Float, Float> = Pair(
+        with(density) { 215.dp.toPx() },
+        with(density) { 225.dp.toPx() }
+    )
+    val topBarRange = topBarJourney.second - topBarJourney.first
+
+    val topBarProgress by remember {
+        derivedStateOf {
+            if (scrollState.firstVisibleItemIndex > 0) {
+                1f
+            } else {
+                val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
+                val progress = (currentScroll - topBarJourney.first) / topBarRange
+                progress.coerceIn(0f, 1f)
+            }
+        }
+    }
+
+    val topBarNameJourney: Pair<Float, Float> = Pair(
+        with(density) { 225.dp.toPx() },
+        with(density) { 250.dp.toPx() }
+    )
+    val topBarNameRange = topBarNameJourney.second - topBarNameJourney.first
+
+    val topBarNameProgress by remember {
+        derivedStateOf {
+            if (scrollState.firstVisibleItemIndex > 0) {
+                1f
+            } else {
+                val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
+                val progress = (currentScroll - topBarNameJourney.first) / topBarNameRange
+                progress.coerceIn(0f, 1f)
+            }
+        }
+    }
 
     val collapseFraction by remember {
         derivedStateOf {
@@ -102,27 +145,56 @@ fun ArtistProfileContent(
                 .fillMaxSize()
         ) {
             ArtistImage(
-                imageUrl = artistProfile.profileImage.orErrorNoText(),
+                artistProfile = artistProfile,
+                artistNameProgress = topBarProgress,
+                collapseFraction = collapseFraction,
                 modifier = Modifier
                     .height(300.dp)
                     .graphicsLayer {
-                        translationY = -scrollState.firstVisibleItemScrollOffset * 0.4f
-                        alpha = 1f - collapseFraction
+                        translationY = -scrollState.firstVisibleItemScrollOffset * 1f
                     }
             )
 
-            LazyColumn(state = scrollState, modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier.fillMaxSize()
+            ) {
                 item {
                     Spacer(Modifier.height(300.dp))
                 }
+
                 item {
-                    Text(
-                        text = "ArtistProfile",
-                        fontSize = 50.sp
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(MaterialTheme.colorScheme.onPrimary)
+                            .padding(
+                                start = 16.dp,
+                                top = 16.dp,
+                            )
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            text = "${ListenerUtils.formatCompact(artistProfile.monthlyListeners.toLong())} monthly listeners",
+                            style = TSDisplayMediumWhite().copy(
+                                fontSize = 12.sp
+                            )
+                        )
+
+                        ArtistActionsRow(
+                            artistProfile = artistProfile,
+                            isFollowing = true,
+                            onFollowClick = { /* Handle follow click */ },
+                            onPlayClick = { /* Handle play click */ },
+                            onShuffleClick = { /* Handle shuffle click */ }
+                        )
+                    }
                 }
                 items(100) {
                     Text(
+                        modifier = Modifier
+                            .background(Color.Black)
+                            .fillMaxWidth(),
                         text = "song",
                         fontSize = 10.sp
                     )
@@ -132,7 +204,8 @@ fun ArtistProfileContent(
 
             TopNavigation(
                 title = artistProfile.name.orErrorNoText(),
-                alpha = collapseFraction,
+                topBarAlpha = topBarProgress,
+                topBarNameAlpha = topBarNameProgress,
                 onBackClick = {
                     onBackClick()
                 }
@@ -143,22 +216,24 @@ fun ArtistProfileContent(
 
 @Composable
 fun ArtistImage(
-    imageUrl: String, // Replace with your image source
-    modifier: Modifier = Modifier
+    artistProfile: ArtistProfileDomain, // Replace with your image source
+    modifier: Modifier = Modifier,
+    collapseFraction: Float,
+    artistNameProgress: Float
 ) {
+
+    Image(
+        painter = rememberAsyncImagePainter(artistProfile.profileImage),
+        contentDescription = null,
+        contentScale = ContentScale.Crop,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+    )
+
     Box(
         modifier = modifier
-            .fillMaxWidth()
-            .background(Color.DarkGray) // Placeholder
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(imageUrl),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier.fillMaxSize()
-        )
-        // Optional: Add a bottom-to-top gradient so the text
-        // in the list remains readable as it scrolls up
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -168,18 +243,44 @@ fun ArtistImage(
                         1f to Color.Black.copy(alpha = 0.5f)
                     )
                 )
+                .graphicsLayer {
+                    alpha = 1f - collapseFraction
+                }
         )
+        Column(
+            modifier = Modifier
+                .align(
+                    Alignment.BottomStart
+                )
+                .alpha(
+                    alpha = 1f - artistNameProgress
+                )
+                .padding(
+                    start = 12.dp,
+                    bottom = 18.dp
+                )
+        ) {
+            Text(
+                text = artistProfile.name,
+                style = TSHeadlineMediumWhite().copy(
+                    fontSize = 50.sp
+                )
+            )
+        }
     }
 }
 
 @Composable
 fun TopNavigation(
     title: String,
-    alpha: Float, // Passed from the scroll logic (0f to 1f)
-    onBackClick: () -> Unit
+    topBarAlpha: Float, // Passed from the scroll logic (0f to 1f)
+    onBackClick: () -> Unit,
+    topBarNameAlpha: Float
 ) {
     Surface(
-        color = Color.Black.copy(alpha = alpha),
+        color = Color.Black.copy(
+            alpha = topBarAlpha
+        ),
         contentColor = Color.White,
         modifier = Modifier
             .fillMaxWidth()
@@ -195,15 +296,13 @@ fun TopNavigation(
                 Icon(Icons.Default.ArrowBack, contentDescription = "Back")
             }
 
-            // The title only becomes visible as the alpha increases
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .graphicsLayer {
-                        // Only show title when the background is mostly opaque
-                        this.alpha = if (alpha > 0.8f) 1f else 0f
+                        this.alpha = topBarNameAlpha
                     }
             )
         }

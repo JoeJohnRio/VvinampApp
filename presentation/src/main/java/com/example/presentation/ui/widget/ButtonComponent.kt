@@ -245,7 +245,7 @@ fun ButtonVariableOutlined(
     textStyle: TextStyle = TSBodyMediumWhite().copy(color = textColor),
     containerColor: Color = MaterialTheme.colorScheme.onPrimary,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
-    buttonHeight: Dp = 50.dp
+    buttonHeight: Dp = 45.dp
 ) {
     OutlinedButton(
         onClick = onClick,

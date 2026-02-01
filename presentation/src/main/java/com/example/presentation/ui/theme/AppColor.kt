@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 //}
 
 object AppColours {
-    val PrimaryGreen = Color(0xFFBB741D)
+    val PrimaryGreen = Color(0xFF1DB954)
     val OnPrimaryBlack = Color(0xff121212)
     val Outline = Color(0xFF808080)
     val OffWhite = Color(0xFFF5F5F5)
