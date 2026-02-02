@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.artist
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +23,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,11 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.entity.artist.ArtistProfileDomain
-import com.example.domain.entity.artist.artistDummy
+import com.example.domain.entity.artist.artistProfileDummy
 import com.example.presentation.R
+import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableOutlined
+import com.example.presentation.util.ListenerUtils
 import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
@@ -48,61 +53,80 @@ fun ArtistActionsRow(
     onShuffleClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = modifier
+    Column(
+        modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .background(MaterialTheme.colorScheme.onPrimary)
+            .padding(
+                start = 16.dp,
+                top = 16.dp,
+            )
     ) {
-        ArtistVerticalVideoFeedPreview(imageUrl = artistProfile.profileImage.orEmpty())
-
-        Spacer(modifier = Modifier.width(24.dp))
-
-        ButtonVariableOutlined(
-            buttonHeight = 45.dp,
-            contentPadding = PaddingValues(horizontal = 25.dp),
-            text = if (isFollowing) "Following" else "Follow",
-            textStyle = MaterialTheme.typography.labelLarge.copy(
-                color = MaterialTheme.colorScheme.inversePrimary,
-                fontWeight = FontWeight.Bold
-            ),
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = "${ListenerUtils.formatCompact(artistProfile.monthlyListeners.toLong())} monthly listeners",
+            style = TSDisplayMediumWhite().copy(
+                fontSize = 12.sp
+            )
         )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        IconButton(onClick = { /* Open Menu */ }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "More",
-                tint = Color.Gray
-            )
-        }
-
-        Spacer(modifier = Modifier.weight(1f)) // Pushes play/shuffle to the right
-
-        IconButton(onClick = onShuffleClick) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_shuffle), // Use a shuffle drawable
-                contentDescription = "Shuffle",
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(28.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.width(16.dp)) // Pushes play/shuffle to the right
-
-        FloatingActionButton(
-            onClick = onPlayClick,
-            shape = CircleShape,
-            containerColor = Color(0xFF1DB954), // Spotify Green
-            contentColor = Color.Black,
-            modifier = Modifier.size(56.dp)
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Filled.PlayArrow,
-                contentDescription = "Play",
-                modifier = Modifier.size(32.dp)
+            ArtistVerticalVideoFeedPreview(imageUrl = artistProfile.profileImage.orEmpty())
+
+            Spacer(modifier = Modifier.width(24.dp))
+
+            ButtonVariableOutlined(
+                text = if (isFollowing) "Following" else "Follow",
+                buttonHeight = 30.dp,
+                contentPadding = PaddingValues(horizontal = 12.dp),
+                shape = RoundedCornerShape(4.dp),
+                textStyle = MaterialTheme.typography.labelLarge.copy(
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.inversePrimary,
+                    fontWeight = FontWeight.Bold
+                ),
             )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            IconButton(onClick = { /* Open Menu */ }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "More",
+                    tint = Color.Gray
+                )
+            }
+
+            Spacer(modifier = Modifier.weight(1f)) // Pushes play/shuffle to the right
+
+            IconButton(onClick = onShuffleClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_shuffle_second), // Use a shuffle drawable
+                    contentDescription = "Shuffle",
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(56.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp)) // Pushes play/shuffle to the right
+
+            FloatingActionButton(
+                onClick = onPlayClick,
+                shape = CircleShape,
+                containerColor = Color(0xFF1DB954), // Spotify Green
+                contentColor = Color.Black,
+                modifier = Modifier.size(56.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.PlayArrow,
+                    contentDescription = "Play",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
         }
     }
 }
@@ -136,7 +160,7 @@ fun ArtistVerticalVideoFeedPreview(imageUrl: String) {
 @Preview
 @Composable
 fun ArtistActionsRowPreview() {
-    val michaelJacksonProfile = artistDummy
+    val michaelJacksonProfile = artistProfileDummy
 
     PreviewTheme {
         Column(

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,10 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -233,13 +236,13 @@ fun ButtonOutlined(
     }
 }
 
-
 @Composable
 fun ButtonVariableOutlined(
     text: String = "",
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     enabled: Boolean = true,
+    shape: Shape = RoundedCornerShape(25.dp),
     outlineColor: Color = MaterialTheme.colorScheme.outline,
     textColor: Color = MaterialTheme.colorScheme.inversePrimary,
     textStyle: TextStyle = TSBodyMediumWhite().copy(color = textColor),
@@ -252,7 +255,7 @@ fun ButtonVariableOutlined(
         modifier = modifier
             .height(buttonHeight),
         enabled = enabled,
-        shape = RoundedCornerShape(25.dp),
+        shape = shape,
         border = BorderStroke(1.dp, outlineColor),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = containerColor
@@ -382,7 +385,19 @@ private fun ButtonsPreview() {
                 icon = painterResource(R.drawable.ic_email),
                 iconTint = AppColours.OnPrimaryBlack
             )
-
+            Spacer(
+                Modifier.height(12.dp)
+            )
+            ButtonVariableOutlined(
+                text = "Follow",
+                buttonHeight = 45.dp,
+                contentPadding = PaddingValues(horizontal = 15.dp),
+                shape = RoundedCornerShape(4.dp),
+                textStyle = TSBodyMediumWhite().copy(
+                    color = MaterialTheme.colorScheme.inversePrimary,
+                    fontWeight = FontWeight.Bold
+                ),
+            )
             ButtonSolidCloseIconAndText(
                 modifier = Modifier.padding(top = 12.dp),
                 text = "Logout",

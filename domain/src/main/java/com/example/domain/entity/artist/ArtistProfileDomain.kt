@@ -12,7 +12,7 @@ data class ArtistProfileDomain(
     val monthlyListeners: Int,
 )
 
-val artistDummy = ArtistProfileDomain(
+val artistProfileDummy = ArtistProfileDomain(
     id = "mj_001",
     name = "Michael Jackson",
     bio = "The King of Pop. One of the most significant cultural figures of the 20th century and one of the greatest entertainers in the history of music.",

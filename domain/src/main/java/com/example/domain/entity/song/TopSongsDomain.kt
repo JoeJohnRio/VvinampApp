@@ -9,3 +9,9 @@ data class TopSongsDomain(
     val error: String?,
     val tracks: List<TrackDomain>,
 )
+
+val topSongsDummy = TopSongsDomain(
+    success = true,
+    error = null,
+    tracks = trackDummy,
+)

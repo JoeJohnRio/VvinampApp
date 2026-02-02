@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -36,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,6 +47,7 @@ import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
+import com.example.presentation.R
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
@@ -59,7 +63,7 @@ fun ArtistScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(history) {
-        viewModel.clearUiState()
+//        viewModel.clearUiState()
         viewModel.getArtistScreenData(history.contentId)
     }
 
@@ -165,22 +169,10 @@ fun ArtistProfileContent(
 
                 item {
                     Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.onPrimary)
-                            .padding(
-                                start = 16.dp,
-                                top = 16.dp,
-                            )
-                    ) {
-                        Text(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            text = "${ListenerUtils.formatCompact(artistProfile.monthlyListeners.toLong())} monthly listeners",
-                            style = TSDisplayMediumWhite().copy(
-                                fontSize = 12.sp
-                            )
+                        modifier = Modifier.background(
+                            color = MaterialTheme.colorScheme.background
                         )
-
+                    ) {
                         ArtistActionsRow(
                             artistProfile = artistProfile,
                             isFollowing = true,
@@ -188,17 +180,27 @@ fun ArtistProfileContent(
                             onPlayClick = { /* Handle play click */ },
                             onShuffleClick = { /* Handle shuffle click */ }
                         )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        Text(
+                            modifier = Modifier.padding(start = 16.dp),
+                            text = stringResource(R.string.title_popular),
+                            style = TSHeadlineMediumWhite().copy(
+                                fontSize = 20.sp
+                            )
+                        )
+
+                        Spacer(Modifier.height(8.dp))
                     }
                 }
-                items(100) {
-                    Text(
-                        modifier = Modifier
-                            .background(Color.Black)
-                            .fillMaxWidth(),
-                        text = "song",
-                        fontSize = 10.sp
+                val listJoel123 = topSongs?.tracks.orEmpty() + topSongs?.tracks.orEmpty()
+                itemsIndexed(listJoel123) { index, song ->
+                    SongRow(
+                        song = song,
+                        index = index,
+                        imageUrlJoel123 = artistProfile.profileImage.orEmpty()
                     )
-//                SongRow(it)
                 }
             }
 
