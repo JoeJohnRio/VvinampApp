@@ -1,21 +1,23 @@
 package com.example.presentation.ui.home.artist
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -29,7 +31,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -39,6 +43,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -49,10 +54,12 @@ import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.presentation.R
 import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.util.ListenerUtils
+import com.example.presentation.ui.widget.ButtonVariableOutlined
 import com.example.presentation.util.orErrorNoText
+import com.example.presentation.util.verticalGradientEdge
 
 @Composable
 fun ArtistScreen(
@@ -96,6 +103,15 @@ fun ArtistProfileContent(
     val scrollState = rememberLazyListState()
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
     val density = LocalDensity.current
+
+    var isExpanded by remember { mutableStateOf(false) }
+
+    val displayTasks = if (isExpanded) {
+        topSongs?.tracks
+    } else {
+        topSongs?.tracks?.take(6)
+    }
+
     val topBarJourney: Pair<Float, Float> = Pair(
         with(density) { 215.dp.toPx() },
         with(density) { 225.dp.toPx() }
@@ -141,11 +157,9 @@ fun ArtistProfileContent(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        contentWindowInsets = WindowInsets.systemBars
     ) { innerPadding ->
         Box(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize()
         ) {
             ArtistImage(
@@ -194,17 +208,64 @@ fun ArtistProfileContent(
                         Spacer(Modifier.height(8.dp))
                     }
                 }
-                val listJoel123 = topSongs?.tracks.orEmpty() + topSongs?.tracks.orEmpty()
-                itemsIndexed(listJoel123) { index, song ->
-                    SongRow(
-                        song = song,
-                        index = index,
-                        imageUrlJoel123 = artistProfile.profileImage.orEmpty()
-                    )
+
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize()
+                            .heightIn(max = if (isExpanded) 1000.dp else 400.dp)
+                            .verticalGradientEdge(
+                                isExpanded = isExpanded,
+                                color = MaterialTheme.colorScheme.background
+                            )
+                    ) {
+                        displayTasks?.forEachIndexed { index, song ->
+                            SongRow(
+                                song = song,
+                                index = index,
+                                imageUrlJoel123 = artistProfile.profileImage.orEmpty()
+                            )
+                        }
+                    }
+                }
+
+                if (!isExpanded) {
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            ButtonVariableOutlined(
+                                text = stringResource(R.string.label_see_more),
+                                textStyle = TSDisplayMediumWhite().copy(
+                                    color = MaterialTheme.colorScheme.inversePrimary,
+                                    fontWeight = FontWeight.Bold
+                                ),
+                                buttonHeight = 25.dp,
+                                onClick = {
+                                    isExpanded = !isExpanded
+                                }
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    topReleases?.let {
+                        PopularReleasesContent(
+                            it
+                        )
+                    }
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(innerPadding.calculateBottomPadding()))
                 }
             }
 
             TopNavigation(
+                innerPadding = innerPadding,
                 title = artistProfile.name.orErrorNoText(),
                 topBarAlpha = topBarProgress,
                 topBarNameAlpha = topBarNameProgress,
@@ -274,39 +335,47 @@ fun ArtistImage(
 
 @Composable
 fun TopNavigation(
+    innerPadding: PaddingValues,
     title: String,
     topBarAlpha: Float, // Passed from the scroll logic (0f to 1f)
     onBackClick: () -> Unit,
     topBarNameAlpha: Float
 ) {
+    val surfaceHeight = 56.dp + innerPadding.calculateTopPadding()
     Surface(
-        color = Color.Black.copy(
+        color = MaterialTheme.colorScheme.background.copy(
             alpha = topBarAlpha
         ),
         contentColor = Color.White,
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(surfaceHeight)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter // Aligns the Row to the bottom
         ) {
-            IconButton(onClick = onBackClick) {
-                Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge,
+            Row(
                 modifier = Modifier
-                    .padding(start = 16.dp)
-                    .graphicsLayer {
-                        this.alpha = topBarNameAlpha
-                    }
-            )
+                    .fillMaxWidth()
+                    .height(56.dp)
+                    .padding(horizontal = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(onClick = onBackClick) {
+                    Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                }
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .graphicsLayer {
+                            this.alpha = topBarNameAlpha
+                        }
+                )
+            }
         }
     }
 }

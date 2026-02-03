@@ -105,7 +105,7 @@ fun ArtistActionsRow(
 
             IconButton(onClick = onShuffleClick) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_shuffle_second), // Use a shuffle drawable
+                    painter = painterResource(id = R.drawable.ic_shuffle), // Use a shuffle drawable
                     contentDescription = "Shuffle",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(56.dp)

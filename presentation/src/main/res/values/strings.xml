@@ -36,9 +36,13 @@
     <string name="title_email_or_username">Email or username</string>
     <string name="title_what_is_your_name">What\'s your name?</string>
     <string name="title_popular">Popular</string>
+    <string name="title_popular_releases">Popular Releases</string>
     <string name="title_password">Password</string>
     <string name="title_create_a_password">Create a password</string>
     <string name="title_what_is_your_date_of_birth">What\'s your date of birth?</string>
     <string name="title_what_is_your_gender">What\'s your gender?</string>
+    <string name="label_show_all">Show All</string>
+    <string name="label_see_more">See More</string>
+    <string name="label_see_discography">See discography</string>
 
 </resources>
