@@ -34,13 +34,13 @@ import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
 fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
-    Spacer(Modifier.height(16.dp))
 
     Column(
         modifier = Modifier.fillMaxWidth()
-            .padding(horizontal = 16.dp)
             .background(MaterialTheme.colorScheme.background)
+            .padding(horizontal = 16.dp)
     ) {
+        Spacer(Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -74,13 +74,13 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
+                    modifier = Modifier
+                        .size(80.dp),
                     painter = rememberAsyncImagePainter(
                         model = album.coverArt,
                         placeholder = painterResource(R.drawable.bg_image),
                     ),
                     contentDescription = null,
-                    modifier = Modifier
-                        .size(80.dp),
                     contentScale = ContentScale.Crop
                 )
 

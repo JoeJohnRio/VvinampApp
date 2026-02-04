@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -54,7 +52,6 @@ import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.presentation.R
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableOutlined
@@ -213,31 +210,34 @@ fun ArtistProfileContent(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .animateContentSize()
-                            .heightIn(max = if (isExpanded) 1000.dp else 400.dp)
-                            .verticalGradientEdge(
-                                isExpanded = isExpanded,
-                                color = MaterialTheme.colorScheme.background
-                            )
+                            .background(MaterialTheme.colorScheme.background)
                     ) {
-                        displayTasks?.forEachIndexed { index, song ->
-                            SongRow(
-                                song = song,
-                                index = index,
-                                imageUrlJoel123 = artistProfile.profileImage.orEmpty()
-                            )
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.background)
+                                .animateContentSize()
+                                .heightIn(max = if (isExpanded) 1000.dp else 400.dp)
+                                .verticalGradientEdge(
+                                    isExpanded = isExpanded,
+                                    color = MaterialTheme.colorScheme.background
+                                )
+                        ) {
+                            displayTasks?.forEachIndexed { index, song ->
+                                SongRow(
+                                    song = song,
+                                    index = index,
+                                    imageUrlJoel123 = artistProfile.profileImage.orEmpty()
+                                )
+                            }
                         }
-                    }
-                }
 
-                if (!isExpanded) {
-                    item {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
                         ) {
                             ButtonVariableOutlined(
-                                text = stringResource(R.string.label_see_more),
+                                text = if (!isExpanded) "See more" else "See less",
                                 textStyle = TSDisplayMediumWhite().copy(
                                     color = MaterialTheme.colorScheme.inversePrimary,
                                     fontWeight = FontWeight.Bold
@@ -248,6 +248,8 @@ fun ArtistProfileContent(
                                 }
                             )
                         }
+
+                        Spacer(Modifier.height(8.dp))
                     }
                 }
 
@@ -257,6 +259,10 @@ fun ArtistProfileContent(
                             it
                         )
                     }
+                }
+
+                item {
+                    ArtistAbout(artistProfile)
                 }
 
                 item {
