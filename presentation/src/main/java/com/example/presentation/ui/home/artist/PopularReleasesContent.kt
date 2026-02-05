@@ -110,7 +110,7 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
             }
         }
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(8.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -125,6 +125,8 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
                 ),
             )
         }
+
+        Spacer(Modifier.height(16.dp))
     }
 }
 

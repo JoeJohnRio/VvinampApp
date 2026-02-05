@@ -39,3 +39,19 @@ fun Modifier.verticalGradientEdge(color: Color) =
                 )
 
         }
+
+
+fun Modifier.verticalGradientTopEdge(color: Color) =
+    this
+        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        .drawWithContent {
+            drawContent()
+            drawRect(
+                brush = Brush.verticalGradient(
+                    0.1f to color, // Transparent
+                    1.0f to Color.Transparent // Opaque
+                ),
+                blendMode = BlendMode.DstIn
+            )
+
+        }

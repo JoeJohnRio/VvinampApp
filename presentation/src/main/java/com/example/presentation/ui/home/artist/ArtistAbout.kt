@@ -39,7 +39,7 @@ import com.example.presentation.util.preview.PreviewTheme
 import com.example.presentation.util.verticalGradientEdge
 
 @Composable
-fun ArtistAbout(artistProfile: ArtistProfileDomain) {
+fun ArtistAbout(artistProfile: ArtistProfileDomain = artistProfileDummy) {
     Column(
         modifier = Modifier.fillMaxWidth().padding(16.dp)
     ) {
@@ -60,7 +60,7 @@ fun ArtistAbout(artistProfile: ArtistProfileDomain) {
                 modifier = Modifier.fillMaxWidth()
                     .clip(RoundedCornerShape(4.dp))
                     .aspectRatio(1f)
-                    .verticalGradientEdge(Color.Black),
+                    .verticalGradientEdge(MaterialTheme.colorScheme.background),
                 painter = rememberAsyncImagePainter(
                     model = artistProfile.profileImage,
                     placeholder = painterResource(R.drawable.bg_image),
