@@ -11,9 +11,8 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
-import com.example.presentation.navigation.graph.MainDestination
 import com.example.presentation.navigation.router.MainRouter
-import com.example.presentation.ui.home.HomePage
+import com.example.presentation.ui.home.HomeScreen
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.navigation.toEntries
 
@@ -42,7 +41,7 @@ fun EntryProviderScope<NavKey>.BottomNavigationViewGraph(
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     entry<BottomNavDestination.Home> {
-        HomePage(
+        HomeScreen(
             mainRouter = mainRouter,
             viewModel = viewModel,
         )

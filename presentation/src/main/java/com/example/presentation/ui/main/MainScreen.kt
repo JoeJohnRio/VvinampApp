@@ -19,8 +19,6 @@ fun MainScreen(
     viewModel: MainViewModel = hiltViewModel(),
     mainRouter: MainRouter,
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {

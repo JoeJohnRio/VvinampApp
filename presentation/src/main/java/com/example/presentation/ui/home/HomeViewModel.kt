@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     val networkMonitor: NetworkMonitor,
     getMoviesWithSeparators: GetMoviesWithSeparators,
     val historyUseCase: HistoryUseCase
-): BaseViewModel() {
+) : BaseViewModel() {
 
     val movies: Flow<PagingData<MusicListItem>> = getMoviesWithSeparators.movies(
         pageSize = 90
@@ -55,33 +55,9 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
     init {
         observeNetworkStatus()
-    }
-
-    fun setLoading(isLoading: Boolean) {
-        // Use .update to atomically modify the state.
-        // 'it' refers to the current HomeUiState instance.
-        _uiState.update { currentState ->
-            currentState.copy(isLoading = isLoading)
-        }
-    }
-
-    fun setErrorMessage(message: String?) {
-        _uiState.update {
-            it.copy(
-                error = message,
-                isLoading = false // Typically, when an error occurs, loading should stop.
-            )
-        }
-    }
-
-    fun clearError() {
-        _uiState.update { it.copy(error = null) }
-    }
-
-    fun updateListHistory(list: UiState<List<ListeningHistoryDomain>>) {
-        _uiState.update { it.copy(listHistory = list) }
     }
 
     private fun observeNetworkStatus() {
@@ -90,23 +66,30 @@ class HomeViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun onLoadStateUpdate(loadState: CombinedLoadStates) {
-        val showLoading = loadState.refresh is LoadState.Loading
-
-        val error = when (val refresh = loadState.refresh) {
-            is LoadState.Error -> refresh.error.message
-            else -> null
-        }
-
-        _uiState.update { it.copy(isLoading = showLoading, error = error) }
-    }
-
     fun getListeningHistory() {
         viewModelScope.launch {
-            updateListHistory(UiState.Loading)
-            updateListHistory(historyUseCase.getListRecentHistoryUseCase.invoke().toUiState())
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            val result = historyUseCase.getListRecentHistoryUseCase.invoke()
+
+            result.onSuccess { data ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        listHistory = data
+                    )
+                }
+            }.onFailure {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = it.error ?: "Failed to get history data",
+                    )
+                }
+            }
         }
     }
+
     fun onRefresh() = launch {
         _refreshListState.emit(Unit)
     }
