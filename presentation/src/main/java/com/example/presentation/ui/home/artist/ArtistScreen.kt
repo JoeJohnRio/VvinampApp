@@ -3,33 +3,20 @@ package com.example.presentation.ui.home.artist
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
@@ -38,31 +25,38 @@ import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
+import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.orErrorNoText
 
 @Composable
 fun ArtistScreen(
-    viewModel: ArtistViewModel = hiltViewModel(),
+    artistViewModel: ArtistViewModel = hiltViewModel(),
+    playbackViewModel: PlaybackViewModel = hiltViewModel(),
     history: ListeningHistoryDomain,
     onBackClick: () -> Unit
 ) {
-    val uiState by viewModel.uiState.collectAsState()
+    val artistUiState by artistViewModel.uiState.collectAsState()
 
     LaunchedEffect(history) {
-        viewModel.getArtistScreenData(history.contentId)
+        artistViewModel.getArtistScreenData(history.contentId)
     }
 
     ScreenWrapper(
-        isLoading = uiState.isLoading,
-        error = uiState.error,
+        isLoading = artistUiState.isLoading,
+        error = artistUiState.error,
         content = {
-            uiState.artistProfile?.let {
+            artistUiState.artistProfile?.let {
                 ArtistProfileContent(
                     artistProfile = it,
-                    topSongs = uiState.topSongs,
-                    topReleases = uiState.topReleases,
-                    onBackClick = onBackClick
+                    topSongs = artistUiState.topSongs,
+                    topReleases = artistUiState.topReleases,
+                    onBackClick = onBackClick,
+                    onTrackClicked = { track ->
+                        playbackViewModel.onEvent(PlaybackUiEvent.TrackClicked(track))
+                    },
                 )
             }
         }
@@ -74,12 +68,12 @@ fun ArtistProfileContent(
     artistProfile: ArtistProfileDomain,
     topSongs: TopSongsDomain?,
     topReleases: TopReleasesDomain?,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onTrackClicked: (TrackDomain) -> Unit
 ) {
     val scrollState = rememberLazyListState()
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
     val density = LocalDensity.current
-
 
     val topBarJourney: Pair<Float, Float> = Pair(
         with(density) { 215.dp.toPx() },
@@ -172,7 +166,8 @@ fun ArtistProfileContent(
                     topSongs?.let {
                         TopSongsComponent(
                             topSongs = it,
-                            artistProfile = artistProfile
+                            artistProfile = artistProfile,
+                            onTrackClicked = onTrackClicked
                         )
                     }
                 }

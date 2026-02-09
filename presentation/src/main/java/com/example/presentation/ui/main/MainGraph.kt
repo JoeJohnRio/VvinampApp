@@ -11,24 +11,8 @@ import com.example.presentation.ui.settings.SettingsScreen
 
 
 @Composable
-fun EntryProviderScope<NavKey>.MainGraph(
-    mainRouter: MainRouter,
-    navigationState: NavigationState
-) {
+fun EntryProviderScope<NavKey>.MainGraph() {
     entry<MainDestination.NavigationBar> {
-        MainScreen(
-            mainRouter = mainRouter
-        )
-    }
-
-    entry<MainDestination.Settings> {
-        SettingsScreen()
-    }
-
-    entry<MainDestination.Artist> { key ->
-        ArtistScreen(
-            history = key.history,
-            onBackClick = mainRouter::navigateBack
-        )
+        MainScreen()
     }
 }

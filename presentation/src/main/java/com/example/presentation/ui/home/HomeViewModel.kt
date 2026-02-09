@@ -1,19 +1,15 @@
 package com.example.presentation.ui.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
 import com.example.presentation.entities.MusicListItem
 import com.example.presentation.util.singleSharedFlowJoel
 import com.example.presentation.ui.home.usecase.GetMoviesWithSeparators
-import com.example.presentation.util.UiState
-import com.example.presentation.util.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,17 +36,23 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<HomeUiEvent>()
+    private val _events = MutableSharedFlow<HomeEvent>()
     val events = _events.asSharedFlow()
 
     private val _refreshListState: MutableSharedFlow<Unit> = singleSharedFlowJoel()
     val refreshListState = _refreshListState.asSharedFlow()
 
-    fun onEvent(event: HomeEvent) {
+    fun onEvent(event: HomeUiEvent) {
         when (event) {
-            is HomeEvent.OnHistoryClicked -> {
+            is HomeUiEvent.OnHistoryClicked -> {
                 viewModelScope.launch {
-                    _events.emit(HomeUiEvent.NavigateToArtistPage(event.history))
+                    _events.emit(HomeEvent.NavigateToArtistScreen(event.history))
+                }
+            }
+
+            is HomeUiEvent.OnSettingsClicked -> {
+                viewModelScope.launch {
+                    _events.emit(HomeEvent.NavigateToSettingsScreen)
                 }
             }
         }
@@ -68,18 +70,22 @@ class HomeViewModel @Inject constructor(
 
     fun getListeningHistory() {
         viewModelScope.launch {
+            Log.d("joel123", "jalan 1")
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             val result = historyUseCase.getListRecentHistoryUseCase.invoke()
 
             result.onSuccess { data ->
+                Log.d("joel123", "jalan 2")
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        listHistory = data
+                        listHistory = data,
+                        error = null
                     )
                 }
             }.onFailure {
+                Log.d("joel123", "jalan 3")
                 _uiState.update {
                     it.copy(
                         isLoading = false,

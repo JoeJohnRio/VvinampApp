@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Brush
 
 fun Modifier.normalGradientBackground(): Modifier = this.background(
     brush = Brush.verticalGradient(
-        colors = listOf(AppColours.GradientTop, AppColours.GradientBottom)
+        colors = listOf(AppColours.GradientTop, AppColours.PitchBlack)
     )
 )
 

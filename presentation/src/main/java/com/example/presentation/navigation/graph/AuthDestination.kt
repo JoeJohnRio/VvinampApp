@@ -6,9 +6,6 @@ import kotlinx.serialization.Serializable
 
 sealed interface AuthDestination: NavKey {
     @Serializable
-    data object Search : AuthDestination
-
-    @Serializable
     data class MusicDetails(val musicId: Int) : AuthDestination
 
     @Serializable

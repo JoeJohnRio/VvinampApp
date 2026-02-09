@@ -1,52 +1,63 @@
 package com.example.presentation.ui.navigationbar
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.BottomNavDestination
-import com.example.presentation.navigation.graph.MainDestination
 import com.example.presentation.navigation.router.BottomNavRouter
-import com.example.presentation.ui.main.MainEvent
-import com.example.presentation.ui.main.MainViewModel
-import com.example.presentation.ui.widget.BottomNavigationBar
-import com.example.presentation.ui.widget.TopBar
+import com.example.presentation.ui.main.playback.PlaybackUiState
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun MainNavigationBarScreen(
-    mainViewModel: MainViewModel = hiltViewModel(),
+fun MainScreenContainer(
     bottomNavRouter: BottomNavRouter,
     navigationState: NavigationState,
+    playbackUiState: PlaybackUiState,
+    onClickPlay: () -> Unit = {},
     content: @Composable () -> Unit,
 ) {
-    val context = LocalContext.current
     val uiState = NavigationBarUiState()
+    val density = LocalDensity.current
+    val navBars = WindowInsets.navigationBars
+    val bottomPadding = navBars.asPaddingValues().calculateBottomPadding()
 
-    Scaffold(
-        topBar = {
-            TopBar(
-                "",
-                onSearchClick = {
-                    Toast.makeText(
-                        context,
-                        "Search clicked",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                },
-                onSettingsClick = {
-                    mainViewModel.onEvent(MainEvent.onSettingsClicked)
-                }
-            )
-        },
-        bottomBar = {
+// Convert the padding to DP to check the height
+    val isButtonNav = with(density) {
+        bottomPadding > 24.dp // Usually gesture bars are ~16dp-20dp, buttons are ~48dp+
+    }
+
+    Box(
+        Modifier
+            .fillMaxSize(1f)
+    ) {
+        content()
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(bottom = if (isButtonNav) bottomPadding else 0.dp)
+        ){
+            playbackUiState.currentlyPlaying?.let {
+                CurrentPlaybackComponent(
+                    currentlyPlaying = it,
+                    onClickPlay = onClickPlay,
+                    isPlaying = playbackUiState.isPlaying
+                )
+            }
+
             BottomNavigationBar(
                 items = uiState.bottomItems,
                 navigationState = navigationState,
@@ -63,14 +74,6 @@ fun MainNavigationBarScreen(
                     }
                 }
             )
-        }
-    ) { paddingValues ->
-        Box(
-            Modifier
-                .fillMaxSize(1f)
-                .padding(paddingValues)
-        ) {
-            content()
         }
     }
 }

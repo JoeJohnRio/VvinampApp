@@ -39,6 +39,7 @@ import com.example.presentation.util.verticalGradientEdge
 fun TopSongsComponent(
     artistProfile: ArtistProfileDomain,
     topSongs: TopSongsDomain,
+    onTrackClicked: (TrackDomain) -> Unit,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -78,7 +79,8 @@ fun TopSongsComponent(
                 SongRow(
                     song = song,
                     index = index,
-                    imageUrlJoel123 = artistProfile.profileImage.orEmpty()
+                    imageUrlJoel123 = artistProfile.profileImage.orEmpty(),
+                    onTrackClicked = onTrackClicked
                 )
             }
         }
@@ -109,8 +111,9 @@ fun TopSongsComponent(
 fun TopSongsComponentPreview() {
     PreviewTheme {
         TopSongsComponent(
+            artistProfile = artistProfileDummy,
             topSongs = topSongsDummy,
-            artistProfile = artistProfileDummy
+            onTrackClicked = {}
         )
     }
 }

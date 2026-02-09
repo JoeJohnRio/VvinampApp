@@ -1,18 +1,10 @@
 package com.example.presentation.ui.home.artist
 
 import androidx.lifecycle.viewModelScope
-import com.example.domain.entity.artist.ArtistScreenDomain
 import com.example.domain.usecase.ArtistUseCase
-import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
-import com.example.presentation.ui.home.HomeUiEvent
-import com.example.presentation.ui.home.HomeUiState
-import com.example.presentation.ui.home.usecase.GetMoviesWithSeparators
-import com.example.presentation.util.UiState
-import com.example.presentation.util.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow

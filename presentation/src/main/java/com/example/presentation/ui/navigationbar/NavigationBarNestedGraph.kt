@@ -1,7 +1,12 @@
 package com.example.presentation.ui.navigationbar
 
-import androidx.compose.material.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
@@ -11,20 +16,22 @@ import androidx.navigation3.ui.NavDisplay
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
-import com.example.presentation.navigation.router.MainRouter
+import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.HomeScreen
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.navigation.toEntries
+import com.example.presentation.ui.home.artist.ArtistScreen
+import com.example.presentation.ui.settings.SettingsScreen
 
 @Composable
 fun MainNavDisplay(
     navigationState: NavigationState,
     navigator: Navigator,
-    mainRouter: MainRouter
+    bottomNavRouter: BottomNavRouter
 ) {
     val entryProvider = entryProvider {
-        BottomNavigationViewGraph(
-            mainRouter = mainRouter
+        MainNavGraph(
+            bottomNavRouter = bottomNavRouter
         )
     }
     NavDisplay(
@@ -36,18 +43,24 @@ fun MainNavDisplay(
 }
 
 @Composable
-fun EntryProviderScope<NavKey>.BottomNavigationViewGraph(
-    mainRouter: MainRouter
+fun EntryProviderScope<NavKey>.MainNavGraph(
+    bottomNavRouter: BottomNavRouter
 ) {
     val viewModel: HomeViewModel = hiltViewModel()
     entry<BottomNavDestination.Home> {
         HomeScreen(
-            mainRouter = mainRouter,
+            bottomNavRouter = bottomNavRouter,
             viewModel = viewModel,
         )
     }
 
     entry<BottomNavDestination.Search> {
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.surface)
+        ) {
+
+        }
         Text(
             text = "Search",
             fontSize = 100.sp
@@ -72,6 +85,17 @@ fun EntryProviderScope<NavKey>.BottomNavigationViewGraph(
         Text(
             text = "Create",
             fontSize = 100.sp
+        )
+    }
+
+    entry<BottomNavDestination.Settings> {
+        SettingsScreen()
+    }
+
+    entry<BottomNavDestination.Artist> { key ->
+        ArtistScreen(
+            history = key.history,
+            onBackClick = bottomNavRouter::navigateBack
         )
     }
 }

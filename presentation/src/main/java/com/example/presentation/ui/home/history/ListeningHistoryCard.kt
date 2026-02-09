@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.entity.ListeningHistoryDomain
-import com.example.presentation.ui.home.HomeEvent
+import com.example.presentation.ui.home.HomeUiEvent
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.widget.ImageSize
@@ -36,7 +36,7 @@ fun ListeningHistoryCard(
 ) {
     Card(
         modifier = modifier.clickable {
-            homeViewModel.onEvent(HomeEvent.OnHistoryClicked(history))
+            homeViewModel.onEvent(HomeUiEvent.OnHistoryClicked(history))
         },
         shape = RoundedCornerShape(4.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),

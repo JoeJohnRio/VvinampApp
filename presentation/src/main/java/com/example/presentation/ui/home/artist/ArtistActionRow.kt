@@ -58,7 +58,9 @@ fun ArtistActionsRow(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.onPrimary)
             .padding(
-                start = 16.dp,
+                horizontal = 16.dp
+            )
+            .padding(
                 top = 16.dp,
             )
     ) {

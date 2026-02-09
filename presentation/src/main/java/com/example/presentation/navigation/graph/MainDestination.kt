@@ -9,14 +9,9 @@ sealed interface MainDestination: NavKey {
     data object NavigationBar : MainDestination
 
     @Serializable
-    data class Artist(val history: ListeningHistoryDomain) : MainDestination
-
-    @Serializable
     data object Root : MainDestination
 
     @Serializable
     data object Main : MainDestination
 
-    @Serializable
-    data object Settings : MainDestination
 }

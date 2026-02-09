@@ -115,10 +115,8 @@ fun EntryProviderScope<NavKey>.RootGraph(
 
         val navigatorMain = remember { Navigator(navigationStateMain) }
 
-        val routerMain = MainRouter(navigatorMain)
-
         val entryProviderAuth = entryProvider {
-            MainGraph(routerMain, navigationState)
+            MainGraph()
         }
         NavDisplay(
             entries = navigationStateMain.toEntries(entryProviderAuth),

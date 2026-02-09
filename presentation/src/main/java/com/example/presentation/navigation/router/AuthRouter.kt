@@ -7,10 +7,6 @@ import com.example.presentation.navigation.graph.AuthDestination
 class AuthRouter(
     private val navigator: Navigator
 ) {
-    fun navigateToSearch() {
-        navigator.navigate(AuthDestination.Search)
-    }
-
     fun navigateToAuthMethodSelectionPage() {
         navigator.navigate(AuthDestination.RegisterMethodSelection)
     }

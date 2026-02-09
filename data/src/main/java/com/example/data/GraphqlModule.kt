@@ -6,6 +6,8 @@ import com.example.data.api.auth.AuthApi
 import com.example.data.api.auth.AuthApiImpl
 import com.example.data.api.history.HistoryApi
 import com.example.data.api.history.HistoryApiImpl
+import com.example.data.api.playback.PlaybackApi
+import com.example.data.api.playback.PlaybackApiImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ abstract class GraphqlModule {
     abstract fun bindArtistApi(
         impl: ArtistApiImpl
     ): ArtistApi
+
+    @Binds
+    @Singleton
+    abstract fun bindPlaybackApi(
+        impl: PlaybackApiImpl
+    ): PlaybackApi
 }

@@ -21,7 +21,7 @@ fun ListeningHistoryGrid(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(list) { history ->
+        items(historyList) { history ->
             ListeningHistoryCard(history)
         }
     }

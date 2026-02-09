@@ -1,5 +1,6 @@
 package com.example.presentation.navigation.router
 
+import com.example.domain.entity.ListeningHistoryDomain
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
 
@@ -25,4 +26,19 @@ class BottomNavRouter(
     fun navigateToCreate() {
         navigator.navigate(BottomNavDestination.Create)
     }
+
+    fun navigateToArtistPage(
+        history: ListeningHistoryDomain
+    ) {
+        navigator.navigate(BottomNavDestination.Artist(history))
+    }
+
+    fun navigateToSettings() {
+        navigator.navigate(BottomNavDestination.Settings)
+    }
+
+    fun navigateBack() {
+        navigator.goBack()
+    }
+
 }

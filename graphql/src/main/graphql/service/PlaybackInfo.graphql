@@ -1,0 +1,7 @@
+query PlaybackInfo($trackId: ID!) {
+    playbackInfo(input: { trackId: $trackId }) {
+        hlsUrl
+        mp3Fallback
+        durationMs
+    }
+}

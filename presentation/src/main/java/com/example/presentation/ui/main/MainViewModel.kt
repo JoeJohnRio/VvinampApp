@@ -19,16 +19,6 @@ class MainViewModel @Inject constructor(
     private val _events = MutableSharedFlow<MainUiEvent>()
     val events = _events.asSharedFlow()
 
-    fun onEvent(event: MainEvent) {
-        when (event) {
-            is MainEvent.onSettingsClicked -> {
-                viewModelScope.launch {
-                    _events.emit(MainUiEvent.NavigateToSettings)
-                }
-            }
-        }
-    }
-
     val sessionState: StateFlow<SessionState> = authStore.getSession()
         .map { session ->
             if (session != null && session.accessToken.isNotBlank()) {

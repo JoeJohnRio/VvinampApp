@@ -140,6 +140,8 @@ dependencies {
     implementation(libs.navigation.viewmodel)
     implementation(libs.navigation.adaptive)
 
+    //media3
+    implementation(libs.bundles.media3)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
