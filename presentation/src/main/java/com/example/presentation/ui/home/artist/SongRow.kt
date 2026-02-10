@@ -50,7 +50,6 @@ import com.example.presentation.util.verticalGradientEdge
 fun SongRow(
     song: TrackDomain,
     index: Int,
-    imageUrlJoel123: String,
     isCurrent: Boolean = false,
     onTrackClicked: (TrackDomain) -> Unit
 ) {
@@ -73,7 +72,7 @@ fun SongRow(
 
         Image(
             painter = rememberAsyncImagePainter(
-                model = imageUrlJoel123,
+                model = song.albumCoverUrl,
                 placeholder = painterResource(R.drawable.bg_image),
             ),
             contentDescription = null,
@@ -150,12 +149,11 @@ fun SongRowPreview() {
                             color = MaterialTheme.colorScheme.background
                         )
                 ) {
-                    displayTasks?.forEachIndexed { index, song ->
+                    displayTasks.forEachIndexed { index, song ->
                         SongRow(
                             song = song,
                             index = index,
                             onTrackClicked = {},
-                            imageUrlJoel123 = artistProfileDummy.profileImage.orEmpty(),
                         )
                     }
                 }

@@ -79,7 +79,6 @@ fun TopSongsComponent(
                 SongRow(
                     song = song,
                     index = index,
-                    imageUrlJoel123 = artistProfile.profileImage.orEmpty(),
                     onTrackClicked = onTrackClicked
                 )
             }

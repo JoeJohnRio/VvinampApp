@@ -15,10 +15,11 @@ query GetArtistScreenData($artistId: ID!) {
         id
         title
         duration
+        albumCoverUrl
+        artistName
         streamCount
         explicit
         releaseDate
-        audioFileUrl
       }
     }
     topReleases {

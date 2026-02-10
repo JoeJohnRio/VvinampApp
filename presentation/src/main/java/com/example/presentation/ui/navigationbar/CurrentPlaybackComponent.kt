@@ -64,7 +64,7 @@ fun CurrentPlaybackComponent(
                 .size(38.dp)
                 .clip(RoundedCornerShape(4.dp)),
             painter = rememberAsyncImagePainter(
-                model = "https://i.ytimg.com/vi/Ep2Ao9--eQc/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDR3nkdjjtmd7PrKAqcsxhXfdAzUA",
+                model = currentlyPlaying.albumCoverUrl,
                 placeholder = painterResource(R.drawable.bg_image),
             ),
             contentDescription = null,
@@ -87,7 +87,7 @@ fun CurrentPlaybackComponent(
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = "Sheila on 7",
+                text = currentlyPlaying.artistName,
                 style = TSLabelMediumWhite().copy(
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.inversePrimary

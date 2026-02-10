@@ -43,7 +43,8 @@ fun GetArtistScreenDataQuery.Track.toDomain(): TrackDomain {
         streamCount = streamCount,
         explicit = explicit,
         releaseDate = releaseDate,
-        audioFileUrl = audioFileUrl,
+        albumCoverUrl = albumCoverUrl,
+        artistName = artistName,
     )
 }
 
