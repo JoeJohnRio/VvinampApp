@@ -1,14 +1,21 @@
 package com.example.presentation.ui.main.playback
 
-import android.content.Context
+import android.app.Application
+import android.content.ComponentName
+import androidx.annotation.OptIn
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.session.MediaController
+import androidx.media3.session.SessionToken
 import com.example.data.BuildConfig
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaybackUseCase
+import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,23 +26,48 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class PlaybackViewModel @Inject constructor(
+class PlaybackViewModel @OptIn(UnstableApi::class)
+@Inject constructor(
     private val playbackRepository: PlaybackUseCase,
-    private val exoPlayer: ExoPlayer
-) : ViewModel() {
+    private val application: Application
+) : AndroidViewModel(application)  {
     private val _uiState = MutableStateFlow(PlaybackUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<PlaybackUiEvent>()
     val events = _events.asSharedFlow()
 
+    private var mediaController: MediaController? = null
+
     init {
-        exoPlayer.addListener(object : Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                _uiState.value = _uiState.value.copy(isPlaying = isPlaying)
-            }
-        })
+        val sessionToken =
+            SessionToken(application, ComponentName(application, PlaybackService::class.java))
+        val controllerFuture = MediaController.Builder(application, sessionToken).buildAsync()
+
+        // Inside your ViewModel
+        controllerFuture.addListener({
+            val controller = controllerFuture.get()
+            mediaController = controller // Save it
+
+            // Attach the listener here
+            controller.addListener(object : Player.Listener {
+                override fun onIsPlayingChanged(isPlaying: Boolean) {
+                    super.onIsPlayingChanged(isPlaying)
+                    // Update your UI state here
+                    _uiState.value = _uiState.value.copy(isPlaying = isPlaying)
+                }
+
+                // You can also override other events like buffering or errors
+                override fun onPlaybackStateChanged(playbackState: Int) {
+                    super.onPlaybackStateChanged(playbackState)
+                    if (playbackState == Player.STATE_BUFFERING) {
+                        // Show loading spinner
+                    }
+                }
+            })
+        }, MoreExecutors.directExecutor())
     }
+
     fun onEvent(event: PlaybackUiEvent) {
         when (event) {
             is PlaybackUiEvent.TogglePlayback -> {
@@ -50,33 +82,22 @@ class PlaybackViewModel @Inject constructor(
 
     fun start(url: String) {
         val mediaItem = MediaItem.fromUri(url)
-        exoPlayer.apply {
-            setMediaItem(mediaItem)
-            prepare()
-            playWhenReady = true
-        }
+        mediaController?.setMediaItem(mediaItem)
+        mediaController?.prepare()
+        mediaController?.play()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        mediaController?.release()
     }
 
     fun play() {
-        exoPlayer.play()
+        mediaController?.play()
     }
 
     fun pause() {
-        exoPlayer.pause()
-    }
-
-    fun togglePlayPause() {
-        exoPlayer.let {
-            if (it.isPlaying) {
-                it.pause()
-            } else {
-                it.play()
-            }
-        }
-    }
-
-    fun release() {
-        exoPlayer.release()
+        mediaController?.pause()
     }
 
     private fun togglePlayback() {
@@ -107,6 +128,6 @@ class PlaybackViewModel @Inject constructor(
             }
         }
     }
-    fun isPlaying(): Boolean = exoPlayer.isPlaying
+    fun isPlaying(): Boolean = mediaController?.isPlaying == true
 
 }
