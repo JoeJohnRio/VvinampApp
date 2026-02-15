@@ -73,50 +73,38 @@ fun ArtistProfileContent(
 ) {
     val scrollState = rememberLazyListState()
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
-    val density = LocalDensity.current
+    val topBarStartPx = with(LocalDensity.current) { 215.dp.toPx() }
+    val topBarEndPx = with(LocalDensity.current) { 225.dp.toPx() }
+    val topBarNameStartPx = with(LocalDensity.current) { 225.dp.toPx() }
+    val topBarNameEndPx = with(LocalDensity.current) { 250.dp.toPx() }
 
-    val topBarJourney: Pair<Float, Float> = Pair(
-        with(density) { 215.dp.toPx() },
-        with(density) { 225.dp.toPx() }
+    val topBarRange = remember { topBarEndPx - topBarStartPx }
+    val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
+
+    data class ScrollProgress(
+        val topBarProgress: Float,
+        val topBarNameProgress: Float,
+        val collapseFraction: Float
     )
-    val topBarRange = topBarJourney.second - topBarJourney.first
 
-    val topBarProgress by remember {
+    val scrollProgress by remember {
         derivedStateOf {
-            if (scrollState.firstVisibleItemIndex > 0) {
-                1f
+            val isScrolledPastFirst = scrollState.firstVisibleItemIndex > 0
+
+            if (isScrolledPastFirst) {
+                ScrollProgress(1f, 1f, 1f)
             } else {
                 val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
-                val progress = (currentScroll - topBarJourney.first) / topBarRange
-                progress.coerceIn(0f, 1f)
+
+                ScrollProgress(
+                    topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(0f, 1f),
+                    topBarNameProgress = ((currentScroll - topBarNameStartPx) / topBarNameRange).coerceIn(0f, 1f),
+                    collapseFraction = (currentScroll / headerHeightPx).coerceIn(0f, 1f)
+                )
             }
         }
     }
 
-    val topBarNameJourney: Pair<Float, Float> = Pair(
-        with(density) { 225.dp.toPx() },
-        with(density) { 250.dp.toPx() }
-    )
-    val topBarNameRange = topBarNameJourney.second - topBarNameJourney.first
-
-    val topBarNameProgress by remember {
-        derivedStateOf {
-            if (scrollState.firstVisibleItemIndex > 0) {
-                1f
-            } else {
-                val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
-                val progress = (currentScroll - topBarNameJourney.first) / topBarNameRange
-                progress.coerceIn(0f, 1f)
-            }
-        }
-    }
-
-    val collapseFraction by remember {
-        derivedStateOf {
-            if (scrollState.firstVisibleItemIndex > 0) 1f
-            else (scrollState.firstVisibleItemScrollOffset / headerHeightPx).coerceIn(0f, 1f)
-        }
-    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -127,8 +115,8 @@ fun ArtistProfileContent(
         ) {
             ArtistHeroImage(
                 artistProfile = artistProfile,
-                artistNameProgress = topBarProgress,
-                collapseFraction = collapseFraction,
+                artistNameProgress = scrollProgress.topBarProgress,
+                collapseFraction = scrollProgress.collapseFraction,
                 modifier = Modifier
                     .height(300.dp)
                     .graphicsLayer {
@@ -192,9 +180,9 @@ fun ArtistProfileContent(
             ArtistTopNavigation(
                 innerPadding = innerPadding,
                 title = artistProfile.name.orErrorNoText(),
-                topBarAlpha = topBarProgress,
-                topBarNameAlpha = topBarNameProgress,
-                collapseFraction = collapseFraction,
+                topBarAlpha = scrollProgress.topBarProgress,
+                topBarNameAlpha = scrollProgress.topBarNameProgress,
+                collapseFraction = scrollProgress.collapseFraction,
                 onBackClick = {
                     onBackClick()
                 }
