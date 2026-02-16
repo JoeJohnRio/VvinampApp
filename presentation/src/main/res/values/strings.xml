@@ -17,6 +17,7 @@
     <string name="label_male">Male</string>
     <string name="label_non_binary">Non-Binary</string>
     <string name="label_other">Other</string>
+    <string name="label_what_do_you_want_to_play">What do you want to play?</string>
     <string name="label_prefer_not_to_say">Prefer not to say</string>
     <string name="label_by_tapping_create_account_terms_of_use">By tapping "Create account", you agree to the Vvinamp Terms of Use.</string>
     <string name="label_by_tapping_create_account_privacy_policy">By tapping "Create account", you agree to the Vvinamp Privacy Policy.</string>
@@ -27,6 +28,7 @@
     <string name="label_login_without_password">Log in without password</string>
 
     <!--/_____TITLE-->
+    <string name="title_your_library">Your Library</string>
     <string name="title_millions_of_songs">Millions of songs.\nFor Free.</string>
     <string name="title_sign_up_to_start_listening">Sign up to start listening</string>
     <string name="title_login_to_vvinamp">Sign up to start listening</string>

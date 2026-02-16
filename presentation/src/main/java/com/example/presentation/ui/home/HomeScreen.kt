@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.entity.listeningHistoryDummy
 import com.example.presentation.navigation.router.BottomNavRouter
+import com.example.presentation.ui.home.artist.ArtistEvent
 import com.example.presentation.ui.home.history.ListeningHistoryGrid
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.widget.TopBar
@@ -39,6 +40,7 @@ fun HomeScreen(
                 is HomeEvent.NavigateToArtistScreen -> {
                     bottomNavRouter.navigateToArtistPage(event.history)
                 }
+
                 is HomeEvent.NavigateToSettingsScreen -> {
                     bottomNavRouter.navigateToSettings()
                 }
@@ -46,13 +48,19 @@ fun HomeScreen(
         }
     }
 
-    HomeContent(
-        uiState = uiState,
+    ScreenWrapper(
+        isLoading = uiState.isLoading,
+        error = uiState.error,
         onRetry = {
             viewModel.getListeningHistory()
         },
-        onSettingsClicked = {
-            viewModel.onEvent(HomeUiEvent.OnSettingsClicked)
+        content = {
+            HomeContent(
+                uiState = uiState,
+                onEvent = {
+                    viewModel.onEvent(it)
+                },
+            )
         }
     )
 }
@@ -60,42 +68,36 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeUiState = HomeUiState(),
-    onRetry: () -> Unit = {},
-    onSettingsClicked: () -> Unit = {}
+    onSettingsClicked: () -> Unit = {},
+    onEvent: (HomeUiEvent) -> Unit = {}
 ) {
-    ScreenWrapper(
-        isLoading = uiState.isLoading,
-        error = uiState.error,
-        onRetry = {
-            onRetry()
-        },
-        content = {
-            Scaffold(
-                topBar = {
+    Scaffold(
+        topBar = {
 
-                    TopBar(
-                        "",
-                        onSearchClick = {},
-                        onSettingsClick = {
-                            onSettingsClicked()
-                        }
-                    )
+            TopBar(
+                "",
+                onSearchClick = {},
+                onSettingsClick = {
+                    onSettingsClicked()
                 }
-            ) { contentPadding ->
+            )
+        }
+    ) { contentPadding ->
 
-                Column(
-                    modifier = Modifier
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(contentPadding)
-                        .padding(16.dp),
-                ) {
-                    uiState.listHistory.let {
-                        ListeningHistoryGrid(it)
-                    }
-                }
+        Column(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .padding(contentPadding)
+                .padding(16.dp),
+        ) {
+            uiState.listHistory.let {
+                ListeningHistoryGrid(
+                    historyList = it,
+                    onEvent = onEvent
+                )
             }
         }
-    )
+    }
 }
 
 @Preview

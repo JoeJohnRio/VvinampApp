@@ -19,17 +19,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.entity.artist.ArtistProfileDomain
+import com.example.domain.entity.artist.artistProfileDummy
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
+import com.example.domain.entity.song.topReleaseDummy
+import com.example.domain.entity.song.topSongsDummy
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.orErrorNoText
+import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
 fun ArtistScreen(
@@ -173,7 +178,7 @@ fun ArtistProfileContent(
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(36.dp + innerPadding.calculateBottomPadding()))
+                    Spacer(modifier = Modifier.height(100.dp + innerPadding.calculateBottomPadding()))
                 }
             }
 
@@ -188,5 +193,23 @@ fun ArtistProfileContent(
                 }
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun ArtistProfileContentPreview() {
+    PreviewTheme {
+        ArtistProfileContent(
+            artistProfile = artistProfileDummy,
+            topSongs = topSongsDummy,
+            topReleases = topReleaseDummy,
+            onBackClick = {
+
+            },
+            onTrackClicked = {
+
+            }
+        )
     }
 }

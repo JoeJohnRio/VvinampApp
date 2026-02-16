@@ -1,12 +1,7 @@
 package com.example.presentation.ui.navigationbar
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
@@ -21,6 +16,7 @@ import com.example.presentation.ui.home.HomeScreen
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.navigation.toEntries
 import com.example.presentation.ui.home.artist.ArtistScreen
+import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.ui.settings.SettingsScreen
 
 @Composable
@@ -49,21 +45,13 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
     val viewModel: HomeViewModel = hiltViewModel()
     entry<BottomNavDestination.Home> {
         HomeScreen(
-            bottomNavRouter = bottomNavRouter,
-            viewModel = viewModel,
+            bottomNavRouter = bottomNavRouter
         )
     }
 
     entry<BottomNavDestination.Search> {
-        Box(
-            modifier = Modifier.fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.surface)
-        ) {
-
-        }
-        Text(
-            text = "Search",
-            fontSize = 100.sp
+        SearchScreen(
+            bottomNavRouter = bottomNavRouter
         )
     }
 

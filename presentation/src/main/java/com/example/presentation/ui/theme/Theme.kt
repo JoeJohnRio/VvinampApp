@@ -59,7 +59,7 @@ val vvinampDarkColorScheme = darkColorScheme(
 //    surface = Color.White
 //)
 
-lateinit var colors: ColorScheme
+var colors: ColorScheme = vvinampDarkColorScheme
 
 @Composable
 fun AppTheme(

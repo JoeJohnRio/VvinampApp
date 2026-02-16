@@ -18,10 +18,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.domain.entity.artist.ArtistProfileDomain
+import com.example.presentation.R
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 
 
@@ -33,7 +35,10 @@ fun ArtistHeroImage(
     artistNameProgress: Float
 ) {
     Image(
-        painter = rememberAsyncImagePainter(artistProfile.profileImage),
+        painter = rememberAsyncImagePainter(
+            model = artistProfile.profileImage,
+            placeholder = painterResource(R.drawable.bg_image),
+        ),
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
