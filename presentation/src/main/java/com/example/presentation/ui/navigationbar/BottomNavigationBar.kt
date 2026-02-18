@@ -52,14 +52,13 @@ fun BottomNavigationBar(
                 selected = isSelected,
                 onClick = { onItemClick(item) },
                 icon = {
-                    Icon(imageVector = item.imageVector, contentDescription = null)
+                    Icon(painter = item.painter.invoke(), contentDescription = null)
                 },
                 label = {
                     Text(
                         text = item.tabName,
                         style = TSLabelMediumWhite().copy(
-                            fontSize = 12.sp,
-                            letterSpacing = 1.3.sp
+                            fontSize = 11.sp
                         )
                     )
                 }

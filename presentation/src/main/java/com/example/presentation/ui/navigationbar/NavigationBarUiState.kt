@@ -8,6 +8,8 @@ import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.WorkspacePremium
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -27,12 +29,12 @@ data class NavigationBarUiState(
 
 sealed class BottomNavigationBarItem(
     val tabName: String,
-    val imageVector: ImageVector,
+    val painter: @Composable () -> Painter,
     val page: MainDestination,
 ) {
-    data object Home : BottomNavigationBarItem("Home", imageVector = Icons.Default.Home, BottomNavDestination.Home)
-    data object Search : BottomNavigationBarItem("Search", imageVector = Icons.Default.Search, BottomNavDestination.Search)
-    data object Library : BottomNavigationBarItem("Library", imageVector = Icons.Default.LibraryMusic, BottomNavDestination.Library)
-    data object Premium : BottomNavigationBarItem("Premium", imageVector = Icons.Default.WorkspacePremium, BottomNavDestination.Premium)
-    data object Create : BottomNavigationBarItem("Create", imageVector = Icons.Default.CreateNewFolder, BottomNavDestination.Create)
+    data object Home : BottomNavigationBarItem("Home", painter = @Composable{ painterResource(R.drawable.ic_home) }, BottomNavDestination.Home)
+    data object Search : BottomNavigationBarItem("Search", painter = @Composable{ painterResource(R.drawable.ic_search) }, BottomNavDestination.Search)
+    data object Library : BottomNavigationBarItem("Your Library", painter = @Composable{ painterResource(R.drawable.ic_library) }, BottomNavDestination.Library)
+    data object Premium : BottomNavigationBarItem("Premium", painter = @Composable{ painterResource(R.drawable.ic_vvinamp_white) }, BottomNavDestination.Premium)
+    data object Create : BottomNavigationBarItem("Create", painter = @Composable{ painterResource(R.drawable.ic_create_plus) }, BottomNavDestination.Create)
 }

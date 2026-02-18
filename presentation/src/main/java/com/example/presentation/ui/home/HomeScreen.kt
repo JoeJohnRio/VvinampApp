@@ -31,7 +31,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.getListeningHistory()
+//        viewModel.getListeningHistory()
     }
 
     LaunchedEffect(Unit) {
@@ -60,6 +60,9 @@ fun HomeScreen(
                 onEvent = {
                     viewModel.onEvent(it)
                 },
+                onSettingsClicked = {
+                    viewModel.onEvent(HomeUiEvent.OnSettingsClicked)
+                }
             )
         }
     )

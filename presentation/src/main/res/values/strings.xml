@@ -26,9 +26,11 @@
     <string name="label_i_would_prefer_not">I would prefer not to receive marketing messages from Vvinamp.</string>
     <string name="label_share_my_registration_data">Share my registration data with Vvinamp\'s content providers for marketing purposes.</string>
     <string name="label_login_without_password">Log in without password</string>
+    <string name="label_start_browsing">Start browsing</string>
 
     <!--/_____TITLE-->
     <string name="title_your_library">Your Library</string>
+    <string name="title_search">Search</string>
     <string name="title_millions_of_songs">Millions of songs.\nFor Free.</string>
     <string name="title_sign_up_to_start_listening">Sign up to start listening</string>
     <string name="title_login_to_vvinamp">Sign up to start listening</string>

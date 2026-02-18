@@ -23,7 +23,7 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import com.example.presentation.R
 import com.example.presentation.navigation.graph.AuthDestination
 import com.example.presentation.navigation.router.AuthRouter
-import com.example.presentation.ui.theme.Gotham
+import com.example.presentation.ui.theme.CircularSTD
 import com.example.presentation.ui.theme.whiteBlackGradientBackground
 import com.example.presentation.ui.widget.ButtonOutlined
 import com.example.presentation.ui.widget.ButtonSolid
@@ -91,7 +91,7 @@ fun ImageTextRegister(
         Text(
             modifier = Modifier.padding(top = 16.dp),
             text = titleText,
-            fontFamily = Gotham,
+            fontFamily = CircularSTD,
             color = Color.White,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Normal,

@@ -1,0 +1,53 @@
+query Search($query: String, $after: String, $before: String) {
+    search(filter: { query: $query }, after: $after, before: $before) {
+        edges {
+            cursor
+            node {
+                __typename
+                ... on Track {
+                    id
+                    title
+                    duration
+                    albumCoverUrl
+                    artistName
+                }
+                ... on Album {
+                    id
+                    title
+                    coverArt
+                    artist {
+                        name
+                    }
+                }
+                ... on Artist {
+                    id
+                    name
+                    verified
+                    profileImage
+                }
+                ... on Playlist {
+                    id
+                    title
+                    coverImage
+                }
+                ... on PodcastEpisode {
+                    id
+                    title
+                    coverArt
+                    duration
+                }
+                ... on PodcastSeries {
+                    id
+                    title
+                    coverArt
+                    publisher
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+        totalCount
+    }
+}

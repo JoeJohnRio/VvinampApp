@@ -25,13 +25,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.example.presentation.R
+import com.example.presentation.entities.ButtonData
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.util.preview.PreviewTheme
 
 
 @Composable
 fun TopNavigationWithButtons(
-    listOfButtons: List<Pair<Painter, Unit>> = listOf()
+    listOfButtons: List<ButtonData> = listOf()
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -46,7 +48,7 @@ fun TopNavigationWithButtons(
                     .clip(CircleShape)
                     .size(32.dp),
                 painter = rememberAsyncImagePainter(
-                    model = "",
+                    model = "https://avatars.githubusercontent.com/u/42718154?v=4",
                     placeholder = painterResource(R.drawable.bg_image),
                 ),
                 contentScale = ContentScale.Crop,
@@ -56,8 +58,8 @@ fun TopNavigationWithButtons(
             Spacer(Modifier.padding(8.dp))
 
             Text(
-                text = stringResource(R.string.title_your_library),
-                style = TSDisplayMediumWhite().copy(
+                text = stringResource(R.string.title_search),
+                style = TSHeadlineMediumWhite().copy(
                     fontSize = 22.sp,
                     color = MaterialTheme.colorScheme.inversePrimary
                 )
@@ -65,11 +67,11 @@ fun TopNavigationWithButtons(
         }
 
         Row() {
-            listOfButtons.forEach { (painter, onClick) ->
+            listOfButtons.forEach { (iconRes, onClick) ->
                 IconButton(onClick = { onClick }) {
                     Icon(
-                        painter = painter,
                         contentDescription = "",
+                        painter = painterResource(iconRes),
                         tint = MaterialTheme.colorScheme.inversePrimary
                     )
                 }
@@ -89,16 +91,16 @@ fun TopNavigationWithButtonsPreview() {
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             TopNavigationWithButtons(
-                listOfButtons = listOf(
-                    Pair(
-                        painterResource(R.drawable.ic_email),
-                        test()
-                    ),
-                    Pair(
-                        painterResource(R.drawable.ic_camera),
-                        test()
-                    )
-                )
+//                listOfButtons = listOf(
+//                    Pair(
+//                        painterResource(R.drawable.ic_email),
+//                        test()
+//                    ),
+//                    Pair(
+//                        painterResource(R.drawable.ic_camera),
+//                        test()
+//                    )
+//                )
             )
         }
     }

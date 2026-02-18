@@ -1,6 +1,6 @@
 package com.example.presentation.ui.search
 
-import androidx.compose.foundation.layout.Column
+import android.widget.Toast
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -9,17 +9,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.presentation.R
+import com.example.presentation.entities.ButtonData
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.widget.TextFieldSearch
+import com.example.presentation.ui.search.component.StartBrowsingComponent
+import com.example.presentation.ui.widget.TextFieldSearchNoClick
 import com.example.presentation.ui.widget.TopNavigationWithButtons
 import com.example.presentation.util.preview.PreviewTheme
 import com.example.presentation.util.preview.navigatorDummy
@@ -28,6 +32,11 @@ import com.example.presentation.util.preview.navigatorDummy
 fun SearchScreen(bottomNavRouter: BottomNavRouter) {
     val viewModel: SearchViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.onSearchInput("a")
+    }
 
     ScreenWrapper(
         isLoading = uiState.isLoading,
@@ -35,18 +44,20 @@ fun SearchScreen(bottomNavRouter: BottomNavRouter) {
         content = {
             SearchContent(
                 uiState = uiState,
-                router = bottomNavRouter
+                router = bottomNavRouter,
+                onClickSearch = {
+                    bottomNavRouter.navigateToSearchResults()
+                }
             )
         }
     )
 }
 
 @Composable
-fun SearchContent(uiState: SearchUiState, router: BottomNavRouter) {
+fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch: () -> Unit) {
     val scrollState = rememberLazyListState()
 
     Scaffold() { contentPadding ->
-
         LazyColumn(
             state = scrollState,
             modifier = Modifier
@@ -57,9 +68,11 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter) {
             item {
                 TopNavigationWithButtons(
                     listOfButtons = listOf(
-                        Pair(
-                            painterResource(R.drawable.ic_email),
-                            router.navigateBack()
+                        ButtonData(
+                            iconRes = R.drawable.ic_camera,
+                            onClick = {
+
+                            }
                         )
                     )
                 )
@@ -70,12 +83,26 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter) {
             }
 
             stickyHeader {
-                TextFieldSearch(
+                val context = LocalContext.current
+                TextFieldSearchNoClick(
                     onValueChanged = {
 
+                    },
+                    onClick = {
+                        onClickSearch()
+                        Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
                     }
                 )
             }
+
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            item {
+                StartBrowsingComponent()
+            }
+
             item {
                 Spacer(Modifier.height(1000.dp))
             }
@@ -90,7 +117,8 @@ fun SearchContentPreview() {
     PreviewTheme {
         SearchContent(
             uiState = SearchUiState(),
-            router = BottomNavRouter(navigatorDummy())
+            router = BottomNavRouter(navigatorDummy()),
+            onClickSearch = {}
         )
     }
 }
