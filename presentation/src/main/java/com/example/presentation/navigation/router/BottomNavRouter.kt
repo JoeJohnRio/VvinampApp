@@ -15,6 +15,10 @@ class BottomNavRouter(
         navigator.navigate(BottomNavDestination.Search)
     }
 
+    fun navigateToSearchResults() {
+        navigator.navigate(BottomNavDestination.SearchResults)
+    }
+
     fun navigateToLibrary() {
         navigator.navigate(BottomNavDestination.Library)
     }

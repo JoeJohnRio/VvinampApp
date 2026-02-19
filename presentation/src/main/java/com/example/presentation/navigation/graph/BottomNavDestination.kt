@@ -15,6 +15,9 @@ sealed interface BottomNavDestination: NavKey {
     data object Library : MainDestination
 
     @Serializable
+    data object SearchResults : MainDestination
+
+    @Serializable
     data object Premium : MainDestination
 
     @Serializable

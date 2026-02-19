@@ -17,6 +17,7 @@ import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.navigation.toEntries
 import com.example.presentation.ui.home.artist.ArtistScreen
 import com.example.presentation.ui.search.SearchScreen
+import com.example.presentation.ui.search.searchresult.SearchResultsScreen
 import com.example.presentation.ui.settings.SettingsScreen
 
 @Composable
@@ -42,7 +43,6 @@ fun MainNavDisplay(
 fun EntryProviderScope<NavKey>.MainNavGraph(
     bottomNavRouter: BottomNavRouter
 ) {
-    val viewModel: HomeViewModel = hiltViewModel()
     entry<BottomNavDestination.Home> {
         HomeScreen(
             bottomNavRouter = bottomNavRouter
@@ -51,6 +51,12 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
 
     entry<BottomNavDestination.Search> {
         SearchScreen(
+            bottomNavRouter = bottomNavRouter
+        )
+    }
+
+    entry<BottomNavDestination.SearchResults> {
+        SearchResultsScreen(
             bottomNavRouter = bottomNavRouter
         )
     }

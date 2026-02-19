@@ -185,7 +185,8 @@ fun TextFieldSearch(
     shape: Shape = RoundedCornerShape(4.dp),
     onValueChanged: (String) -> Unit = { },
     textFieldInfo: String? = null,
-    isError: () -> Boolean = { false }
+    isError: () -> Boolean = { false },
+    onBackClicked: () -> Unit = {}
 ) {
     Column {
         TextField(
@@ -206,6 +207,9 @@ fun TextFieldSearch(
                 },
             leadingIcon = @Composable {
                     Icon(
+                        modifier = Modifier.clickable {
+                            onBackClicked()
+                        },
                         painter = painterResource(R.drawable.ic_arrow_back),
                         contentDescription = null
                     )
@@ -218,7 +222,7 @@ fun TextFieldSearch(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                 errorContainerColor = MaterialTheme.colorScheme.onErrorContainer,
                 errorTextColor = MaterialTheme.colorScheme.onError
             ),
