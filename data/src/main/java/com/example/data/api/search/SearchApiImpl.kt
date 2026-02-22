@@ -12,12 +12,14 @@ class SearchApiImpl @Inject constructor(
 
     override suspend fun search(
         query: String,
-        cursorAfter: String?
+        cursorAfter: String?,
+        pageSize: Int
     ): Result<SearchQuery.Search> {
         return apolloClient.safeQuery(
             SearchQuery(
                 query = Optional.presentIfNotNull(query),
-                after = Optional.presentIfNotNull(cursorAfter)
+                after = Optional.presentIfNotNull(cursorAfter),
+                limit = Optional.presentIfNotNull(pageSize)
             )
         ) {
             it.search

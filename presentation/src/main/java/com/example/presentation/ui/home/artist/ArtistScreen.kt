@@ -1,5 +1,6 @@
 package com.example.presentation.ui.home.artist
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,9 +33,12 @@ import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.topReleaseDummy
 import com.example.domain.entity.song.topSongsDummy
+import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
+import com.example.presentation.util.ExtractDominantColorEffect
+import com.example.presentation.util.PaddingUtil
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.preview.PreviewTheme
 
@@ -40,13 +46,14 @@ import com.example.presentation.util.preview.PreviewTheme
 fun ArtistScreen(
     artistViewModel: ArtistViewModel = hiltViewModel(),
     playbackViewModel: PlaybackViewModel = hiltViewModel(),
-    history: ListeningHistoryDomain,
-    onBackClick: () -> Unit
+    artistId: String,
+    onBackClick: () -> Unit,
+    bottomNavRouter: BottomNavRouter
 ) {
     val artistUiState by artistViewModel.uiState.collectAsState()
 
-    LaunchedEffect(history) {
-        artistViewModel.getArtistScreenData(history.contentId)
+    LaunchedEffect(artistId) {
+        artistViewModel.getArtistScreenData(artistId)
     }
 
     ScreenWrapper(
@@ -55,13 +62,20 @@ fun ArtistScreen(
         content = {
             artistUiState.artistProfile?.let {
                 ArtistProfileContent(
+                    uiState = artistUiState,
                     artistProfile = it,
                     topSongs = artistUiState.topSongs,
                     topReleases = artistUiState.topReleases,
                     onBackClick = onBackClick,
+                    onClickAlbum = {
+                        bottomNavRouter.navigateToAlbum(it)
+                    },
                     onTrackClicked = { track ->
                         playbackViewModel.onEvent(PlaybackUiEvent.TrackClicked(track))
                     },
+                    updateDominantColor = { color ->
+                        artistViewModel.updateDominantColor(color)
+                    }
                 )
             }
         }
@@ -70,10 +84,13 @@ fun ArtistScreen(
 
 @Composable
 fun ArtistProfileContent(
+    uiState: ArtistUiState,
     artistProfile: ArtistProfileDomain,
     topSongs: TopSongsDomain?,
     topReleases: TopReleasesDomain?,
     onBackClick: () -> Unit,
+    onClickAlbum: (String) -> Unit = {},
+    updateDominantColor: (Color) -> Unit,
     onTrackClicked: (TrackDomain) -> Unit
 ) {
     val scrollState = rememberLazyListState()
@@ -102,14 +119,27 @@ fun ArtistProfileContent(
                 val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
 
                 ScrollProgress(
-                    topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(0f, 1f),
-                    topBarNameProgress = ((currentScroll - topBarNameStartPx) / topBarNameRange).coerceIn(0f, 1f),
+                    topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(
+                        0f,
+                        1f
+                    ),
+                    topBarNameProgress = ((currentScroll - topBarNameStartPx) / topBarNameRange).coerceIn(
+                        0f,
+                        1f
+                    ),
                     collapseFraction = (currentScroll / headerHeightPx).coerceIn(0f, 1f)
                 )
             }
         }
     }
 
+    ExtractDominantColorEffect(
+        imageUrl = artistProfile.profileImage,
+        onColorExtracted = { color ->
+            Log.d("joel123", "nowUpdating $color")
+            updateDominantColor(color)
+        }
+    )
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -118,16 +148,32 @@ fun ArtistProfileContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            ArtistHeroImage(
-                artistProfile = artistProfile,
-                artistNameProgress = scrollProgress.topBarProgress,
-                collapseFraction = scrollProgress.collapseFraction,
+            Box(
                 modifier = Modifier
-                    .height(300.dp)
+                    .fillMaxSize()
                     .graphicsLayer {
-                        translationY = -scrollState.firstVisibleItemScrollOffset * 1f
+                        val offset = if (scrollState.firstVisibleItemIndex == 0) {
+                            -scrollState.firstVisibleItemScrollOffset.toFloat()
+                        } else {
+                            -headerHeightPx
+                        }
+                        translationY = offset
                     }
-            )
+                    .background(
+                        Brush.verticalGradient(
+                            0f to uiState.dominantColor,
+                            0.5f to MaterialTheme.colorScheme.background
+                        )
+                    )
+            ) {
+                ArtistHeroImage(
+                    artistProfile = artistProfile,
+                    artistNameProgress = scrollProgress.topBarProgress,
+                    collapseFraction = scrollProgress.collapseFraction,
+                    modifier = Modifier
+                        .height(300.dp)
+                )
+            }
 
             LazyColumn(
                 state = scrollState,
@@ -138,21 +184,15 @@ fun ArtistProfileContent(
                 }
 
                 item {
-                    Column(
-                        modifier = Modifier.background(
-                            color = MaterialTheme.colorScheme.background
-                        )
-                    ) {
-                        ArtistActionsRow(
-                            artistProfile = artistProfile,
-                            isFollowing = true,
-                            onFollowClick = { /* Handle follow click */ },
-                            onPlayClick = { /* Handle play click */ },
-                            onShuffleClick = { /* Handle shuffle click */ }
-                        )
+                    ArtistActionsRow(
+                        artistProfile = artistProfile,
+                        isFollowing = true,
+                        onFollowClick = { /* Handle follow click */ },
+                        onPlayClick = { /* Handle play click */ },
+                        onShuffleClick = { /* Handle shuffle click */ }
+                    )
 
-                        Spacer(Modifier.height(16.dp))
-                    }
+                    Spacer(Modifier.height(16.dp))
                 }
 
                 item {
@@ -168,7 +208,8 @@ fun ArtistProfileContent(
                 item {
                     topReleases?.let {
                         PopularReleasesContent(
-                            it
+                            it,
+                            onClickAlbum = onClickAlbum
                         )
                     }
                 }
@@ -182,12 +223,12 @@ fun ArtistProfileContent(
                 }
             }
 
-            ArtistTopNavigation(
+            AnimatedTopNavigation(
                 innerPadding = innerPadding,
                 title = artistProfile.name.orErrorNoText(),
                 topBarAlpha = scrollProgress.topBarProgress,
                 topBarNameAlpha = scrollProgress.topBarNameProgress,
-                collapseFraction = scrollProgress.collapseFraction,
+                topBarColor = uiState.dominantColor,
                 onBackClick = {
                     onBackClick()
                 }
@@ -207,9 +248,9 @@ fun ArtistProfileContentPreview() {
             onBackClick = {
 
             },
-            onTrackClicked = {
-
-            }
+            uiState = ArtistUiState(),
+            updateDominantColor = {},
+            onTrackClicked = {}
         )
     }
 }

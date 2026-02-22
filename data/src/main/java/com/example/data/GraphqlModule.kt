@@ -1,5 +1,7 @@
 package com.example.data
 
+import com.example.data.api.album.AlbumApi
+import com.example.data.api.album.AlbumApiImpl
 import com.example.data.api.artist.ArtistApi
 import com.example.data.api.artist.ArtistApiImpl
 import com.example.data.api.auth.AuthApi
@@ -37,6 +39,12 @@ abstract class GraphqlModule {
     abstract fun bindArtistApi(
         impl: ArtistApiImpl
     ): ArtistApi
+
+    @Binds
+    @Singleton
+    abstract fun bindAlbumApi(
+        impl: AlbumApiImpl
+    ): AlbumApi
 
     @Binds
     @Singleton

@@ -2,6 +2,7 @@ package com.example.presentation.ui.home.artist
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.rememberAsyncImagePainter
 import com.example.data.util.dateToYear
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.topReleaseDummy
@@ -33,11 +34,10 @@ import com.example.presentation.ui.widget.ButtonVariableOutlined
 import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
-fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
-
+fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (String) -> Unit = {}) {
     Column(
-        modifier = Modifier.fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
         Spacer(Modifier.height(16.dp))
@@ -70,7 +70,10 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                    .padding(vertical = 8.dp)
+                    .clickable {
+                        onClickAlbum(album.id)
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -85,7 +88,8 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
                 )
 
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 12.dp)
                 ) {
                     Text(
@@ -134,6 +138,6 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain) {
 @Composable
 fun PopularReleasesContentPreview() {
     PreviewTheme {
-        PopularReleasesContent(topReleaseDummy)
+        PopularReleasesContent(topReleaseDummy,)
     }
 }

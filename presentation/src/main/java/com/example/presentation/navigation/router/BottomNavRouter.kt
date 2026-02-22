@@ -11,6 +11,10 @@ class BottomNavRouter(
         navigator.navigate(BottomNavDestination.Home)
     }
 
+    fun navigateToAlbum(albumId: String) {
+        navigator.navigate(BottomNavDestination.Album(albumId))
+    }
+
     fun navigateToSearch() {
         navigator.navigate(BottomNavDestination.Search)
     }
@@ -32,9 +36,9 @@ class BottomNavRouter(
     }
 
     fun navigateToArtistPage(
-        history: ListeningHistoryDomain
+        artistId: String
     ) {
-        navigator.navigate(BottomNavDestination.Artist(history))
+        navigator.navigate(BottomNavDestination.Artist(artistId))
     }
 
     fun navigateToSettings() {

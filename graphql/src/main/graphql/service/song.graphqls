@@ -4,6 +4,7 @@ type Track {
   title: String!
   duration: Int!
   streamCount: Int!
+  audioFileUrl: String!
   albumCoverUrl: String!
   artistName: String!
   explicit: Boolean!
@@ -45,9 +46,25 @@ type Album {
   tracks: [Track!]!
 }
 
+type AlbumDetail {
+  id: ID!
+  title: String!
+  artistName: String!
+  artistImage: String
+  releaseDate: String!
+  coverArt: String
+  tracks: [Track!]!
+  trackCount: Int!
+  totalDuration: Int!
+}
+
 type Genre {
   id: ID!
   name: String!
   description: String
   albums: [Album!]!
+}
+
+extend type Query {
+  album(id: ID!): AlbumDetail
 }

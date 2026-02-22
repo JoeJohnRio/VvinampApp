@@ -2,7 +2,7 @@ package com.example.data.api.artist
 
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.ArtistScreenDomain
-import com.example.domain.entity.song.AlbumDomain
+import com.example.domain.entity.song.SimplifiedAlbumDomain
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
@@ -56,8 +56,8 @@ fun GetArtistScreenDataQuery.TopReleases.toDomain(): TopReleasesDomain {
     )
 }
 
-fun GetArtistScreenDataQuery.Album.toDomain(): AlbumDomain {
-    return AlbumDomain(
+fun GetArtistScreenDataQuery.Album.toDomain(): SimplifiedAlbumDomain {
+    return SimplifiedAlbumDomain(
         id = id,
         title = title,
         releaseDate = releaseDate,

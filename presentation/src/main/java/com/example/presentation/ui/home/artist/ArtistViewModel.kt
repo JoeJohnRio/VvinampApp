@@ -1,5 +1,6 @@
 package com.example.presentation.ui.home.artist
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.ArtistUseCase
 import com.example.domain.util.NetworkMonitor
@@ -43,6 +44,9 @@ class ArtistViewModel @Inject constructor(
         }
     }
 
+    fun updateDominantColor(color: Color) {
+        _uiState.update { it.copy(dominantColor = color) }
+    }
     fun getArtistScreenData(artistId: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)

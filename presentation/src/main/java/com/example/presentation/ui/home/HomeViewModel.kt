@@ -70,13 +70,11 @@ class HomeViewModel @Inject constructor(
 
     fun getListeningHistory() {
         viewModelScope.launch {
-            Log.d("joel123", "jalan 1")
             _uiState.value = _uiState.value.copy(isLoading = true)
 
             val result = historyUseCase.getListRecentHistoryUseCase.invoke()
 
             result.onSuccess { data ->
-                Log.d("joel123", "jalan 2")
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -85,7 +83,6 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             }.onFailure {
-                Log.d("joel123", "jalan 3")
                 _uiState.update {
                     it.copy(
                         isLoading = false,

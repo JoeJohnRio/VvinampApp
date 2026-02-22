@@ -31,14 +31,14 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-//        viewModel.getListeningHistory()
+        viewModel.getListeningHistory()
     }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
                 is HomeEvent.NavigateToArtistScreen -> {
-                    bottomNavRouter.navigateToArtistPage(event.history)
+                    bottomNavRouter.navigateToArtistPage(event.history.contentId)
                 }
 
                 is HomeEvent.NavigateToSettingsScreen -> {

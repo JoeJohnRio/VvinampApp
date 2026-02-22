@@ -35,7 +35,7 @@ fun SearchScreen(bottomNavRouter: BottomNavRouter) {
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
-        viewModel.onSearchInput("a")
+        viewModel.onSearchInput("")
     }
 
     ScreenWrapper(
@@ -90,7 +90,6 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
                     },
                     onClick = {
                         onClickSearch()
-                        Toast.makeText(context, "Search", Toast.LENGTH_SHORT).show()
                     }
                 )
             }

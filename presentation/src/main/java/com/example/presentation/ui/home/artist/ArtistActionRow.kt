@@ -35,7 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.rememberAsyncImagePainter
+import coil3.compose.AsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.artistProfileDummy
 import com.example.presentation.R
@@ -56,7 +57,6 @@ fun ArtistActionsRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onPrimary)
             .padding(
                 horizontal = 16.dp
             )
@@ -77,7 +77,7 @@ fun ArtistActionsRow(
                 .padding(top = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ArtistVerticalVideoFeedPreview(imageUrl = artistProfile.profileImage.orEmpty())
+            VerticalVideoFeedPreview(imageUrl = artistProfile.profileImage.orEmpty())
 
             Spacer(modifier = Modifier.width(24.dp))
 
@@ -134,7 +134,7 @@ fun ArtistActionsRow(
 }
 
 @Composable
-fun ArtistVerticalVideoFeedPreview(imageUrl: String) {
+fun VerticalVideoFeedPreview(imageUrl: String) {
     Box(
         modifier = Modifier
             .height(40.dp)
@@ -145,16 +145,16 @@ fun ArtistVerticalVideoFeedPreview(imageUrl: String) {
                 shape = RoundedCornerShape(8.dp)
             )
     ) {
-        Image(
-            painter = rememberAsyncImagePainter(imageUrl), // Replace with your logo
+        AsyncImage(
+            model = imageUrl,
             contentDescription = null,
+            placeholder = painterResource(R.drawable.bg_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
                 .clip(
                     shape = RoundedCornerShape(8.dp)
                 )
-
         )
     }
 }

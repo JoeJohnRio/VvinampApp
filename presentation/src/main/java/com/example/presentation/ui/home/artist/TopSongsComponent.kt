@@ -52,7 +52,6 @@ fun TopSongsComponent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background)
     ) {
         Text(
             modifier = Modifier.padding(start = 16.dp),
@@ -67,7 +66,6 @@ fun TopSongsComponent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.background)
                 .animateContentSize()
                 .heightIn(max = if (isExpanded) 1000.dp else 400.dp)
                 .verticalGradientEdge(

@@ -14,9 +14,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
-import coil.size.Scale
+import coil3.compose.SubcomposeAsyncImage
+import coil3.request.ImageRequest
+import coil3.size.Scale
 import com.example.presentation.ui.widget.ImageSize
 import com.example.presentation.ui.widget.NoImagePlaceholder
 import com.example.presentation.ui.widget.toPX

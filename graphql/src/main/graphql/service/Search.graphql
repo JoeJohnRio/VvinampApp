@@ -1,5 +1,5 @@
-query Search($query: String, $after: String, $before: String) {
-    search(filter: { query: $query }, after: $after, before: $before) {
+query Search($query: String, $after: String, $before: String, $limit: Int) {
+    search(filter: { query: $query, limit: $limit }, after: $after, before: $before) {
         edges {
             cursor
             node {

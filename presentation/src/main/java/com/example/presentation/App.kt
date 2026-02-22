@@ -1,20 +1,22 @@
 package com.example.presentation
 
 import android.app.Application
+import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
-import coil.request.CachePolicy
-import coil.util.DebugLogger
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.disk.DiskCache
+import coil3.disk.directory
+import coil3.memory.MemoryCache
+import coil3.request.CachePolicy
+import coil3.util.DebugLogger
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
-class App : Application(), Configuration.Provider, ImageLoaderFactory {
+class App : Application(), Configuration.Provider, SingletonImageLoader.Factory {
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
@@ -37,12 +39,12 @@ class App : Application(), Configuration.Provider, ImageLoaderFactory {
 //        )
     }
 
-    override fun newImageLoader(): ImageLoader {
-        return ImageLoader(this).newBuilder()
+    override fun newImageLoader(context: Context): ImageLoader {
+        return ImageLoader.Builder(context)
             .memoryCachePolicy(CachePolicy.ENABLED)
             .memoryCache {
-                MemoryCache.Builder(this)
-                    .maxSizePercent(0.1)
+                MemoryCache.Builder() // use the passed context
+                    .maxSizePercent(context)
                     .strongReferencesEnabled(true)
                     .build()
             }

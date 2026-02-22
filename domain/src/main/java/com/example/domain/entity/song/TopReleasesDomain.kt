@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 data class TopReleasesDomain(
     val success: Boolean,
     val error: String?,
-    val albums: List<AlbumDomain>,
+    val albums: List<SimplifiedAlbumDomain>,
 )
 
 val topReleaseDummy = TopReleasesDomain(
     success = true,
     error = null,
-    albums = albumDummy
+    albums = dummySimplifiedAlbumDomain
 )

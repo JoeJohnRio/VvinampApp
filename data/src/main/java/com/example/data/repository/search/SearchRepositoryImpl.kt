@@ -16,11 +16,11 @@ class SearchRepositoryImpl @Inject constructor(
     override fun search(query: String): Flow<PagingData<SearchItemDomain>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 20,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                SearchPagingSource(searchApi, query)
+                SearchPagingSource(searchApi, query, pageSize = 10)
             }
         ).flow
     }

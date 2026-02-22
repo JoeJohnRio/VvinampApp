@@ -8,11 +8,12 @@ import com.example.domain.entity.search.SearchItemDomain
 
 class SearchPagingSource(
     private val api: SearchApiImpl,
-    private val query: String
+    private val query: String,
+    private val pageSize: Int
 ) : PagingSource<String, SearchItemDomain>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, SearchItemDomain> {
-        return api.search(query, params.key).fold(
+        return api.search(query, params.key, pageSize).fold(
             onSuccess = { searchData ->
                 val items = searchData.edges
                     .mapNotNull { it.node.toDomain() }

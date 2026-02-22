@@ -3,7 +3,6 @@ package com.example.presentation.ui.navigationbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -13,8 +12,8 @@ import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.HomeScreen
-import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.navigation.toEntries
+import com.example.presentation.ui.home.album.AlbumScreen
 import com.example.presentation.ui.home.artist.ArtistScreen
 import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.ui.search.searchresult.SearchResultsScreen
@@ -88,8 +87,16 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
 
     entry<BottomNavDestination.Artist> { key ->
         ArtistScreen(
-            history = key.history,
-            onBackClick = bottomNavRouter::navigateBack
+            artistId = key.artistId,
+            onBackClick = bottomNavRouter::navigateBack,
+            bottomNavRouter = bottomNavRouter
+        )
+    }
+
+    entry<BottomNavDestination.Album> {
+        AlbumScreen(
+            albumId = it.albumId,
+            bottomNavRouter = bottomNavRouter
         )
     }
 }

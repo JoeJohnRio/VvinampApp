@@ -24,8 +24,9 @@ sealed interface BottomNavDestination: NavKey {
     data object Create : MainDestination
 
     @Serializable
-    data class Artist(val history: ListeningHistoryDomain) : MainDestination
-
+    data class Artist(val artistId: String) : MainDestination
+    @Serializable
+    data class Album(val albumId: String) : MainDestination
     @Serializable
     data object Settings : MainDestination
 }

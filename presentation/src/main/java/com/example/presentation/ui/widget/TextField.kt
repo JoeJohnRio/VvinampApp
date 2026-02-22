@@ -215,6 +215,17 @@ fun TextFieldSearch(
                     )
                 }
             ,
+            trailingIcon = if (text.isNotEmpty()) {
+                @Composable {
+                    Icon(
+                        modifier = Modifier.clickable {
+                            onValueChanged("")
+                        },
+                        contentDescription = null,
+                        painter = painterResource(R.drawable.ic_close)
+                    )
+                }
+            } else null,
             modifier = modifier
                 .padding(0.dp),
             shape = shape,
