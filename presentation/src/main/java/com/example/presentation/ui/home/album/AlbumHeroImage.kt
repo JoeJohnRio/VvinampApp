@@ -83,9 +83,9 @@ fun AlbumHeroImage(
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = albumDomain?.artistName.orErrorNoText(),
+                text = albumDomain?.title.orErrorNoText(),
                 style = TSHeadlineMediumWhite().copy(
-                    fontSize = 26.sp
+                    fontSize = 22.sp
                 )
             )
         }

@@ -50,10 +50,11 @@ fun MainScreenContainer(
                 .align(Alignment.BottomCenter)
                 .padding(bottom = if (isButtonNav) bottomPadding else 0.dp)
         ){
-            playbackUiState.currentlyPlaying?.let {
-                CurrentPlaybackComponent(
+            playbackUiState.currentTrack?.let {
+                PlaybackCurrentSongComponent(
                     currentlyPlaying = it,
                     onClickPlay = onClickPlay,
+                    backgroundColor = playbackUiState.dominantColor,
                     isPlaying = playbackUiState.isPlaying
                 )
             }

@@ -37,12 +37,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
-import com.example.domain.entity.artist.artistProfileDummy
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.topSongsDummy
 import com.example.presentation.R
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableOutlined
+import com.example.presentation.ui.widget.SpotifyPlayingIndicator
 import com.example.presentation.util.preview.PreviewTheme
 import com.example.presentation.util.verticalGradientEdge
 
@@ -50,9 +51,11 @@ import com.example.presentation.util.verticalGradientEdge
 fun SongRow(
     song: TrackDomain,
     index: Int,
-    isCurrent: Boolean = false,
-    onTrackClicked: (TrackDomain) -> Unit
+    onTrackClicked: (TrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
+    val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == song.id
+
     Row(
         modifier = Modifier
             .clickable{ onTrackClicked(song) }
@@ -63,7 +66,7 @@ fun SongRow(
     ) {
         Text(
             text = "${index + 1}",
-            color = if (isCurrent) Color(0xFF1DB954) else Color.Gray,
+            color = MaterialTheme.colorScheme.inversePrimary,
             modifier = Modifier.width(30.dp),
             style = TSDisplayMediumWhite().copy(
                 fontSize = 16.sp
@@ -84,15 +87,26 @@ fun SongRow(
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = song.title,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                style = TSDisplayMediumWhite().copy(
-                    fontSize = 16.sp,
-                    color = if (isCurrent) Color(0xFF1DB954) else Color.White,
+            Row() {
+                if (isCurrentTrackPlayed) {
+                    SpotifyPlayingIndicator(
+                        isPlaying = playbackUiState.isPlaying,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+
+                    Spacer(Modifier.width(4.dp))
+                }
+
+                Text(
+                    text = song.title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = TSDisplayMediumWhite().copy(
+                        fontSize = 16.sp,
+                        color = if (isCurrentTrackPlayed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inversePrimary,
+                    )
                 )
-            )
+            }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = song.streamCount.toString(),

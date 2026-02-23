@@ -29,7 +29,6 @@ fun getMiddleColor(
 @Composable
 fun ExtractDominantColorEffect(
     imageUrl: String?,
-    defaultColor: Color = Color.LightGray,
     onColorExtracted: (Color) -> Unit // Callback to update uiState
 ) {
     val context = LocalContext.current
@@ -57,8 +56,19 @@ fun ExtractDominantColorEffect(
                 val bitmap = (result.image as? BitmapImage)?.bitmap
                 Log.d("joel123", "bitmap $bitmap")
                 bitmap?.let {
-                    val palette = Palette.from(it).generate()
-                    val extractedColorInt = palette.getDarkVibrantColor(defaultColor.toArgb())
+                    val palette = Palette
+                        .from(it)
+                        .maximumColorCount(24) // Increase color count for better extraction
+                        .addFilter { _, hsl ->
+                            val isBlack = hsl[2] <= 0.15f // Reject dark colors (Lightness < 15%)
+                            val isWhite = hsl[2] >= 0.85f // Reject light colors (Lightness > 85%)
+                            val isGrayscale =
+                                hsl[1] <= 0.10f // Reject dull/gray colors (Saturation < 10%)
+
+                            // Only allow colors that are NOT black, white, or grayscale
+                            !isBlack && !isWhite && !isGrayscale
+                        }.generate()
+                    val extractedColorInt = palette.getDarkMutedColor(Color.DarkGray.toArgb()) // Always use a dark fallback
 
                     dominantColorCache.put(imageUrl, extractedColorInt)
 

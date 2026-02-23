@@ -3,7 +3,6 @@ package com.example.presentation.ui.home.artist
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -25,7 +24,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.domain.entity.ListeningHistoryDomain
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.artistProfileDummy
 import com.example.domain.entity.song.TopReleasesDomain
@@ -36,9 +35,9 @@ import com.example.domain.entity.song.topSongsDummy
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
-import com.example.presentation.util.PaddingUtil
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.preview.PreviewTheme
 
@@ -51,6 +50,8 @@ fun ArtistScreen(
     bottomNavRouter: BottomNavRouter
 ) {
     val artistUiState by artistViewModel.uiState.collectAsState()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+
 
     LaunchedEffect(artistId) {
         artistViewModel.getArtistScreenData(artistId)
@@ -63,6 +64,7 @@ fun ArtistScreen(
             artistUiState.artistProfile?.let {
                 ArtistProfileContent(
                     uiState = artistUiState,
+                    playbackUiState = playbackUiState,
                     artistProfile = it,
                     topSongs = artistUiState.topSongs,
                     topReleases = artistUiState.topReleases,
@@ -75,7 +77,7 @@ fun ArtistScreen(
                     },
                     updateDominantColor = { color ->
                         artistViewModel.updateDominantColor(color)
-                    }
+                    },
                 )
             }
         }
@@ -91,7 +93,8 @@ fun ArtistProfileContent(
     onBackClick: () -> Unit,
     onClickAlbum: (String) -> Unit = {},
     updateDominantColor: (Color) -> Unit,
-    onTrackClicked: (TrackDomain) -> Unit
+    onTrackClicked: (TrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     val scrollState = rememberLazyListState()
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
@@ -161,8 +164,8 @@ fun ArtistProfileContent(
                     }
                     .background(
                         Brush.verticalGradient(
-                            0f to uiState.dominantColor,
-                            0.5f to MaterialTheme.colorScheme.background
+                            0.3f to uiState.dominantColor,
+                            0.45f to MaterialTheme.colorScheme.background
                         )
                     )
             ) {
@@ -200,7 +203,8 @@ fun ArtistProfileContent(
                         TopSongsComponent(
                             topSongs = it,
                             artistProfile = artistProfile,
-                            onTrackClicked = onTrackClicked
+                            onTrackClicked = onTrackClicked,
+                            playbackUiState = playbackUiState
                         )
                     }
                 }
@@ -242,15 +246,15 @@ fun ArtistProfileContent(
 fun ArtistProfileContentPreview() {
     PreviewTheme {
         ArtistProfileContent(
+            uiState = ArtistUiState(),
             artistProfile = artistProfileDummy,
             topSongs = topSongsDummy,
             topReleases = topReleaseDummy,
             onBackClick = {
 
             },
-            uiState = ArtistUiState(),
             updateDominantColor = {},
-            onTrackClicked = {}
+            onTrackClicked = {},
         )
     }
 }

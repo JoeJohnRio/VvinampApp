@@ -28,18 +28,21 @@ import coil3.compose.AsyncImage
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.entity.search.dummySearchItems
 import com.example.presentation.R
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
+import com.example.presentation.ui.widget.SpotifyPlayingIndicator
 import com.example.presentation.util.preview.PreviewTheme
 
 
 @Composable
 fun SearchItemComponent(
     domain: SearchItemDomain?,
-    onClicked: (SearchItemDomain) -> Unit = {}
+    onClicked: (SearchItemDomain) -> Unit = {},
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     when (domain) {
-        is SearchItemDomain.TrackSearch -> TrackSearchComponent(domain, onClicked)
+        is SearchItemDomain.TrackSearch -> TrackSearchComponent(domain, onClicked, playbackUiState)
 
         is SearchItemDomain.AlbumSearch -> AlbumSearchComponent(domain, onClicked)
 
@@ -66,8 +69,11 @@ fun SearchItemComponent(
 @Composable
 fun TrackSearchComponent(
     domain: SearchItemDomain.TrackSearch,
-    onClicked: (SearchItemDomain.TrackSearch) -> Unit
+    onClicked: (SearchItemDomain.TrackSearch) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
+    val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == domain.id
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,13 +100,24 @@ fun TrackSearchComponent(
             Column(
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = domain.title,
-                    style = TSDisplayMediumWhite().copy(
-                        fontSize = 15.sp,
-                        color = MaterialTheme.colorScheme.inversePrimary,
+                Row() {
+                    if (isCurrentTrackPlayed) {
+                        SpotifyPlayingIndicator(
+                            isPlaying = playbackUiState.isPlaying,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        Spacer(Modifier.width(4.dp))
+                    }
+
+                    Text(
+                        text = domain.title,
+                        style = TSDisplayMediumWhite().copy(
+                            fontSize = 15.sp,
+                            color = if (isCurrentTrackPlayed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inversePrimary,
+                        )
                     )
-                )
+                }
 
                 Text(
                     text = "Song • ${domain.artistName}",

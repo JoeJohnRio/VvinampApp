@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -22,23 +23,30 @@ import androidx.compose.ui.unit.sp
 import com.example.domain.entity.album.SimplifiedTrackDomain
 import com.example.domain.entity.album.dummyAlbumDomain
 import com.example.presentation.R
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.widget.SpotifyPlayingIndicator
 import com.example.presentation.util.preview.PreviewTheme
+import com.example.presentation.util.toMinutes
 
 @Composable
-fun AlbumSongsComponent(uiState: AlbumUiState, onSongClick: (SimplifiedTrackDomain) -> Unit) {
+fun AlbumSongsComponent(
+    uiState: AlbumUiState,
+    onSongClick: (SimplifiedTrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
     ) {
         Spacer(Modifier.height(32.dp))
 
-        ListSongsComponent(uiState.tracks, onSongClick)
+        ListSongsComponent(uiState.tracks, onSongClick, playbackUiState)
 
         Spacer(Modifier.height(16.dp))
 
         Text(
-            text = "${uiState.album?.trackCount} songs ∙ ${uiState.album?.totalDuration} min",
+            text = "${uiState.album?.trackCount} songs ∙ ${uiState.album?.totalDuration?.toMinutes()} min",
             style = TSDisplayMediumWhite().copy(
                 fontSize = 16.sp
             )
@@ -49,9 +57,13 @@ fun AlbumSongsComponent(uiState: AlbumUiState, onSongClick: (SimplifiedTrackDoma
 @Composable
 fun ListSongsComponent(
     tracks: List<SimplifiedTrackDomain>,
-    onSongClick: (SimplifiedTrackDomain) -> Unit
+    onSongClick: (SimplifiedTrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState
 ) {
     tracks.forEach { track ->
+        val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == track.id
+        val color = if (isCurrentTrackPlayed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inversePrimary
+
         Row(
             modifier = Modifier.fillMaxWidth()
                 .clickable {
@@ -60,12 +72,24 @@ fun ListSongsComponent(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column() {
-                Text(
-                    text = track.title,
-                    style = TSDisplayMediumWhite().copy(
-                        fontSize = 16.sp
+                Row() {
+                    if (isCurrentTrackPlayed) {
+                        SpotifyPlayingIndicator(
+                            isPlaying = playbackUiState.isPlaying,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        Spacer(Modifier.width(4.dp))
+                    }
+
+                    Text(
+                        text = track.title,
+                        style = TSDisplayMediumWhite().copy(
+                            fontSize = 16.sp,
+                            color = color
+                        )
                     )
-                )
+                }
 
                 Spacer(Modifier.height(8.dp))
 
@@ -83,7 +107,7 @@ fun ListSongsComponent(
                 onClick = {
                     //add to liked song
                 },
-                modifier = Modifier.size(24.dp) // Standard IconButton size
+                modifier = Modifier.size(24.dp)
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_bullet_vertical),
@@ -102,6 +126,6 @@ fun ListSongsComponent(
 @Composable
 fun AlbumSongsComponentPreview() {
     PreviewTheme {
-        AlbumSongsComponent(AlbumUiState(album = dummyAlbumDomain),{})
+        AlbumSongsComponent(AlbumUiState(album = dummyAlbumDomain), {},)
     }
 }

@@ -24,11 +24,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.album.SimplifiedTrackDomain
 import com.example.domain.entity.album.toTrackDomain
-import com.example.domain.entity.search.toTrackDomain
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.PaddingUtil
@@ -42,6 +42,7 @@ fun AlbumScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playbackViewModel: PlaybackViewModel = hiltViewModel()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.getAlbum(albumId)
@@ -53,6 +54,7 @@ fun AlbumScreen(
         content = {
             AlbumContent(
                 uiState = uiState,
+                playbackUiState = playbackUiState,
                 bottomNavRouter = bottomNavRouter,
                 viewModel = viewModel,
                 onSongClick = { searchItem ->
@@ -72,7 +74,8 @@ fun AlbumContent(
     uiState: AlbumUiState,
     bottomNavRouter: BottomNavRouter,
     viewModel: AlbumViewModel,
-    onSongClick: (SimplifiedTrackDomain) -> Unit
+    onSongClick: (SimplifiedTrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     val scrollState = rememberLazyListState()
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
@@ -163,7 +166,11 @@ fun AlbumContent(
                 }
 
                 item {
-                    AlbumSongsComponent(uiState, onSongClick)
+                    AlbumSongsComponent(
+                        uiState,
+                        onSongClick,
+                        playbackUiState = playbackUiState
+                        )
                 }
 
                 item {

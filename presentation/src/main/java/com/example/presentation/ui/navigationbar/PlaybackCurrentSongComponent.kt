@@ -36,15 +36,18 @@ import coil3.compose.rememberAsyncImagePainter
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.trackDummy
 import com.example.presentation.R
+import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
+import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.SpotifyMarquee
 //import com.example.presentation.util.SimpleMarqueeText
 import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
-fun CurrentPlaybackComponent(
+fun PlaybackCurrentSongComponent(
     currentlyPlaying: TrackDomain,
+    backgroundColor: Color,
     onClickPlay: () -> Unit = {},
     isPlaying: Boolean = false
 ) {
@@ -53,7 +56,7 @@ fun CurrentPlaybackComponent(
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
             .background(
-                color = Color(0xff61531d),
+                color = backgroundColor,
                 shape = RoundedCornerShape(4.dp)
             )
             .padding(8.dp),
@@ -108,7 +111,7 @@ fun CurrentPlaybackComponent(
 
         IconButton(
             onClick = { onClickPlay() },
-            modifier = Modifier.size(48.dp) // Standard IconButton size
+            modifier = Modifier.size(32.dp) // Standard IconButton size
         ) {
             Icon(
                 painter = painterResource(
@@ -117,7 +120,7 @@ fun CurrentPlaybackComponent(
                 ),
                 contentDescription = if (isPlaying) "Pause" else "Play",
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(32.dp)
             )
         }
 
@@ -154,8 +157,8 @@ fun VideoPlayer(m3u8Url: String) {
 
 @Preview(showBackground = true)
 @Composable
-fun CurrentPlaybackComponentPreview() {
+fun PlaybackCurrentSongComponentPreview() {
     PreviewTheme {
-        CurrentPlaybackComponent(currentlyPlaying = trackDummy.first(),)
+        PlaybackCurrentSongComponent(currentlyPlaying = trackDummy.first(), AppColours.PrimaryGreen)
     }
 }

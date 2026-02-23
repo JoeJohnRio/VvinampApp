@@ -1,7 +1,6 @@
 package com.example.presentation.ui.home.artist
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,6 +28,7 @@ import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.topSongsDummy
 import com.example.presentation.R
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableOutlined
@@ -40,6 +40,7 @@ fun TopSongsComponent(
     artistProfile: ArtistProfileDomain,
     topSongs: TopSongsDomain,
     onTrackClicked: (TrackDomain) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState(),
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -75,6 +76,7 @@ fun TopSongsComponent(
         ) {
             displayTasks.forEachIndexed { index, song ->
                 SongRow(
+                    playbackUiState = playbackUiState,
                     song = song,
                     index = index,
                     onTrackClicked = onTrackClicked
@@ -110,7 +112,7 @@ fun TopSongsComponentPreview() {
         TopSongsComponent(
             artistProfile = artistProfileDummy,
             topSongs = topSongsDummy,
-            onTrackClicked = {}
+            onTrackClicked = {},
         )
     }
 }

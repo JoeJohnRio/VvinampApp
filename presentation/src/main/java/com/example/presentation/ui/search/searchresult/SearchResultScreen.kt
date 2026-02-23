@@ -1,8 +1,6 @@
 package com.example.presentation.ui.search.searchresult
 
 
-import android.R.attr.track
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,11 +18,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -33,13 +31,12 @@ import com.example.domain.entity.search.toTrackDomain
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.ui.search.SearchUiState
 import com.example.presentation.ui.search.SearchViewModel
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
-import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.ui.theme.TSLabelMediumWhite
 import com.example.presentation.ui.widget.TextFieldSearch
 
 @Composable
@@ -50,6 +47,8 @@ fun SearchResultsScreen(
     val viewModel: SearchViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+
 
     ScreenWrapper(
         isLoading = uiState.isLoading,
@@ -57,6 +56,7 @@ fun SearchResultsScreen(
         content = {
             SearchResultsContent(
                 uiState = uiState,
+                playbackUiState = playbackUiState,
                 router = bottomNavRouter,
                 onTypeSearch = {
                     viewModel.onSearchInput(it)
@@ -100,7 +100,8 @@ fun SearchResultsContent(
     onTypeSearch: (String) -> Unit,
     searchItems: LazyPagingItems<SearchItemDomain>,
     onBackClicked: () -> Unit = {},
-    onItemClicked: (SearchItemDomain) -> Unit = {}
+    onItemClicked: (SearchItemDomain) -> Unit = {},
+    playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     Scaffold(
         topBar = {
@@ -142,7 +143,7 @@ fun SearchResultsContent(
                     }
                 }
             ) { index ->
-                SearchItemComponent(searchItems[index], onItemClicked)
+                SearchItemComponent(searchItems[index], onItemClicked, playbackUiState)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 

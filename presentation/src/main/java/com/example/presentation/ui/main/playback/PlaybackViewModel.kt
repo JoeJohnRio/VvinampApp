@@ -3,13 +3,12 @@ package com.example.presentation.ui.main.playback
 import android.app.Application
 import android.content.ComponentName
 import androidx.annotation.OptIn
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.data.BuildConfig
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -115,7 +115,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             playbackRepository.playbackInfo.invoke(track.id).onSuccess {
                 _uiState.value = _uiState.value.copy(
                     playbackInfo = it,
-                    currentlyPlaying = track,
+                    currentTrack = track,
                     isLoading = false,
                     error = null
                 )
@@ -129,5 +129,9 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
         }
     }
     fun isPlaying(): Boolean = mediaController?.isPlaying == true
+
+    fun updateDominantColor(color: Color) {
+        _uiState.update { it.copy(dominantColor = color) }
+    }
 
 }
