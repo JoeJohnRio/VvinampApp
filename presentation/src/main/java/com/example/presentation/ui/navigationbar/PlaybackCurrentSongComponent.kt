@@ -2,6 +2,7 @@ package com.example.presentation.ui.navigationbar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,6 +50,7 @@ fun PlaybackCurrentSongComponent(
     currentlyPlaying: TrackDomain,
     backgroundColor: Color,
     onClickPlay: () -> Unit = {},
+    onClickTrack: (TrackDomain) -> Unit = {},
     isPlaying: Boolean = false
 ) {
     Row(
@@ -59,6 +61,9 @@ fun PlaybackCurrentSongComponent(
                 color = backgroundColor,
                 shape = RoundedCornerShape(4.dp)
             )
+            .clickable {
+                onClickTrack(currentlyPlaying)
+            }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
