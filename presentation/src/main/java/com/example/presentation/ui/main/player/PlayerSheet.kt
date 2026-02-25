@@ -1,5 +1,9 @@
 package com.example.presentation.ui.main.player
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -8,6 +12,7 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,10 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 // 1. Define the states
@@ -34,111 +41,70 @@ enum class PlayerState { EXPANDED, COLLAPSED }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpotifyPlayerSheet(
-    // Optional: Pass height of your BottomNavigation if you want the mini player
-    // to sit ABOVE it rather than covering it.
-    bottomNavHeight: Int = 0
+    bottomNavHeight: Int = 0, // in pixels
+    state: AnchoredDraggableState<PlayerState>
 ) {
-    val density = LocalDensity.current
-    val screenHeight = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp.dp
+    // Use a composition-aware scope — no more bare CoroutineScope(Dispatchers.Main)
+    val scope = rememberCoroutineScope()
 
-    // Height of the mini player bar
-    val miniPlayerHeight = 64.dp
+    // Entrance animation: starts at 0f, will be snapped to full height then animated back down to 0f
+    val entranceOffset = remember { Animatable(0f) }
+    val entranceAnimated = remember { mutableStateOf(false) }
 
-    // 2. Setup the AnchoredDraggableState
-
-    val state = remember {
-        AnchoredDraggableState(
-            initialValue = PlayerState.COLLAPSED,
-        )
-    }
-
-    // 3. Calculate anchors based on screen size
-    // We update anchors when the layout is measured
-    val pxScreenHeight = with(density) { screenHeight.toPx() }
-    val pxMiniPlayerHeight = with(density) { miniPlayerHeight.toPx() }
-//    val pxBottomNavHeight = with(density) { bottomNavHeight.toPx() } // If using standard int, remove toPx()
-
-    SideEffect {
-        state.updateAnchors(
-            DraggableAnchors {
-                PlayerState.EXPANDED at 0f
-                // The collapsed position is at the bottom, leaving only the mini player visible
-                PlayerState.COLLAPSED at (pxScreenHeight - pxMiniPlayerHeight - bottomNavHeight)
-            }
-        )
-    }
-
-    // 4. Calculate progress (0f = Collapsed, 1f = Expanded)
-    // We use this to fade elements in and out
+    // Derive expansion progress from actual anchor positions (safer than manual px math)
     val offset = if (state.offset.isNaN()) 0f else state.offset
-    val collapsedOffset = pxScreenHeight - pxMiniPlayerHeight - bottomNavHeight
+    val collapsedAnchor = state.anchors.positionOf(PlayerState.COLLAPSED).let {
+        if (it.isNaN() || it == 0f) 1f else it // avoid divide-by-zero before anchors are ready
+    }
+    val expansionProgress = (1f - (offset / collapsedAnchor)).coerceIn(0f, 1f)
 
-    // Progress is 1.0 when Expanded (offset 0), 0.0 when Collapsed
-    val expansionProgress = (1f - (offset / collapsedOffset)).coerceIn(0f, 1f)
-
-    // THE CONTAINER
     Box(
         modifier = Modifier
             .fillMaxSize()
-            // Important: This offset moves the entire sheet
-            .offset { IntOffset(x = 0, y = state.requireOffset().roundToInt()) }
+            // updateAnchors here: fires when size is actually known (layout phase)
+            .onSizeChanged { size ->
+                state.updateAnchors(
+                    DraggableAnchors {
+                        PlayerState.EXPANDED at 0f
+                        PlayerState.COLLAPSED at (size.height.toFloat() - bottomNavHeight)
+                    }
+                )
+                // Trigger entrance animation exactly once, after we know the real height
+                if (!entranceAnimated.value) {
+                    entranceAnimated.value = true
+                    scope.launch {
+                        entranceOffset.snapTo(size.height.toFloat()) // instantly off-screen
+                        entranceOffset.animateTo(
+                            targetValue = 0f,
+                            animationSpec = spring(
+                                dampingRatio = Spring.DampingRatioMediumBouncy,
+                                stiffness = Spring.StiffnessMediumLow
+                            )
+                        )
+                    }
+                }
+            }
+            .offset {
+                IntOffset(
+                    x = 0,
+                    // Drag state offset + entrance animation combined
+                    y = (state.requireOffset() + entranceOffset.value).roundToInt()
+                )
+            }
             .anchoredDraggable(state, Orientation.Vertical)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest) // Background of player
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
     ) {
-
-        // --- CONTENT 1: FULL SCREEN PLAYER ---
-        // Visible only when expanding
         FullPlayerContent(
             modifier = Modifier
-                .alpha(expansionProgress) // Fade in as we drag up
+                .alpha(expansionProgress)
                 .fillMaxSize(),
             onCollapse = {
-                // Programmatic collapse (e.g. top-left down arrow)
-                // Need a coroutine scope in real app
+                // Now we have a proper scope here
+                scope.launch {
+                    state.animateTo(PlayerState.COLLAPSED)
+                }
             }
         )
-
-        // --- CONTENT 2: MINI PLAYER ---
-        // Visible only when collapsed
-        MiniPlayerContent(
-            modifier = Modifier
-                .alpha(1f - expansionProgress) // Fade out as we drag up
-                .height(miniPlayerHeight)
-                .fillMaxWidth()
-                .clickable {
-                    // Tap to expand
-                    // scope.launch { state.animateTo(PlayerState.EXPANDED) }
-                },
-            height = miniPlayerHeight
-        )
-    }
-}
-
-@Composable
-fun MiniPlayerContent(
-    modifier: Modifier = Modifier,
-    height: androidx.compose.ui.unit.Dp
-) {
-    Row(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.secondaryContainer)
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        // Tiny Album Art
-        Box(modifier = Modifier.size(40.dp).background(Color.Gray, RoundedCornerShape(4.dp)))
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text("Espresso", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-            Text("Sabrina Carpenter", style = MaterialTheme.typography.bodySmall)
-        }
-
-        // Mini Play Button
-        IconButton(onClick = {}) {
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play")
-        }
     }
 }
 
@@ -176,7 +142,12 @@ fun FullPlayerContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         // Title & Artist
-        Text("Espresso", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = Color.Black)
+        Text(
+            "Espresso",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
+        )
         Text("Sabrina Carpenter", style = MaterialTheme.typography.titleMedium, color = Color.Gray)
 
         Spacer(modifier = Modifier.weight(1f))
