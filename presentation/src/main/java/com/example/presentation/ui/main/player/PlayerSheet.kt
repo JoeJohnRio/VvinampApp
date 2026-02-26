@@ -1,10 +1,8 @@
 package com.example.presentation.ui.main.player
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -14,24 +12,28 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalWindowInfo
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil3.compose.AsyncImage
+import com.example.presentation.R
+import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.theme.TSLabelMediumWhite
+import com.example.presentation.util.PaddingUtil
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -115,28 +117,40 @@ fun FullPlayerContent(
 ) {
     Column(
         modifier = modifier
+            .fillMaxWidth()
+            .background(
+                Brush.verticalGradient(
+                    0f to Color(0xffe4541f),
+                    1f to MaterialTheme.colorScheme.background
+                )
+            )
             .padding(top = 48.dp) // Status bar padding
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Drag Handle / Down Arrow
-        Icon(
-            imageVector = Icons.Default.KeyboardArrowDown,
-            contentDescription = "Collapse",
-            modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.Start)
-                .clickable { onCollapse() }
+        PlayerTopBar(
+            onCollapse = {},
+            onMoreOptionClicked = {}
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         // Big Album Art
-        Box(
+        AsyncImage(
+            model = "https://asset.kompas.com/crops/hh1ksZLgngR1tvdZpFSPt6qTicY=/20x0:1280x840/1200x800/data/photo/2022/01/24/61ee4f978c1be.jpeg",
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.bg_image),
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-                .background(Color.DarkGray, RoundedCornerShape(12.dp))
+                .clip(RoundedCornerShape(8.dp))
+
+        )
+
+        TrackPlayerComponent(
+            onAddToPlaylistClicked = {}
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -156,5 +170,172 @@ fun FullPlayerContent(
         LinearProgressIndicator(progress = { 0.3f }, modifier = Modifier.fillMaxWidth())
 
         Spacer(modifier = Modifier.height(64.dp))
+    }
+}
+
+@Composable
+fun PlayerTopBar(
+    onCollapse: () -> Unit,
+    onMoreOptionClicked: () -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(
+            modifier = Modifier
+                .size(24.dp),
+            onClick = onCollapse
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_chevron_down),
+                contentDescription = "Collapse",
+            )
+        }
+
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "PLAYING FROM ARTIST",
+                style = TSLabelMediumWhite().copy(
+                    fontSize = 12.sp
+                )
+            )
+
+            Text(
+                text = "Koes Plus",
+                style = TSDisplayMediumWhite().copy(
+                    fontSize = 12.sp
+                )
+            )
+        }
+
+        IconButton(
+            modifier = Modifier
+                .size(24.dp),
+            onClick = onMoreOptionClicked
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_bullet_vertical),
+                contentDescription = "Detail",
+            )
+        }
+    }
+}
+
+@Composable
+fun TrackPlayerComponent(
+    onAddToPlaylistClicked: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column() {
+                Text(
+                    text = "Bujangan",
+                    style = TSLabelMediumWhite().copy(
+                        fontSize = 22.sp
+                    )
+                )
+
+                Text(
+                    text = "Koes Plus",
+                    style = TSLabelMediumWhite().copy(
+                        fontSize = 15.sp
+                    )
+                )
+            }
+
+            IconButton(
+                modifier = Modifier
+                    .size(32.dp),
+                onClick = onAddToPlaylistClicked
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_plus_circle),
+                    contentDescription = "Detail",
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        PlayerProgressBar()
+
+        PlayerControls()
+    }
+}
+
+@Composable
+fun PlayerProgressBar() {
+
+}
+
+@Composable
+fun PlayerControls() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        IconButton(
+            modifier = Modifier
+                .size(32.dp),
+            onClick = {}
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_shuffle),
+                contentDescription = "Detail",
+            )
+        }
+
+        IconButton(
+            modifier = Modifier
+                .size(32.dp),
+            onClick = {}
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_play_back),
+                contentDescription = "Detail",
+            )
+        }
+
+        IconButton(
+            modifier = Modifier
+                .size(32.dp),
+            onClick = {}
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_play),
+                contentDescription = "Detail",
+            )
+        }
+
+        IconButton(
+            modifier = Modifier
+                .size(32.dp),
+            onClick = {}
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_play_forward),
+                contentDescription = "Detail",
+            )
+        }
+
+        IconButton(
+            modifier = Modifier
+                .size(32.dp),
+            onClick = {}
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_plus_circle),
+                contentDescription = "Detail",
+            )
+        }
     }
 }
