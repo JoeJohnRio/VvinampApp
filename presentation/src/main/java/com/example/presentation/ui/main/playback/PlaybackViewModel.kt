@@ -37,7 +37,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
     private val _events = MutableSharedFlow<PlaybackUiEvent>()
     val events = _events.asSharedFlow()
 
-    private var mediaController: MediaController? = null
+    private val _mediaController = MutableStateFlow<MediaController?>(null)
+    val mediaController = _mediaController.asStateFlow()
 
     init {
         val sessionToken =
@@ -47,7 +48,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
         // Inside your ViewModel
         controllerFuture.addListener({
             val controller = controllerFuture.get()
-            mediaController = controller // Save it
+            _mediaController.update { controller }
 
             // Attach the listener here
             controller.addListener(object : Player.Listener {
@@ -82,22 +83,22 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
     fun start(url: String) {
         val mediaItem = MediaItem.fromUri(url)
-        mediaController?.setMediaItem(mediaItem)
-        mediaController?.prepare()
-        mediaController?.play()
+        mediaController.value?.setMediaItem(mediaItem)
+        mediaController.value?.prepare()
+        mediaController.value?.play()
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaController?.release()
+        mediaController.value?.release()
     }
 
     fun play() {
-        mediaController?.play()
+        mediaController.value?.play()
     }
 
     fun pause() {
-        mediaController?.pause()
+        mediaController.value?.pause()
     }
 
     private fun togglePlayback() {
@@ -128,7 +129,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             }
         }
     }
-    fun isPlaying(): Boolean = mediaController?.isPlaying == true
+    fun isPlaying(): Boolean = mediaController.value?.isPlaying == true
 
     fun updateDominantColor(color: Color) {
         _uiState.update { it.copy(dominantColor = color) }

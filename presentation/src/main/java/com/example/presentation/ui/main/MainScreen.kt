@@ -20,6 +20,7 @@ fun MainScreen(
     playbackViewModel: PlaybackViewModel = hiltViewModel()
 ) {
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+    val mediaController by playbackViewModel.mediaController.collectAsStateWithLifecycle()
 
     ExtractDominantColorEffect(
         imageUrl = playbackUiState.currentTrack?.albumCoverUrl,
@@ -44,6 +45,7 @@ fun MainScreen(
     val bottomNavRouter = BottomNavRouter(navigator)
 
     MainScreenContainer(
+        player = mediaController,
         bottomNavRouter = bottomNavRouter,
         navigationState = navigationState,
         playbackUiState = playbackUiState,

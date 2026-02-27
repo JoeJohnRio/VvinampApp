@@ -5,7 +5,6 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
@@ -20,20 +19,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.Player
 import coil3.compose.AsyncImage
 import com.example.presentation.R
+import androidx.media3.ui.compose.material3.indicator.PositionAndDurationText
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
-import com.example.presentation.util.PaddingUtil
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -42,9 +45,10 @@ enum class PlayerState { EXPANDED, COLLAPSED }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpotifyPlayerSheet(
+fun PlayerSheet(
     bottomNavHeight: Int = 0, // in pixels
-    state: AnchoredDraggableState<PlayerState>
+    state: AnchoredDraggableState<PlayerState>,
+    player: Player?
 ) {
     // Use a composition-aware scope — no more bare CoroutineScope(Dispatchers.Main)
     val scope = rememberCoroutineScope()
@@ -100,6 +104,7 @@ fun SpotifyPlayerSheet(
             modifier = Modifier
                 .alpha(expansionProgress)
                 .fillMaxSize(),
+            player = player,
             onCollapse = {
                 // Now we have a proper scope here
                 scope.launch {
@@ -113,7 +118,8 @@ fun SpotifyPlayerSheet(
 @Composable
 fun FullPlayerContent(
     modifier: Modifier = Modifier,
-    onCollapse: () -> Unit
+    onCollapse: () -> Unit,
+    player: Player?
 ) {
     Column(
         modifier = modifier
@@ -134,7 +140,7 @@ fun FullPlayerContent(
             onMoreOptionClicked = {}
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(32.dp))
 
         // Big Album Art
         AsyncImage(
@@ -149,20 +155,11 @@ fun FullPlayerContent(
 
         )
 
+        Spacer(modifier = Modifier.weight(1f))
         TrackPlayerComponent(
+            player = player,
             onAddToPlaylistClicked = {}
         )
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Title & Artist
-        Text(
-            "Espresso",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black
-        )
-        Text("Sabrina Carpenter", style = MaterialTheme.typography.titleMedium, color = Color.Gray)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -188,6 +185,7 @@ fun PlayerTopBar(
             onClick = onCollapse
         ) {
             Icon(
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_chevron_down),
                 contentDescription = "Collapse",
             )
@@ -218,6 +216,7 @@ fun PlayerTopBar(
             onClick = onMoreOptionClicked
         ) {
             Icon(
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_bullet_vertical),
                 contentDescription = "Detail",
             )
@@ -227,7 +226,8 @@ fun PlayerTopBar(
 
 @Composable
 fun TrackPlayerComponent(
-    onAddToPlaylistClicked: () -> Unit
+    onAddToPlaylistClicked: () -> Unit,
+    player: Player?
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -239,7 +239,7 @@ fun TrackPlayerComponent(
             Column() {
                 Text(
                     text = "Bujangan",
-                    style = TSLabelMediumWhite().copy(
+                    style = TSDisplayMediumWhite().copy(
                         fontSize = 22.sp
                     )
                 )
@@ -247,7 +247,7 @@ fun TrackPlayerComponent(
                 Text(
                     text = "Koes Plus",
                     style = TSLabelMediumWhite().copy(
-                        fontSize = 15.sp
+                        fontSize = 16.sp
                     )
                 )
             }
@@ -258,6 +258,7 @@ fun TrackPlayerComponent(
                 onClick = onAddToPlaylistClicked
             ) {
                 Icon(
+                    tint = MaterialTheme.colorScheme.inversePrimary,
                     painter = painterResource(R.drawable.ic_plus_circle),
                     contentDescription = "Detail",
                 )
@@ -266,22 +267,30 @@ fun TrackPlayerComponent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        PlayerProgressBar()
+        PlayerProgressBar(player)
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         PlayerControls()
     }
 }
 
 @Composable
-fun PlayerProgressBar() {
-
+fun PlayerProgressBar(player: Player?) {
+    if (player != null) {
+        PositionAndDurationText(
+            player = player,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+        )
+    }
 }
 
 @Composable
 fun PlayerControls() {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
             modifier = Modifier
@@ -289,6 +298,7 @@ fun PlayerControls() {
             onClick = {}
         ) {
             Icon(
+                tint = MaterialTheme.colorScheme.outline,
                 painter = painterResource(R.drawable.ic_shuffle),
                 contentDescription = "Detail",
             )
@@ -300,6 +310,7 @@ fun PlayerControls() {
             onClick = {}
         ) {
             Icon(
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_play_back),
                 contentDescription = "Detail",
             )
@@ -307,10 +318,21 @@ fun PlayerControls() {
 
         IconButton(
             modifier = Modifier
-                .size(32.dp),
+                .graphicsLayer {
+                    compositingStrategy = CompositingStrategy.Offscreen
+                }
+                .drawBehind {
+                    drawCircle(Color.White)
+                }
+                .size(64.dp),
             onClick = {}
         ) {
             Icon(
+                modifier = Modifier
+                    .graphicsLayer {
+                        blendMode = BlendMode.DstOut
+                    },
+                tint = Color.Black,
                 painter = painterResource(R.drawable.ic_play),
                 contentDescription = "Detail",
             )
@@ -322,6 +344,7 @@ fun PlayerControls() {
             onClick = {}
         ) {
             Icon(
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_play_forward),
                 contentDescription = "Detail",
             )
@@ -333,7 +356,8 @@ fun PlayerControls() {
             onClick = {}
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_plus_circle),
+                tint = MaterialTheme.colorScheme.outline,
+                painter = painterResource(R.drawable.ic_loop),
                 contentDescription = "Detail",
             )
         }

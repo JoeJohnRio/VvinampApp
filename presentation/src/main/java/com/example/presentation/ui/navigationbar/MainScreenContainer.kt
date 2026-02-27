@@ -2,7 +2,6 @@ package com.example.presentation.ui.navigationbar
 
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
-import androidx.compose.foundation.gestures.snapTo
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -13,30 +12,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.Player
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.player.PlayerState
-import com.example.presentation.ui.main.player.SpotifyPlayerSheet
-import com.example.presentation.util.toast
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.presentation.ui.main.player.PlayerSheet
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun MainScreenContainer(
+    player: Player?,
     bottomNavRouter: BottomNavRouter,
     navigationState: NavigationState,
     playbackUiState: PlaybackUiState,
@@ -105,7 +99,8 @@ fun MainScreenContainer(
             )
         }
     }
-    SpotifyPlayerSheet(
+    PlayerSheet(
+        player = player,
         bottomNavHeight = 0, // pass your bottom nav height in px if needed
         state = playerState
     )
