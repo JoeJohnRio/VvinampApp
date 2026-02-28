@@ -139,7 +139,6 @@ fun ArtistProfileContent(
     ExtractDominantColorEffect(
         imageUrl = artistProfile.profileImage,
         onColorExtracted = { color ->
-            Log.d("joel123", "nowUpdating $color")
             updateDominantColor(color)
         }
     )

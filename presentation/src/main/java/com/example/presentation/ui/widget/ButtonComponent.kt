@@ -152,7 +152,8 @@ fun ButtonSolidCloseIconAndText(
 @Composable
 fun ButtonVariableSizeSolid(
     text: String = "",
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
+        .height(50.dp),
     modifierText: Modifier = Modifier,
     onClick: () -> Unit = {},
     textColor: Color = MaterialTheme.colorScheme.onPrimary,
@@ -163,8 +164,7 @@ fun ButtonVariableSizeSolid(
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier
-            .height(50.dp),
+        modifier = modifier,
         colors = ButtonDefaults.buttonColors(
             containerColor = containerColor,
             disabledContainerColor = disabledContainerColor

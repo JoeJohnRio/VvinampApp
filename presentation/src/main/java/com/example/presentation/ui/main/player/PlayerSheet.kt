@@ -10,33 +10,62 @@ import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
-import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.media3.common.Player
 import coil3.compose.AsyncImage
+import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
-import androidx.media3.ui.compose.material3.indicator.PositionAndDurationText
+import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
+import com.example.presentation.ui.widget.ButtonVariableOutlined
+import com.example.presentation.ui.widget.text.ExpandableText
+import com.example.presentation.util.orErrorNoText
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -46,36 +75,88 @@ enum class PlayerState { EXPANDED, COLLAPSED }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayerSheet(
-    bottomNavHeight: Int = 0, // in pixels
+    uiEvent: (PlaybackUiEvent) -> Unit,
+    playbackUiState: PlaybackUiState,
+    player: Player?,
     state: AnchoredDraggableState<PlayerState>,
-    player: Player?
 ) {
-    // Use a composition-aware scope — no more bare CoroutineScope(Dispatchers.Main)
     val scope = rememberCoroutineScope()
 
-    // Entrance animation: starts at 0f, will be snapped to full height then animated back down to 0f
     val entranceOffset = remember { Animatable(0f) }
     val entranceAnimated = remember { mutableStateOf(false) }
 
-    // Derive expansion progress from actual anchor positions (safer than manual px math)
     val offset = if (state.offset.isNaN()) 0f else state.offset
     val collapsedAnchor = state.anchors.positionOf(PlayerState.COLLAPSED).let {
         if (it.isNaN() || it == 0f) 1f else it // avoid divide-by-zero before anchors are ready
     }
     val expansionProgress = (1f - (offset / collapsedAnchor)).coerceIn(0f, 1f)
+    val scrollState = rememberScrollState()
+    val isAtTop = scrollState.value == 0
+
+    // 1. Create the nested scroll connection
+    val nestedScrollConnection = remember(state) {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val delta = available.y
+                // Dragging UP: If sheet isn't fully expanded, expand it first before scrolling
+                return if (delta < 0f) {
+                    val consumed = state.dispatchRawDelta(delta)
+                    Offset(0f, consumed)
+                } else {
+                    Offset.Zero
+                }
+            }
+
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                val delta = available.y
+                // Dragging DOWN: The verticalScroll uses what it needs.
+                // If we hit the top, available.y will contain the remaining swipe.
+                // We pass that leftover swipe to the draggable state to collapse it.
+                return if (delta > 0f) {
+                    val dragged = state.dispatchRawDelta(delta)
+                    Offset(0f, dragged)
+                } else {
+                    Offset.Zero
+                }
+            }
+
+            override suspend fun onPreFling(available: Velocity): Velocity {
+                val velocity = available.y
+                // Flinging UP
+                return if (velocity < 0f) {
+                    state.animateTo(PlayerState.EXPANDED)
+                    Velocity(0f, velocity)
+                } else {
+                    Velocity.Zero
+                }
+            }
+
+            override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                val velocity = available.y
+                // Flinging DOWN: Only trigger collapse if the inner scroll didn't consume the fling
+                if (velocity > 0f) {
+                    state.animateTo(PlayerState.COLLAPSED)
+                    return Velocity(0f, velocity)
+                }
+                return Velocity.Zero
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            // updateAnchors here: fires when size is actually known (layout phase)
             .onSizeChanged { size ->
                 state.updateAnchors(
                     DraggableAnchors {
                         PlayerState.EXPANDED at 0f
-                        PlayerState.COLLAPSED at (size.height.toFloat() - bottomNavHeight)
+                        PlayerState.COLLAPSED at size.height.toFloat()
                     }
                 )
-                // Trigger entrance animation exactly once, after we know the real height
                 if (!entranceAnimated.value) {
                     entranceAnimated.value = true
                     scope.launch {
@@ -93,31 +174,38 @@ fun PlayerSheet(
             .offset {
                 IntOffset(
                     x = 0,
-                    // Drag state offset + entrance animation combined
                     y = (state.requireOffset() + entranceOffset.value).roundToInt()
                 )
             }
-            .anchoredDraggable(state, Orientation.Vertical)
-            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+            .anchoredDraggable(
+                state = state,
+                orientation = Orientation.Vertical,
+                enabled = isAtTop
+            )
+            .clip(RoundedCornerShape(32.dp))
     ) {
-        FullPlayerContent(
+        PlayerSheetContent(
+            uiState = playbackUiState,
             modifier = Modifier
-                .alpha(expansionProgress)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .nestedScroll(nestedScrollConnection)
+                .verticalScroll(scrollState),
             player = player,
             onCollapse = {
-                // Now we have a proper scope here
                 scope.launch {
                     state.animateTo(PlayerState.COLLAPSED)
                 }
-            }
+            },
+            uiEvent = uiEvent
         )
     }
 }
 
 @Composable
-fun FullPlayerContent(
+fun PlayerSheetContent(
     modifier: Modifier = Modifier,
+    uiEvent: (PlaybackUiEvent) -> Unit,
+    uiState: PlaybackUiState,
     onCollapse: () -> Unit,
     player: Player?
 ) {
@@ -126,57 +214,181 @@ fun FullPlayerContent(
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
-                    0f to Color(0xffe4541f),
-                    1f to MaterialTheme.colorScheme.background
+                    0f to uiState.dominantColor,
+                    0.5f to MaterialTheme.colorScheme.background
                 )
             )
-            .padding(top = 48.dp) // Status bar padding
+            .padding(top = 48.dp)
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Drag Handle / Down Arrow
         PlayerTopBar(
-            onCollapse = {},
+            uiState = uiState,
+            onCollapse = onCollapse,
             onMoreOptionClicked = {}
         )
 
-        Spacer(modifier = Modifier.height(32.dp))
+        Column(
+            modifier = Modifier.height(550.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                model = uiState.currentTrack?.albumCoverUrl,
+                contentDescription = null,
+                placeholder = painterResource(R.drawable.bg_image),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(8.dp))
 
-        // Big Album Art
-        AsyncImage(
-            model = "https://asset.kompas.com/crops/hh1ksZLgngR1tvdZpFSPt6qTicY=/20x0:1280x840/1200x800/data/photo/2022/01/24/61ee4f978c1be.jpeg",
-            contentDescription = null,
-            placeholder = painterResource(R.drawable.bg_image),
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f)
-                .clip(RoundedCornerShape(8.dp))
+            )
+        }
 
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
         TrackPlayerComponent(
+            uiState = uiState,
+            uiEvent = uiEvent,
             player = player,
             onAddToPlaylistClicked = {}
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // Scrubber & Controls would go here
-        LinearProgressIndicator(progress = { 0.3f }, modifier = Modifier.fillMaxWidth())
+        ShareTrackComponent()
 
-        Spacer(modifier = Modifier.height(64.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        AboutArtistSolidColoredDesc(
+            uiState = uiState
+        )
+
+        Spacer(modifier = Modifier.height(50.dp))
+    }
+}
+
+@Composable
+fun AboutArtistSolidColoredDesc(
+    uiState: PlaybackUiState
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+    ) {
+        ImageAboutArtist(uiState.currentTrack?.albumCoverUrl.orEmpty())
+
+        ArtistAboutDetail(uiState.currentTrack)
+    }
+}
+
+@Composable
+fun ArtistAboutDetail(currentTrack: TrackDomain?) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.surfaceContainer)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 24.dp
+            )
+    ) {
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.align(Alignment.CenterStart)
+            ) {
+                Text(
+                    text = currentTrack?.artistName.orErrorNoText(),
+                    style = TSDisplayMediumWhite().copy(
+                        fontSize = 18.sp
+                    )
+                )
+
+                Spacer(Modifier.height(4.dp))
+
+                Text(
+                    text = "13.6M monthly listeners",
+                    style = TSDisplayMediumWhite().copy(
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.surfaceBright
+                    )
+                )
+            }
+
+            ButtonVariableOutlined(
+                modifier = Modifier
+                    .height(30.dp)
+                    .align(Alignment.TopEnd),
+                text = "Follow",
+                textStyle = TSDisplayMediumWhite().copy(
+                    fontSize = 12.sp
+                )
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        ExpandableText(
+            text = "Sheila on 7 is an alternative rock band from Yogyakarta, Indonesia. They have changed their lineup several times since their formation on 6 May 1996. Their first lineup consisted of Akhdiyat Duta Modjo (also known as Duta, vocals), Saktia \"Sakti\" Ari Seno (guitar), Eross Candra (guitar), Adam Muhammad Subarkah (bass), and Anton Widiastanto (drums). Anton left the group in 2004, while Sakti left in 2006, leaving their current lineup as it is, but with Brian Kresna Putro replacing Anton in the drums until his departure in 2022.",
+            textStyle = TSDisplayMediumWhite().copy(
+                fontSize = 10.sp,
+                color = MaterialTheme.colorScheme.surfaceBright
+            )
+        )
+    }
+}
+
+@Composable
+fun ImageAboutArtist(
+    artistImageUrl: String = ""
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(2f)
+    ) {
+
+        AsyncImage(
+            modifier = Modifier.fillMaxSize(),
+            model = artistImageUrl,
+            contentDescription = null,
+            placeholder = painterResource(R.drawable.bg_image),
+            contentScale = ContentScale.Crop
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        0f to MaterialTheme.colorScheme.background.copy(alpha = 0.5f),
+                        0.3f to Color.Transparent
+                    )
+                )
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.TopStart)
+                .padding(top = 16.dp, start = 16.dp),
+            text = stringResource(R.string.title_about_the_artist),
+            style = TSHeadlineMediumWhite().copy(
+                fontSize = 13.sp
+            ),
+        )
+
     }
 }
 
 @Composable
 fun PlayerTopBar(
+    uiState: PlaybackUiState,
     onCollapse: () -> Unit,
     onMoreOptionClicked: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
@@ -203,7 +415,7 @@ fun PlayerTopBar(
             )
 
             Text(
-                text = "Koes Plus",
+                text = uiState.currentTrack?.artistName.orErrorNoText(),
                 style = TSDisplayMediumWhite().copy(
                     fontSize = 12.sp
                 )
@@ -225,141 +437,49 @@ fun PlayerTopBar(
 }
 
 @Composable
-fun TrackPlayerComponent(
-    onAddToPlaylistClicked: () -> Unit,
-    player: Player?
-) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
+fun ShareTrackComponent() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+        IconButton(
+            modifier = Modifier
+                .size(24.dp),
+            onClick = {}
         ) {
-            Column() {
-                Text(
-                    text = "Bujangan",
-                    style = TSDisplayMediumWhite().copy(
-                        fontSize = 22.sp
-                    )
-                )
+            Icon(
+                tint = MaterialTheme.colorScheme.inversePrimary,
+                painter = painterResource(R.drawable.ic_multi_platform),
+                contentDescription = "Multi Platform",
+            )
+        }
 
-                Text(
-                    text = "Koes Plus",
-                    style = TSLabelMediumWhite().copy(
-                        fontSize = 16.sp
-                    )
+        Row(
+
+        ) {
+            IconButton(
+                modifier = Modifier
+                    .size(24.dp),
+                onClick = {}
+            ) {
+                Icon(
+                    tint = MaterialTheme.colorScheme.inversePrimary,
+                    painter = painterResource(R.drawable.ic_share),
+                    contentDescription = "Share",
                 )
             }
 
             IconButton(
                 modifier = Modifier
-                    .size(32.dp),
-                onClick = onAddToPlaylistClicked
+                    .size(24.dp),
+                onClick = {}
             ) {
                 Icon(
                     tint = MaterialTheme.colorScheme.inversePrimary,
-                    painter = painterResource(R.drawable.ic_plus_circle),
-                    contentDescription = "Detail",
+                    painter = painterResource(R.drawable.ic_list),
+                    contentDescription = "List",
                 )
             }
-        }
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        PlayerProgressBar(player)
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        PlayerControls()
-    }
-}
-
-@Composable
-fun PlayerProgressBar(player: Player?) {
-    if (player != null) {
-        PositionAndDurationText(
-            player = player,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun PlayerControls() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        IconButton(
-            modifier = Modifier
-                .size(32.dp),
-            onClick = {}
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.outline,
-                painter = painterResource(R.drawable.ic_shuffle),
-                contentDescription = "Detail",
-            )
-        }
-
-        IconButton(
-            modifier = Modifier
-                .size(32.dp),
-            onClick = {}
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = painterResource(R.drawable.ic_play_back),
-                contentDescription = "Detail",
-            )
-        }
-
-        IconButton(
-            modifier = Modifier
-                .graphicsLayer {
-                    compositingStrategy = CompositingStrategy.Offscreen
-                }
-                .drawBehind {
-                    drawCircle(Color.White)
-                }
-                .size(64.dp),
-            onClick = {}
-        ) {
-            Icon(
-                modifier = Modifier
-                    .graphicsLayer {
-                        blendMode = BlendMode.DstOut
-                    },
-                tint = Color.Black,
-                painter = painterResource(R.drawable.ic_play),
-                contentDescription = "Detail",
-            )
-        }
-
-        IconButton(
-            modifier = Modifier
-                .size(32.dp),
-            onClick = {}
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = painterResource(R.drawable.ic_play_forward),
-                contentDescription = "Detail",
-            )
-        }
-
-        IconButton(
-            modifier = Modifier
-                .size(32.dp),
-            onClick = {}
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.outline,
-                painter = painterResource(R.drawable.ic_loop),
-                contentDescription = "Detail",
-            )
         }
     }
 }

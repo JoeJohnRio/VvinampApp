@@ -30,6 +30,7 @@
 
     <!--/_____TITLE-->
     <string name="title_your_library">Your Library</string>
+    <string name="title_about_the_artist">About the artist</string>
     <string name="title_search">Search</string>
     <string name="title_millions_of_songs">Millions of songs.\nFor Free.</string>
     <string name="title_sign_up_to_start_listening">Sign up to start listening</string>

@@ -63,7 +63,7 @@ fun AlbumScreen(
                             searchItem.toTrackDomain()
                         )
                     )
-                }
+                },
             )
         }
     )

@@ -49,7 +49,7 @@ wheelPickerCompose = "1.1.11"
 apollo = "4.4.0"
 securityCrypto = "1.1.0"
 datastore = "1.1.7"
-media3 = "1.9.1"
+media3 = "1.10.0-beta01"
 palette = "1.0.0"
 
 [libraries]

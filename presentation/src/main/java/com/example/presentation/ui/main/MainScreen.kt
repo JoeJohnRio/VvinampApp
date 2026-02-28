@@ -1,10 +1,8 @@
 package com.example.presentation.ui.main
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.rememberNavigationState
@@ -13,22 +11,11 @@ import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.ui.navigationbar.MainNavDisplay
 import com.example.presentation.ui.navigationbar.MainScreenContainer
-import com.example.presentation.util.ExtractDominantColorEffect
 
 @Composable
 fun MainScreen(
     playbackViewModel: PlaybackViewModel = hiltViewModel()
 ) {
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
-    val mediaController by playbackViewModel.mediaController.collectAsStateWithLifecycle()
-
-    ExtractDominantColorEffect(
-        imageUrl = playbackUiState.currentTrack?.albumCoverUrl,
-        onColorExtracted = { color ->
-            playbackViewModel.updateDominantColor(color)
-        }
-    )
-
     val appTopLevel =
         setOf(
             BottomNavDestination.Home,
@@ -45,13 +32,9 @@ fun MainScreen(
     val bottomNavRouter = BottomNavRouter(navigator)
 
     MainScreenContainer(
-        player = mediaController,
+        playbackViewModel = playbackViewModel,
         bottomNavRouter = bottomNavRouter,
         navigationState = navigationState,
-        playbackUiState = playbackUiState,
-        onClickPlay = {
-            playbackViewModel.onEvent(PlaybackUiEvent.TogglePlayback)
-        }
     ) {
         MainNavDisplay(
             navigationState = navigationState,
