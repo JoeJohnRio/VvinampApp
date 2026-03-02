@@ -1,7 +1,9 @@
 package com.example.presentation.ui.navigationbar
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -17,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,6 +58,18 @@ fun MainScreenContainer(
     val isButtonNav = with(density) {
         bottomPadding > 24.dp // Usually gesture bars are ~16dp-20dp, buttons are ~48dp+
     }
+
+// 1. Calculate the current offset, handling the initial NaN state before anchors are ready
+    val offset = if (playerState.offset.isNaN()) 0f else playerState.offset
+    val collapsedAnchor = playerState.anchors.positionOf(PlayerState.COLLAPSED).let {
+        if (it.isNaN() || it == 0f) 1f else it
+    }
+
+// 2. Calculate a progress fraction from 0f (fully collapsed) to 1f (fully expanded)
+    val expansionProgress = (1f - (offset / collapsedAnchor)).coerceIn(0f, 1f)
+
+// 3. Multiply progress by your maximum desired alpha (0.5f)
+    val scrimAlpha = expansionProgress * 0.5f
 
     ExtractDominantColorEffect(
         imageUrl = playbackUiState.currentTrack?.albumCoverUrl,
@@ -112,6 +128,23 @@ fun MainScreenContainer(
                 }
             )
         }
+    }
+
+    if (scrimAlpha > 0f) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = scrimAlpha))
+                // Intercept clicks to prevent clicking background items
+                // and collapse the sheet when the user taps the darkened area
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            scope.launch { playerState.animateTo(PlayerState.COLLAPSED) }
+                        }
+                    )
+                }
+        )
     }
 
     PlayerSheet(

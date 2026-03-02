@@ -12,6 +12,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -72,24 +74,19 @@ fun PlayerSheet(
     state: AnchoredDraggableState<PlayerState>,
 ) {
     val scope = rememberCoroutineScope()
+    val entranceOffset = remember { Animatable(0f) }
+    val entranceAnimated = remember { mutableStateOf(false) }
+
+    val scrollState = rememberScrollState()
+    var wasAtTopWhenGestureStarted by remember { mutableStateOf(true) }
+
     BackHandler(enabled = state.targetValue == PlayerState.EXPANDED) {
         // When the back button is pressed, animate the sheet to collapsed
         scope.launch {
             state.animateTo(PlayerState.COLLAPSED)
         }
     }
-    val entranceOffset = remember { Animatable(0f) }
-    val entranceAnimated = remember { mutableStateOf(false) }
 
-    val offset = if (state.offset.isNaN()) 0f else state.offset
-    val collapsedAnchor = state.anchors.positionOf(PlayerState.COLLAPSED).let {
-        if (it.isNaN() || it == 0f) 1f else it // avoid divide-by-zero before anchors are ready
-    }
-    val expansionProgress = (1f - (offset / collapsedAnchor)).coerceIn(0f, 1f)
-    val scrollState = rememberScrollState()
-    var wasAtTopWhenGestureStarted by remember { mutableStateOf(true) }
-
-// Updates the variable exactly when a new drag/fling gesture begins
     LaunchedEffect(scrollState.isScrollInProgress) {
         if (scrollState.isScrollInProgress) {
             wasAtTopWhenGestureStarted = (scrollState.value == 0)

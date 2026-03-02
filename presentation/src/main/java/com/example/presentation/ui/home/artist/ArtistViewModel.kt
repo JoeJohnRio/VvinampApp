@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.artist
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.ArtistUseCase
 import com.example.domain.util.NetworkMonitor
@@ -16,9 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-    val networkMonitor: NetworkMonitor,
     val artistUseCase: ArtistUseCase
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ArtistUiState())
     val uiState = _uiState.asStateFlow()

@@ -28,12 +28,12 @@ class SearchViewModel @Inject constructor(
     // Example: Search triggered by user typing
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val searchResults: Flow<PagingData<SearchItemDomain>> = _uiState
-        .debounce(300) // Wait 300ms after typing stops
-        .filter { it.searchText.isNotBlank() } // Don't search empty strings
+        .debounce(300)
+        .filter { it.searchText.isNotBlank() }
         .flatMapLatest { uiState ->
             repository.search(uiState.searchText)
         }
-        .cachedIn(viewModelScope) // Important: Caches data for rotation/navigation
+        .cachedIn(viewModelScope)
 
     fun onSearchInput(query: String) {
         _uiState.update {

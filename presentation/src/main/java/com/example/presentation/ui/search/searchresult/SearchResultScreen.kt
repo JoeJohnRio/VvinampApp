@@ -49,7 +49,6 @@ fun SearchResultsScreen(
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
 
-
     ScreenWrapper(
         isLoading = uiState.isLoading,
         error = uiState.error,
@@ -118,9 +117,13 @@ fun SearchResultsContent(
         }
     ) { contentPadding ->
 
-        val isEmpty = searchItems.itemCount == 0 && uiState.searchText.isNotEmpty()
         val isLoading = searchItems.loadState.refresh is LoadState.Loading
+                && uiState.searchText.isNotEmpty()
 
+        val isEmpty = !isLoading
+                && searchItems.loadState.append.endOfPaginationReached
+                && searchItems.itemCount == 0
+                && uiState.searchText.isNotEmpty()
         LazyColumn(
             modifier = Modifier
                 .padding(contentPadding)
