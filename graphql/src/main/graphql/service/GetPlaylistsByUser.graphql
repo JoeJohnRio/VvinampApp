@@ -1,0 +1,19 @@
+query GetPlaylistsByUser($userId: ID!, $first: Int, $after: String, $last: Int, $before: String) {
+    getPlaylistsByUser(userId: $userId, first: $first, after: $after, last: $last, before: $before) {
+        totalCount
+        pageInfo {
+            hasNextPage
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                id
+                title
+                coverImage
+                isPublic
+                savedCount
+            }
+        }
+    }
+}

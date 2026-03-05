@@ -1,0 +1,14 @@
+mutation AddSongToPlaylist($input: AddSongToPlaylistInput!) {
+    addSongToPlaylist(input: $input) {
+        id
+        totalDuration
+        tracks {
+            position
+            addedAt
+            track {
+                id
+                title
+            }
+        }
+    }
+}

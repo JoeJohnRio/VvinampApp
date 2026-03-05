@@ -40,7 +40,6 @@ fun PlaylistHeroImage(
     collapseFraction: Float,
     artistNameProgress: Float
 ) {
-
     Box(
         modifier = modifier
             .fillMaxSize()

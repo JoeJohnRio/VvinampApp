@@ -49,7 +49,7 @@ fun ArtistScreen(
     onBackClick: () -> Unit,
     bottomNavRouter: BottomNavRouter
 ) {
-    val artistUiState by artistViewModel.uiState.collectAsState()
+    val artistUiState by artistViewModel.uiState.collectAsStateWithLifecycle()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
 
 

@@ -1,0 +1,145 @@
+package com.example.data.api.playlist
+
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
+import com.example.data.util.safeMutation
+import com.example.data.util.safeQuery
+import com.example.graphql.AddSongToPlaylistMutation
+import com.example.graphql.CreatePlaylistMutation
+import com.example.graphql.DeletePlaylistMutation
+import com.example.graphql.GetArtistScreenDataQuery
+import com.example.graphql.GetMyPlaylistsQuery
+import com.example.graphql.GetPlaylistQuery
+import com.example.graphql.GetPlaylistsByUserQuery
+import com.example.graphql.ListRecentHistoryQuery
+import com.example.graphql.RemoveSongFromPlaylistMutation
+import com.example.graphql.SavePlaylistMutation
+import com.example.graphql.UnsavePlaylistMutation
+import com.example.graphql.UpdatePlaylistMutation
+import com.example.graphql.type.AddSongToPlaylistInput
+import com.example.graphql.type.CreatePlaylistInput
+import com.example.graphql.type.RemoveSongFromPlaylistInput
+import com.example.graphql.type.SavePlaylistInput
+import com.example.graphql.type.UnsavePlaylistInput
+import com.example.graphql.type.UpdatePlaylistInput
+import javax.inject.Inject
+
+class PlaylistApiImpl @Inject constructor(
+    private val api: ApolloClient
+) : PlaylistApi {
+
+    override suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist?> {
+        return api.safeQuery(
+            GetPlaylistQuery(id)
+        ) {
+            it.getPlaylist
+        }
+    }
+
+    override suspend fun getMyPlaylists(
+        first: Int?,
+        after: String?,
+        last: Int?,
+        before: String?
+    ): Result<GetMyPlaylistsQuery.GetMyPlaylists> {
+        return api.safeQuery(
+            GetMyPlaylistsQuery(
+                first = Optional.presentIfNotNull(first),
+                after = Optional.presentIfNotNull(after),
+                last = Optional.presentIfNotNull(last),
+                before = Optional.presentIfNotNull(before)
+            )
+        ) {
+            it.getMyPlaylists
+        }
+    }
+
+    override suspend fun getPlaylistsByUser(
+        userId: String,
+        first: Int?,
+        after: String?,
+        last: Int?,
+        before: String?
+    ): Result<GetPlaylistsByUserQuery.GetPlaylistsByUser> {
+        return api.safeQuery(
+            GetPlaylistsByUserQuery(
+                userId = userId,
+                first = Optional.presentIfNotNull(first),
+                after = Optional.presentIfNotNull(after),
+                last = Optional.presentIfNotNull(last),
+                before = Optional.presentIfNotNull(before)
+            )
+        ) {
+            it.getPlaylistsByUser
+        }
+    }
+
+    override suspend fun createPlaylist(
+        input: CreatePlaylistInput
+    ): Result<CreatePlaylistMutation.CreatePlaylist> {
+        return api.safeMutation(
+            CreatePlaylistMutation(input)
+        ) {
+            it.createPlaylist
+        }
+    }
+
+    override suspend fun updatePlaylist(
+        id: String,
+        input: UpdatePlaylistInput
+    ): Result<UpdatePlaylistMutation.UpdatePlaylist> {
+        return api.safeMutation(
+            UpdatePlaylistMutation(id, input)
+        ) {
+            it.updatePlaylist
+        }
+    }
+
+    override suspend fun deletePlaylist(id: String): Result<Boolean> {
+        return api.safeMutation(
+            DeletePlaylistMutation(id)
+        ) {
+            it.deletePlaylist
+        }
+    }
+
+    override suspend fun addSongToPlaylist(
+        input: AddSongToPlaylistInput
+    ): Result<AddSongToPlaylistMutation.AddSongToPlaylist> {
+        return api.safeMutation(
+            AddSongToPlaylistMutation(input)
+        ) {
+            it.addSongToPlaylist
+        }
+    }
+
+    override suspend fun removeSongFromPlaylist(
+        input: RemoveSongFromPlaylistInput
+    ): Result<Boolean> {
+        return api.safeMutation(
+            RemoveSongFromPlaylistMutation(input)
+        ) {
+            it.removeSongFromPlaylist
+        }
+    }
+
+    override suspend fun savePlaylist(
+        input: SavePlaylistInput
+    ): Result<SavePlaylistMutation.SavePlaylist> {
+        return api.safeMutation(
+            SavePlaylistMutation(input)
+        ) {
+            it.savePlaylist
+        }
+    }
+
+    override suspend fun unsavePlaylist(
+        input: UnsavePlaylistInput
+    ): Result<Boolean> {
+        return api.safeMutation(
+            UnsavePlaylistMutation(input)
+        ) {
+            it.unsavePlaylist
+        }
+    }
+}

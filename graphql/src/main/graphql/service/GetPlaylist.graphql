@@ -1,0 +1,29 @@
+query GetPlaylist($id: ID!) {
+    getPlaylist(id: $id) {
+        id
+        title
+        description
+        isPublic
+        coverImage
+        bannerImage
+        savedCount
+        totalDuration
+        isSavedByMe
+        createdAt
+        updatedAt
+        creator {
+            id
+            username
+        }
+        tracks {
+            position
+            addedAt
+            track {
+                id
+                title
+                albumCoverUrl
+                duration
+            }
+        }
+    }
+}

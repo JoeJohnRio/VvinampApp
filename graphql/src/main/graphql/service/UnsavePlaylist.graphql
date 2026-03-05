@@ -1,0 +1,3 @@
+mutation UnsavePlaylist($input: UnsavePlaylistInput!) {
+    unsavePlaylist(input: $input)
+}

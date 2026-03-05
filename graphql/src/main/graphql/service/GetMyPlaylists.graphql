@@ -1,0 +1,27 @@
+query GetMyPlaylists($first: Int, $after: String, $last: Int, $before: String) {
+    getMyPlaylists(first: $first, after: $after, last: $last, before: $before) {
+        totalCount
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+        edges {
+            cursor
+            node {
+                id
+                title
+                coverImage
+                isPublic
+                savedCount
+                isSavedByMe
+                tracks {
+                    track {
+                        albumCoverUrl
+                    }
+                }
+            }
+        }
+    }
+}

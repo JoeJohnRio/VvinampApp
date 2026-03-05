@@ -135,15 +135,6 @@ fun MainScreenContainer(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = scrimAlpha))
-                // Intercept clicks to prevent clicking background items
-                // and collapse the sheet when the user taps the darkened area
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onTap = {
-                            scope.launch { playerState.animateTo(PlayerState.COLLAPSED) }
-                        }
-                    )
-                }
         )
     }
 

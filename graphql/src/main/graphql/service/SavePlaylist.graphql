@@ -1,0 +1,7 @@
+mutation SavePlaylist($input: SavePlaylistInput!) {
+    savePlaylist(input: $input) {
+        id
+        savedCount
+        isSavedByMe
+    }
+}

@@ -1,0 +1,11 @@
+mutation UpdatePlaylist($id: ID!, $input: UpdatePlaylistInput!) {
+    updatePlaylist(id: $id, input: $input) {
+        id
+        title
+        description
+        isPublic
+        coverImage
+        bannerImage
+        updatedAt
+    }
+}
