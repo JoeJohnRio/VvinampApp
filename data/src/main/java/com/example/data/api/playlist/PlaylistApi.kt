@@ -2,7 +2,9 @@ package com.example.data.api.playlist
 
 import com.example.graphql.AddSongToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
+import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
+import com.example.graphql.GetPlaylistsByUserQuery
 import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
@@ -25,4 +27,18 @@ interface PlaylistApi {
 
     suspend fun createPlaylist(input: CreatePlaylistInput): Result<CreatePlaylistMutation.CreatePlaylist>
     suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist?>
+    suspend fun getMyPlaylists(
+        first: Int?,
+        after: String?,
+        last: Int?,
+        before: String?
+    ): Result<GetMyPlaylistsQuery.GetMyPlaylists>
+
+    suspend fun getPlaylistsByUser(
+        userId: String,
+        first: Int?,
+        after: String?,
+        last: Int?,
+        before: String?
+    ): Result<GetPlaylistsByUserQuery.GetPlaylistsByUser>
 }
