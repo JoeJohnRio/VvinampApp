@@ -31,7 +31,10 @@ class SearchViewModel @Inject constructor(
         .debounce(300)
         .filter { it.searchText.isNotBlank() }
         .flatMapLatest { uiState ->
-            repository.search(uiState.searchText)
+            repository.search(
+                query = uiState.searchText,
+                pageSize = 10
+            )
         }
         .cachedIn(viewModelScope)
 

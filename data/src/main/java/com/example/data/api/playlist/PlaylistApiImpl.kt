@@ -37,17 +37,11 @@ class PlaylistApiImpl @Inject constructor(
     }
 
     override suspend fun getMyPlaylists(
-        first: Int?,
         after: String?,
-        last: Int?,
-        before: String?
     ): Result<GetMyPlaylistsQuery.GetMyPlaylists> {
         return api.safeQuery(
             GetMyPlaylistsQuery(
-                first = Optional.presentIfNotNull(first),
                 after = Optional.presentIfNotNull(after),
-                last = Optional.presentIfNotNull(last),
-                before = Optional.presentIfNotNull(before)
             )
         ) {
             it.getMyPlaylists
@@ -56,18 +50,12 @@ class PlaylistApiImpl @Inject constructor(
 
     override suspend fun getPlaylistsByUser(
         userId: String,
-        first: Int?,
         after: String?,
-        last: Int?,
-        before: String?
     ): Result<GetPlaylistsByUserQuery.GetPlaylistsByUser> {
         return api.safeQuery(
             GetPlaylistsByUserQuery(
                 userId = userId,
-                first = Optional.presentIfNotNull(first),
                 after = Optional.presentIfNotNull(after),
-                last = Optional.presentIfNotNull(last),
-                before = Optional.presentIfNotNull(before)
             )
         ) {
             it.getPlaylistsByUser

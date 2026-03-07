@@ -28,17 +28,11 @@ interface PlaylistApi {
     suspend fun createPlaylist(input: CreatePlaylistInput): Result<CreatePlaylistMutation.CreatePlaylist>
     suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist?>
     suspend fun getMyPlaylists(
-        first: Int?,
         after: String?,
-        last: Int?,
-        before: String?
     ): Result<GetMyPlaylistsQuery.GetMyPlaylists>
 
     suspend fun getPlaylistsByUser(
         userId: String,
-        first: Int?,
         after: String?,
-        last: Int?,
-        before: String?
     ): Result<GetPlaylistsByUserQuery.GetPlaylistsByUser>
 }
