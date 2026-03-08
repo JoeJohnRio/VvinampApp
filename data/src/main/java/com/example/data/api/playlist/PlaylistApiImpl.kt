@@ -8,6 +8,7 @@ import com.example.graphql.AddSongToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.DeletePlaylistMutation
 import com.example.graphql.GetArtistScreenDataQuery
+import com.example.graphql.GetMyPlaylistFeedQuery
 import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
 import com.example.graphql.GetPlaylistsByUserQuery
@@ -18,6 +19,7 @@ import com.example.graphql.UnsavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
+import com.example.graphql.type.PlaylistSortOrder
 import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
 import com.example.graphql.type.UnsavePlaylistInput
@@ -45,6 +47,20 @@ class PlaylistApiImpl @Inject constructor(
             )
         ) {
             it.getMyPlaylists
+        }
+    }
+
+    override suspend fun getMyPlaylistFeed(
+        sortOrder: PlaylistSortOrder,
+        after: String?
+    ): Result<GetMyPlaylistFeedQuery.GetMyPlaylistFeed> {
+        return api.safeQuery(
+            GetMyPlaylistFeedQuery(
+                after = Optional.presentIfNotNull(after),
+                sortOrder = Optional.presentIfNotNull(sortOrder)
+            )
+        ) {
+            it.getMyPlaylistFeed
         }
     }
 

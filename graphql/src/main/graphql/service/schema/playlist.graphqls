@@ -38,7 +38,7 @@ input UpdatePlaylistInput {
 input AddSongToPlaylistInput {
   playlistId: ID!
   trackId: ID!
-  position: Int 
+  position: Int
 }
 
 input RemoveSongFromPlaylistInput {
@@ -54,27 +54,36 @@ input UnsavePlaylistInput {
   playlistId: ID!
 }
 
+enum PlaylistSortOrder {
+  RECENTS
+  RECENTLY_ADDED
+  ALPHABETICAL
+  CREATOR
+}
+
 extend type Query {
   getPlaylist(id: ID!): Playlist
-  
+
   getMyPlaylists(first: Int, after: String, last: Int, before: String): PlaylistConnection!
-  
+
   getPlaylistsByUser(userId: ID!, first: Int, after: String, last: Int, before: String): PlaylistConnection!
+
+  getMyPlaylistFeed(first: Int, after: String, last: Int, before: String, sortOrder: PlaylistSortOrder = RECENTS): PlaylistConnection!
 }
 
 extend type Mutation {
   createPlaylist(input: CreatePlaylistInput!): Playlist!
-  
+
   updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist!
-  
+
   deletePlaylist(id: ID!): Boolean!
-  
+
   addSongToPlaylist(input: AddSongToPlaylistInput!): Playlist!
-  
+
   removeSongFromPlaylist(input: RemoveSongFromPlaylistInput!): Boolean!
-  
+
   savePlaylist(input: SavePlaylistInput!): Playlist!
-  
+
   unsavePlaylist(input: UnsavePlaylistInput!): Boolean!
 }
 

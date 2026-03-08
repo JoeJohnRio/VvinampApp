@@ -1,5 +1,5 @@
-query GetMyPlaylists($first: Int, $after: String, $last: Int, $before: String) {
-    getMyPlaylists(first: $first, after: $after, last: $last, before: $before) {
+query GetMyPlaylists($after: String) {
+    getMyPlaylists(after: $after) {
         totalCount
         pageInfo {
             hasNextPage
@@ -13,13 +13,10 @@ query GetMyPlaylists($first: Int, $after: String, $last: Int, $before: String) {
                 id
                 title
                 coverImage
-                isPublic
                 savedCount
                 isSavedByMe
-                tracks {
-                    track {
-                        albumCoverUrl
-                    }
+                creator {
+                    username
                 }
             }
         }

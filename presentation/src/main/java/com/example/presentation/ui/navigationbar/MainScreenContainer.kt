@@ -114,11 +114,7 @@ fun MainScreenContainer(
                         BottomNavDestination.Home -> bottomNavRouter.navigateToHome()
                         BottomNavDestination.Create -> bottomNavRouter.navigateToCreate()
 //                        BottomNavDestination.Library -> bottomNavRouter.navigateToLibrary()
-                        BottomNavDestination.Library -> {
-                            scope.launch {
-                                playerState.animateTo(PlayerState.EXPANDED)
-                            }
-                        }
+                        BottomNavDestination.Library -> bottomNavRouter.navigateToLibrary()
                         BottomNavDestination.Premium -> bottomNavRouter.navigateToPremium()
                         BottomNavDestination.Search -> bottomNavRouter.navigateToSearch()
                         else -> {

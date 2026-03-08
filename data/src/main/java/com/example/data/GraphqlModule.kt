@@ -10,6 +10,8 @@ import com.example.data.api.history.HistoryApi
 import com.example.data.api.history.HistoryApiImpl
 import com.example.data.api.playback.PlaybackApi
 import com.example.data.api.playback.PlaybackApiImpl
+import com.example.data.api.playlist.PlaylistApi
+import com.example.data.api.playlist.PlaylistApiImpl
 import com.example.data.api.search.SearchApi
 import com.example.data.api.search.SearchApiImpl
 import dagger.Binds
@@ -51,6 +53,12 @@ abstract class GraphqlModule {
     abstract fun bindPlaybackApi(
         impl: PlaybackApiImpl
     ): PlaybackApi
+
+    @Binds
+    @Singleton
+    abstract fun bindPlaylistApi(
+        impl: PlaylistApiImpl
+    ): PlaylistApi
 
     @Binds
     @Singleton

@@ -1,10 +1,9 @@
 package com.example.domain.entity.playlist
 
 import com.example.domain.entity.User
-import com.example.domain.entity.album.SimplifiedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 
-data class PlaylistDomain(
+data class PlaylistComplete(
     val id: String,
     val title: String,
     val description: String?,

@@ -14,6 +14,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -67,6 +68,7 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
         ) {
             item {
                 TopNavigationWithButtons(
+                    title = stringResource(R.string.title_search),
                     listOfButtons = listOf(
                         ButtonData(
                             iconRes = R.drawable.ic_camera,
@@ -83,7 +85,6 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
             }
 
             stickyHeader {
-                val context = LocalContext.current
                 TextFieldSearchNoClick(
                     onValueChanged = {
 

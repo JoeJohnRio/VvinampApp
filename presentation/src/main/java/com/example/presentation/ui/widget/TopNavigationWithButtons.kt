@@ -33,6 +33,7 @@ import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
 fun TopNavigationWithButtons(
+    title: String,
     listOfButtons: List<ButtonData> = listOf()
 ) {
     Row(
@@ -58,7 +59,7 @@ fun TopNavigationWithButtons(
             Spacer(Modifier.padding(8.dp))
 
             Text(
-                text = stringResource(R.string.title_search),
+                text = title,
                 style = TSHeadlineMediumWhite().copy(
                     fontSize = 22.sp,
                     color = MaterialTheme.colorScheme.inversePrimary
@@ -91,6 +92,7 @@ fun TopNavigationWithButtonsPreview() {
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             TopNavigationWithButtons(
+                title = "test"
 //                listOfButtons = listOf(
 //                    Pair(
 //                        painterResource(R.drawable.ic_email),

@@ -1,0 +1,22 @@
+query GetMyPlaylistFeed($after: String, $sortOrder: PlaylistSortOrder ) {
+    getMyPlaylistFeed(after: $after, sortOrder: $sortOrder) {
+        edges {
+            node {
+                id
+                title
+                coverImage
+                savedCount
+                isSavedByMe
+                creator {
+                    username
+                }
+            }
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}

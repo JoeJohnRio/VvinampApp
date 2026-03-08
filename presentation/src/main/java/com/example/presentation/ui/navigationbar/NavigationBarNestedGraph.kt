@@ -15,6 +15,7 @@ import com.example.presentation.ui.home.HomeScreen
 import com.example.presentation.navigation.toEntries
 import com.example.presentation.ui.home.album.AlbumScreen
 import com.example.presentation.ui.home.artist.ArtistScreen
+import com.example.presentation.ui.home.library.LibraryScreen
 import com.example.presentation.ui.search.SearchScreen
 import com.example.presentation.ui.search.searchresult.SearchResultsScreen
 import com.example.presentation.ui.settings.SettingsScreen
@@ -61,9 +62,8 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
     }
 
     entry<BottomNavDestination.Library> {
-        Text(
-            text = "Library",
-            fontSize = 100.sp
+        LibraryScreen(
+            bottomNavRouter = bottomNavRouter
         )
     }
 

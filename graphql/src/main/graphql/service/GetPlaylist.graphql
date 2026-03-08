@@ -21,6 +21,7 @@ query GetPlaylist($id: ID!) {
             track {
                 id
                 title
+                artistName
                 albumCoverUrl
                 duration
             }

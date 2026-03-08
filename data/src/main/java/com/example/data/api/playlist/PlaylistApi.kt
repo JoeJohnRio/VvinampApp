@@ -2,6 +2,7 @@ package com.example.data.api.playlist
 
 import com.example.graphql.AddSongToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
+import com.example.graphql.GetMyPlaylistFeedQuery
 import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
 import com.example.graphql.GetPlaylistsByUserQuery
@@ -9,6 +10,7 @@ import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
+import com.example.graphql.type.PlaylistSortOrder
 import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
 import com.example.graphql.type.UnsavePlaylistInput
@@ -35,4 +37,9 @@ interface PlaylistApi {
         userId: String,
         after: String?,
     ): Result<GetPlaylistsByUserQuery.GetPlaylistsByUser>
+
+    suspend fun getMyPlaylistFeed(
+        sortOrder: PlaylistSortOrder,
+        after: String?
+    ): Result<GetMyPlaylistFeedQuery.GetMyPlaylistFeed>
 }
