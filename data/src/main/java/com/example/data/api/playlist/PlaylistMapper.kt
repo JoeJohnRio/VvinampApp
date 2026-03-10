@@ -46,6 +46,6 @@ fun PlaylistSortOrderDomain.toRemote(): PlaylistSortOrder {
         PlaylistSortOrderDomain.RECENTLY_ADDED -> PlaylistSortOrder.RECENTLY_ADDED
         PlaylistSortOrderDomain.ALPHABETICAL -> PlaylistSortOrder.ALPHABETICAL
         PlaylistSortOrderDomain.CREATOR -> PlaylistSortOrder.CREATOR
-        PlaylistSortOrderDomain.UNKNOWN__ -> PlaylistSortOrder.UNKNOWN__
+        PlaylistSortOrderDomain.UNKNOWN -> PlaylistSortOrder.UNKNOWN__
     }
 }

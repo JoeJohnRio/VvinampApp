@@ -244,8 +244,7 @@ fun ButtonVariableOutlined(
     enabled: Boolean = true,
     shape: Shape = RoundedCornerShape(25.dp),
     outlineColor: Color = MaterialTheme.colorScheme.outline,
-    textColor: Color = MaterialTheme.colorScheme.inversePrimary,
-    textStyle: TextStyle = TSBodyMediumWhite().copy(color = textColor),
+    textStyle: TextStyle = TSBodyMediumWhite(),
     containerColor: Color = MaterialTheme.colorScheme.onPrimary,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
     buttonHeight: Dp = 45.dp
@@ -279,9 +278,15 @@ fun ButtonListWithState(
     modifier: Modifier = Modifier,
     listButton: List<String>,
     onClick: (String) -> Unit,
+    buttonHorizontalPadding: Dp = 16.dp,
+    buttonHeight: Dp = 45.dp,
+    textStyle: TextStyle = TSBodyMediumWhite(),
     outlineColor: Color = MaterialTheme.colorScheme.outline,
+    outlineColorClicked: Color = outlineColor.copy(alpha = 0.4f),
     textColor: Color = MaterialTheme.colorScheme.inversePrimary,
+    textColorClicked: Color = textColor.copy(alpha = 0.4f),
     containerColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColorClicked: Color = containerColor.copy(alpha = 0.4f)
 ) {
     var clickedItem by remember { mutableStateOf<String?>(null) }
 
@@ -297,9 +302,11 @@ fun ButtonListWithState(
                         bottom = 12.dp
                     ),
                 text = data,
-                textColor = if (isClicked) textColor else textColor.copy(alpha = 0.4f),
-                containerColor = if (isClicked) containerColor else containerColor.copy(alpha = 0.4f),
-                outlineColor = outlineColor,
+                contentPadding = PaddingValues(horizontal = buttonHorizontalPadding),
+                buttonHeight = buttonHeight,
+                textStyle = textStyle.copy(color = if (isClicked) textColorClicked else textColor),
+                containerColor = if (isClicked) containerColorClicked else containerColor,
+                outlineColor = if (isClicked) outlineColorClicked else outlineColor,
                 onClick = {
                     clickedItem = data
                     onClick(data)
@@ -428,7 +435,9 @@ private fun ButtonsPreview() {
                 text = "Continue with phone number",
                 modifier = Modifier.padding(top = 12.dp),
                 outlineColor = AppColours.Outline,
-                textColor = AppColours.OffWhite,
+                textStyle = TSDisplayMediumWhite().copy(
+                    color = MaterialTheme.colorScheme.inversePrimary,
+                ),
                 containerColor = AppColours.OnPrimaryBlack,
             )
 
