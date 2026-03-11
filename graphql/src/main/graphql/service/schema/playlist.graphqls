@@ -7,7 +7,6 @@ type Playlist {
   updatedAt: String
   isPublic: Boolean!
   coverImage: String
-  bannerImage: String
   tracks: [PlaylistTrack!]!
   savedCount: Int!
   totalDuration: Int!
@@ -25,14 +24,14 @@ input CreatePlaylistInput {
   title: String!
   description: String
   isPublic: Boolean = true
-  bannerImage: String
+  coverImage: String
 }
 
 input UpdatePlaylistInput {
   title: String
   description: String
   isPublic: Boolean
-  bannerImage: String
+  coverImage: String
 }
 
 input AddSongToPlaylistInput {

@@ -5,7 +5,6 @@ mutation UpdatePlaylist($id: ID!, $input: UpdatePlaylistInput!) {
         description
         isPublic
         coverImage
-        bannerImage
         updatedAt
     }
 }

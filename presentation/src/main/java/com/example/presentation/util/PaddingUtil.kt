@@ -6,6 +6,7 @@ object PaddingUtil {
 
     val ArtistImagePadding = 300.dp
     val AlbumImageSize = 252.dp
+    val LibraryItemSize = 64.dp
 
     val NormalPadding = 16.dp
 

@@ -128,10 +128,7 @@ fun LibraryContent(
             val playlist = pagingItems[index]
 
             if (playlist != null) {
-                Text(
-                    text = playlist.title,
-                    color = Color.White
-                )
+                LibraryItem(playlist)
             }
         }
 

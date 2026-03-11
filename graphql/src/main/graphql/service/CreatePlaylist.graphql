@@ -5,7 +5,6 @@ mutation CreatePlaylist($input: CreatePlaylistInput!) {
         description
         isPublic
         coverImage
-        bannerImage
         createdAt
     }
 }
