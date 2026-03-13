@@ -8,5 +8,6 @@ data class LibraryUiState(
     val error: String? = null,
     val libraryCategory: LibraryCategory = LibraryCategory.ALL,
     val currentSort: PlaylistSortOrderDomain = PlaylistSortOrderDomain.RECENTS,
-    val isSortSheetVisible: Boolean = false, // The toggle
+    val isSortSheetVisible: Boolean = false,
+    val isLibraryViewModeGrid: Boolean = false
 )

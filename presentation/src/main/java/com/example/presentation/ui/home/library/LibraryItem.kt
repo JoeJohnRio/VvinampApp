@@ -41,7 +41,6 @@ fun LibraryItem(
             placeholder = painterResource(R.drawable.bg_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .clip(RoundedCornerShape(4.dp))
                 .size(PaddingUtil.LibraryItemSize)
         )
 

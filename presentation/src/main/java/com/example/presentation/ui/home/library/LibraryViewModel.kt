@@ -36,7 +36,9 @@ class LibraryViewModel @Inject constructor(
             is LibraryUiEvent.onPlaylistSortOrderClicked -> {}
             LibraryUiEvent.onCreatePlaylistClicked -> {}
             LibraryUiEvent.onSearchClicked -> {}
-            LibraryUiEvent.onLibraryViewModesClicked -> {}
+            LibraryUiEvent.onLibraryViewModesClicked -> {
+                toggleLibraryViewMode()
+            }
             LibraryUiEvent.onSortByClicked -> {
                 showSortSheet()
             }
@@ -51,6 +53,10 @@ class LibraryViewModel @Inject constructor(
 
     fun showSortSheet() {
         _uiState.update { it.copy(isSortSheetVisible = true) }
+    }
+
+    fun toggleLibraryViewMode() {
+        _uiState.update { it.copy(isLibraryViewModeGrid = !it.isLibraryViewModeGrid) }
     }
 
     fun hideSortSheet() {

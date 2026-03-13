@@ -6,12 +6,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
@@ -101,13 +106,18 @@ fun LibraryContent(
     pagingItems: LazyPagingItems<PlaylistMinimal>,
     onEvent: (LibraryUiEvent) -> Unit
 ) {
-    LazyColumn(
+    LazyVerticalGrid(
+        columns =  GridCells.Fixed(if(uiState.isLibraryViewModeGrid) 3 else 1),
+        state = rememberLazyGridState(),
         modifier = Modifier
             .background(
                 MaterialTheme.colorScheme.background
             )
+            .fillMaxSize()
             .statusBarsPadding()
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         stickyHeader {
             LibraryTopBar(
@@ -115,9 +125,11 @@ fun LibraryContent(
             )
         }
 
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             LibrarySortBar(
                 onEvent = onEvent,
+                sortBy = uiState.currentSort.label,
+                isLibraryViewModeGrid = uiState.isLibraryViewModeGrid
             )
         }
 
@@ -128,7 +140,11 @@ fun LibraryContent(
             val playlist = pagingItems[index]
 
             if (playlist != null) {
-                LibraryItem(playlist)
+                if (uiState.isLibraryViewModeGrid) {
+                    LibraryGridItem(playlist)
+                } else {
+                    LibraryItem(playlist)
+                }
             }
         }
 
@@ -154,56 +170,59 @@ fun LibraryContent(
 
 @Composable
 fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
-    TopNavigationWithButtons(
-        title = stringResource(R.string.title_your_library),
-        listOfButtons = listOf(
-            ButtonData(
-                iconRes = R.drawable.ic_search,
-                onClick = {
-                    onEvent(LibraryUiEvent.onSearchClicked)
-                }
-            ),
-            ButtonData(
-                iconRes = R.drawable.ic_create_plus,
-                onClick = {
-                    onEvent(LibraryUiEvent.onCreatePlaylistClicked)
-                }
+    Column() {
+        TopNavigationWithButtons(
+            title = stringResource(R.string.title_your_library),
+            listOfButtons = listOf(
+                ButtonData(
+                    iconRes = R.drawable.ic_search,
+                    onClick = {
+                        onEvent(LibraryUiEvent.onSearchClicked)
+                    }
+                ),
+                ButtonData(
+                    iconRes = R.drawable.ic_create_plus,
+                    onClick = {
+                        onEvent(LibraryUiEvent.onCreatePlaylistClicked)
+                    }
+                )
             )
         )
-    )
 
-    Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(12.dp))
 
-    ButtonListWithState(
-        modifier = Modifier
-            .fillMaxWidth(),
-        buttonHorizontalPadding = 12.dp,
-        buttonHeight = 32.dp,
-        textStyle = TSDisplayMediumWhite().copy(
-            fontSize = 11.sp
-        ),
-        listButton = listOf(
-            LibraryCategory.PLAYLIST.displayName,
-            LibraryCategory.PODCAST.displayName,
-            LibraryCategory.ALBUM.displayName,
-            LibraryCategory.ARTIST.displayName,
-            LibraryCategory.DOWNLOADED.displayName,
-        ),
-        outlineColor = Color.Transparent,
-        textColor = MaterialTheme.colorScheme.inversePrimary,
-        textColorClicked = MaterialTheme.colorScheme.onPrimary,
-        containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        containerColorClicked = MaterialTheme.colorScheme.primary,
-        onClick = { gender ->
-            onEvent(LibraryUiEvent.onLibraryCategoryClicked(gender.toLibraryCategory()))
-        }
-    )
+        ButtonListWithState(
+            modifier = Modifier
+                .fillMaxWidth(),
+            buttonHorizontalPadding = 12.dp,
+            buttonHeight = 32.dp,
+            textStyle = TSDisplayMediumWhite().copy(
+                fontSize = 11.sp
+            ),
+            listButton = listOf(
+                LibraryCategory.PLAYLIST.displayName,
+                LibraryCategory.PODCAST.displayName,
+                LibraryCategory.ALBUM.displayName,
+                LibraryCategory.ARTIST.displayName,
+                LibraryCategory.DOWNLOADED.displayName,
+            ),
+            outlineColor = Color.Transparent,
+            textColor = MaterialTheme.colorScheme.inversePrimary,
+            textColorClicked = MaterialTheme.colorScheme.onPrimary,
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            containerColorClicked = MaterialTheme.colorScheme.primary,
+            onClick = { gender ->
+                onEvent(LibraryUiEvent.onLibraryCategoryClicked(gender.toLibraryCategory()))
+            }
+        )
+    }
 }
 
 @Composable
 fun LibrarySortBar(
     onEvent: (LibraryUiEvent) -> Unit,
-    sortBy: String = PlaylistSortOrderDomain.RECENTS.label
+    sortBy: String = PlaylistSortOrderDomain.RECENTS.label,
+    isLibraryViewModeGrid: Boolean = false
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -237,7 +256,8 @@ fun LibrarySortBar(
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = painterResource(R.drawable.ic_grid),
+                painter = if (isLibraryViewModeGrid) painterResource(R.drawable.ic_grid)
+                else painterResource(R.drawable.ic_paragraph),
                 contentDescription = null,
             )
         }
