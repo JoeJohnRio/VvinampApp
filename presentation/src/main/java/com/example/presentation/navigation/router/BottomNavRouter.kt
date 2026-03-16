@@ -27,6 +27,14 @@ class BottomNavRouter(
         navigator.navigate(BottomNavDestination.Library)
     }
 
+    fun navigateToCreatePlaylist() {
+        navigator.navigate(BottomNavDestination.CreatePlaylist)
+    }
+
+    fun navigateToPlaylistDetail(playlistId: String) {
+        navigator.navigate(BottomNavDestination.PlaylistDetail(playlistId))
+    }
+
     fun navigateToPremium() {
         navigator.navigate(BottomNavDestination.Premium)
     }

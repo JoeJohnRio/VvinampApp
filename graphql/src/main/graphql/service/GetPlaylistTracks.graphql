@@ -1,0 +1,27 @@
+query GetPlaylistTracks($playlistId: ID!, $after: String) {
+    getPlaylistTracks(playlistId: $playlistId, after: $after) {
+        edges {
+            node {
+                track {
+                    id
+                    title
+                    duration
+                    streamCount
+                    audioFileUrl
+                    albumCoverUrl
+                    artistName
+                    explicit
+                    lyrics
+                    releaseDate
+                }
+            }
+        }
+
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}

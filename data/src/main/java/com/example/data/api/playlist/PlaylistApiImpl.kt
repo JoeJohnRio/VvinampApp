@@ -11,6 +11,7 @@ import com.example.graphql.GetArtistScreenDataQuery
 import com.example.graphql.GetMyPlaylistFeedQuery
 import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
+import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
 import com.example.graphql.ListRecentHistoryQuery
 import com.example.graphql.RemoveSongFromPlaylistMutation
@@ -30,7 +31,7 @@ class PlaylistApiImpl @Inject constructor(
     private val api: ApolloClient
 ) : PlaylistApi {
 
-    override suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist?> {
+    override suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist> {
         return api.safeQuery(
             GetPlaylistQuery(id)
         ) {
@@ -50,6 +51,20 @@ class PlaylistApiImpl @Inject constructor(
         }
     }
 
+    override suspend fun getPlaylistTracks(
+        playlistId: String,
+        after: String?
+    ): Result<GetPlaylistTracksQuery.GetPlaylistTracks> {
+        return api.safeQuery(
+            GetPlaylistTracksQuery(
+                playlistId = playlistId,
+                after = Optional.presentIfNotNull(after)
+            )
+        ) {
+            it.getPlaylistTracks
+        }
+    }
+
     override suspend fun getMyPlaylistFeed(
         sortOrder: PlaylistSortOrder,
         after: String?
@@ -61,6 +76,18 @@ class PlaylistApiImpl @Inject constructor(
             )
         ) {
             it.getMyPlaylistFeed
+        }
+    }
+
+    override suspend fun createPlaylist(title: String): Result<CreatePlaylistMutation.CreatePlaylist> {
+        return api.safeMutation(
+            CreatePlaylistMutation(
+                input = CreatePlaylistInput(
+                    title = title
+                )
+            )
+        ) {
+            it.createPlaylist
         }
     }
 

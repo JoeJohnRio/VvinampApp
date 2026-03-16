@@ -1,4 +1,4 @@
-package com.example.presentation.ui.home.playlist
+package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.domain.entity.album.AlbumDomain
+import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.presentation.R
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.util.PaddingUtil
@@ -35,7 +35,7 @@ import com.example.presentation.util.orErrorNoText
 @Composable
 fun PlaylistHeroImage(
     innerPadding: PaddingValues,
-    albumDomain: AlbumDomain?, // Replace with your image source
+    playlist: PlaylistComplete?, // Replace with your image source
     modifier: Modifier = Modifier,
     collapseFraction: Float,
     artistNameProgress: Float
@@ -67,7 +67,7 @@ fun PlaylistHeroImage(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             AsyncImage(
-                model = albumDomain?.coverArt,
+                model = playlist?.coverImage,
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.bg_image),
                 contentScale = ContentScale.Crop,
@@ -80,7 +80,7 @@ fun PlaylistHeroImage(
 
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = albumDomain?.title.orErrorNoText(),
+                text = playlist?.title.orErrorNoText(),
                 style = TSHeadlineMediumWhite().copy(
                     fontSize = 22.sp
                 )

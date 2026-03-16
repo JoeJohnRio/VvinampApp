@@ -1,10 +1,5 @@
 mutation CreatePlaylist($input: CreatePlaylistInput!) {
     createPlaylist(input: $input) {
         id
-        title
-        description
-        isPublic
-        coverImage
-        createdAt
     }
 }

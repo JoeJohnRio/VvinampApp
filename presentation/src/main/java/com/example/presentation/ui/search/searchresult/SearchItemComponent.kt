@@ -123,7 +123,7 @@ fun TrackSearchComponent(
                     text = "Song • ${domain.artistName}",
                     style = TSLabelMediumWhite().copy(
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.outline,
                     )
                 )
             }
@@ -207,7 +207,7 @@ fun AlbumSearchComponent(
                     text = "Album • ${domain.artistName}",
                     style = TSLabelMediumWhite().copy(
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.outline,
                     )
                 )
             }
@@ -275,7 +275,7 @@ fun ArtistSearchComponent(
                     text = "Artist",
                     style = TSLabelMediumWhite().copy(
                         fontSize = 12.sp,
-                        color = MaterialTheme.colorScheme.secondary,
+                        color = MaterialTheme.colorScheme.outline,
                     )
                 )
             }

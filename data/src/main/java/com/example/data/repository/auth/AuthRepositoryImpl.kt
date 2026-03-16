@@ -5,7 +5,7 @@ import com.example.data.api.auth.AuthApi
 import com.example.data.util.toDomain
 import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
-import com.example.domain.entity.User
+import com.example.domain.entity.user.User
 import com.example.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

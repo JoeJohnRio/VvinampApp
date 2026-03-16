@@ -69,7 +69,7 @@ fun TopNavigationWithButtons(
 
         Row() {
             listOfButtons.forEach { (iconRes, onClick) ->
-                IconButton(onClick = { onClick }) {
+                IconButton(onClick = { onClick() }) {
                     Icon(
                         contentDescription = "",
                         painter = painterResource(iconRes),
@@ -84,25 +84,22 @@ fun TopNavigationWithButtons(
 @Preview
 @Composable
 fun TopNavigationWithButtonsPreview() {
-    var test: () -> Unit = {
-
-    }
     PreviewTheme {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             TopNavigationWithButtons(
-                title = "test"
-//                listOfButtons = listOf(
-//                    Pair(
-//                        painterResource(R.drawable.ic_email),
-//                        test()
-//                    ),
-//                    Pair(
-//                        painterResource(R.drawable.ic_camera),
-//                        test()
-//                    )
-//                )
+                title = "Title",
+                listOfButtons = listOf(
+                    ButtonData(
+                        iconRes = R.drawable.ic_search,
+                        onClick = {}
+                    ),
+                    ButtonData(
+                        iconRes = R.drawable.ic_create_plus,
+                        onClick = {}
+                    )
+                )
             )
         }
     }

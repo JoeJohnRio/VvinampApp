@@ -1,6 +1,6 @@
 package com.example.data.api.auth
 
-import com.example.domain.entity.User
+import com.example.domain.entity.user.User
 import com.example.graphql.LoginQuery
 import com.example.graphql.RegisterMutation
 

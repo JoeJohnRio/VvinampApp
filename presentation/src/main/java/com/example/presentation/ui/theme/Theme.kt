@@ -22,15 +22,15 @@ val vvinampDarkColorScheme = darkColorScheme(
     surfaceContainerHighest = AppColours.SurfaceContainerHighestBlack,
     surfaceContainerHigh = AppColours.SurfaceContainerHighBlack,
     surfaceContainer = AppColours.SurfaceContainerBlack,
+    secondary = AppColours.Secondary,
     surface = AppColours.SurfaceBlack,
     surfaceDim = AppColours.PitchBlack,
+    surfaceContainerLow = AppColours.SurfaceContainerLow,
 
     error = AppColours.error,
     errorContainer = AppColours.errorContainer,
     onError = AppColours.onError,
     onErrorContainer = AppColours.onErrorContainer,
-
-    secondary = AppColours.Outline,
     onSecondary = Color.White
 )
 

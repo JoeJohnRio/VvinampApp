@@ -1,4 +1,4 @@
-package com.example.presentation.ui.home.playlist
+package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -22,17 +23,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.domain.entity.album.toTrackDomain
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.navigation.router.BottomNavRouter
-import com.example.presentation.ui.home.album.AlbumContent
-import com.example.presentation.ui.home.album.AlbumDetailComponent
-import com.example.presentation.ui.home.album.AlbumHeroImage
-import com.example.presentation.ui.home.album.AlbumSongsComponent
-import com.example.presentation.ui.home.album.AlbumViewModel
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.main.playback.PlaybackUiEvent
-import com.example.presentation.ui.main.playback.PlaybackViewModel
+import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.PaddingUtil
 import com.example.presentation.util.orErrorNoText
 
@@ -43,16 +40,25 @@ fun PlaylistScreen(
     viewModel: PlaylistViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val playbackViewModel: PlaybackViewModel = hiltViewModel()
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+    val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
+    LaunchedEffect(playlistId) {
+        viewModel.getPlaylist(playlistId)
+    }
 
     ScreenWrapper(
         isLoading = uiState.isLoading,
         error = uiState.error,
         content = {
             PlaylistContent(
-                uiState = uiState
+                uiState = uiState,
+                playlistTracks = playlistTracks,
+                updateDominantColor = { color ->
+                    viewModel.updateDominantColor(color)
+                },
+                onBackClicked = {
+                    bottomNavRouter.navigateBack()
+                }
             )
         }
     )
@@ -60,7 +66,10 @@ fun PlaylistScreen(
 
 @Composable
 fun PlaylistContent(
-    uiState: PlaylistUiState
+    uiState: PlaylistUiState,
+    playlistTracks: LazyPagingItems<TrackDomain>,
+    updateDominantColor: (Color) -> Unit,
+    onBackClicked: () -> Unit,
 ) {
     val scrollState = rememberLazyListState()
 
@@ -102,6 +111,14 @@ fun PlaylistContent(
             }
         }
     }
+
+    ExtractDominantColorEffect(
+        imageUrl = uiState.playlist?.coverImage,
+        onColorExtracted = { color ->
+            updateDominantColor(color)
+        }
+    )
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
@@ -109,10 +126,9 @@ fun PlaylistContent(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-
             PlaylistHeroImage(
                 innerPadding = innerPadding,
-                albumDomain = null,
+                playlist = null,
                 artistNameProgress = scrollProgress.topBarProgress,
                 collapseFraction = scrollProgress.collapseFraction,
                 modifier = Modifier
@@ -125,10 +141,12 @@ fun PlaylistContent(
                         }
                         translationY = offset
                     }
-                    .background(Brush.verticalGradient(
-                        0f to Color(0xff175faa),
-                        1f to MaterialTheme.colorScheme.background
-                    )),
+                    .background(
+                        Brush.verticalGradient(
+                            0f to Color(0xff175faa),
+                            1f to MaterialTheme.colorScheme.background
+                        )
+                    ),
             )
 
             LazyColumn(
@@ -141,6 +159,7 @@ fun PlaylistContent(
                 }
 
                 item {
+
                 }
 
 
@@ -150,16 +169,16 @@ fun PlaylistContent(
             }
 
 
-//            AnimatedTopNavigation(
-//                innerPadding = innerPadding,
-//                title = uiState.album?.title.orErrorNoText(),
-//                topBarAlpha = scrollProgress.topBarProgress,
-//                topBarNameAlpha = scrollProgress.topBarNameProgress,
-//                topBarColor = uiState.dominantColor,
-//                onBackClick = {
-//                    bottomNavRouter.navigateBack()
-//                }
-//            )
+            AnimatedTopNavigation(
+                innerPadding = innerPadding,
+                title = uiState.playlist?.title.orErrorNoText(),
+                topBarAlpha = scrollProgress.topBarProgress,
+                topBarNameAlpha = scrollProgress.topBarNameProgress,
+                topBarColor = uiState.dominantColor,
+                onBackClick = {
+                    onBackClicked()
+                }
+            )
         }
     }
 }

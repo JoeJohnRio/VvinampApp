@@ -5,6 +5,7 @@ import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.GetMyPlaylistFeedQuery
 import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
+import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
 import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
@@ -28,7 +29,7 @@ interface PlaylistApi {
     ): Result<UpdatePlaylistMutation.UpdatePlaylist>
 
     suspend fun createPlaylist(input: CreatePlaylistInput): Result<CreatePlaylistMutation.CreatePlaylist>
-    suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist?>
+    suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist>
     suspend fun getMyPlaylists(
         after: String?,
     ): Result<GetMyPlaylistsQuery.GetMyPlaylists>
@@ -42,4 +43,10 @@ interface PlaylistApi {
         sortOrder: PlaylistSortOrder,
         after: String?
     ): Result<GetMyPlaylistFeedQuery.GetMyPlaylistFeed>
+
+    suspend fun createPlaylist(title: String): Result<CreatePlaylistMutation.CreatePlaylist>
+    suspend fun getPlaylistTracks(
+        playlistId: String,
+        after: String?
+    ): Result<GetPlaylistTracksQuery.GetPlaylistTracks>
 }

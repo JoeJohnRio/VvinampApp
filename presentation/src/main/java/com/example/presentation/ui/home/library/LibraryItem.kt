@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.library
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,9 +31,13 @@ import com.example.presentation.util.preview.PreviewContainer
 
 @Composable
 fun LibraryItem(
-    playlistMinimal: PlaylistMinimal
+    playlistMinimal: PlaylistMinimal,
+    onEvent: (LibraryUiEvent) -> Unit = {}
 ) {
     Row(
+        modifier = Modifier.clickable {
+            onEvent(LibraryUiEvent.onPlaylistClicked(playlistMinimal.id))
+        },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

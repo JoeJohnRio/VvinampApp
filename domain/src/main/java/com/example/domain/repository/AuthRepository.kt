@@ -2,7 +2,7 @@ package com.example.domain.repository
 
 import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
-import com.example.domain.entity.User
+import com.example.domain.entity.user.User
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {

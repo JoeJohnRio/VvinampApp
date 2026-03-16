@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.repository.auth.AuthStore
 import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
-import com.example.domain.entity.User
+import com.example.domain.entity.user.User
 import com.example.domain.usecase.AuthUseCases
 import com.example.presentation.navigation.router.AuthRouter
 import com.example.presentation.util.UiState

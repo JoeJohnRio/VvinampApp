@@ -13,17 +13,7 @@ query GetPlaylist($id: ID!) {
         creator {
             id
             username
-        }
-        tracks {
-            position
-            addedAt
-            track {
-                id
-                title
-                artistName
-                albumCoverUrl
-                duration
-            }
+            profilePicture
         }
     }
 }

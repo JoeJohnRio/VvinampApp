@@ -2,7 +2,7 @@ package com.example.domain.usecase
 
 import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
-import com.example.domain.entity.User
+import com.example.domain.entity.user.User
 import com.example.domain.repository.AuthRepository
 import javax.inject.Inject
 import kotlin.Result
