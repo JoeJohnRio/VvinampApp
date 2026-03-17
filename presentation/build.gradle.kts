@@ -116,6 +116,7 @@ dependencies {
     implementation(libs.palette)
 
     // Compose
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1") // or latest version
     implementation(platform(libs.compose.bom))
     implementation(libs.compose.ui)
     implementation(libs.compose.ui.tooling.preview)
