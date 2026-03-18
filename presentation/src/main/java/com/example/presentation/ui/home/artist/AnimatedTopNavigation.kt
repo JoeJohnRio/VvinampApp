@@ -53,7 +53,6 @@ fun AnimatedTopNavigation(
                 onClick = onBackClick,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(horizontal = 8.dp)
             ) {
                 Icon(
                     painter = painterResource(com.example.presentation.R.drawable.ic_back_chevron),
