@@ -2,6 +2,7 @@ package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,9 +12,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -26,7 +29,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
@@ -37,6 +45,10 @@ import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.theme.TSHeadlineMediumWhite
+import com.example.presentation.ui.widget.ButtonVariableOutlined
+import com.example.presentation.ui.widget.ButtonVariableSizeSolid
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.PaddingUtil
 import com.example.presentation.util.PaddingUtil.PlaylistNoPhotoSize
@@ -157,9 +169,11 @@ fun PlaylistContent(
 
 
                 item {
-                    Spacer(Modifier
-                        .height(1000.dp)
-                        .fillMaxWidth())
+                    Spacer(
+                        Modifier
+                            .height(1000.dp)
+                            .fillMaxWidth()
+                    )
                 }
             }
 
@@ -186,13 +200,56 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
         Box(
             modifier = Modifier
                 .size(PlaylistNoPhotoSize)
-                .background(Color.Cyan)
+                .background(
+                    color = MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(4.dp)
+                )
         ) {
             Icon(
                 modifier = Modifier.align(Alignment.Center),
                 painter = painterResource(R.drawable.ic_music_note),
+                tint = MaterialTheme.colorScheme.outline,
                 contentDescription = null
             )
+        }
+
+        Column() {
+            ConstraintLayout(
+                modifier = Modifier
+            ) {
+                val (textRef, btnRef) = createRefs()
+
+                createHorizontalChain(
+                    textRef,
+                    btnRef,
+                    chainStyle = ChainStyle.Packed(0f)
+                )
+
+                Text(
+                    modifier = Modifier.constrainAs(textRef) {
+                        width = Dimension.preferredWrapContent
+                        centerVerticallyTo(parent)
+                    }.background(Color.Red),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    text = "My playlist #20",
+//                text = playlist?.title.orEmpty(),
+                    style = TSHeadlineMediumWhite().copy(
+                        fontSize = 32.sp
+                    )
+                )
+
+                ButtonVariableSizeSolid(
+                    modifier = Modifier
+                        .height(36.dp)
+                        .constrainAs(btnRef) {
+                            centerVerticallyTo(textRef)
+                        },
+                    text = "Change",
+                    textColor = MaterialTheme.colorScheme.onSecondary,
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            }
         }
     }
 }
