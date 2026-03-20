@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,10 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,9 +28,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,6 +48,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
@@ -195,7 +205,8 @@ fun PlaylistContent(
 @Composable
 fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
@@ -213,6 +224,8 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
             )
         }
 
+        Spacer(Modifier.width(16.dp))
+
         Column() {
             ConstraintLayout(
                 modifier = Modifier
@@ -226,16 +239,17 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
                 )
 
                 Text(
-                    modifier = Modifier.constrainAs(textRef) {
-                        width = Dimension.preferredWrapContent
-                        centerVerticallyTo(parent)
-                    }.background(Color.Red),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .constrainAs(textRef) {
+                            width = Dimension.preferredWrapContent
+                            centerVerticallyTo(parent)
+                        },
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    text = "My playlist #20",
-//                text = playlist?.title.orEmpty(),
+                    text = playlist?.title.orEmpty(),
                     style = TSHeadlineMediumWhite().copy(
-                        fontSize = 32.sp
+                        fontSize = 24.sp
                     )
                 )
 
@@ -250,6 +264,61 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
                     containerColor = MaterialTheme.colorScheme.secondary
                 )
             }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        compositingStrategy = CompositingStrategy.Offscreen
+                    }
+            ) {
+                Box(
+                    modifier = Modifier
+                        .padding(start = 18.dp)
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp).align(Alignment.Center),
+                        painter = painterResource(R.drawable.ic_create_plus),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+
+                AsyncImage(
+//                    model = playlistMinimal.coverImage,
+                    contentDescription = null,
+                    placeholder = painterResource(R.drawable.bg_image),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(PaddingUtil.LibraryItemSize)
+                )
+                Box(
+                    modifier = Modifier
+                        .offset(x = 34.dp)
+                        .size(24.dp)
+                        .drawBehind {
+                            drawCircle(
+                                color = Color.Black, // Color doesn't matter for Clear
+                                radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
+                                blendMode = BlendMode.Clear
+                            )
+                        }
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                ) {
+                    Icon(
+                        modifier = Modifier.size(20.dp).align(Alignment.Center),
+                        painter = painterResource(R.drawable.ic_create_plus),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
         }
     }
 }
