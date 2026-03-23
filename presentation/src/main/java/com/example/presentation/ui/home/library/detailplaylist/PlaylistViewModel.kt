@@ -1,5 +1,6 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
+import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,6 +56,7 @@ class PlaylistViewModel @Inject constructor(
 
             val result = useCase.getPlaylistUseCase.invoke(id)
             result.onSuccess { data ->
+                Log.d("joel123", "${data}")
                 _uiState.update {
                     it.copy(
                         playlist = data,

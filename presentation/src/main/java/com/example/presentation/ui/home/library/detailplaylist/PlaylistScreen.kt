@@ -1,7 +1,7 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
+import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +39,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ChainStyle
@@ -55,9 +56,7 @@ import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.ui.widget.ButtonVariableOutlined
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.PaddingUtil
@@ -204,6 +203,8 @@ fun PlaylistContent(
 
 @Composable
 fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
+    val dummyCreators = listOf(playlist?.creator, playlist?.creator)
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -272,53 +273,55 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
                         compositingStrategy = CompositingStrategy.Offscreen
                     }
             ) {
+
                 Box(
                     modifier = Modifier
-                        .padding(start = 18.dp)
                         .size(24.dp)
                         .clip(CircleShape)
                         .background(MaterialTheme.colorScheme.surfaceContainer)
                 ) {
                     Icon(
-                        modifier = Modifier.size(20.dp).align(Alignment.Center),
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(Alignment.Center),
                         painter = painterResource(R.drawable.ic_create_plus),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
 
-
-                AsyncImage(
-//                    model = playlistMinimal.coverImage,
-                    contentDescription = null,
-                    placeholder = painterResource(R.drawable.bg_image),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .size(PaddingUtil.LibraryItemSize)
-                )
-                Box(
-                    modifier = Modifier
-                        .offset(x = 34.dp)
-                        .size(24.dp)
-                        .drawBehind {
-                            drawCircle(
-                                color = Color.Black, // Color doesn't matter for Clear
-                                radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
-                                blendMode = BlendMode.Clear
-                            )
-                        }
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
-                ) {
-                    Icon(
-                        modifier = Modifier.size(20.dp).align(Alignment.Center),
-                        painter = painterResource(R.drawable.ic_create_plus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                dummyCreators.forEachIndexed { index, dummyCreator ->
+                    Log.d("joel123", dummyCreator?.profilePicture.orErrorNoText())
+                    Box(
+                        modifier = Modifier
+                            .offset(x = index.calculateCollaboratorPadding())
+                            .size(24.dp)
+                            .drawBehind {
+                                drawCircle(
+                                    color = Color.Black, // Color doesn't matter for Clear
+                                    radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
+                                    blendMode = BlendMode.Clear
+                                )
+                            }
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.surfaceContainer)
+                    ) {
+                        AsyncImage(
+                            model = dummyCreator?.profilePicture,
+                            contentDescription = null,
+                            placeholder = painterResource(R.drawable.bg_image),
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(PaddingUtil.LibraryItemSize)
+                        )
+                    }
                 }
             }
-
         }
     }
+}
+
+fun Int.calculateCollaboratorPadding(): Dp {
+    val xDistance = (this + 1) * 16
+    return xDistance.dp
 }
