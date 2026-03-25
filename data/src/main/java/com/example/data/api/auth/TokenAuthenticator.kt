@@ -32,6 +32,9 @@ class TokenAuthenticator @Inject constructor(
                 val currentToken = authStore.getAccessToken()
                 val requestToken = response.request.header("Authorization")?.removePrefix("Bearer ")
 
+                Log.d("joel123", "currentToken: $currentToken")
+                Log.d("joel123", "requestToken: $requestToken")
+
                 if (currentToken != requestToken) {
                     return@withLock currentToken
                 }
