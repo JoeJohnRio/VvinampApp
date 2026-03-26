@@ -28,7 +28,7 @@ class DataStoreAuthStore @Inject constructor(
 
     override suspend fun saveTokens(access: String, refresh: String?, expiresAt: String) {
         context.dataStore.edit { preferences ->
-            preferences[ACCESS_TOKEN] = access + "joel123"
+            preferences[ACCESS_TOKEN] = access
             refresh?.let { preferences[REFRESH_TOKEN] = it }
             preferences[EXPIRES_AT] = expiresAt
         }
