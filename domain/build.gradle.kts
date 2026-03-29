@@ -1,10 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.serialization)
-    kotlin("kapt")
 }
 
 android {
@@ -31,8 +29,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
 
@@ -40,8 +41,8 @@ dependencies {
     // Hilt
     api(libs.hilt.dagger.android)
     api(libs.hilt.work)
-    kapt(libs.hilt.dagger.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.dagger.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.paging.common.ktx)
 
     // Serializable

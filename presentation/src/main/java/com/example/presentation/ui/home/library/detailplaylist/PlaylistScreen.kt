@@ -73,7 +73,6 @@ fun PlaylistScreen(
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
     LaunchedEffect(playlistId) {
-        Log.d("joel123", "event playlist ids ${playlistId}")
         viewModel.getPlaylist(playlistId)
     }
 

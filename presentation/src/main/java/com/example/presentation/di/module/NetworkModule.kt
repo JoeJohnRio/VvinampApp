@@ -14,6 +14,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import com.example.data.BuildConfig
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.ApolloRequest
+import com.apollographql.apollo.api.ApolloResponse
+import com.apollographql.apollo.api.Operation
+import com.apollographql.apollo.interceptor.ApolloInterceptor
+import com.apollographql.apollo.interceptor.ApolloInterceptorChain
 import com.apollographql.apollo.network.okHttpClient
 import com.chuckerteam.chucker.api.ChuckerCollector
 import com.chuckerteam.chucker.api.ChuckerInterceptor
@@ -22,6 +27,7 @@ import com.example.data.api.auth.TokenAuthenticator
 import com.example.data.datasource.local.DataStoreAuthStore
 import com.example.data.repository.auth.AuthStore
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.Flow
 
 
 @Module
@@ -44,6 +50,19 @@ class NetworkModule {
     fun provideApolloClient(client: OkHttpClient): ApolloClient {
         return ApolloClient.Builder()
             .serverUrl(BuildConfig.BASE_URL + BuildConfig.BASE_URL_GRAPHQL)
+            .addInterceptor(object : ApolloInterceptor {
+                override fun <D : Operation.Data> intercept(
+                    request: ApolloRequest<D>,
+                    chain: ApolloInterceptorChain
+                ): Flow<ApolloResponse<D>> {
+                    return chain.proceed(
+                        request.newBuilder()
+                            .addHttpHeader("X-APOLLO-OPERATION-NAME", request.operation.name())
+                            .addHttpHeader("X-APOLLO-OPERATION-ID", request.operation.id())
+                            .build()
+                    )
+                }
+            })
             .okHttpClient(client)
             .build()
     }

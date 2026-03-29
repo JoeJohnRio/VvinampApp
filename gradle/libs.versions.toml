@@ -5,13 +5,13 @@ coilCompose = "3.1.0"
 composeBom = "2025.06.00"
 coreKtx = "1.15.0"
 coreTesting = "2.2.0"
-androidAppGradlePlugin = "8.9.1"
-androidLibraryGradlePlugin = "8.7.3"
+androidAppGradlePlugin = "9.0.1"
+androidLibraryGradlePlugin = "9.0.1"
 gson = "2.10.1"
-hiltDagger = "2.56.2"
-hilt = "1.2.0"
+hiltDagger = "2.59.2"
+hilt = "1.3.0"
 junit = "4.13.2"
-kotlinGradlePlugin = "2.1.0"
+kotlinGradlePlugin = "2.3.0"
 kotlinxCoroutinesAndroid = "1.8.1"
 kotlinxCoroutinesTest = "1.8.1"
 kotlinxSerializationJson = "1.6.3"
@@ -35,8 +35,7 @@ truth = "1.1.3"
 turbine = "0.12.1"
 workRuntimeKtx = "2.10.0"
 detekt = "1.23.6"
-ksp = "2.1.0-1.0.28"
-kapt = "2.2.0"
+ksp = "2.3.6"
 kover = "0.8.2"
 serializationGradlePlugin = "1.9.0"
 jdk = "21"
@@ -51,6 +50,7 @@ securityCrypto = "1.1.0"
 datastore = "1.1.7"
 media3 = "1.10.0-beta01"
 palette = "1.0.0"
+chucker = "4.3.1"
 
 [libraries]
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
@@ -84,8 +84,8 @@ media3-session = { module = "androidx.media3:media3-session", version.ref = "med
 media3-ui-compose-material3 = { module = "androidx.media3:media3-ui-compose-material3", version.ref = "media3" }
 
 # Chucker
-chucker-debug = { module = "com.github.chuckerteam.chucker:library", version = "4.0.0" }
-chucker-release = { module = "com.github.chuckerteam.chucker:library-no-op", version = "4.0.0" }
+chucker-debug = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
+chucker-release = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
 
 # Apollo
 apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
@@ -152,11 +152,9 @@ media3 = ["media3-exoplayer", "media3-exoplayer-hls", "media3-ui", "media3-commo
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin"}
 android-application = { id = "com.android.application", version.ref = "androidAppGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidLibraryGradlePlugin" }
-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinGradlePlugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltDagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationGradlePlugin" }
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }

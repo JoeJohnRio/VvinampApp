@@ -1,9 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    kotlin("kapt")
 }
 
 android {
@@ -37,11 +37,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11
@@ -63,8 +65,8 @@ dependencies {
     // Hilt
     api(libs.hilt.dagger.android)
     api(libs.hilt.work)
-    kapt(libs.hilt.dagger.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.dagger.compiler)
+    ksp(libs.hilt.compiler)
 
     // Room
     implementation(libs.room.runtime)

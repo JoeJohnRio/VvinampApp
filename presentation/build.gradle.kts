@@ -1,11 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
     alias(libs.plugins.compose)
-    kotlin("kapt")
 }
 
 android {
@@ -32,14 +30,16 @@ android {
         }
     }
 
-    flavorDimensions.add("environment")
+    flavorDimensions += listOf("environment")
 
     productFlavors {
         create("prod") {
+            dimension = "environment"
             applicationIdSuffix = ".prod"
             isDefault = true
         }
         create("mock") {
+            dimension = "environment"
             applicationIdSuffix = ".mock"
         }
     }
@@ -50,14 +50,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.kotlinGradlePlugin.get()
     }
-
-    kotlinOptions {
-        freeCompilerArgs += listOf("-Xjvm-default=all")
-    }
 }
 
 kotlin {
     jvmToolchain(libs.versions.jdk.get().toInt())
+
+    compilerOptions {
+        freeCompilerArgs.addAll(listOf("-Xjvm-default=all"))
+    }
 }
 
 dependencies {
@@ -100,8 +100,8 @@ dependencies {
     // Hilt
     api(libs.hilt.dagger.android)
     api(libs.hilt.work)
-    kapt(libs.hilt.dagger.compiler)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.dagger.compiler)
+    ksp(libs.hilt.compiler)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)

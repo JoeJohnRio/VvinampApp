@@ -92,7 +92,6 @@ private fun HomeContent(
 ) {
     Scaffold(
         topBar = {
-
             TopBar(
                 "",
                 onSearchClick = {},
@@ -114,46 +113,6 @@ private fun HomeContent(
                     historyList = it,
                     onEvent = onEvent
                 )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                ConstraintLayout(
-                    modifier = Modifier
-                        .weight(0.7f)
-                        .background(Color.White)
-                ) {
-                    val (textRef, btnRef) = createRefs()
-
-                    // 1. Chains them together tightly, anchored to the left edge (0f)
-                    createHorizontalChain(textRef, btnRef, chainStyle = ChainStyle.Packed(0f))
-
-                    Text(
-                        text = "Lorem",
-                        modifier = Modifier.constrainAs(textRef) {
-                            // 2. Allows text to shrink to a new line instead of breaking boundaries
-                            width = Dimension.preferredWrapContent
-                            centerVerticallyTo(parent)
-                        },maxLines = 2,                                  // 1. Force single line
-                        overflow = TextOverflow.Ellipsis,
-                    )
-
-                    ButtonVariableOutlined(
-                        "Outline",
-                        modifier = Modifier.constrainAs(btnRef) {
-                            centerVerticallyTo(parent)
-                        }
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .weight(0.3f)
-                        .background(Color.Red)
-                ) {
-                    Text("test")
-                }
             }
         }
     }
