@@ -20,13 +20,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.util.getMiddleColor
+import com.example.presentation.R
 
 
 @Composable
 fun AnimatedTopNavigation(
     innerPadding: PaddingValues,
     title: String,
-    topBarAlpha: Float, // Passed from the scroll logic (0f to 1f)
+    topBarAlpha: Float,
+    drawableId: Int = R.drawable.ic_back_chevron,
     onBackClick: () -> Unit,
     topBarNameAlpha: Float,
     topBarColor: Color
@@ -55,7 +57,7 @@ fun AnimatedTopNavigation(
                     .align(Alignment.CenterStart)
             ) {
                 Icon(
-                    painter = painterResource(com.example.presentation.R.drawable.ic_back_chevron),
+                    painter = painterResource(drawableId),
                     contentDescription = "Back"
                 )
             }

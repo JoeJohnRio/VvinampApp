@@ -33,6 +33,8 @@ object AppColours {
 
     val Black100 = Color(0xFF121212)
     val Black150 = Color(0xFF121212)
+
+    val Black175 = Color(0xff1e1e1e)
     val Black200 = Color(0xff1e1f22)
     val Black300 = Color(0xff4d5056)
 

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -42,6 +43,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -56,10 +58,12 @@ import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
+import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.PaddingUtil
+import com.example.presentation.util.PaddingUtil.NormalPadding
 import com.example.presentation.util.PaddingUtil.PlaylistNoPhotoSize
 import com.example.presentation.util.orErrorNoText
 
@@ -112,6 +116,12 @@ fun PlaylistContent(
     val topBarRange = remember { topBarEndPx - topBarStartPx }
     val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
 
+    val noSongsBackgroundColor =
+        Brush.verticalGradient(
+            0f to Color(0xff474747),
+            0.35f to MaterialTheme.colorScheme.background
+        )
+
     data class ScrollProgress(
         val topBarProgress: Float,
         val topBarNameProgress: Float,
@@ -156,10 +166,7 @@ fun PlaylistContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
-                    Brush.verticalGradient(
-                        0f to Color.Blue.copy(alpha = 0.7f),
-                        1f to Color.Transparent
-                    )
+                    noSongsBackgroundColor
                 )
         ) {
             LazyColumn(
@@ -169,13 +176,15 @@ fun PlaylistContent(
                     .padding(horizontal = 16.dp)
             ) {
                 item {
-                    Spacer(Modifier.height(innerPadding.calculateTopPadding() + PaddingUtil.AlbumHeroSize))
+                    Spacer(Modifier.height(innerPadding.calculateTopPadding()))
                 }
 
                 item {
-                    PlaylistDetailComponent(uiState.playlist)
+                    PlaylistDetailComponent(
+                        playlist = uiState.playlist,
+                        paddingTop = innerPadding
+                    )
                 }
-
 
                 item {
                     Spacer(
@@ -189,6 +198,7 @@ fun PlaylistContent(
 
             AnimatedTopNavigation(
                 innerPadding = innerPadding,
+                drawableId = R.drawable.ic_arrow_back,
                 title = uiState.playlist?.title.orErrorNoText(),
                 topBarAlpha = scrollProgress.topBarProgress,
                 topBarNameAlpha = scrollProgress.topBarNameProgress,
@@ -202,18 +212,22 @@ fun PlaylistContent(
 }
 
 @Composable
-fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
+fun PlaylistDetailComponent(
+    playlist: PlaylistComplete?,
+    paddingTop: PaddingValues
+) {
     val dummyCreators = listOf(playlist?.creator, playlist?.creator)
+    val totalPaddingTop = paddingTop.calculateTopPadding() + NormalPadding
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = totalPaddingTop),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
                 .size(PlaylistNoPhotoSize)
                 .background(
-                    color = MaterialTheme.colorScheme.background,
+                    color = AppColours.Black175,
                     shape = RoundedCornerShape(4.dp)
                 )
         ) {
@@ -277,8 +291,13 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
                 Box(
                     modifier = Modifier
                         .size(24.dp)
-                        .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.surfaceContainer)
+                        .zIndex(1f)
+                        .drawBehind {
+                            drawCircle(
+                                color = Color.Black,
+                                blendMode = BlendMode.Clear
+                            )
+                        }
                 ) {
                     Icon(
                         modifier = Modifier
@@ -295,10 +314,11 @@ fun PlaylistDetailComponent(playlist: PlaylistComplete?) {
                     Box(
                         modifier = Modifier
                             .offset(x = index.calculateCollaboratorPadding())
+                            .zIndex(-index.toFloat()) // Forces the first index to the front
                             .size(24.dp)
                             .drawBehind {
                                 drawCircle(
-                                    color = Color.Black, // Color doesn't matter for Clear
+                                    color = Color.Black,
                                     radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
                                     blendMode = BlendMode.Clear
                                 )
