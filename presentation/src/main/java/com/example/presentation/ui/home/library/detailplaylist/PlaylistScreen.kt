@@ -2,6 +2,7 @@ package com.example.presentation.ui.home.library.detailplaylist
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -104,6 +106,8 @@ fun PlaylistContent(
     playlistTracks: LazyPagingItems<TrackDomain>,
     updateDominantColor: (Color) -> Unit,
     onBackClicked: () -> Unit,
+    onClickShare: () -> Unit = {},
+    onClickMore: () -> Unit = {}
 ) {
     val scrollState = rememberLazyListState()
 
@@ -187,6 +191,10 @@ fun PlaylistContent(
                 }
 
                 item {
+                    RecommendedSongsComponent()
+                }
+
+                item {
                     Spacer(
                         Modifier
                             .height(1000.dp)
@@ -214,13 +222,17 @@ fun PlaylistContent(
 @Composable
 fun PlaylistDetailComponent(
     playlist: PlaylistComplete?,
-    paddingTop: PaddingValues
+    paddingTop: PaddingValues,
+    onClickShare: () -> Unit = {},
+    onClickMore: () -> Unit = {}
 ) {
     val dummyCreators = listOf(playlist?.creator, playlist?.creator)
     val totalPaddingTop = paddingTop.calculateTopPadding() + NormalPadding
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = totalPaddingTop),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = totalPaddingTop),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -234,7 +246,7 @@ fun PlaylistDetailComponent(
             Icon(
                 modifier = Modifier.align(Alignment.Center),
                 painter = painterResource(R.drawable.ic_music_note),
-                tint = MaterialTheme.colorScheme.outline,
+                tint = MaterialTheme.colorScheme.surfaceBright,
                 contentDescription = null
             )
         }
@@ -287,7 +299,6 @@ fun PlaylistDetailComponent(
                         compositingStrategy = CompositingStrategy.Offscreen
                     }
             ) {
-
                 Box(
                     modifier = Modifier
                         .size(24.dp)
@@ -338,6 +349,39 @@ fun PlaylistDetailComponent(
                 }
             }
         }
+    }
+
+    Spacer(Modifier.height(8.dp))
+
+    Icon(
+        painter = painterResource(R.drawable.ic_public),
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.surfaceBright
+    )
+
+    Spacer(Modifier.height(24.dp))
+
+    Row() {
+        Icon(
+            modifier = Modifier.clickable {
+                onClickShare()
+            },
+            painter = painterResource(R.drawable.ic_share),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.surfaceBright
+        )
+
+
+        Spacer(Modifier.width(16.dp))
+
+        Icon(
+            modifier = Modifier.clickable {
+                onClickMore()
+            },
+            painter = painterResource(R.drawable.ic_bullet_vertical),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.surfaceBright
+        )
     }
 }
 

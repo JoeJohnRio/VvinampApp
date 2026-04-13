@@ -49,5 +49,6 @@
     <string name="label_show_all">Show All</string>
     <string name="label_see_more">See More</string>
     <string name="label_see_discography">See discography</string>
+    <string name="title_recommended_songs">Recommended Songs</string>
 
 </resources>
