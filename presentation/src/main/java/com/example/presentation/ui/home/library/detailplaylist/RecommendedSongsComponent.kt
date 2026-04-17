@@ -82,8 +82,7 @@ fun ItemRecommendedSong(
                 )
             )
 
-            Spacer(Modifier.hei
-                (8.dp))
+            Spacer(Modifier.height(8.dp))
 
             Text(
                 text = artistName,
