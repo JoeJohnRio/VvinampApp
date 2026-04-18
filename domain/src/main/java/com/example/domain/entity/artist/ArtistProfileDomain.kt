@@ -16,7 +16,7 @@ val artistProfileDummy = ArtistProfileDomain(
     id = "mj_001",
     name = "Michael Jackson",
     bio = "The King of Pop. One of the most significant cultural figures of the 20th century and one of the greatest entertainers in the history of music.",
-    profileImage = "https://cirio.my.id/images/artists/sheilaOn7_artist_profile.jpg", // Replace with actual image URL
+    profileImage = "https://cirio.my.id/artist/cdef7bae-fa80-4519-9338-6d94354c723a/dewa_19.jpg", // Replace with actual image URL
     verified = true,
     monthlyListeners = 42500000 // approx 42.5M
 )

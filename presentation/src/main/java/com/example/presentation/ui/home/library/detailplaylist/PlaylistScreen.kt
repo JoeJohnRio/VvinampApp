@@ -191,6 +191,10 @@ fun PlaylistContent(
                 }
 
                 item {
+                    Spacer(Modifier.height(32.dp))
+                }
+
+                item {
                     RecommendedSongsComponent()
                 }
 
