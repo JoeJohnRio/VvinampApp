@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -68,6 +67,7 @@ import com.example.presentation.util.PaddingUtil
 import com.example.presentation.util.PaddingUtil.NormalPadding
 import com.example.presentation.util.PaddingUtil.PlaylistNoPhotoSize
 import com.example.presentation.util.orErrorNoText
+import com.example.presentation.util.orZero
 
 @Composable
 fun PlaylistScreen(
@@ -110,6 +110,9 @@ fun PlaylistContent(
     onClickMore: () -> Unit = {}
 ) {
     val scrollState = rememberLazyListState()
+
+    //this is the temporary way
+    val isSongExist = uiState.playlist?.totalDuration.orZero() > 0
 
     val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
     val topBarStartPx = with(LocalDensity.current) { 255.dp.toPx() }
@@ -179,31 +182,37 @@ fun PlaylistContent(
                     .fillMaxSize()
                     .padding(horizontal = 16.dp)
             ) {
-                item {
-                    Spacer(Modifier.height(innerPadding.calculateTopPadding()))
-                }
+                if (isSongExist) {
+                    item {
+                        Text("Nahhhh")
+                    }
+                } else {
+                    item {
+                        Spacer(Modifier.height(innerPadding.calculateTopPadding()))
+                    }
 
-                item {
-                    PlaylistDetailComponent(
-                        playlist = uiState.playlist,
-                        paddingTop = innerPadding
-                    )
-                }
+                    item {
+                        PlaylistDetailComponent(
+                            playlist = uiState.playlist,
+                            paddingTop = innerPadding
+                        )
+                    }
 
-                item {
-                    Spacer(Modifier.height(32.dp))
-                }
+                    item {
+                        Spacer(Modifier.height(32.dp))
+                    }
 
-                item {
-                    RecommendedSongsComponent()
-                }
+                    item {
+                        RecommendedSongsComponent()
+                    }
 
-                item {
-                    Spacer(
-                        Modifier
-                            .height(1000.dp)
-                            .fillMaxWidth()
-                    )
+                    item {
+                        Spacer(
+                            Modifier
+                                .height(1000.dp)
+                                .fillMaxWidth()
+                        )
+                    }
                 }
             }
 

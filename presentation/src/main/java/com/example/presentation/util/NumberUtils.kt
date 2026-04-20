@@ -7,3 +7,5 @@ fun Int.addCommas(): String {
 fun Int.toMinutes(): Int {
     return Math.floorDiv(this, 60)
 }
+
+fun Int?.orZero(): Int = this ?: 0
