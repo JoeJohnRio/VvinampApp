@@ -6,12 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.data.api.playlist.toChecked
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaylistUseCase
+import com.example.presentation.ui.home.HomeEvent
+import com.example.presentation.ui.home.HomeUiEvent
+import com.example.presentation.util.singleSharedFlowJoel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
@@ -30,8 +36,24 @@ class PlaylistViewModel @Inject constructor(
         }
         .cachedIn(viewModelScope)
 
+    private val _events = MutableSharedFlow<PlaylistEvent>()
+    val events = _events.asSharedFlow()
+
     fun onEvent(event: PlaylistUiEvent) {
         when (event) {
+            is PlaylistUiEvent.onClickAdd -> {
+                addSongsToPlaylist(
+                    playlistId = event.playlistId,
+                    trackId = event.trackId
+                )
+            }
+
+            is PlaylistUiEvent.onClickTrack -> {
+                viewModelScope.launch {
+                    _events.emit(PlaylistEvent.PlayTrack(event.track))
+                }
+            }
+
             PlaylistUiEvent.onClickChange -> {
 
             }
@@ -50,6 +72,39 @@ class PlaylistViewModel @Inject constructor(
         _uiState.update { it.copy(dominantColor = color) }
     }
 
+    fun addSongsToPlaylist(
+        playlistId: String,
+        trackId: String
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            val result = useCase.addSongToPlaylistUseCase.invoke(
+                playlistId = playlistId,
+                trackId = trackId
+            )
+            result.onSuccess { data ->
+                val updatedTracks = uiState.value.recommendedTracks?.map { track ->
+                    if (track.id == trackId) track.toChecked() else track
+                }
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        recommendedTracks = updatedTracks
+                    )
+                }
+            }.onFailure {
+                _uiState.update {
+                    it.copy(
+                        error = it.error,
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
     fun getPlaylist(id: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
@@ -60,6 +115,31 @@ class PlaylistViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         playlist = data,
+                        isLoading = false
+                    )
+                }
+                getRecommendedTracks()
+            }.onFailure {
+                _uiState.update {
+                    it.copy(
+                        error = it.error,
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
+    fun getRecommendedTracks() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true)
+
+            val result = useCase.getRecommendedTracksUseCase.invoke()
+
+            result.onSuccess { data ->
+                _uiState.update {
+                    it.copy(
+                        recommendedTracks = data,
                         isLoading = false
                     )
                 }

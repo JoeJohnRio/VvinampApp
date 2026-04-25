@@ -14,6 +14,7 @@ import com.example.graphql.GetPlaylistQuery
 import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
 import com.example.graphql.ListRecentHistoryQuery
+import com.example.graphql.RecommendedTracksQuery
 import com.example.graphql.RemoveSongFromPlaylistMutation
 import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UnsavePlaylistMutation
@@ -36,6 +37,14 @@ class PlaylistApiImpl @Inject constructor(
             GetPlaylistQuery(id)
         ) {
             it.getPlaylist
+        }
+    }
+
+    override suspend fun getRecommendedTracks(): Result<List<RecommendedTracksQuery.RecommendedTrack>> {
+        return api.safeQuery(
+            RecommendedTracksQuery()
+        ) {
+            it.recommendedTracks
         }
     }
 

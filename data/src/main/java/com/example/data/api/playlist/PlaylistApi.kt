@@ -7,6 +7,7 @@ import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
 import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
+import com.example.graphql.RecommendedTracksQuery
 import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
@@ -49,4 +50,6 @@ interface PlaylistApi {
         playlistId: String,
         after: String?
     ): Result<GetPlaylistTracksQuery.GetPlaylistTracks>
+
+    suspend fun getRecommendedTracks(): Result<List<RecommendedTracksQuery.RecommendedTrack>>
 }

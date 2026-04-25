@@ -12,8 +12,10 @@ import com.example.domain.entity.PageResponse
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
+import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -62,6 +64,32 @@ class PlaylistRepositoryImpl @Inject constructor(
     ): Result<String> {
         return api.createPlaylist(title).map {
             it.id
+        }
+    }
+
+    override suspend fun getRecommendedTracks(): Result<List<RecommendedTrackDomain>> {
+        return api.getRecommendedTracks().map {
+            it.map {
+                it.toDomain()
+            }
+        }
+    }
+
+    override suspend fun addSongToPlaylist(
+        playlistId: String,
+        trackId: String
+    ): Result<Boolean> {
+        return api.addSongToPlaylist(
+            input = AddSongToPlaylistInput(
+                playlistId = playlistId,
+                trackId = trackId
+            )
+        ).map {
+            if (it.id.isNullOrBlank()) {
+                false
+            } else {
+                true
+            }
         }
     }
 

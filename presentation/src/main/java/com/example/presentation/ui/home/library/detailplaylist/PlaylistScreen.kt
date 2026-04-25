@@ -1,71 +1,41 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
-import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import coil3.compose.AsyncImage
-import com.example.domain.entity.playlist.PlaylistComplete
+import androidx.paging.compose.itemKey
 import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
+import com.example.presentation.ui.home.HomeEvent
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.theme.AppColours
-import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.ui.widget.ButtonVariableSizeSolid
+import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
-import com.example.presentation.util.PaddingUtil
-import com.example.presentation.util.PaddingUtil.NormalPadding
-import com.example.presentation.util.PaddingUtil.PlaylistNoPhotoSize
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.orZero
 
@@ -73,13 +43,24 @@ import com.example.presentation.util.orZero
 fun PlaylistScreen(
     playlistId: String,
     bottomNavRouter: BottomNavRouter,
-    viewModel: PlaylistViewModel = hiltViewModel()
+    viewModel: PlaylistViewModel = hiltViewModel(),
+    playbackViewModel: PlaybackViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
     LaunchedEffect(playlistId) {
         viewModel.getPlaylist(playlistId)
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is PlaylistEvent.PlayTrack -> {
+                    playbackViewModel.onEvent(PlaybackUiEvent.OnTrackClicked(event.track))
+                }
+            }
+        }
     }
 
     ScreenWrapper(
@@ -94,6 +75,9 @@ fun PlaylistScreen(
                 },
                 onBackClicked = {
                     bottomNavRouter.navigateBack()
+                },
+                onEvent = {
+                    viewModel.onEvent(it)
                 }
             )
         }
@@ -103,6 +87,7 @@ fun PlaylistScreen(
 @Composable
 fun PlaylistContent(
     uiState: PlaylistUiState,
+    onEvent: (PlaylistUiEvent) -> Unit,
     playlistTracks: LazyPagingItems<TrackDomain>,
     updateDominantColor: (Color) -> Unit,
     onBackClicked: () -> Unit,
@@ -184,8 +169,27 @@ fun PlaylistContent(
             ) {
                 if (isSongExist) {
                     item {
-                        Text("Nahhhh")
+                        Spacer(Modifier.height(innerPadding.calculateTopPadding()))
                     }
+
+                    items(
+                        count = playlistTracks.itemCount,
+                        key = playlistTracks.itemKey { it.id } // Provide stable keys if your Domain model has an ID
+                    ) { index ->
+                        val track = playlistTracks[index]
+
+                        if (track != null) {
+                            // Render the loaded track
+                            PlaylistTrackComponent(
+                                track = track,
+                                onEvent = onEvent
+                            )
+                        } else {
+                            // Render a shimmer or placeholder if Paging 3 is currently fetching this index
+                            TrackPlaceholder()
+                        }
+                    }
+
                 } else {
                     item {
                         Spacer(Modifier.height(innerPadding.calculateTopPadding()))
@@ -197,22 +201,25 @@ fun PlaylistContent(
                             paddingTop = innerPadding
                         )
                     }
+                }
 
-                    item {
-                        Spacer(Modifier.height(32.dp))
-                    }
+                item {
+                    Spacer(Modifier.height(32.dp))
+                }
 
-                    item {
-                        RecommendedSongsComponent()
-                    }
+                item {
+                    RecommendedTrackComponent(
+                        uiState = uiState,
+                        onEvent = onEvent
+                    )
+                }
 
-                    item {
-                        Spacer(
-                            Modifier
-                                .height(1000.dp)
-                                .fillMaxWidth()
-                        )
-                    }
+                item {
+                    Spacer(
+                        Modifier
+                            .height(1000.dp)
+                            .fillMaxWidth()
+                    )
                 }
             }
 
@@ -232,171 +239,6 @@ fun PlaylistContent(
     }
 }
 
-@Composable
-fun PlaylistDetailComponent(
-    playlist: PlaylistComplete?,
-    paddingTop: PaddingValues,
-    onClickShare: () -> Unit = {},
-    onClickMore: () -> Unit = {}
-) {
-    val dummyCreators = listOf(playlist?.creator, playlist?.creator)
-    val totalPaddingTop = paddingTop.calculateTopPadding() + NormalPadding
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = totalPaddingTop),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(PlaylistNoPhotoSize)
-                .background(
-                    color = AppColours.Black175,
-                    shape = RoundedCornerShape(4.dp)
-                )
-        ) {
-            Icon(
-                modifier = Modifier.align(Alignment.Center),
-                painter = painterResource(R.drawable.ic_music_note),
-                tint = MaterialTheme.colorScheme.surfaceBright,
-                contentDescription = null
-            )
-        }
-
-        Spacer(Modifier.width(16.dp))
-
-        Column() {
-            ConstraintLayout(
-                modifier = Modifier
-            ) {
-                val (textRef, btnRef) = createRefs()
-
-                createHorizontalChain(
-                    textRef,
-                    btnRef,
-                    chainStyle = ChainStyle.Packed(0f)
-                )
-
-                Text(
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .constrainAs(textRef) {
-                            width = Dimension.preferredWrapContent
-                            centerVerticallyTo(parent)
-                        },
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    text = playlist?.title.orEmpty(),
-                    style = TSHeadlineMediumWhite().copy(
-                        fontSize = 24.sp
-                    )
-                )
-
-                ButtonVariableSizeSolid(
-                    modifier = Modifier
-                        .height(36.dp)
-                        .constrainAs(btnRef) {
-                            centerVerticallyTo(textRef)
-                        },
-                    text = "Change",
-                    textColor = MaterialTheme.colorScheme.onSecondary,
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .graphicsLayer {
-                        compositingStrategy = CompositingStrategy.Offscreen
-                    }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .zIndex(1f)
-                        .drawBehind {
-                            drawCircle(
-                                color = Color.Black,
-                                blendMode = BlendMode.Clear
-                            )
-                        }
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .align(Alignment.Center),
-                        painter = painterResource(R.drawable.ic_create_plus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                dummyCreators.forEachIndexed { index, dummyCreator ->
-                    Log.d("joel123", dummyCreator?.profilePicture.orErrorNoText())
-                    Box(
-                        modifier = Modifier
-                            .offset(x = index.calculateCollaboratorPadding())
-                            .zIndex(-index.toFloat()) // Forces the first index to the front
-                            .size(24.dp)
-                            .drawBehind {
-                                drawCircle(
-                                    color = Color.Black,
-                                    radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
-                                    blendMode = BlendMode.Clear
-                                )
-                            }
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                    ) {
-                        AsyncImage(
-                            model = dummyCreator?.profilePicture,
-                            contentDescription = null,
-                            placeholder = painterResource(R.drawable.bg_image),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(PaddingUtil.LibraryItemSize)
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    Spacer(Modifier.height(8.dp))
-
-    Icon(
-        painter = painterResource(R.drawable.ic_public),
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.surfaceBright
-    )
-
-    Spacer(Modifier.height(24.dp))
-
-    Row() {
-        Icon(
-            modifier = Modifier.clickable {
-                onClickShare()
-            },
-            painter = painterResource(R.drawable.ic_share),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.surfaceBright
-        )
-
-
-        Spacer(Modifier.width(16.dp))
-
-        Icon(
-            modifier = Modifier.clickable {
-                onClickMore()
-            },
-            painter = painterResource(R.drawable.ic_bullet_vertical),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.surfaceBright
-        )
-    }
-}
 
 fun Int.calculateCollaboratorPadding(): Dp {
     val xDistance = (this + 1) * 16

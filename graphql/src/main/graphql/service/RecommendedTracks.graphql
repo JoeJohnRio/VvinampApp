@@ -1,0 +1,14 @@
+query RecommendedTracks {
+    recommendedTracks(limit: 10) {
+        id
+        title
+        duration
+        streamCount
+        audioFileUrl
+        albumCoverUrl
+        artistName
+        explicit
+        lyrics
+        releaseDate
+    }
+}

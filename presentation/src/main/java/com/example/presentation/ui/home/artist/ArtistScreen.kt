@@ -1,6 +1,5 @@
 package com.example.presentation.ui.home.artist
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -73,7 +71,7 @@ fun ArtistScreen(
                         bottomNavRouter.navigateToAlbum(it)
                     },
                     onTrackClicked = { track ->
-                        playbackViewModel.onEvent(PlaybackUiEvent.TrackClicked(track))
+                        playbackViewModel.onEvent(PlaybackUiEvent.OnTrackClicked(track))
                     },
                     updateDominantColor = { color ->
                         artistViewModel.updateDominantColor(color)

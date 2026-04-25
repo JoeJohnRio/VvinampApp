@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,7 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -21,51 +21,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.domain.entity.album.dummyAlbumDomain
-import com.example.domain.entity.artist.artistProfileDummy
-import com.example.domain.entity.song.trackDummy
+import com.example.data.api.playlist.toTrackDomain
+import com.example.domain.entity.song.RecommendedTrackDomain
+import com.example.domain.entity.song.dummyRecommendedTracks
 import com.example.presentation.R
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.util.preview.PreviewTheme
 
-@Composable
-fun RecommendedSongsComponent() {
-
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Text(
-            text = stringResource(R.string.title_recommended_songs),
-            style = TSHeadlineMediumWhite().copy(
-                fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.inversePrimary
-            )
-        )
-
-        Spacer(Modifier.height(32.dp))
-
-        trackDummy.forEach {
-            ItemRecommendedSong(
-                songTitle = it.title,
-                artistName = it.artistName
-            )
-
-            Spacer(Modifier.height(16.dp))
-        }
-    }
-}
 
 @Composable
-fun ItemRecommendedSong(
-    songTitle: String = "Song Title",
-    artistName: String = "Artist Name",
-    onClickAdd: () -> Unit = {}
+fun RecommendedTrackItem(
+    playlistId: String,
+    track: RecommendedTrackDomain,
+    onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -73,10 +46,15 @@ fun ItemRecommendedSong(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
+            modifier = Modifier.clickable {
+                onEvent(PlaylistUiEvent.onClickTrack(
+                    track.toTrackDomain()
+                ))
+            },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
-                model = artistProfileDummy.profileImage,
+                model = track.albumCoverUrl,
                 contentDescription = null,
                 placeholder = painterResource(R.drawable.bg_image),
                 contentScale = ContentScale.Crop,
@@ -88,10 +66,11 @@ fun ItemRecommendedSong(
             Spacer(Modifier.width(8.dp))
 
             Column(
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = songTitle,
+                    text = track.title,
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.inversePrimary
@@ -101,32 +80,56 @@ fun ItemRecommendedSong(
                 Spacer(Modifier.height(8.dp))
 
                 Text(
-                    text = artistName,
+                    text = track.artistName,
                     style = TSHeadlineMediumWhite().copy(
                         fontSize = 10.sp,
-                        color = MaterialTheme.colorScheme.inversePrimary
+                        color = MaterialTheme.colorScheme.surfaceBright
                     )
                 )
             }
         }
 
-        Icon(
-            painter = painterResource(R.drawable.ic_plus_circle),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.inversePrimary
-        )
+        if (track.isAdded) {
+            Icon(
+                painter = painterResource(R.drawable.ic_check),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+        } else {
+            Icon(
+                modifier = Modifier.clickable(
+                    onClick = {
+                        onEvent(
+                            PlaylistUiEvent.onClickAdd(
+                                playlistId = playlistId,
+                                trackId = track.id
+                            )
+                        )
+                    }
+                ),
+                painter = painterResource(R.drawable.ic_plus_circle),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.surfaceBright
+            )
+        }
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
-fun RecommendedSongsComponentPreview() {
+fun RecommendedTrackItemPreview() {
     PreviewTheme {
         Column(
-            modifier = Modifier.background(MaterialTheme.colorScheme.background)
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
                 .padding(horizontal = 16.dp)
         ) {
-            RecommendedSongsComponent()
+            RecommendedTrackItem(
+                playlistId = "",
+                track = dummyRecommendedTracks.first(),
+                onEvent = {}
+            )
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.data.api.playlist
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.user.UserMinimal
 import com.example.graphql.GetMyPlaylistFeedQuery
@@ -10,6 +11,7 @@ import com.example.graphql.GetMyPlaylistsQuery
 import com.example.graphql.GetPlaylistQuery
 import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
+import com.example.graphql.RecommendedTracksQuery
 import com.example.graphql.type.PlaylistSortOrder
 
 fun GetMyPlaylistsQuery.Node.toPlaylistMinimal(): PlaylistMinimal {
@@ -36,6 +38,48 @@ fun GetPlaylistQuery.GetPlaylist.toDomain(): PlaylistComplete {
         savedCount = this.savedCount,
         totalDuration = this.totalDuration,
         isSavedByMe = this.isSavedByMe
+    )
+}
+
+fun RecommendedTracksQuery.RecommendedTrack.toDomain(): RecommendedTrackDomain {
+    return RecommendedTrackDomain(
+        id = this.id,
+        title = this.title,
+        duration = this.duration,
+        streamCount = this.streamCount,
+        audioFileUrl = this.audioFileUrl,
+        albumCoverUrl = this.albumCoverUrl,
+        artistName = this.artistName,
+        explicit = this.explicit,
+        lyrics = this.lyrics,
+        releaseDate = this.releaseDate
+    )
+}
+fun RecommendedTrackDomain.toTrackDomain(): TrackDomain {
+    return TrackDomain(
+        id = this.id,
+        artistName = this.artistName,
+        albumCoverUrl = this.albumCoverUrl,
+        title = this.title,
+        duration = this.duration,
+        streamCount = this.streamCount,
+        explicit = this.explicit,
+        releaseDate = this.releaseDate
+    )
+}
+fun RecommendedTrackDomain.toChecked(): RecommendedTrackDomain {
+    return RecommendedTrackDomain(
+        id = this.id,
+        title = this.title,
+        duration = this.duration,
+        streamCount = this.streamCount,
+        audioFileUrl = this.audioFileUrl,
+        albumCoverUrl = this.albumCoverUrl,
+        artistName = this.artistName,
+        explicit = this.explicit,
+        lyrics = this.lyrics,
+        releaseDate = this.releaseDate,
+        isAdded = true
     )
 }
 

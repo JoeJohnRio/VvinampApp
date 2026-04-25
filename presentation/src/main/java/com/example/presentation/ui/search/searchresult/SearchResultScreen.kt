@@ -68,7 +68,7 @@ fun SearchResultsScreen(
                     when (searchItem) {
                         is SearchItemDomain.TrackSearch -> {
                             playbackViewModel.onEvent(
-                                PlaybackUiEvent.TrackClicked(
+                                PlaybackUiEvent.OnTrackClicked(
                                     searchItem.toTrackDomain()
                                 )
                             )

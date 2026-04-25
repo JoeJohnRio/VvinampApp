@@ -75,7 +75,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                 togglePlayback()
             }
 
-            is PlaybackUiEvent.TrackClicked -> {
+            is PlaybackUiEvent.OnTrackClicked -> {
                 trackClicked(event.track)
             }
         }

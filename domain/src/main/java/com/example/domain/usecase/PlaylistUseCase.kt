@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,9 @@ data class PlaylistUseCase @Inject constructor(
     val getMyPlaylistFeedUseCase: GetMyPlaylistFeedUseCase,
     val createPlaylistUseCase: CreatePlaylistUseCase,
     val getPlaylistTracksUseCase: GetPlaylistTracksUseCase,
-    val getPlaylistUseCase: GetPlaylistUseCase
+    val getPlaylistUseCase: GetPlaylistUseCase,
+    val getRecommendedTracksUseCase: GetRecommendedTracksUseCase,
+    val addSongToPlaylistUseCase: AddSongToPlaylistUseCase
 )
 
 class GetMyPlaylistUseCase @Inject constructor(
@@ -38,6 +41,28 @@ class GetPlaylistUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(id: String): Result<PlaylistComplete> {
         return repository.getPlaylist(id)
+    }
+}
+
+class GetRecommendedTracksUseCase @Inject constructor(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(): Result<List<RecommendedTrackDomain>> {
+        return repository.getRecommendedTracks()
+    }
+}
+
+class AddSongToPlaylistUseCase @Inject constructor(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(
+        playlistId: String,
+        trackId: String
+    ): Result<Boolean> {
+        return repository.addSongToPlaylist(
+            playlistId = playlistId,
+            trackId = trackId
+        )
     }
 }
 

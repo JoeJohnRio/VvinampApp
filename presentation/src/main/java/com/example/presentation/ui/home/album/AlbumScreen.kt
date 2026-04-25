@@ -59,7 +59,7 @@ fun AlbumScreen(
                 viewModel = viewModel,
                 onSongClick = { searchItem ->
                     playbackViewModel.onEvent(
-                        PlaybackUiEvent.TrackClicked(
+                        PlaybackUiEvent.OnTrackClicked(
                             searchItem.toTrackDomain()
                         )
                     )
