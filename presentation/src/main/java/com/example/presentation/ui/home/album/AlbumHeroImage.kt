@@ -2,7 +2,6 @@ package com.example.presentation.ui.home.album
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,7 +29,7 @@ import coil3.compose.AsyncImage
 import com.example.domain.entity.album.AlbumDomain
 import com.example.presentation.R
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.util.PaddingUtil
+import com.example.presentation.util.PaddingSizeUtil
 import com.example.presentation.util.orErrorNoText
 
 
@@ -49,7 +47,7 @@ fun AlbumHeroImage(
             .padding(
                 horizontal = 16.dp,
             )
-            .padding(top = innerPadding.calculateTopPadding() + PaddingUtil.NormalPadding)
+            .padding(top = innerPadding.calculateTopPadding() + PaddingSizeUtil.NormalPadding)
             .graphicsLayer {
                 alpha = 1f - collapseFraction
             }
@@ -76,7 +74,7 @@ fun AlbumHeroImage(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))
-                    .size(PaddingUtil.AlbumImageSize)
+                    .size(PaddingSizeUtil.AlbumImageSize)
             )
 
             Spacer(Modifier.height(32.dp))

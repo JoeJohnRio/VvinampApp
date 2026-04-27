@@ -77,7 +77,6 @@ class PlaylistViewModel @Inject constructor(
         trackId: String
     ) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
 
             val result = useCase.addSongToPlaylistUseCase.invoke(
                 playlistId = playlistId,
@@ -90,15 +89,13 @@ class PlaylistViewModel @Inject constructor(
 
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
                         recommendedTracks = updatedTracks
                     )
                 }
             }.onFailure {
                 _uiState.update {
                     it.copy(
-                        error = it.error,
-                        isLoading = false
+                        error = it.error
                     )
                 }
             }
@@ -132,7 +129,6 @@ class PlaylistViewModel @Inject constructor(
 
     fun getRecommendedTracks() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
 
             val result = useCase.getRecommendedTracksUseCase.invoke()
 
@@ -140,14 +136,12 @@ class PlaylistViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         recommendedTracks = data,
-                        isLoading = false
                     )
                 }
             }.onFailure {
                 _uiState.update {
                     it.copy(
                         error = it.error,
-                        isLoading = false
                     )
                 }
             }

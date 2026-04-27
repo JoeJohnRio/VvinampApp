@@ -1,5 +1,6 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -30,12 +31,12 @@ import androidx.paging.compose.itemKey
 import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
-import com.example.presentation.ui.home.HomeEvent
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
+import com.example.presentation.util.PaddingSizeUtil.TopBarHeight
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.orZero
 
@@ -99,12 +100,14 @@ fun PlaylistContent(
     //this is the temporary way
     val isSongExist = uiState.playlist?.totalDuration.orZero() > 0
 
-    val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
+    val coverImageStartPx = with(LocalDensity.current) { 70.dp.toPx() }
+//    val coverImageEndPx = with(LocalDensity.current) { 600.dp.toPx() }
     val topBarStartPx = with(LocalDensity.current) { 255.dp.toPx() }
     val topBarEndPx = with(LocalDensity.current) { 265.dp.toPx() }
     val topBarNameStartPx = with(LocalDensity.current) { 265.dp.toPx() }
     val topBarNameEndPx = with(LocalDensity.current) { 270.dp.toPx() }
 
+//    val coverImageRange = remember { coverImageEndPx - coverImageStartPx }
     val topBarRange = remember { topBarEndPx - topBarStartPx }
     val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
 
@@ -129,6 +132,7 @@ fun PlaylistContent(
             } else {
                 val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
 
+                Log.d("joel123", "$currentScroll dan $coverImageStartPx")
                 ScrollProgress(
                     topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(
                         0f,
@@ -138,7 +142,10 @@ fun PlaylistContent(
                         0f,
                         1f
                     ),
-                    collapseFraction = (currentScroll / headerHeightPx).coerceIn(0f, 1f)
+                    collapseFraction = (((currentScroll * 2) / coverImageStartPx)).coerceIn(
+                        0f,
+                        1f
+                    ),
                 )
             }
         }
@@ -161,6 +168,7 @@ fun PlaylistContent(
                     noSongsBackgroundColor
                 )
         ) {
+
             LazyColumn(
                 state = scrollState,
                 modifier = Modifier
@@ -169,7 +177,15 @@ fun PlaylistContent(
             ) {
                 if (isSongExist) {
                     item {
-                        Spacer(Modifier.height(innerPadding.calculateTopPadding()))
+                        Spacer(Modifier.height(innerPadding.calculateTopPadding() + TopBarHeight))
+                    }
+
+                    item {
+                        PlaylistHeroImage(
+                            playlist = uiState.playlist,
+                            modifier = Modifier,
+                            collapseFraction = scrollProgress.collapseFraction,
+                        )
                     }
 
                     items(

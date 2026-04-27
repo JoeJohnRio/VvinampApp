@@ -43,9 +43,9 @@ import com.example.presentation.R
 import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.widget.ButtonVariableSizeSolid
-import com.example.presentation.util.PaddingUtil
-import com.example.presentation.util.PaddingUtil.NormalPadding
-import com.example.presentation.util.PaddingUtil.PlaylistNoPhotoSize
+import com.example.presentation.util.PaddingSizeUtil
+import com.example.presentation.util.PaddingSizeUtil.NormalPadding
+import com.example.presentation.util.PaddingSizeUtil.PlaylistNoPhotoSize
 import com.example.presentation.util.orErrorNoText
 
 
@@ -173,7 +173,7 @@ fun PlaylistDetailComponent(
                             placeholder = painterResource(R.drawable.bg_image),
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
-                                .size(PaddingUtil.LibraryItemSize)
+                                .size(PaddingSizeUtil.LibraryItemSize)
                         )
                     }
                 }

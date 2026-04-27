@@ -13,6 +13,7 @@ data class PlaylistComplete(
     val updatedAt: String?,
     val isPublic: Boolean,
     val coverImage: String?,
+    val albumCovers: List<String>,
     val savedCount: Int,
     val totalDuration: Int,
     val isSavedByMe: Boolean

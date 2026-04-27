@@ -6,6 +6,7 @@ type Playlist {
   createdAt: String!
   updatedAt: String
   isPublic: Boolean!
+  albumCovers: [String!]
   coverImage: String
   savedCount: Int!
   totalDuration: Int!

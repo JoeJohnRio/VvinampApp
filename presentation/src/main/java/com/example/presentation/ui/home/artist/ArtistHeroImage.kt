@@ -26,7 +26,7 @@ import coil3.compose.rememberAsyncImagePainter
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.presentation.R
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
-import com.example.presentation.util.PaddingUtil
+import com.example.presentation.util.PaddingSizeUtil
 
 
 @Composable
@@ -45,7 +45,7 @@ fun BoxScope.ArtistHeroImage(
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .fillMaxWidth()
-            .height(PaddingUtil.ArtistImagePadding)
+            .height(PaddingSizeUtil.ArtistImagePadding)
     )
     Box(
         modifier = modifier

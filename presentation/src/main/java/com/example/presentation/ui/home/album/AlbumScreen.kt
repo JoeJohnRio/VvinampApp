@@ -31,7 +31,7 @@ import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
-import com.example.presentation.util.PaddingUtil
+import com.example.presentation.util.PaddingSizeUtil
 import com.example.presentation.util.orErrorNoText
 
 @Composable
@@ -137,7 +137,7 @@ fun AlbumContent(
                 artistNameProgress = scrollProgress.topBarProgress,
                 collapseFraction = scrollProgress.collapseFraction,
                 modifier = Modifier
-                    .height(innerPadding.calculateTopPadding() + PaddingUtil.AlbumHeroSize)
+                    .height(innerPadding.calculateTopPadding() + PaddingSizeUtil.AlbumHeroSize)
                     .graphicsLayer {
                         val offset = if (scrollState.firstVisibleItemIndex == 0) {
                             -scrollState.firstVisibleItemScrollOffset.toFloat()
@@ -158,7 +158,7 @@ fun AlbumContent(
                     .fillMaxSize()
             ) {
                 item {
-                    Spacer(Modifier.height(innerPadding.calculateTopPadding() + PaddingUtil.AlbumHeroSize))
+                    Spacer(Modifier.height(innerPadding.calculateTopPadding() + PaddingSizeUtil.AlbumHeroSize))
                 }
 
                 item {

@@ -6,6 +6,7 @@ query GetPlaylist($id: ID!) {
         isPublic
         coverImage
         savedCount
+        albumCovers
         totalDuration
         isSavedByMe
         createdAt

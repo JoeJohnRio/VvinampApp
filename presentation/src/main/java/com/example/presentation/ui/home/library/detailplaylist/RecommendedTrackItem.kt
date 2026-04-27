@@ -41,16 +41,19 @@ fun RecommendedTrackItem(
     onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                onEvent(
+                    PlaylistUiEvent.onClickTrack(
+                        track.toTrackDomain()
+                    )
+                )
+            },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Row(
-            modifier = Modifier.clickable {
-                onEvent(PlaylistUiEvent.onClickTrack(
-                    track.toTrackDomain()
-                ))
-            },
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
@@ -66,7 +69,6 @@ fun RecommendedTrackItem(
             Spacer(Modifier.width(8.dp))
 
             Column(
-                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(

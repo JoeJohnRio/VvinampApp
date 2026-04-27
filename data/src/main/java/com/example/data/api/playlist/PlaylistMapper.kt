@@ -35,6 +35,7 @@ fun GetPlaylistQuery.GetPlaylist.toDomain(): PlaylistComplete {
         updatedAt = this.updatedAt,
         isPublic = this.isPublic,
         coverImage = this.coverImage,
+        albumCovers = this.albumCovers.orEmpty(),
         savedCount = this.savedCount,
         totalDuration = this.totalDuration,
         isSavedByMe = this.isSavedByMe

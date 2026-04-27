@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.util.getMiddleColor
 import com.example.presentation.R
+import com.example.presentation.util.PaddingSizeUtil.TopBarHeight
 
 
 @Composable
@@ -33,7 +34,7 @@ fun AnimatedTopNavigation(
     topBarNameAlpha: Float,
     topBarColor: Color
 ) {
-    val surfaceHeight = 56.dp + innerPadding.calculateTopPadding()
+    val surfaceHeight = TopBarHeight + innerPadding.calculateTopPadding()
     Surface(
         color = getMiddleColor(
             firstColor = topBarColor,
