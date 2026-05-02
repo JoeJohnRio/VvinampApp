@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.util.getMiddleColor
 import com.example.presentation.R
+import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.util.PaddingSizeUtil.TopBarHeight
 
 
@@ -70,8 +72,64 @@ fun AnimatedTopNavigation(
                         this.alpha = topBarNameAlpha
                     },
                 text = title,
-                style = TSDisplayMediumWhite().copy(
+                style = TSHeadlineMediumWhite().copy(
                     fontSize = 15.sp
+                )
+            )
+        }
+    }
+}
+
+@Composable
+fun AnimatedTopSlidingNameNavigation(
+    innerPadding: PaddingValues,
+    title: String,
+    topBarAlpha: Float,
+    drawableId: Int = R.drawable.ic_back_chevron,
+    onBackClick: () -> Unit,
+    titleProgress: Float,
+    topBarColor: Color
+) {
+    val surfaceHeight = TopBarHeight + innerPadding.calculateTopPadding()
+    Surface(
+        color = getMiddleColor(
+            firstColor = topBarColor,
+            secondColor = MaterialTheme.colorScheme.background
+        ).copy(
+            alpha = topBarAlpha
+        ),
+        contentColor = Color.White,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(surfaceHeight)
+    ) {
+        Box(
+            modifier = Modifier
+                .clipToBounds() // CRITICAL: This hides the text when it gets pushed down
+                .padding(top = innerPadding.calculateTopPadding()),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+            ) {
+                Icon(
+                    painter = painterResource(drawableId),
+                    contentDescription = "Back"
+                )
+            }
+
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .graphicsLayer {
+                        val hiddenOffset = 40.dp.toPx()
+                        this.translationY = hiddenOffset * (1f - titleProgress)
+                    },
+                text = title,
+                style = TSHeadlineMediumWhite().copy(
+                    fontSize = 18.sp
                 )
             )
         }

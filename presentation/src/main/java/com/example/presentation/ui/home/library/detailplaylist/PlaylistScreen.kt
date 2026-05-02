@@ -32,11 +32,12 @@ import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
+import com.example.presentation.ui.home.artist.AnimatedTopSlidingNameNavigation
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
-import com.example.presentation.util.PaddingSizeUtil.TopBarHeight
+import com.example.presentation.util.PaddingSizeUtil
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.orZero
 
@@ -100,14 +101,11 @@ fun PlaylistContent(
     //this is the temporary way
     val isSongExist = uiState.playlist?.totalDuration.orZero() > 0
 
-    val coverImageStartPx = with(LocalDensity.current) { 70.dp.toPx() }
-//    val coverImageEndPx = with(LocalDensity.current) { 600.dp.toPx() }
-    val topBarStartPx = with(LocalDensity.current) { 255.dp.toPx() }
-    val topBarEndPx = with(LocalDensity.current) { 265.dp.toPx() }
-    val topBarNameStartPx = with(LocalDensity.current) { 265.dp.toPx() }
-    val topBarNameEndPx = with(LocalDensity.current) { 270.dp.toPx() }
+    val topBarStartPx = with(LocalDensity.current) { (255).dp.toPx() }
+    val topBarEndPx = with(LocalDensity.current) { (265).dp.toPx() }
+    val topBarNameStartPx = with(LocalDensity.current) { (270).dp.toPx() }
+    val topBarNameEndPx = with(LocalDensity.current) { (300).dp.toPx() }
 
-//    val coverImageRange = remember { coverImageEndPx - coverImageStartPx }
     val topBarRange = remember { topBarEndPx - topBarStartPx }
     val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
 
@@ -120,7 +118,6 @@ fun PlaylistContent(
     data class ScrollProgress(
         val topBarProgress: Float,
         val topBarNameProgress: Float,
-        val collapseFraction: Float
     )
 
     val scrollProgress by remember {
@@ -128,21 +125,17 @@ fun PlaylistContent(
             val isScrolledPastFirst = scrollState.firstVisibleItemIndex > 0
 
             if (isScrolledPastFirst) {
-                ScrollProgress(1f, 1f, 1f)
+                ScrollProgress(1f, 1f)
             } else {
                 val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
 
-                Log.d("joel123", "$currentScroll dan $coverImageStartPx")
+                Log.d("joel123", "currentScroll $currentScroll")
                 ScrollProgress(
                     topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(
                         0f,
                         1f
                     ),
                     topBarNameProgress = ((currentScroll - topBarNameStartPx) / topBarNameRange).coerceIn(
-                        0f,
-                        1f
-                    ),
-                    collapseFraction = (((currentScroll * 2) / coverImageStartPx)).coerceIn(
                         0f,
                         1f
                     ),
@@ -177,31 +170,34 @@ fun PlaylistContent(
             ) {
                 if (isSongExist) {
                     item {
-                        Spacer(Modifier.height(innerPadding.calculateTopPadding() + TopBarHeight))
-                    }
-
-                    item {
                         PlaylistHeroImage(
                             playlist = uiState.playlist,
                             modifier = Modifier,
-                            collapseFraction = scrollProgress.collapseFraction,
+                            scrollStateProvider = {
+                                scrollState.firstVisibleItemScrollOffset.toFloat()
+                            },
+                            innerPadding = innerPadding
+                        )
+                    }
+
+                    item {
+                        PlaylistDetailTrackFilled(
+                            uiState.playlist
                         )
                     }
 
                     items(
                         count = playlistTracks.itemCount,
-                        key = playlistTracks.itemKey { it.id } // Provide stable keys if your Domain model has an ID
+                        key = playlistTracks.itemKey { it.id }
                     ) { index ->
                         val track = playlistTracks[index]
 
                         if (track != null) {
-                            // Render the loaded track
                             PlaylistTrackComponent(
                                 track = track,
                                 onEvent = onEvent
                             )
                         } else {
-                            // Render a shimmer or placeholder if Paging 3 is currently fetching this index
                             TrackPlaceholder()
                         }
                     }
@@ -240,12 +236,12 @@ fun PlaylistContent(
             }
 
 
-            AnimatedTopNavigation(
+            AnimatedTopSlidingNameNavigation(
                 innerPadding = innerPadding,
                 drawableId = R.drawable.ic_arrow_back,
                 title = uiState.playlist?.title.orErrorNoText(),
                 topBarAlpha = scrollProgress.topBarProgress,
-                topBarNameAlpha = scrollProgress.topBarNameProgress,
+                titleProgress = scrollProgress.topBarNameProgress,
                 topBarColor = uiState.dominantColor,
                 onBackClick = {
                     onBackClicked()

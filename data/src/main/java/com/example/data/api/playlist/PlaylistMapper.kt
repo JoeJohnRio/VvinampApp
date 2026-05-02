@@ -100,7 +100,7 @@ fun GetPlaylistTracksQuery.Track.toDomain(): TrackDomain {
 fun GetPlaylistQuery.Creator.toDomain(): UserMinimal {
     return UserMinimal(
         id = this.id,
-        userName = this.username,
+        username = this.username,
         profilePicture = this.profilePicture
     )
 }

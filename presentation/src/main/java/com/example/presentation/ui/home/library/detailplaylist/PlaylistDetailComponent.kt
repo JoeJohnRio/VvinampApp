@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -39,6 +40,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistComplete
+import com.example.domain.entity.playlist.dummyPlaylists
 import com.example.presentation.R
 import com.example.presentation.ui.theme.AppColours
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
@@ -47,6 +49,7 @@ import com.example.presentation.util.PaddingSizeUtil
 import com.example.presentation.util.PaddingSizeUtil.NormalPadding
 import com.example.presentation.util.PaddingSizeUtil.PlaylistNoPhotoSize
 import com.example.presentation.util.orErrorNoText
+import com.example.presentation.util.preview.PreviewTheme
 
 
 @Composable
@@ -56,7 +59,6 @@ fun PlaylistDetailComponent(
     onClickShare: () -> Unit = {},
     onClickMore: () -> Unit = {}
 ) {
-    val dummyCreators = listOf(playlist?.creator, playlist?.creator)
     val totalPaddingTop = paddingTop.calculateTopPadding() + NormalPadding
 
     Row(
@@ -122,62 +124,7 @@ fun PlaylistDetailComponent(
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .graphicsLayer {
-                        compositingStrategy = CompositingStrategy.Offscreen
-                    }
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .zIndex(1f)
-                        .drawBehind {
-                            drawCircle(
-                                color = Color.Black,
-                                blendMode = BlendMode.Clear
-                            )
-                        }
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(20.dp)
-                            .align(Alignment.Center),
-                        painter = painterResource(R.drawable.ic_create_plus),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                dummyCreators.forEachIndexed { index, dummyCreator ->
-                    Log.d("joel123", dummyCreator?.profilePicture.orErrorNoText())
-                    Box(
-                        modifier = Modifier
-                            .offset(x = index.calculateCollaboratorPadding())
-                            .zIndex(-index.toFloat()) // Forces the first index to the front
-                            .size(24.dp)
-                            .drawBehind {
-                                drawCircle(
-                                    color = Color.Black,
-                                    radius = size.width / 2f + 2.dp.toPx(), // +2.dp creates the border gap
-                                    blendMode = BlendMode.Clear
-                                )
-                            }
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceContainer)
-                    ) {
-                        AsyncImage(
-                            model = dummyCreator?.profilePicture,
-                            contentDescription = null,
-                            placeholder = painterResource(R.drawable.bg_image),
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .size(PaddingSizeUtil.LibraryItemSize)
-                        )
-                    }
-                }
-            }
+            PlaylistCreatorComponent(playlist = playlist)
         }
     }
 
@@ -211,6 +158,17 @@ fun PlaylistDetailComponent(
             painter = painterResource(R.drawable.ic_bullet_vertical),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.surfaceBright
+        )
+    }
+}
+
+@Preview(apiLevel = 36)
+@Composable
+private fun PlaylistDetailComponentPreview() {
+    PreviewTheme {
+        PlaylistDetailComponent(
+            playlist = dummyPlaylists.first(),
+            paddingTop = PaddingValues.Zero
         )
     }
 }
