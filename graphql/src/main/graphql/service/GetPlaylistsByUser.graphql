@@ -10,7 +10,7 @@ query GetPlaylistsByUser($userId: ID!, $after: String) {
             node {
                 id
                 title
-                coverImage
+                albumCovers
                 savedCount
                 isSavedByMe
                 creator {

@@ -15,15 +15,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.playlistMinimalDummy
 import com.example.presentation.R
+import com.example.presentation.ui.home.library.widget.image.PlaylistCover
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.util.preview.PreviewContainer
 
@@ -39,16 +38,13 @@ fun LibraryGridItem(
                 onEvent(LibraryUiEvent.onPlaylistClicked(playlistMinimal.id))
             }
     ) {
-        AsyncImage(
-            model = playlistMinimal.coverImage,
-            contentDescription = null,
-            placeholder = painterResource(R.drawable.bg_image),
-            contentScale = ContentScale.Crop,
+        PlaylistCover(
+            covers = playlistMinimal.albumCovers,
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f)
-//                .size(PaddingUtil.LibraryItemSize)
         )
+
 
         Spacer(Modifier.height(12.dp))
 

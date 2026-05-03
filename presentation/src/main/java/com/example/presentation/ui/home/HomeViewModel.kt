@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.domain.entity.enum.ContentType
 import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
@@ -46,7 +47,23 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeUiEvent.OnHistoryClicked -> {
                 viewModelScope.launch {
-                    _events.emit(HomeEvent.NavigateToArtistScreen(event.history))
+                    when(event.history.contentType) {
+                        ContentType.TRACK -> {
+                            _events.emit(HomeEvent.PlayTrack(event.history))
+                        }
+                        ContentType.PLAYLIST -> {
+                            _events.emit(HomeEvent.NavigateToPlaylistScreen(event.history))
+                        }
+                        ContentType.ALBUM -> {
+                            _events.emit(HomeEvent.NavigateToAlbumScreen(event.history))
+                        }
+                        ContentType.ARTIST -> {
+                            _events.emit(HomeEvent.NavigateToArtistScreen(event.history))
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
             }
 

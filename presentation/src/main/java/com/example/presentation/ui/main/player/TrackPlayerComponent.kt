@@ -37,7 +37,7 @@ import com.example.presentation.util.orErrorNoText
 @Composable
 fun TrackPlayerComponent(
     uiState: PlaybackUiState,
-    uiEvent: (PlaybackUiEvent) -> Unit,
+    onEvent: (PlaybackUiEvent) -> Unit,
     onAddToPlaylistClicked: () -> Unit,
     player: Player?,
 ) {
@@ -84,8 +84,8 @@ fun TrackPlayerComponent(
         Spacer(modifier = Modifier.height(8.dp))
 
         PlayerControls(
-            isPlaying = uiState.isPlaying,
-            onClickTogglePlayback = uiEvent
+            uiState = uiState,
+            onEvent = onEvent
         )
     }
 }
@@ -115,7 +115,7 @@ fun PlayerProgressBar(player: Player?) {
 }
 
 @Composable
-fun PlayerControls(isPlaying: Boolean, onClickTogglePlayback: (PlaybackUiEvent) -> Unit) {
+fun PlayerControls(uiState: PlaybackUiState, onEvent: (PlaybackUiEvent) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -124,10 +124,16 @@ fun PlayerControls(isPlaying: Boolean, onClickTogglePlayback: (PlaybackUiEvent) 
         IconButton(
             modifier = Modifier
                 .size(32.dp),
-            onClick = {}
+            onClick = {
+                onEvent(PlaybackUiEvent.ToggleShuffleClicked)
+            }
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.outline,
+                tint = if (uiState.isShuffle) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.outline
+                },
                 painter = painterResource(R.drawable.ic_shuffle),
                 contentDescription = "Detail",
             )
@@ -156,7 +162,7 @@ fun PlayerControls(isPlaying: Boolean, onClickTogglePlayback: (PlaybackUiEvent) 
                 }
                 .size(64.dp),
             onClick = {
-                onClickTogglePlayback(PlaybackUiEvent.TogglePlayback)
+                onEvent(PlaybackUiEvent.TogglePlayback)
             }
         ) {
             Icon(
@@ -166,10 +172,10 @@ fun PlayerControls(isPlaying: Boolean, onClickTogglePlayback: (PlaybackUiEvent) 
                     },
                 tint = Color.Black
                 ,painter = painterResource(
-                    if (isPlaying) R.drawable.ic_pause
+                    if (uiState.isPlaying) R.drawable.ic_pause
                     else R.drawable.ic_play
                 ),
-                contentDescription = if (isPlaying) "Pause" else "Play",
+                contentDescription = if (uiState.isPlaying) "Pause" else "Play",
             )
         }
 
@@ -188,10 +194,16 @@ fun PlayerControls(isPlaying: Boolean, onClickTogglePlayback: (PlaybackUiEvent) 
         IconButton(
             modifier = Modifier
                 .size(32.dp),
-            onClick = {}
+            onClick = {
+                onEvent(PlaybackUiEvent.ToggleLoopClicked)
+            }
         ) {
             Icon(
-                tint = MaterialTheme.colorScheme.outline,
+                tint = if (uiState.isLooping) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.outline
+                },
                 painter = painterResource(R.drawable.ic_loop),
                 contentDescription = "Detail",
             )

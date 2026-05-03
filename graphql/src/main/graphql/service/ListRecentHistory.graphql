@@ -8,6 +8,7 @@ query ListRecentHistory {
         contentType
         contentImage
         contentName
+        contentSubtitle
         playedAt
         progress
     }

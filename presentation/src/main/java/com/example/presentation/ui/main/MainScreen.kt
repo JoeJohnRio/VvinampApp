@@ -2,7 +2,7 @@ package com.example.presentation.ui.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.example.presentation.navigation.Navigator
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.rememberNavigationState

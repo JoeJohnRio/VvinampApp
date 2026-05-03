@@ -4,7 +4,7 @@ query GetMyPlaylistFeed($after: String, $sortOrder: PlaylistSortOrder ) {
             node {
                 id
                 title
-                coverImage
+                albumCovers
                 savedCount
                 isSavedByMe
                 creator {

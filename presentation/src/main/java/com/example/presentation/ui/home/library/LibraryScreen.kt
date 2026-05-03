@@ -3,7 +3,9 @@ package com.example.presentation.ui.home.library
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,7 +13,7 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,16 +21,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.presentation.navigation.router.BottomNavRouter
-import com.example.presentation.ui.home.HomeEvent
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.widget.ButtonVariableOutlined
+import com.example.presentation.ui.widget.LoadingScreen
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -93,6 +95,7 @@ fun LibraryScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LibraryContent(
     uiState: LibraryUiState,
@@ -100,7 +103,7 @@ fun LibraryContent(
     onEvent: (LibraryUiEvent) -> Unit
 ) {
     LazyVerticalGrid(
-        columns =  GridCells.Fixed(if(uiState.isLibraryViewModeGrid) 3 else 1),
+        columns = GridCells.Fixed(if (uiState.isLibraryViewModeGrid) 3 else 1),
         state = rememberLazyGridState(),
         modifier = Modifier
             .background(
@@ -141,9 +144,16 @@ fun LibraryContent(
             }
         }
 
-        // Handle Paging's internal loading states here
-        when (pagingItems.loadState.append) {
-            is LoadState.Loading -> item { CircularProgressIndicator() }
+        item {
+            Spacer(Modifier.height(50.dp))
+        }
+
+        when (pagingItems.loadState.refresh) {
+            is LoadState.Loading -> item {
+                Log.d("joel123", "loading nih")
+                LoadingScreen()
+            }
+
             is LoadState.Error -> item {
                 ButtonVariableOutlined(
                     text = "Retry",

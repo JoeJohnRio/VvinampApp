@@ -3,7 +3,7 @@ package com.example.domain.entity.playlist
 data class PlaylistMinimal(
     val id: String,
     val title: String,
-    val coverImage: String?,
+    val albumCovers: List<String>,
     val isSavedByMe: Boolean,
     val savedCount: Int,
     val username: String,
@@ -12,7 +12,7 @@ data class PlaylistMinimal(
 val playlistMinimalDummy = PlaylistMinimal(
     id = "pl-001",
     title = "Late Night Coding",
-    coverImage = "https://picsum.photos/seed/coding/400",
+    albumCovers = listOf("https://picsum.photos/seed/coding/400"),
     isSavedByMe = true,
     savedCount = 1240,
     username = "vvinamp_user"
@@ -23,7 +23,7 @@ val playlistMinimalListDummy = listOf(
     PlaylistMinimal(
         id = "pl-002",
         title = "Deep Focus Anthems",
-        coverImage = "https://picsum.photos/seed/focus/400",
+        albumCovers = listOf("https://picsum.photos/seed/focus/400"),
         isSavedByMe = false,
         savedCount = 856,
         username = "alex_dev"
@@ -31,7 +31,7 @@ val playlistMinimalListDummy = listOf(
     PlaylistMinimal(
         id = "pl-003",
         title = "Local Favorites",
-        coverImage = null, // Testing placeholder/fallback UI
+        albumCovers = listOf(), // Testing placeholder/fallback UI
         isSavedByMe = false,
         savedCount = 12,
         username = "johndoe"
@@ -39,7 +39,7 @@ val playlistMinimalListDummy = listOf(
     PlaylistMinimal(
         id = "pl-004",
         title = "Workout Mix 2026",
-        coverImage = "https://picsum.photos/seed/gym/400",
+        albumCovers = listOf("https://picsum.photos/seed/gym/400"),
         isSavedByMe = true,
         savedCount = 3200,
         username = "powerlifter_99"
@@ -47,7 +47,7 @@ val playlistMinimalListDummy = listOf(
     PlaylistMinimal(
         id = "pl-005",
         title = "A Very Long Playlist Title That Might Need Ellipsis in the UI",
-        coverImage = "https://picsum.photos/seed/long/400",
+        albumCovers = listOf("https://picsum.photos/seed/long/400"),
         isSavedByMe = false,
         savedCount = 150,
         username = "curator_pro"

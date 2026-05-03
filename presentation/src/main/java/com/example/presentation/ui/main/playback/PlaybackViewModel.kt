@@ -12,6 +12,7 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.data.BuildConfig
+import com.example.domain.entity.enum.ContentType
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaybackUseCase
 import com.google.common.util.concurrent.MoreExecutors
@@ -30,7 +31,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 @Inject constructor(
     private val playbackRepository: PlaybackUseCase,
     private val application: Application
-) : AndroidViewModel(application)  {
+) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(PlaybackUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -75,8 +76,41 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                 togglePlayback()
             }
 
+            is PlaybackUiEvent.ToggleLoopClicked -> {
+                toggleLoopClicked()
+            }
+
+            is PlaybackUiEvent.ToggleShuffleClicked -> {
+                toggleShuffleClicked()
+            }
+
             is PlaybackUiEvent.OnTrackClicked -> {
-                trackClicked(event.track)
+                when (event.contentType) {
+                    ContentType.TRACK -> {
+                        trackClicked(
+                            track = event.track,
+                            contentId = event.track.id,
+                            contentType = ContentType.TRACK
+                        )
+                    }
+
+                    ContentType.PLAYLIST, ContentType.ALBUM, ContentType.ARTIST -> {
+                        trackClicked(
+                            track = event.track,
+                            contentId = event.contentId,
+                            contentType = event.contentType
+                        )
+                    }
+
+                    else -> {
+                        trackClicked(
+                            track = event.track,
+                            contentId = event.track.id,
+                            contentType = ContentType.TRACK
+                        )
+                    }
+                }
+
             }
         }
     }
@@ -109,11 +143,51 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
         }
     }
 
-    private fun trackClicked(track: TrackDomain) {
+    private fun toggleLoopClicked() {
+        _uiState.update {
+            it.copy(
+                isLooping = !uiState.value.isLooping
+            )
+        }
+
+        setRepeatMode(
+            _uiState.value.isLooping.toRepeatInt()
+        )
+    }
+
+    fun Boolean.toRepeatInt(): Int {
+        if (true) {
+            return Player.REPEAT_MODE_ALL
+        } else {
+            return Player.REPEAT_MODE_OFF
+        }
+    }
+
+    fun setRepeatMode(mode: Int) {
+        mediaController.value?.repeatMode = mode
+    }
+
+    private fun toggleShuffleClicked() {
+        _uiState.update {
+            it.copy(
+                isShuffle = !uiState.value.isShuffle
+            )
+        }
+    }
+
+    private fun trackClicked(
+        track: TrackDomain,
+        contentType: ContentType,
+        contentId: String
+    ) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
 
-            playbackRepository.playbackInfo.invoke(track.id).onSuccess {
+            playbackRepository.playbackInfo.invoke(
+                trackId = track.id,
+                contentType = contentType,
+                contentId = contentId
+            ).onSuccess {
                 _uiState.value = _uiState.value.copy(
                     playbackInfo = it,
                     currentTrack = track,
@@ -129,6 +203,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             }
         }
     }
+
     fun isPlaying(): Boolean = mediaController.value?.isPlaying == true
 
     fun updateDominantColor(color: Color) {

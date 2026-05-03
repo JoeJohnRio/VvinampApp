@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.domain.entity.listeningHistoryDummy
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.ArtistEvent
@@ -36,6 +35,11 @@ import com.example.presentation.util.preview.PreviewTheme
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.song.toTrackDomain
+import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackViewModel
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -43,6 +47,7 @@ import androidx.constraintlayout.compose.Dimension
 fun HomeScreen(
     bottomNavRouter: BottomNavRouter,
     viewModel: HomeViewModel = hiltViewModel(),
+    playbackViewModel: PlaybackViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -57,8 +62,25 @@ fun HomeScreen(
                     bottomNavRouter.navigateToArtistPage(event.history.contentId)
                 }
 
+                is HomeEvent.PlayTrack -> {
+                    playbackViewModel.onEvent(
+                        PlaybackUiEvent.OnTrackClicked(
+                            track = event.history.toTrackDomain(),
+                            contentType = ContentType.TRACK,
+                            contentId = event.history.contentId
+                        )
+                    )
+                }
+
                 is HomeEvent.NavigateToSettingsScreen -> {
                     bottomNavRouter.navigateToSettings()
+                }
+
+                is HomeEvent.NavigateToAlbumScreen -> {
+                    bottomNavRouter.navigateToAlbum(event.history.contentId)
+                }
+                is HomeEvent.NavigateToPlaylistScreen -> {
+                    bottomNavRouter.navigateToPlaylistDetail(event.history.contentId)
                 }
             }
         }

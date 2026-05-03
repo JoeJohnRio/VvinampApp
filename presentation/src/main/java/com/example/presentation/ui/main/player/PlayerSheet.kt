@@ -12,7 +12,6 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -68,7 +66,7 @@ enum class PlayerState { EXPANDED, COLLAPSED }
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PlayerSheet(
-    uiEvent: (PlaybackUiEvent) -> Unit,
+    onEvent: (PlaybackUiEvent) -> Unit,
     playbackUiState: PlaybackUiState,
     player: Player?,
     state: AnchoredDraggableState<PlayerState>,
@@ -210,7 +208,7 @@ fun PlayerSheet(
             onCollapse = {
                 scope.launch { state.animateTo(PlayerState.COLLAPSED) }
             },
-            uiEvent = uiEvent,
+            onEvent = onEvent,
             maxHeight = maxHeight
         )
     }
@@ -219,7 +217,7 @@ fun PlayerSheet(
 @Composable
 fun PlayerSheetContent(
     modifier: Modifier = Modifier,
-    uiEvent: (PlaybackUiEvent) -> Unit,
+    onEvent: (PlaybackUiEvent) -> Unit,
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
     player: Player?,
@@ -270,7 +268,7 @@ fun PlayerSheetContent(
 
         TrackPlayerComponent(
             uiState = uiState,
-            uiEvent = uiEvent,
+            onEvent = onEvent,
             player = player,
             onAddToPlaylistClicked = {}
         )

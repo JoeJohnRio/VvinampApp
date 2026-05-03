@@ -9,6 +9,8 @@ data class PlaybackUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val isPlaying: Boolean = false,
+    val isLooping: Boolean = false,
+    val isShuffle: Boolean = false,
     val playbackInfo: PlaybackInfoDomain? = null,
     val currentTrack: TrackDomain? = null,
     val dominantColor: Color = AppColours.BackgroundBlack

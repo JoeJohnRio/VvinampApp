@@ -1,5 +1,6 @@
 package com.example.domain.entity.song
 
+import com.example.domain.entity.ListeningHistoryDomain
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +14,19 @@ data class TrackDomain(
     val explicit: Boolean,
     val releaseDate: String,
 )
-
+//joel456 Temporary
+fun ListeningHistoryDomain.toTrackDomain(): TrackDomain {
+    return TrackDomain(
+        id = contentId,
+        artistName = contentSubtitle,
+        albumCoverUrl = contentImage,
+        title = contentName,
+        duration = 0,
+        streamCount = 0,
+        explicit = false,
+        releaseDate = ""
+    )
+}
 val trackDummy =  listOf(
     TrackDomain(
         id = "track_001",

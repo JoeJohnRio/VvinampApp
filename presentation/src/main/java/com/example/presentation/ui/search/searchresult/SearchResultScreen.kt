@@ -21,11 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.domain.entity.album.toTrackDomain
+import com.example.domain.entity.enum.ContentType
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.entity.search.toTrackDomain
 import com.example.presentation.navigation.router.BottomNavRouter
@@ -69,7 +71,9 @@ fun SearchResultsScreen(
                         is SearchItemDomain.TrackSearch -> {
                             playbackViewModel.onEvent(
                                 PlaybackUiEvent.OnTrackClicked(
-                                    searchItem.toTrackDomain()
+                                    track = searchItem.toTrackDomain(),
+                                    contentType = ContentType.TRACK,
+                                    contentId = searchItem.id
                                 )
                             )
                         }

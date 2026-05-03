@@ -18,7 +18,6 @@ fun TrackPlaceholder(modifier: Modifier = Modifier) {
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Album Art Shimmer (assuming a 48dp square or circle)
         Box(
             modifier = Modifier
                 .size(48.dp)
@@ -28,7 +27,6 @@ fun TrackPlaceholder(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.width(12.dp))
 
-        // Title and Subtitle Shimmer
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Center

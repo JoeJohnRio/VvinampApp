@@ -9,6 +9,7 @@ data class ListeningHistoryDomain(
     val playedAt: String,
     val progress: Int,
     val contentType: ContentType,
+    val contentSubtitle: String,
     val contentId: String,
     val contentImage: String,
     val contentName: String
@@ -23,7 +24,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.PLAYLIST,
         contentId = "playlist_80s_hits_classic",
         contentImage = "https://example.com/80s_playlist_cover.jpg",
-        contentName = "Ultimate 80s Classics"
+        contentName = "Ultimate 80s Classics",
+        contentSubtitle = ""
     ),
 
     // 2. PODCAST_SERIES - The Joe Rogan Experience
@@ -34,7 +36,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.PODCAST_SERIES,
         contentId = "series_jre_spotify",
         contentImage = "https://example.com/jre_cover.jpg",
-        contentName = "The Joe Rogan Experience"
+        contentName = "The Joe Rogan Experience",
+        contentSubtitle = ""
     ),
 
     // 3. ALBUM - Thriller by Michael Jackson
@@ -45,7 +48,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.ALBUM,
         contentId = "album_thriller_mj_1982",
         contentImage = "https://example.com/thriller_cover.jpg",
-        contentName = "Thriller - Michael Jackson"
+        contentName = "Thriller - Michael Jackson",
+        contentSubtitle = ""
     ),
 
     // 4. ARTIST - Madonna Radio
@@ -56,7 +60,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.ARTIST,
         contentId = "artist_madonna_radio",
         contentImage = "https://example.com/madonna_profile.jpg",
-        contentName = "Madonna Radio"
+        contentName = "Madonna Radio",
+        contentSubtitle = ""
     ),
 
     // 5. PLAYLIST - 90s Rock Anthems
@@ -67,7 +72,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.PLAYLIST,
         contentId = "playlist_90s_rock_anthems",
         contentImage = "https://example.com/90s_rock_playlist.jpg",
-        contentName = "90s Rock Anthems"
+        contentName = "90s Rock Anthems",
+        contentSubtitle = ""
     ),
 
     // 6. ALBUM - Purple Rain by Prince
@@ -78,7 +84,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.ALBUM,
         contentId = "album_purple_rain_prince_1984",
         contentImage = "https://example.com/purple_rain_cover.jpg",
-        contentName = "Purple Rain - Prince"
+        contentName = "Purple Rain - Prince",
+        contentSubtitle = ""
     ),
 
     // 7. PODCAST_SERIES - Hardcore History
@@ -89,7 +96,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.PODCAST_SERIES,
         contentId = "series_hardcore_history_dancarlin",
         contentImage = "https://example.com/hardcore_history_cover.jpg",
-        contentName = "Hardcore History - Dan Carlin"
+        contentName = "Hardcore History - Dan Carlin",
+        contentSubtitle = ""
     ),
 
     // 8. UNKNOWN__ - Corrupted Entry
@@ -100,7 +108,8 @@ val listeningHistoryDummy = listOf(
         contentType = ContentType.UNKNOWN__,
         contentId = "unknown_content_xyz",
         contentImage = "https://example.com/placeholder.jpg",
-        contentName = "Unknown Content"
+        contentName = "Unknown Content",
+        contentSubtitle = ""
     )
 )
 

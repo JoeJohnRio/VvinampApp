@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -28,16 +29,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.example.domain.entity.enum.ContentType
 import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
-import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.home.artist.AnimatedTopSlidingNameNavigation
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
-import com.example.presentation.util.PaddingSizeUtil
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.orZero
 
@@ -59,7 +59,13 @@ fun PlaylistScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is PlaylistEvent.PlayTrack -> {
-                    playbackViewModel.onEvent(PlaybackUiEvent.OnTrackClicked(event.track))
+                    playbackViewModel.onEvent(
+                        PlaybackUiEvent.OnTrackClicked(
+                            track = event.track,
+                            contentType = ContentType.PLAYLIST,
+                            contentId = playlistId
+                        )
+                    )
                 }
             }
         }
@@ -101,19 +107,27 @@ fun PlaylistContent(
     //this is the temporary way
     val isSongExist = uiState.playlist?.totalDuration.orZero() > 0
 
-    val topBarStartPx = with(LocalDensity.current) { (255).dp.toPx() }
-    val topBarEndPx = with(LocalDensity.current) { (265).dp.toPx() }
-    val topBarNameStartPx = with(LocalDensity.current) { (270).dp.toPx() }
-    val topBarNameEndPx = with(LocalDensity.current) { (300).dp.toPx() }
+    val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
+    val topBarStartPx = with(LocalDensity.current) { (215).dp.toPx() }
+    val topBarEndPx = with(LocalDensity.current) { (255).dp.toPx() }
+    val topBarNameStartPx = with(LocalDensity.current) { (230).dp.toPx() }
+    val topBarNameEndPx = with(LocalDensity.current) { (260).dp.toPx() }
 
     val topBarRange = remember { topBarEndPx - topBarStartPx }
     val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
 
     val noSongsBackgroundColor =
-        Brush.verticalGradient(
-            0f to Color(0xff474747),
-            0.35f to MaterialTheme.colorScheme.background
-        )
+        if (isSongExist) {
+            Brush.verticalGradient(
+                0f to uiState.dominantColor,
+                0.5f to MaterialTheme.colorScheme.background
+            )
+        } else {
+            Brush.verticalGradient(
+                0f to Color(0xff474747),
+                0.5f to MaterialTheme.colorScheme.background
+            )
+        }
 
     data class ScrollProgress(
         val topBarProgress: Float,
@@ -145,7 +159,7 @@ fun PlaylistContent(
     }
 
     ExtractDominantColorEffect(
-        imageUrl = uiState.playlist?.coverImage,
+        imageUrl = uiState.playlist?.albumCovers?.firstOrNull(),
         onColorExtracted = { color ->
             updateDominantColor(color)
         }
@@ -157,97 +171,129 @@ fun PlaylistContent(
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .graphicsLayer {
+                    val offset = if (scrollState.firstVisibleItemIndex == 0) {
+                        -scrollState.firstVisibleItemScrollOffset.toFloat()
+                    } else {
+                        -headerHeightPx
+                    }
+                    translationY = offset
+                }
                 .background(
                     noSongsBackgroundColor
                 )
+        )
+
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
         ) {
-
-            LazyColumn(
-                state = scrollState,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 16.dp)
-            ) {
-                if (isSongExist) {
-                    item {
-                        PlaylistHeroImage(
-                            playlist = uiState.playlist,
-                            modifier = Modifier,
-                            scrollStateProvider = {
-                                scrollState.firstVisibleItemScrollOffset.toFloat()
-                            },
-                            innerPadding = innerPadding
-                        )
-                    }
-
-                    item {
-                        PlaylistDetailTrackFilled(
-                            uiState.playlist
-                        )
-                    }
-
-                    items(
-                        count = playlistTracks.itemCount,
-                        key = playlistTracks.itemKey { it.id }
-                    ) { index ->
-                        val track = playlistTracks[index]
-
-                        if (track != null) {
-                            PlaylistTrackComponent(
-                                track = track,
-                                onEvent = onEvent
-                            )
-                        } else {
-                            TrackPlaceholder()
-                        }
-                    }
-
-                } else {
-                    item {
-                        Spacer(Modifier.height(innerPadding.calculateTopPadding()))
-                    }
-
-                    item {
-                        PlaylistDetailComponent(
-                            playlist = uiState.playlist,
-                            paddingTop = innerPadding
-                        )
-                    }
-                }
-
+            if (isSongExist) {
                 item {
-                    Spacer(Modifier.height(32.dp))
-                }
-
-                item {
-                    RecommendedTrackComponent(
-                        uiState = uiState,
-                        onEvent = onEvent
+                    PlaylistHeroImage(
+                        playlist = uiState.playlist,
+                        modifier = Modifier,
+                        scrollStateProvider = {
+                            scrollState.firstVisibleItemScrollOffset.toFloat()
+                        },
+                        innerPadding = innerPadding
                     )
                 }
 
                 item {
-                    Spacer(
-                        Modifier
-                            .height(1000.dp)
-                            .fillMaxWidth()
+                    Spacer(Modifier.height(16.dp))
+                }
+
+                item {
+                    PlaylistDetailTrackFilled(
+                        uiState.playlist
+                    )
+                }
+
+                item {
+                    Spacer(Modifier.height(16.dp))
+                }
+
+                item {
+                    PlaylistActionRow(
+                        uiState = uiState,
+                        isFollowing = true,
+                        onFollowClick = { /* Handle follow click */ },
+                        onPlayClick = { /* Handle play click */ },
+                        onShuffleClick = { /* Handle shuffle click */ }
+                    )
+                }
+
+                item {
+                    Spacer(Modifier.height(16.dp))
+                }
+
+                items(
+                    count = playlistTracks.itemCount,
+                    key = playlistTracks.itemKey { it.id },
+
+                    ) { index ->
+                    val track = playlistTracks[index]
+
+                    if (track != null) {
+                        PlaylistTrackComponent(
+                            track = track,
+                            onEvent = onEvent
+                        )
+                    } else {
+                        TrackPlaceholder()
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+                }
+
+            } else {
+                item {
+                    Spacer(Modifier.height(innerPadding.calculateTopPadding()))
+                }
+
+                item {
+                    PlaylistDetailComponent(
+                        playlist = uiState.playlist,
+                        paddingTop = innerPadding
                     )
                 }
             }
 
+            item {
+                Spacer(Modifier.height(32.dp))
+            }
 
-            AnimatedTopSlidingNameNavigation(
-                innerPadding = innerPadding,
-                drawableId = R.drawable.ic_arrow_back,
-                title = uiState.playlist?.title.orErrorNoText(),
-                topBarAlpha = scrollProgress.topBarProgress,
-                titleProgress = scrollProgress.topBarNameProgress,
-                topBarColor = uiState.dominantColor,
-                onBackClick = {
-                    onBackClicked()
-                }
-            )
+            item {
+                RecommendedTrackComponent(
+                    uiState = uiState,
+                    onEvent = onEvent
+                )
+            }
+
+            item {
+                Spacer(
+                    Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                )
+            }
         }
+
+
+        AnimatedTopSlidingNameNavigation(
+            innerPadding = innerPadding,
+            drawableId = R.drawable.ic_arrow_back,
+            title = uiState.playlist?.title.orErrorNoText(),
+            topBarAlpha = scrollProgress.topBarProgress,
+            titleProgress = scrollProgress.topBarNameProgress,
+            topBarColor = uiState.dominantColor,
+            onBackClick = {
+                onBackClicked()
+            }
+        )
     }
 }
 

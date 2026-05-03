@@ -21,10 +21,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.domain.entity.album.toTrackDomain
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.artistProfileDummy
+import com.example.domain.entity.enum.ContentType
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
@@ -71,7 +73,13 @@ fun ArtistScreen(
                         bottomNavRouter.navigateToAlbum(it)
                     },
                     onTrackClicked = { track ->
-                        playbackViewModel.onEvent(PlaybackUiEvent.OnTrackClicked(track))
+                        playbackViewModel.onEvent(
+                            PlaybackUiEvent.OnTrackClicked(
+                                track = track,
+                                contentType = ContentType.ARTIST,
+                                contentId = artistId
+                            )
+                        )
                     },
                     updateDominantColor = { color ->
                         artistViewModel.updateDominantColor(color)
