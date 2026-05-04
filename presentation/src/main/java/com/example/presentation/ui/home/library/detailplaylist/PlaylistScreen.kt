@@ -99,8 +99,6 @@ fun PlaylistContent(
     playlistTracks: LazyPagingItems<TrackDomain>,
     updateDominantColor: (Color) -> Unit,
     onBackClicked: () -> Unit,
-    onClickShare: () -> Unit = {},
-    onClickMore: () -> Unit = {}
 ) {
     val scrollState = rememberLazyListState()
 

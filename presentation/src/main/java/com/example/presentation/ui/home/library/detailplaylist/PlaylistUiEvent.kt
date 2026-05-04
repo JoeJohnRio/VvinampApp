@@ -14,5 +14,7 @@ sealed class PlaylistUiEvent {
 
     object onClickChange : PlaylistUiEvent()
     object onClickShare : PlaylistUiEvent()
+    object onClickShuffle : PlaylistUiEvent()
+    object onClickPlayAll : PlaylistUiEvent()
     object onClickDetail : PlaylistUiEvent()
 }

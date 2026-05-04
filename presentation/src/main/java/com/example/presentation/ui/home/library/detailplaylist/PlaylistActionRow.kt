@@ -44,11 +44,20 @@ import com.example.presentation.util.preview.PreviewTheme
 @Composable
 fun PlaylistActionRow(
     uiState: PlaylistUiState,
-    isFollowing: Boolean,
-    onFollowClick: () -> Unit,
-    onPlayClick: () -> Unit,
-    onShuffleClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onEvent: (PlaylistUiEvent) -> Unit = {}
+) {
+    PlaylistActionTopRow(
+        uiState,
+        modifier
+    )
+}
+
+@Composable
+fun PlaylistActionTopRow(
+    uiState: PlaylistUiState,
+    modifier: Modifier = Modifier,
+    onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -56,7 +65,7 @@ fun PlaylistActionRow(
         verticalAlignment = Alignment.CenterVertically
     ) {
         //joel456Temporary
-        VerticalVideoFeedPreview(imageUrl = uiState.playlist?.creator?.profilePicture .orEmpty())
+        VerticalVideoFeedPreview(imageUrl = uiState.playlist?.creator?.profilePicture.orEmpty())
 
         Spacer(modifier = Modifier.width(24.dp))
 
@@ -78,23 +87,27 @@ fun PlaylistActionRow(
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f)) // Pushes play/shuffle to the right
+        Spacer(modifier = Modifier.weight(1f))
 
-        IconButton(onClick = onShuffleClick) {
+        IconButton(onClick = {
+            onEvent(PlaylistUiEvent.onClickShuffle)
+        }) {
             Icon(
-                painter = painterResource(id = R.drawable.ic_shuffle), // Use a shuffle drawable
+                painter = painterResource(id = R.drawable.ic_shuffle),
                 contentDescription = "Shuffle",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(56.dp)
             )
         }
 
-        Spacer(modifier = Modifier.width(16.dp)) // Pushes play/shuffle to the right
+        Spacer(modifier = Modifier.width(16.dp))
 
         FloatingActionButton(
-            onClick = onPlayClick,
+            onClick = {
+                onEvent(PlaylistUiEvent.onClickPlayAll)
+            },
             shape = CircleShape,
-            containerColor = Color(0xFF1DB954), // Spotify Green
+            containerColor = Color(0xFF1DB954),
             contentColor = Color.Black,
             modifier = Modifier.size(56.dp)
         ) {
@@ -144,10 +157,8 @@ fun ArtistActionsRowPreview() {
         ) {
             PlaylistActionRow(
                 uiState = PlaylistUiState(),
-                isFollowing = false,
-                onFollowClick = { /* Handle follow click */ },
-                onPlayClick = { /* Handle play click */ },
-                onShuffleClick = { /* Handle shuffle click */ }
+                modifier = Modifier,
+
             )
         }
     }
