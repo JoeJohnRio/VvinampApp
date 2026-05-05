@@ -9,9 +9,7 @@ import androidx.paging.cachedIn
 import com.example.data.api.playlist.toChecked
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaylistUseCase
-import com.example.presentation.ui.home.HomeEvent
-import com.example.presentation.ui.home.HomeUiEvent
-import com.example.presentation.util.singleSharedFlowJoel
+import com.example.presentation.ui.home.library.detailplaylist.PlaylistEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +48,7 @@ class PlaylistViewModel @Inject constructor(
 
             is PlaylistUiEvent.onClickTrack -> {
                 viewModelScope.launch {
-                    _events.emit(PlaylistEvent.PlayTrack(event.track))
+                    _events.emit(PlayTrack(event.track))
                 }
             }
 
@@ -65,11 +63,25 @@ class PlaylistViewModel @Inject constructor(
             PlaylistUiEvent.onClickShare -> {
 
             }
+
+            PlaylistUiEvent.onClickPlayAll -> {
+
+            }
+
+            PlaylistUiEvent.ToggleShuffleClicked -> {
+                toggleShuffleClicked()
+            }
         }
     }
 
     fun updateDominantColor(color: Color) {
         _uiState.update { it.copy(dominantColor = color) }
+    }
+
+    fun toggleShuffleClicked() {
+        viewModelScope.launch {
+            _events.emit(OnClickShuffle)
+        }
     }
 
     fun addSongsToPlaylist(

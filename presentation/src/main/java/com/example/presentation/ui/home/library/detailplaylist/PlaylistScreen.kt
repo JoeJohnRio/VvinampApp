@@ -36,6 +36,8 @@ import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopSlidingNameNavigation
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
+import com.example.presentation.ui.main.playback.PlaybackUiEvent.*
+import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.orErrorNoText
@@ -49,6 +51,7 @@ fun PlaylistScreen(
     playbackViewModel: PlaybackViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
     LaunchedEffect(playlistId) {
@@ -60,12 +63,16 @@ fun PlaylistScreen(
             when (event) {
                 is PlaylistEvent.PlayTrack -> {
                     playbackViewModel.onEvent(
-                        PlaybackUiEvent.OnTrackClicked(
+                        OnTrackClicked(
                             track = event.track,
                             contentType = ContentType.PLAYLIST,
                             contentId = playlistId
                         )
                     )
+                }
+
+                PlaylistEvent.OnClickShuffle -> {
+                    playbackViewModel.onEvent(ToggleShuffleClicked)
                 }
             }
         }
@@ -77,6 +84,7 @@ fun PlaylistScreen(
         content = {
             PlaylistContent(
                 uiState = uiState,
+                playbackUiState = playbackUiState,
                 playlistTracks = playlistTracks,
                 updateDominantColor = { color ->
                     viewModel.updateDominantColor(color)
@@ -95,6 +103,7 @@ fun PlaylistScreen(
 @Composable
 fun PlaylistContent(
     uiState: PlaylistUiState,
+    playbackUiState: PlaybackUiState,
     onEvent: (PlaylistUiEvent) -> Unit,
     playlistTracks: LazyPagingItems<TrackDomain>,
     updateDominantColor: (Color) -> Unit,
@@ -217,10 +226,11 @@ fun PlaylistContent(
                 item {
                     PlaylistActionRow(
                         uiState = uiState,
-                        isFollowing = true,
-                        onFollowClick = { /* Handle follow click */ },
-                        onPlayClick = { /* Handle play click */ },
-                        onShuffleClick = { /* Handle shuffle click */ }
+                        playbackUiState = playbackUiState
+//                        isFollowing = true,
+//                        onFollowClick = { /* Handle follow click */ },
+//                        onPlayClick = { /* Handle play click */ },
+//                        onShuffleClick = { /* Handle shuffle click */ }
                     )
                 }
 

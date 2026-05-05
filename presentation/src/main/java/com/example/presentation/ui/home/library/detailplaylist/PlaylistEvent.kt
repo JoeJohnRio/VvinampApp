@@ -4,4 +4,5 @@ import com.example.domain.entity.song.TrackDomain
 
 sealed class PlaylistEvent {
     data class PlayTrack(val track: TrackDomain): PlaylistEvent()
+    object OnClickShuffle: PlaylistEvent()
 }

@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -148,6 +150,53 @@ fun ButtonSolidCloseIconAndText(
         }
     }
 }
+
+
+@Composable
+fun ButtonSmallIcon(
+    text: String = "",
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    textColor: Color = MaterialTheme.colorScheme.onPrimary,
+    containerColor: Color = MaterialTheme.colorScheme.primary,
+    disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
+    icon: Painter? = null,
+    iconTint: Color = MaterialTheme.colorScheme.onPrimary,
+    contentDescription: String? = null,
+    enabled: Boolean = true
+) {
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        modifier = modifier.defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = containerColor,
+            disabledContainerColor = disabledContainerColor
+        ),
+        shape = RoundedCornerShape(25.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp)
+    ) {
+        icon?.let {
+            Icon(
+                painter = it,
+                contentDescription = contentDescription,
+                tint = iconTint,
+                modifier = Modifier
+                    .size(24.dp)
+            )
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Text(
+            text = text,
+            style = TSBodyMediumWhite().copy(
+                color = textColor
+            )
+        )
+    }
+}
+
 
 @Composable
 fun ButtonVariableSizeSolid(
@@ -375,7 +424,7 @@ fun CircleCheckbox(
     }
 }
 
-@Preview(apiLevel = 33)
+@Preview(apiLevel = 34)
 @Composable
 private fun ButtonsPreview() {
     PreviewTheme {
@@ -392,6 +441,47 @@ private fun ButtonsPreview() {
                 icon = painterResource(R.drawable.ic_email),
                 iconTint = AppColours.OnPrimaryBlack
             )
+            Spacer(
+                Modifier.height(12.dp)
+            )
+            Row() {
+                ButtonSmallIcon(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .height(30.dp),
+                    text = "Add",
+                    textColor = MaterialTheme.colorScheme.inversePrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    icon = painterResource(R.drawable.ic_create_plus),
+                    iconTint = MaterialTheme.colorScheme.inversePrimary
+                )
+
+                Spacer(Modifier.width(8.dp))
+
+                ButtonSmallIcon(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .height(30.dp),
+                    text = "Add",
+                    textColor = MaterialTheme.colorScheme.inversePrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    icon = painterResource(R.drawable.ic_create_plus),
+                    iconTint = MaterialTheme.colorScheme.inversePrimary
+                )
+
+                Spacer(Modifier.width(8.dp))
+
+                ButtonSmallIcon(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .height(30.dp),
+                    text = "Add",
+                    textColor = MaterialTheme.colorScheme.inversePrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                    icon = painterResource(R.drawable.ic_create_plus),
+                    iconTint = MaterialTheme.colorScheme.inversePrimary
+                )
+            }
             Spacer(
                 Modifier.height(12.dp)
             )
