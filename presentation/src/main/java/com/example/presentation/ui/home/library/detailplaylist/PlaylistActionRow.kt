@@ -1,6 +1,7 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,8 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -31,19 +34,24 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.presentation.R
 import com.example.presentation.ui.main.playback.PlaybackUiState
+import com.example.presentation.ui.widget.ButtonBlackSmallIcon
 import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
 fun PlaylistActionRow(
     uiState: PlaylistUiState,
     playbackUiState: PlaybackUiState,
-    modifier: Modifier = Modifier,
     onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
     PlaylistActionTopRow(
         uiState,
         playbackUiState,
-        modifier,
+        onEvent
+    )
+    //joel456 when youre user you could edit
+    PlaylistActionBottomRow(
+        uiState,
+        onEvent
     )
 }
 
@@ -51,11 +59,10 @@ fun PlaylistActionRow(
 fun PlaylistActionTopRow(
     uiState: PlaylistUiState,
     playbackUiState: PlaybackUiState,
-    modifier: Modifier = Modifier,
     onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
     Row(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -145,6 +152,58 @@ fun VerticalVideoFeedPreview(imageUrl: String) {
     }
 }
 
+@Composable
+fun PlaylistActionBottomRow(
+    uiState: PlaylistUiState,
+    onEvent: (PlaylistUiEvent) -> Unit = {}
+) {
+    val scrollState = rememberScrollState()
+    Row(
+        modifier = Modifier.fillMaxWidth()
+            .horizontalScroll(scrollState)
+    ) {
+        ButtonBlackSmallIcon(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .height(30.dp),
+            text = "Add",
+            icon = painterResource(R.drawable.ic_create_plus),
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        ButtonBlackSmallIcon(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .height(30.dp),
+            text = "Edit",
+            icon = painterResource(R.drawable.ic_paragraph),
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        ButtonBlackSmallIcon(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .height(30.dp),
+            text = "Sort",
+            icon = painterResource(R.drawable.ic_arrow_up_down),
+        )
+
+        Spacer(Modifier.width(8.dp))
+
+        ButtonBlackSmallIcon(
+            modifier = Modifier
+                .padding(top = 12.dp)
+                .height(30.dp),
+            text = "Name & details",
+            icon = painterResource(R.drawable.ic_edit),
+        )
+
+        Spacer(Modifier.width(8.dp))
+    }
+}
+
 @Preview
 @Composable
 fun ArtistActionsRowPreview() {
@@ -156,7 +215,6 @@ fun ArtistActionsRowPreview() {
         ) {
             PlaylistActionRow(
                 uiState = PlaylistUiState(),
-                modifier = Modifier,
                 playbackUiState = PlaybackUiState(
                     isShuffle = true,
                 )

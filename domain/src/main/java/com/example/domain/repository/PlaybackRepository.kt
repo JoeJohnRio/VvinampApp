@@ -9,4 +9,9 @@ interface PlaybackRepository {
         contentType: ContentType,
         contentId: String
     ): Result<PlaybackInfoDomain>
+
+    suspend fun getPlayerQueue(): Result<PlayerQueueDomain>
+    suspend fun addToQueue(trackIds: List<String>): Result<PlayerQueueDomain>
+    suspend fun skipToNext(): Result<PlayerQueueDomain>
+    suspend fun clearQueue(): Result<PlayerQueueDomain>
 }

@@ -1,0 +1,6 @@
+mutation ClearQueue {
+  clearQueue {
+    currentTrackId
+    upcomingTrackIds
+  }
+}

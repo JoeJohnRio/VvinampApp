@@ -227,10 +227,6 @@ fun PlaylistContent(
                     PlaylistActionRow(
                         uiState = uiState,
                         playbackUiState = playbackUiState
-//                        isFollowing = true,
-//                        onFollowClick = { /* Handle follow click */ },
-//                        onPlayClick = { /* Handle play click */ },
-//                        onShuffleClick = { /* Handle shuffle click */ }
                     )
                 }
 

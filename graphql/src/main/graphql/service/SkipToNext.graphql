@@ -1,0 +1,6 @@
+mutation SkipToNext {
+  skipToNext {
+    currentTrackId
+    upcomingTrackIds
+  }
+}

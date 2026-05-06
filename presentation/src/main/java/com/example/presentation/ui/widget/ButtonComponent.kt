@@ -153,15 +153,12 @@ fun ButtonSolidCloseIconAndText(
 
 
 @Composable
-fun ButtonSmallIcon(
+fun ButtonBlackSmallIcon(
     text: String = "",
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    textColor: Color = MaterialTheme.colorScheme.onPrimary,
-    containerColor: Color = MaterialTheme.colorScheme.primary,
     disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
     icon: Painter? = null,
-    iconTint: Color = MaterialTheme.colorScheme.onPrimary,
     contentDescription: String? = null,
     enabled: Boolean = true
 ) {
@@ -170,7 +167,7 @@ fun ButtonSmallIcon(
         enabled = enabled,
         modifier = modifier.defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
+            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
             disabledContainerColor = disabledContainerColor
         ),
         shape = RoundedCornerShape(25.dp),
@@ -180,7 +177,7 @@ fun ButtonSmallIcon(
             Icon(
                 painter = it,
                 contentDescription = contentDescription,
-                tint = iconTint,
+                tint = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier
                     .size(24.dp)
             )
@@ -191,7 +188,7 @@ fun ButtonSmallIcon(
         Text(
             text = text,
             style = TSBodyMediumWhite().copy(
-                color = textColor
+                color = MaterialTheme.colorScheme.inversePrimary
             )
         )
     }
@@ -445,41 +442,32 @@ private fun ButtonsPreview() {
                 Modifier.height(12.dp)
             )
             Row() {
-                ButtonSmallIcon(
+                ButtonBlackSmallIcon(
                     modifier = Modifier
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    textColor = MaterialTheme.colorScheme.inversePrimary,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     icon = painterResource(R.drawable.ic_create_plus),
-                    iconTint = MaterialTheme.colorScheme.inversePrimary
                 )
 
                 Spacer(Modifier.width(8.dp))
 
-                ButtonSmallIcon(
+                ButtonBlackSmallIcon(
                     modifier = Modifier
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    textColor = MaterialTheme.colorScheme.inversePrimary,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     icon = painterResource(R.drawable.ic_create_plus),
-                    iconTint = MaterialTheme.colorScheme.inversePrimary
                 )
 
                 Spacer(Modifier.width(8.dp))
 
-                ButtonSmallIcon(
+                ButtonBlackSmallIcon(
                     modifier = Modifier
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    textColor = MaterialTheme.colorScheme.inversePrimary,
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
                     icon = painterResource(R.drawable.ic_create_plus),
-                    iconTint = MaterialTheme.colorScheme.inversePrimary
                 )
             }
             Spacer(

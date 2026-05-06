@@ -1,0 +1,6 @@
+query GetPlayerQueue {
+  playerQueue {
+    currentTrackId
+    upcomingTrackIds
+  }
+}
