@@ -48,8 +48,17 @@ class PlaylistViewModel @Inject constructor(
 
             is PlaylistUiEvent.onClickTrack -> {
                 viewModelScope.launch {
-                    _events.emit(PlayTrack(event.track))
+                    _events.emit(
+                        PlayTrack(
+                            playlistId = event.playlistId,
+                            trackId = event.trackId
+                        )
+                    )
                 }
+            }
+
+            is PlaylistUiEvent.onClickTrackRecommended -> {
+
             }
 
             PlaylistUiEvent.onClickChange -> {

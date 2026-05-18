@@ -24,7 +24,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.album.SimplifiedTrackDomain
 import com.example.domain.entity.album.toTrackDomain
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopNavigation
 import com.example.presentation.ui.main.ScreenWrapper
@@ -62,7 +62,7 @@ fun AlbumScreen(
                     playbackViewModel.onEvent(
                         PlaybackUiEvent.OnTrackClicked(
                             track = searchItem.toTrackDomain(),
-                            contentType = ContentType.ALBUM,
+                            contentTypeDomain = ContentTypeDomain.ALBUM,
                             contentId = albumId
                         )
                     )

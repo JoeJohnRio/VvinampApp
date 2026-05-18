@@ -1,6 +1,7 @@
 package com.example.domain.entity.playbackinfo
 
 data class PlayerQueueDomain(
-    val currentTrackId: String?,
-    val upcomingTrackIds: List<String>
+    val currentTrack: TrackMinimalDomain?,
+    val upcomingTrackIds: List<TrackMinimalDomain>,
+    val previousTrack: List<TrackMinimalDomain>
 )

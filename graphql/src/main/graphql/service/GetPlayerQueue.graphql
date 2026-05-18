@@ -1,6 +1,22 @@
 query GetPlayerQueue {
   playerQueue {
-    currentTrackId
-    upcomingTrackIds
+    currentTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
+    upcomingTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
+    previousTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
   }
 }

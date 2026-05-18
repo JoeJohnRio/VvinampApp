@@ -1,6 +1,10 @@
 mutation ClearQueue {
   clearQueue {
-    currentTrackId
-    upcomingTrackIds
+    currentTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
   }
 }

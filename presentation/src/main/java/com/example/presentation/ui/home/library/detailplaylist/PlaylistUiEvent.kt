@@ -9,6 +9,11 @@ sealed class PlaylistUiEvent {
     ) : PlaylistUiEvent()
 
     data class onClickTrack(
+        val playlistId: String,
+        val trackId: String
+    ) : PlaylistUiEvent()
+
+    data class onClickTrackRecommended(
         val track: TrackDomain
     ) : PlaylistUiEvent()
 

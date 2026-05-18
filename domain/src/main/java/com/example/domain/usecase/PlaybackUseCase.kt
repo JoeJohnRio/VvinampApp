@@ -1,12 +1,21 @@
 package com.example.domain.usecase
 
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
+import com.example.domain.entity.playbackinfo.PlaybackStateDomain
+import com.example.domain.entity.playbackinfo.PlayerQueueDomain
 import com.example.domain.repository.PlaybackRepository
 import javax.inject.Inject
 
 class PlaybackUseCase @Inject constructor(
-    val playbackInfo: PlaybackInfoUseCase
+    val playbackInfo: PlaybackInfoUseCase,
+    val getPlayerQueue: GetPlayerQueueUseCase,
+    val addToQueue: AddToQueueUseCase,
+    val skipToNext: SkipToNextUseCase,
+    val skipToPrevious: SkipToPreviousUseCase,
+    val clearQueue: ClearQueueUseCase,
+    val playContext: PlayContextUseCase
 )
 
 class PlaybackInfoUseCase @Inject constructor(
@@ -14,13 +23,62 @@ class PlaybackInfoUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         trackId: String,
-        contentType: ContentType,
+        contentTypeDomain: ContentTypeDomain,
         contentId: String
     ): Result<PlaybackInfoDomain> {
         return repository.playbackInfo(
             trackId = trackId,
-            contentType = contentType,
+            contentTypeDomain = contentTypeDomain,
             contentId = contentId
+        )
+    }
+}
+
+class GetPlayerQueueUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.getPlayerQueue()
+}
+
+class AddToQueueUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(trackIds: List<String>): Result<PlayerQueueDomain> =
+        repository.addToQueue(trackIds)
+}
+
+class SkipToNextUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.skipToNext()
+}
+
+class SkipToPreviousUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.skipToPrevious()
+}
+
+class ClearQueueUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.clearQueue()
+}
+
+class PlayContextUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(
+        contextType: PlaybackContextType,
+        contextId: String?,
+        trackIds: List<String>?,
+        offsetTrackId: String
+    ): Result<PlaybackStateDomain> {
+        return repository.playContext(
+            contextType = contextType,
+            contextId = contextId,
+            trackIds = trackIds,
+            offsetTrackId = offsetTrackId
         )
     }
 }

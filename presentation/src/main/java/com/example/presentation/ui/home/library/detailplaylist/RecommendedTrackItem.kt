@@ -45,7 +45,7 @@ fun RecommendedTrackItem(
             .fillMaxWidth()
             .clickable {
                 onEvent(
-                    PlaylistUiEvent.onClickTrack(
+                    PlaylistUiEvent.onClickTrackRecommended(
                         track.toTrackDomain()
                     )
                 )

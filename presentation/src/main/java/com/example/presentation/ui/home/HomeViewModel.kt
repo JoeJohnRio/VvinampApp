@@ -1,10 +1,9 @@
 package com.example.presentation.ui.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
@@ -47,17 +46,17 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeUiEvent.OnHistoryClicked -> {
                 viewModelScope.launch {
-                    when(event.history.contentType) {
-                        ContentType.TRACK -> {
+                    when(event.history.contentTypeDomain) {
+                        ContentTypeDomain.TRACK -> {
                             _events.emit(HomeEvent.PlayTrack(event.history))
                         }
-                        ContentType.PLAYLIST -> {
+                        ContentTypeDomain.PLAYLIST -> {
                             _events.emit(HomeEvent.NavigateToPlaylistScreen(event.history))
                         }
-                        ContentType.ALBUM -> {
+                        ContentTypeDomain.ALBUM -> {
                             _events.emit(HomeEvent.NavigateToAlbumScreen(event.history))
                         }
-                        ContentType.ARTIST -> {
+                        ContentTypeDomain.ARTIST -> {
                             _events.emit(HomeEvent.NavigateToArtistScreen(event.history))
                         }
                         else -> {

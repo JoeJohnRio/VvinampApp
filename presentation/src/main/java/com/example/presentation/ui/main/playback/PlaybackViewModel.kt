@@ -12,8 +12,10 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
 import com.example.data.BuildConfig
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
+import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -85,20 +87,20 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             }
 
             is PlaybackUiEvent.OnTrackClicked -> {
-                when (event.contentType) {
-                    ContentType.TRACK -> {
+                when (event.contentTypeDomain) {
+                    ContentTypeDomain.TRACK -> {
                         trackClicked(
                             track = event.track,
                             contentId = event.track.id,
-                            contentType = ContentType.TRACK
+                            contentTypeDomain = ContentTypeDomain.TRACK
                         )
                     }
 
-                    ContentType.PLAYLIST, ContentType.ALBUM, ContentType.ARTIST -> {
+                    ContentTypeDomain.PLAYLIST, ContentTypeDomain.ALBUM, ContentTypeDomain.ARTIST -> {
                         trackClicked(
                             track = event.track,
                             contentId = event.contentId,
-                            contentType = event.contentType
+                            contentTypeDomain = event.contentTypeDomain
                         )
                     }
 
@@ -106,11 +108,138 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         trackClicked(
                             track = event.track,
                             contentId = event.track.id,
-                            contentType = ContentType.TRACK
+                            contentTypeDomain = ContentTypeDomain.TRACK
                         )
                     }
                 }
 
+            }
+
+            is PlaybackUiEvent.PlayContext -> {
+                playContext(
+                    contextType = event.contextType,
+                    contextId = event.contextId,
+                    trackIds = event.trackIds,
+                    offsetTrackId = event.offsetTrackId
+                )
+            }
+
+            is PlaybackUiEvent.SkipToNext -> {
+                skipToNext()
+            }
+
+            is PlaybackUiEvent.SkipToPrevious -> {
+                skipToPrevious()
+            }
+
+            is PlaybackUiEvent.ClearQueue -> {
+                clearQueue()
+            }
+
+            is PlaybackUiEvent.AddToQueue -> {
+                addToQueue(event.trackIds)
+            }
+        }
+    }
+
+    private fun skipToNext() {
+        viewModelScope.launch {
+            playbackRepository.skipToNext().onSuccess { queue ->
+                val trackDomain = queue.currentTrack?.toTrackDomain()
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        currentTrack = trackDomain,
+                        error = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun skipToPrevious() {
+        viewModelScope.launch {
+            playbackRepository.skipToPrevious().onSuccess { queue ->
+                val trackDomain = queue.currentTrack?.toTrackDomain()
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        currentTrack = trackDomain,
+                        error = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun clearQueue() {
+        viewModelScope.launch {
+            playbackRepository.clearQueue().onSuccess { queue ->
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        error = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun addToQueue(trackIds: List<String>) {
+        viewModelScope.launch {
+            playbackRepository.addToQueue(trackIds).onSuccess { queue ->
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        error = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun playContext(
+        contextType: PlaybackContextType,
+        contextId: String?,
+        trackIds: List<String>?,
+        offsetTrackId: String
+    ) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            playbackRepository.playContext(
+                contextType = contextType,
+                contextId = contextId,
+                trackIds = trackIds,
+                offsetTrackId = offsetTrackId
+            ).onSuccess { state ->
+                val trackDomain = state.queue.currentTrack?.toTrackDomain()
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        playbackInfo = state.playbackInfo,
+                        queue = state.queue,
+                        currentTrack = trackDomain,
+                        error = null
+                    )
+                }
+                state.playbackInfo.let {
+                    start(BuildConfig.BASE_URL + it.hlsUrl)
+                }
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = error.message ?: "Failed to play context"
+                    )
+                }
             }
         }
     }
@@ -177,7 +306,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
     private fun trackClicked(
         track: TrackDomain,
-        contentType: ContentType,
+        contentTypeDomain: ContentTypeDomain,
         contentId: String
     ) {
         viewModelScope.launch {
@@ -185,7 +314,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
             playbackRepository.playbackInfo.invoke(
                 trackId = track.id,
-                contentType = contentType,
+                contentTypeDomain = contentTypeDomain,
                 contentId = contentId
             ).onSuccess {
                 _uiState.value = _uiState.value.copy(

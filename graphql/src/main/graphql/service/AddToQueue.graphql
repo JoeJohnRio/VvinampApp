@@ -1,6 +1,22 @@
-mutation AddToQueue($trackIds: [ID!]!) {
-  addToQueue(trackIds: $trackIds) {
-    currentTrackId
-    upcomingTrackIds
+mutation AddToQueue($ids: [ID!]!) {
+  addToQueue(trackIds: $ids) {
+    currentTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
+    previousTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
+    upcomingTrack {
+      trackId
+      title
+      artist
+      coverImageUrl
+    }
   }
 }

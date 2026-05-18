@@ -3,7 +3,7 @@ package com.example.data.api.history
 import com.example.domain.entity.ListeningHistoryDomain
 import com.example.graphql.ListRecentHistoryQuery
 import com.example.graphql.type.ContentType
-import com.example.domain.entity.enum.ContentType as DomainContentType
+import com.example.domain.entity.enum.ContentTypeDomain as DomainContentType
 
 
 fun List<ListRecentHistoryQuery.ListRecentHistory?>.toDomain(): List<ListeningHistoryDomain> {
@@ -14,7 +14,7 @@ fun List<ListRecentHistoryQuery.ListRecentHistory?>.toDomain(): List<ListeningHi
                 playedAt = data.playedAt.toString(),
                 progress = data.progress ?: 0,
                 contentName = data.contentName,
-                contentType = data.contentType.toContentType(),
+                contentTypeDomain = data.contentType.toContentType(),
                 contentId = data.contentId,
                 contentImage = data.contentImage.orEmpty(),
                 contentSubtitle = data.contentSubtitle.orEmpty()

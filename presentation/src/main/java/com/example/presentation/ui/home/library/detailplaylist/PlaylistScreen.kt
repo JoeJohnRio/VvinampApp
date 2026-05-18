@@ -29,13 +29,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopSlidingNameNavigation
 import com.example.presentation.ui.main.ScreenWrapper
-import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiEvent.*
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
@@ -63,9 +63,19 @@ fun PlaylistScreen(
             when (event) {
                 is PlaylistEvent.PlayTrack -> {
                     playbackViewModel.onEvent(
+                        PlayContext(
+                            contextType = PlaybackContextType.PLAYLIST,
+                            contextId = event.playlistId,
+                            offsetTrackId = event.trackId
+                        )
+                    )
+                }
+
+                is PlaylistEvent.PlayTrackRecommended -> {
+                    playbackViewModel.onEvent(
                         OnTrackClicked(
                             track = event.track,
-                            contentType = ContentType.PLAYLIST,
+                            contentTypeDomain = ContentTypeDomain.PLAYLIST,
                             contentId = playlistId
                         )
                     )
@@ -74,6 +84,7 @@ fun PlaylistScreen(
                 PlaylistEvent.OnClickShuffle -> {
                     playbackViewModel.onEvent(ToggleShuffleClicked)
                 }
+
             }
         }
     }
@@ -243,6 +254,7 @@ fun PlaylistContent(
 
                     if (track != null) {
                         PlaylistTrackComponent(
+                            uiState = uiState,
                             track = track,
                             onEvent = onEvent
                         )

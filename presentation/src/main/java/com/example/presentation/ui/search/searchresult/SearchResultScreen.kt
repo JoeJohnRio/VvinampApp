@@ -26,8 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.domain.entity.album.toTrackDomain
-import com.example.domain.entity.enum.ContentType
+import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.entity.search.toTrackDomain
 import com.example.presentation.navigation.router.BottomNavRouter
@@ -72,7 +71,7 @@ fun SearchResultsScreen(
                             playbackViewModel.onEvent(
                                 PlaybackUiEvent.OnTrackClicked(
                                     track = searchItem.toTrackDomain(),
-                                    contentType = ContentType.TRACK,
+                                    contentTypeDomain = ContentTypeDomain.TRACK,
                                     contentId = searchItem.id
                                 )
                             )

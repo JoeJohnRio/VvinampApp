@@ -29,6 +29,7 @@ import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 
 @Composable
 fun PlaylistTrackComponent(
+    uiState: PlaylistUiState,
     track: TrackDomain,
     onEvent: (PlaylistUiEvent) -> Unit = {}
 ) {
@@ -36,7 +37,10 @@ fun PlaylistTrackComponent(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                onEvent(PlaylistUiEvent.onClickTrack(track))
+                onEvent(PlaylistUiEvent.onClickTrack(
+                    playlistId = uiState.playlist?.id.orEmpty(),
+                    trackId = track.id
+                ))
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween

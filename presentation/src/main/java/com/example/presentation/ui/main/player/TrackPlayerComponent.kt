@@ -143,12 +143,13 @@ fun PlayerControls(uiState: PlaybackUiState, onEvent: (PlaybackUiEvent) -> Unit)
             modifier = Modifier
                 .size(32.dp),
             onClick = {
+                onEvent(PlaybackUiEvent.SkipToPrevious)
             }
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_play_back),
-                contentDescription = "Detail",
+                contentDescription = "Previous",
             )
         }
 
@@ -170,8 +171,8 @@ fun PlayerControls(uiState: PlaybackUiState, onEvent: (PlaybackUiEvent) -> Unit)
                     .graphicsLayer {
                         blendMode = BlendMode.DstOut
                     },
-                tint = Color.Black
-                ,painter = painterResource(
+                tint = Color.Black,
+                painter = painterResource(
                     if (uiState.isPlaying) R.drawable.ic_pause
                     else R.drawable.ic_play
                 ),
@@ -182,12 +183,14 @@ fun PlayerControls(uiState: PlaybackUiState, onEvent: (PlaybackUiEvent) -> Unit)
         IconButton(
             modifier = Modifier
                 .size(32.dp),
-            onClick = {}
+            onClick = {
+                onEvent(PlaybackUiEvent.SkipToNext)
+            }
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
                 painter = painterResource(R.drawable.ic_play_forward),
-                contentDescription = "Detail",
+                contentDescription = "Next",
             )
         }
 
