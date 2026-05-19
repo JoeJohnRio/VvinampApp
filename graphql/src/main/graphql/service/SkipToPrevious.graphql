@@ -1,0 +1,29 @@
+mutation SkipToPrevious {
+  skipToPrevious {
+    queue {
+      currentTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      previousTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      upcomingTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+    }
+    playbackInfo {
+      hlsUrl
+      mp3Fallback
+      durationMs
+    }
+  }
+}

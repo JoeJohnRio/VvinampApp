@@ -1,0 +1,29 @@
+mutation PlayContext($context: PlaybackContextInput!, $offsetTrackId: ID!) {
+  playContext(context: $context, offsetTrackId: $offsetTrackId) {
+    queue {
+      currentTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      upcomingTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      previousTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+    }
+    playbackInfo {
+      hlsUrl
+      mp3Fallback
+      durationMs
+    }
+  }
+}
