@@ -36,11 +36,11 @@ class PlaybackRepositoryImpl @Inject constructor(private val playbackApi: Playba
         return playbackApi.addToQueue(trackIds).map { it.toDomain() }
     }
 
-    override suspend fun skipToNext(): Result<PlayerQueueDomain> {
+    override suspend fun skipToNext(): Result<PlaybackStateDomain> {
         return playbackApi.skipToNext().map { it.toDomain() }
     }
 
-    override suspend fun skipToPrevious(): Result<PlayerQueueDomain> {
+    override suspend fun skipToPrevious(): Result<PlaybackStateDomain> {
         return playbackApi.skipToPrevious().map { it.toDomain() }
     }
 

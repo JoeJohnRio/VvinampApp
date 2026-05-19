@@ -50,13 +50,13 @@ class AddToQueueUseCase @Inject constructor(
 class SkipToNextUseCase @Inject constructor(
     private val repository: PlaybackRepository
 ) {
-    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.skipToNext()
+    suspend operator fun invoke(): Result<PlaybackStateDomain> = repository.skipToNext()
 }
 
 class SkipToPreviousUseCase @Inject constructor(
     private val repository: PlaybackRepository
 ) {
-    suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.skipToPrevious()
+    suspend operator fun invoke(): Result<PlaybackStateDomain> = repository.skipToPrevious()
 }
 
 class ClearQueueUseCase @Inject constructor(

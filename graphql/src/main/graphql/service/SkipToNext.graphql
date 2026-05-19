@@ -1,22 +1,29 @@
 mutation SkipToNext {
   skipToNext {
-    currentTrack {
-      trackId
-      title
-      artist
-      coverImageUrl
+    queue {
+      currentTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      previousTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
+      upcomingTrack {
+        trackId
+        title
+        artist
+        coverImageUrl
+      }
     }
-    previousTrack {
-      trackId
-      title
-      artist
-      coverImageUrl
-    }
-    upcomingTrack {
-      trackId
-      title
-      artist
-      coverImageUrl
+    playbackInfo {
+      hlsUrl
+      mp3Fallback
+      durationMs
     }
   }
 }

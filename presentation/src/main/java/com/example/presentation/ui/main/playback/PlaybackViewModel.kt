@@ -144,14 +144,18 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
     private fun skipToNext() {
         viewModelScope.launch {
-            playbackRepository.skipToNext().onSuccess { queue ->
-                val trackDomain = queue.currentTrack?.toTrackDomain()
+            playbackRepository.skipToNext().onSuccess { state ->
+                val trackDomain = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update {
                     it.copy(
-                        queue = queue,
+                        queue = state.queue,
+                        playbackInfo = state.playbackInfo,
                         currentTrack = trackDomain,
                         error = null
                     )
+                }
+                state.playbackInfo.let {
+                    start(BuildConfig.BASE_URL + it.hlsUrl)
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -161,14 +165,18 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
     private fun skipToPrevious() {
         viewModelScope.launch {
-            playbackRepository.skipToPrevious().onSuccess { queue ->
-                val trackDomain = queue.currentTrack?.toTrackDomain()
+            playbackRepository.skipToPrevious().onSuccess { state ->
+                val trackDomain = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update {
                     it.copy(
-                        queue = queue,
+                        queue = state.queue,
+                        playbackInfo = state.playbackInfo,
                         currentTrack = trackDomain,
                         error = null
                     )
+                }
+                state.playbackInfo.let {
+                    start(BuildConfig.BASE_URL + it.hlsUrl)
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }

@@ -61,7 +61,14 @@ fun AddToQueueMutation.AddToQueue.toDomain(): PlayerQueueDomain {
     )
 }
 
-fun SkipToNextMutation.SkipToNext.toDomain(): PlayerQueueDomain {
+fun SkipToNextMutation.SkipToNext.toDomain(): PlaybackStateDomain {
+    return PlaybackStateDomain(
+        queue = this.queue.toDomain(),
+        playbackInfo = this.playbackInfo.toDomain()
+    )
+}
+
+fun SkipToNextMutation.Queue.toDomain(): PlayerQueueDomain {
     return PlayerQueueDomain(
         currentTrack = this.currentTrack?.toDomain(),
         upcomingTrackIds = this.upcomingTrack.mapNotNull { it?.toDomain() },
@@ -69,11 +76,34 @@ fun SkipToNextMutation.SkipToNext.toDomain(): PlayerQueueDomain {
     )
 }
 
-fun SkipToPreviousMutation.SkipToPrevious.toDomain(): PlayerQueueDomain {
+fun SkipToNextMutation.PlaybackInfo.toDomain(): PlaybackInfoDomain {
+    return PlaybackInfoDomain(
+        hlsUrl = this.hlsUrl,
+        mp3Fallback = this.mp3Fallback,
+        durationMs = this.durationMs
+    )
+}
+
+fun SkipToPreviousMutation.SkipToPrevious.toDomain(): PlaybackStateDomain {
+    return PlaybackStateDomain(
+        queue = this.queue.toDomain(),
+        playbackInfo = this.playbackInfo.toDomain()
+    )
+}
+
+fun SkipToPreviousMutation.Queue.toDomain(): PlayerQueueDomain {
     return PlayerQueueDomain(
         currentTrack = this.currentTrack?.toDomain(),
         upcomingTrackIds = this.upcomingTrack.mapNotNull { it?.toDomain() },
         previousTrack = this.previousTrack.mapNotNull { it?.toDomain() }
+    )
+}
+
+fun SkipToPreviousMutation.PlaybackInfo.toDomain(): PlaybackInfoDomain {
+    return PlaybackInfoDomain(
+        hlsUrl = this.hlsUrl,
+        mp3Fallback = this.mp3Fallback,
+        durationMs = this.durationMs
     )
 }
 

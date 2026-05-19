@@ -14,8 +14,8 @@ interface PlaybackRepository {
 
     suspend fun getPlayerQueue(): Result<PlayerQueueDomain>
     suspend fun addToQueue(trackIds: List<String>): Result<PlayerQueueDomain>
-    suspend fun skipToNext(): Result<PlayerQueueDomain>
-    suspend fun skipToPrevious(): Result<PlayerQueueDomain>
+    suspend fun skipToNext(): Result<PlaybackStateDomain>
+    suspend fun skipToPrevious(): Result<PlaybackStateDomain>
     suspend fun clearQueue(): Result<PlayerQueueDomain>
     suspend fun playContext(
         contextType: com.example.domain.entity.enum.PlaybackContextType,
