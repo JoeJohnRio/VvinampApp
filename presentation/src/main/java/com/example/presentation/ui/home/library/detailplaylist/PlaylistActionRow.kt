@@ -1,6 +1,8 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
+import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -110,7 +112,7 @@ fun PlaylistActionTopRow(
 
         FloatingActionButton(
             onClick = {
-                onEvent(PlaylistUiEvent.onClickPlayAll)
+                onEvent(PlaylistUiEvent.onClickPlayAll(uiState.playlist?.id.orEmpty()))
             },
             shape = CircleShape,
             containerColor = Color(0xFF1DB954),
@@ -164,6 +166,9 @@ fun PlaylistActionBottomRow(
     ) {
         ButtonBlackSmallIcon(
             modifier = Modifier
+                .clickable {
+                    onEvent(PlaylistUiEvent.onRowClickAdd)
+                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Add",
@@ -174,6 +179,9 @@ fun PlaylistActionBottomRow(
 
         ButtonBlackSmallIcon(
             modifier = Modifier
+                .clickable {
+                    onEvent(PlaylistUiEvent.onRowClickEdit)
+                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Edit",
@@ -184,6 +192,9 @@ fun PlaylistActionBottomRow(
 
         ButtonBlackSmallIcon(
             modifier = Modifier
+                .clickable {
+                    onEvent(PlaylistUiEvent.onRowClickSort)
+                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Sort",
@@ -194,6 +205,9 @@ fun PlaylistActionBottomRow(
 
         ButtonBlackSmallIcon(
             modifier = Modifier
+                .clickable {
+                    onEvent(PlaylistUiEvent.onRowClickEditDetail)
+                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Name & details",

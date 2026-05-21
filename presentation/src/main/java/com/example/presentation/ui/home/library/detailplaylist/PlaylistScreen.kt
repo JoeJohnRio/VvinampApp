@@ -237,7 +237,8 @@ fun PlaylistContent(
                 item {
                     PlaylistActionRow(
                         uiState = uiState,
-                        playbackUiState = playbackUiState
+                        playbackUiState = playbackUiState,
+                        onEvent = onEvent
                     )
                 }
 

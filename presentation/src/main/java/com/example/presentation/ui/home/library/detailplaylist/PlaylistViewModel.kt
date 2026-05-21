@@ -61,6 +61,18 @@ class PlaylistViewModel @Inject constructor(
 
             }
 
+            is PlaylistUiEvent.onClickPlayAll -> {
+                Log.d("joel123" , "ONCLICKPLAYALL")
+                viewModelScope.launch {
+                    _events.emit(
+                        PlayTrack(
+                            playlistId = event.playlistId,
+                            trackId = ""
+                        )
+                    )
+                }
+            }
+
             PlaylistUiEvent.onClickChange -> {
 
             }
@@ -73,12 +85,21 @@ class PlaylistViewModel @Inject constructor(
 
             }
 
-            PlaylistUiEvent.onClickPlayAll -> {
-
-            }
-
             PlaylistUiEvent.ToggleShuffleClicked -> {
                 toggleShuffleClicked()
+            }
+
+            PlaylistUiEvent.onRowClickAdd -> {
+
+            }
+            PlaylistUiEvent.onRowClickEdit -> {
+
+            }
+            PlaylistUiEvent.onRowClickEditDetail -> {
+
+            }
+            PlaylistUiEvent.onRowClickSort -> {
+
             }
         }
     }
