@@ -115,6 +115,9 @@ dependencies {
     // Palette
     implementation(libs.palette)
 
+    // Reorderable
+    implementation(libs.reorderable)
+
     // Compose
     implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1") // or latest version
     implementation(platform(libs.compose.bom))

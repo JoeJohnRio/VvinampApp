@@ -161,14 +161,15 @@ fun PlaylistActionBottomRow(
 ) {
     val scrollState = rememberScrollState()
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .horizontalScroll(scrollState)
     ) {
         ButtonBlackSmallIcon(
+            onClick = {
+                onEvent(PlaylistUiEvent.onRowClickAdd)
+            },
             modifier = Modifier
-                .clickable {
-                    onEvent(PlaylistUiEvent.onRowClickAdd)
-                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Add",
@@ -178,10 +179,10 @@ fun PlaylistActionBottomRow(
         Spacer(Modifier.width(8.dp))
 
         ButtonBlackSmallIcon(
+            onClick = {
+                onEvent(PlaylistUiEvent.onRowClickEdit(uiState.playlist?.id.orEmpty()))
+            },
             modifier = Modifier
-                .clickable {
-                    onEvent(PlaylistUiEvent.onRowClickEdit)
-                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Edit",
@@ -191,10 +192,10 @@ fun PlaylistActionBottomRow(
         Spacer(Modifier.width(8.dp))
 
         ButtonBlackSmallIcon(
+            onClick = {
+                onEvent(PlaylistUiEvent.onRowClickSort)
+            },
             modifier = Modifier
-                .clickable {
-                    onEvent(PlaylistUiEvent.onRowClickSort)
-                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Sort",
@@ -204,10 +205,10 @@ fun PlaylistActionBottomRow(
         Spacer(Modifier.width(8.dp))
 
         ButtonBlackSmallIcon(
+            onClick = {
+                onEvent(PlaylistUiEvent.onRowClickEditDetail)
+            },
             modifier = Modifier
-                .clickable {
-                    onEvent(PlaylistUiEvent.onRowClickEditDetail)
-                }
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Name & details",

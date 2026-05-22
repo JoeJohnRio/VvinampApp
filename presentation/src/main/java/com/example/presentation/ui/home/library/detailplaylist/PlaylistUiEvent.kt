@@ -19,14 +19,16 @@ sealed class PlaylistUiEvent {
     data class onClickPlayAll(
         val playlistId: String,
     ) : PlaylistUiEvent()
+    data class onRowClickEdit(
+        val playlistId: String
+    ) : PlaylistUiEvent()
     object onClickChange : PlaylistUiEvent()
     object onClickShare : PlaylistUiEvent()
     object ToggleShuffleClicked : PlaylistUiEvent()
+
     object onClickDetail : PlaylistUiEvent()
 
     object onRowClickAdd : PlaylistUiEvent()
-
-    object onRowClickEdit : PlaylistUiEvent()
 
     object onRowClickSort : PlaylistUiEvent()
 

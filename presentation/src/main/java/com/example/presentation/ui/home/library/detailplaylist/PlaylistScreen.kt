@@ -81,6 +81,10 @@ fun PlaylistScreen(
                     )
                 }
 
+                is PlaylistEvent.NavigateToEditScreen -> {
+                    bottomNavRouter.navigateToPlaylistEdit(event.playlistId)
+                }
+
                 PlaylistEvent.OnClickShuffle -> {
                     playbackViewModel.onEvent(ToggleShuffleClicked)
                 }
@@ -254,7 +258,7 @@ fun PlaylistContent(
                     val track = playlistTracks[index]
 
                     if (track != null) {
-                        PlaylistTrackComponent(
+                        ItemPlaylistTrackComponent(
                             uiState = uiState,
                             track = track,
                             onEvent = onEvent

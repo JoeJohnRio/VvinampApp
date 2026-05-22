@@ -18,6 +18,8 @@ sealed interface BottomNavDestination: NavKey {
     @Serializable
     data class PlaylistDetail(val id: String): MainDestination
     @Serializable
+    data class PlaylistEdit(val id: String): MainDestination
+    @Serializable
     data object SearchResults : MainDestination
 
     @Serializable

@@ -58,11 +58,25 @@ class PlaylistViewModel @Inject constructor(
             }
 
             is PlaylistUiEvent.onClickTrackRecommended -> {
+                viewModelScope.launch {
+                    _events.emit(
+                        PlayTrackRecommended(
+                            track = event.track
+                        )
+                    )
+                }
+            }
 
+            is PlaylistUiEvent.onRowClickEdit -> {
+                viewModelScope.launch {
+                    _events.emit(
+                        NavigateToEditScreen(event.playlistId)
+                    )
+                }
             }
 
             is PlaylistUiEvent.onClickPlayAll -> {
-                Log.d("joel123" , "ONCLICKPLAYALL")
+                Log.d("joel123", "ONCLICKPLAYALL")
                 viewModelScope.launch {
                     _events.emit(
                         PlayTrack(
@@ -92,12 +106,11 @@ class PlaylistViewModel @Inject constructor(
             PlaylistUiEvent.onRowClickAdd -> {
 
             }
-            PlaylistUiEvent.onRowClickEdit -> {
 
-            }
             PlaylistUiEvent.onRowClickEditDetail -> {
 
             }
+
             PlaylistUiEvent.onRowClickSort -> {
 
             }
