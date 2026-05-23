@@ -1,7 +1,6 @@
 package com.example.presentation.di.module
 
 import android.content.Context
-import com.example.data.api.MusicApi
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
@@ -95,10 +94,5 @@ class NetworkModule {
         fun provideAuthStore(
             @ApplicationContext context: Context
         ): AuthStore = DataStoreAuthStore(context)
-    }
-    @Singleton
-    @Provides
-    fun provideMovieApi(retrofit: Retrofit): MusicApi {
-        return retrofit.create(MusicApi::class.java)
     }
 }

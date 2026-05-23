@@ -1,12 +1,17 @@
 package com.example.data.repository.playlist
 
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
+import com.apollographql.apollo.api.Optional
 import com.example.data.api.playlist.PlaylistApiImpl
 import com.example.data.api.playlist.toDomain
 import com.example.data.api.playlist.toPlaylistMinimal
 import com.example.data.api.playlist.toRemote
+import com.example.data.db.music.MusicDatabase
+import com.example.data.entities.toDomain
 import com.example.data.repository.pagination.GenericPagingSource
 import com.example.domain.entity.PageResponse
 import com.example.domain.entity.playlist.PlaylistComplete
@@ -16,12 +21,16 @@ import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
 import com.example.graphql.type.AddSongToPlaylistInput
+import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
+import com.example.graphql.type.RepositionSongInput
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PlaylistRepositoryImpl @Inject constructor(
-    private val api: PlaylistApiImpl
+    private val api: PlaylistApiImpl,
+    private val database: MusicDatabase
 ) : PlaylistRepository {
 
     override fun getPlaylistsByUser(
@@ -101,18 +110,21 @@ class PlaylistRepositoryImpl @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalPagingApi::class)
     override fun getPlaylistTracks(id: String, pageSize: Int): Flow<PagingData<TrackDomain>> {
-        return Pager(PagingConfig(pageSize = pageSize)) {
-            GenericPagingSource { cursor ->
-                api.getPlaylistTracks(playlistId = id, after = cursor).map { listData ->
-                    PageResponse(
-                        items = listData.edges.mapNotNull { it.node.track.toDomain() },
-                        endCursor = listData.pageInfo.endCursor,
-                        hasNextPage = listData.pageInfo.hasNextPage
-                    )
-                }
+        return Pager(
+            config = PagingConfig(pageSize = pageSize),
+            remoteMediator = PlaylistTracksRemoteMediator(
+                playlistId = id,
+                api = api,
+                database = database
+            ),
+            pagingSourceFactory = {
+                database.playlistTrackDao().getTracksByPlaylist(id)
             }
-        }.flow
+        ).flow.map { pagingData ->
+            pagingData.map { it.toDomain() }
+        }
     }
 
     override fun getMyPlaylists(pageSize: Int): Flow<PagingData<PlaylistMinimal>> {
@@ -127,5 +139,23 @@ class PlaylistRepositoryImpl @Inject constructor(
                 }
             }
         }.flow
+    }
+
+    override suspend fun editPlaylist(
+        playlistId: String,
+        deletedTrackIds: List<String>?,
+        repositionedSongs: List<Pair<String, Int>>?
+    ): Result<Boolean> {
+        val input = EditPlaylistInput(
+            playlistId = playlistId,
+            deletedTrackIds = Optional.presentIfNotNull(deletedTrackIds),
+            repositionedSongs = Optional.presentIfNotNull(repositionedSongs?.map {
+                RepositionSongInput(
+                    trackId = it.first,
+                    position = it.second
+                )
+            })
+        )
+        return api.editPlaylist(input)
     }
 }

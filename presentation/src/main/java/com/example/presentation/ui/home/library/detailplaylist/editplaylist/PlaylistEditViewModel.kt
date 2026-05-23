@@ -6,11 +6,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaylistUseCase
-import com.example.presentation.ui.home.library.detailplaylist.PlaylistEvent
-import com.example.presentation.ui.home.library.detailplaylist.PlaylistEvent.PlayTrack
-import com.example.presentation.ui.home.library.detailplaylist.PlaylistUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +35,14 @@ class PlaylistEditViewModel @Inject constructor(
 
             }
             is PlaylistEditUiEvent.OnClickPlayTrack -> playtrackFromPlaylist(event.trackId)
+            is PlaylistEditUiEvent.OnSave -> savePlaylist(
+                tracks = event.tracks,
+                movedTrackIds = event.movedTrackIds,
+                deletedTrackIds = event.deletedTrackIds
+            )
+            is PlaylistEditUiEvent.OnDelete -> {
+
+            }
         }
     }
 
@@ -60,11 +65,40 @@ class PlaylistEditViewModel @Inject constructor(
         }
     }
 
+    private fun savePlaylist(
+        tracks: List<TrackDomain>,
+        movedTrackIds: Set<String>,
+        deletedTrackIds: Set<String>
+    ) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, error = null) }
+            
+            val repositionedSongs = tracks
+                .mapIndexed { index, track -> Pair(track.id, index) }
+                .filter { (trackId, _) -> movedTrackIds.contains(trackId) }
+
+            useCase.editPlaylistUseCase.invoke(
+                playlistId = uiState.value.playlistId,
+                deletedTrackIds = deletedTrackIds.toList().ifEmpty { null },
+                repositionedSongs = repositionedSongs.ifEmpty { null }
+            ).onSuccess {
+                _uiState.update { it.copy(isLoading = false) }
+                _events.emit(PlaylistEditEvent.SaveSuccess)
+            }.onFailure { error ->
+                _uiState.update { it.copy(isLoading = false, error = error.message ?: "Update failed") }
+            }
+        }
+    }
+
     fun setPlaylistId(playlistId: String) {
         _uiState.update {
             it.copy(
                 playlistId = playlistId
             )
         }
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(error = null) }
     }
 }

@@ -1,14 +1,13 @@
 package com.example.presentation.ui.home.library.detailplaylist.editplaylist
 
-import android.os.Parcelable
-
 data class PlaylistEditUiState(
     val playlistId: String = "",
     val editedSong: List<EditedPlaylistTrack> = emptyList(),
     val deletedTrackId: List<String> = emptyList(),
-//    val isMove
+    val isLoading: Boolean = false,
+    val error: String? = null
 ) {
     fun isSaveEnable(): Boolean {
-        return editedSong.isNotEmpty() && deletedTrackId.isNotEmpty()
+        return editedSong.isNotEmpty() || deletedTrackId.isNotEmpty()
     }
 }

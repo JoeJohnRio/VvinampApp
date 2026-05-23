@@ -2,9 +2,9 @@ package com.example.presentation.di.module
 
 import android.content.Context
 import androidx.room.Room
-import com.example.data.db.music.MusicDao
 import com.example.data.db.music.MusicDatabase
-import com.example.data.db.music.MusicRemoteKeyDao
+import com.example.data.db.playlist.PlaylistRemoteKeyDao
+import com.example.data.db.playlist.PlaylistTrackDao
 import com.example.data.util.DiskExecutor
 import dagger.Module
 import dagger.Provides
@@ -20,24 +20,25 @@ class DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideMovieDatabase(
+    fun provideMusicDatabase(
         @ApplicationContext context: Context,
         diskExecutor: DiskExecutor
     ): MusicDatabase {
         return Room
-            .databaseBuilder(context, MusicDatabase::class.java, "movie.db")
+            .databaseBuilder(context, MusicDatabase::class.java, "vvinamp.db")
             .setQueryExecutor(diskExecutor)
             .setTransactionExecutor(diskExecutor)
+            .fallbackToDestructiveMigration()
             .build()
     }
 
     @Provides
-    fun provideMovieDao(movieDatabase: MusicDatabase): MusicDao {
-        return movieDatabase.movieDao()
+    fun providePlaylistTrackDao(database: MusicDatabase): PlaylistTrackDao {
+        return database.playlistTrackDao()
     }
 
     @Provides
-    fun provideMovieRemoteKeyDao(movieDatabase: MusicDatabase): MusicRemoteKeyDao {
-        return movieDatabase.movieRemoteKeysDao()
+    fun providePlaylistRemoteKeyDao(database: MusicDatabase): PlaylistRemoteKeyDao {
+        return database.playlistRemoteKeyDao()
     }
 }

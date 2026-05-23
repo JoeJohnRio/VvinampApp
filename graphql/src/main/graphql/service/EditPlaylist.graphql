@@ -1,0 +1,7 @@
+mutation EditPlaylist(
+    $playlistId: EditPlaylistInput!
+) {
+    editPlaylist(
+        input: $playlistId
+    )
+}

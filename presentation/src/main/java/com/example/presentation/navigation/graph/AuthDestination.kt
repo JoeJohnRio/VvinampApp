@@ -1,13 +1,9 @@
 package com.example.presentation.navigation.graph
 
-//import com.example.domain.entity.User
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
 sealed interface AuthDestination: NavKey {
-    @Serializable
-    data class MusicDetails(val musicId: Int) : AuthDestination
-
     @Serializable
     data object Auth : AuthDestination
 

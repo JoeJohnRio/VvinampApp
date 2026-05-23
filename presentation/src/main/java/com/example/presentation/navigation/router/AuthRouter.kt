@@ -1,7 +1,6 @@
 package com.example.presentation.navigation.router
 
 import com.example.presentation.navigation.Navigator
-//import com.example.domain.entity.User
 import com.example.presentation.navigation.graph.AuthDestination
 
 class AuthRouter(
@@ -37,10 +36,6 @@ class AuthRouter(
 
     fun navigateToLoginMethodSelectionPage() {
         navigator.navigate(AuthDestination.LoginMethodSelection)
-    }
-
-    fun navigateToMovieDetails(movieId: Int) {
-        navigator.navigate(AuthDestination.MusicDetails(movieId))
     }
 
     fun popBackToAuthRootPage() {

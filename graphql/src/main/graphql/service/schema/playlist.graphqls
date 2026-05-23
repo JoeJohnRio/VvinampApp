@@ -71,6 +71,29 @@ enum PlaylistSortOrder {
   CREATOR
 }
 
+input RepositionSongInput {
+  trackId: ID!
+  position: Int!
+}
+
+input EditPlaylistInput {
+  playlistId: ID!
+  deletedTrackIds: [ID!]
+  repositionedSongs: [RepositionSongInput!]
+}
+
+
+type PlaylistConnection {
+  edges: [PlaylistEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type PlaylistEdge {
+  cursor: String!
+  node: Playlist!
+}
+
 extend type Query {
   getPlaylist(id: ID!): Playlist
 
@@ -84,6 +107,8 @@ extend type Query {
 }
 
 extend type Mutation {
+  editPlaylist(input: EditPlaylistInput!): Boolean!
+
   createPlaylist(input: CreatePlaylistInput!): Playlist!
 
   updatePlaylist(id: ID!, input: UpdatePlaylistInput!): Playlist!
@@ -97,15 +122,4 @@ extend type Mutation {
   savePlaylist(input: SavePlaylistInput!): Playlist!
 
   unsavePlaylist(input: UnsavePlaylistInput!): Boolean!
-}
-
-type PlaylistConnection {
-  edges: [PlaylistEdge!]!
-  pageInfo: PageInfo!
-  totalCount: Int!
-}
-
-type PlaylistEdge {
-  cursor: String!
-  node: Playlist!
 }

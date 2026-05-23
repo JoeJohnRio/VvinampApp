@@ -24,12 +24,10 @@ import androidx.compose.ui.unit.sp
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.trackDummy
 import com.example.presentation.R
-import com.example.presentation.ui.home.library.detailplaylist.PlaylistUiEvent
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSHeadlineMediumWhite
 import com.example.presentation.ui.widget.image.ImageWithPlayButton
 import com.example.presentation.util.preview.PreviewTheme
-import sh.calvin.reorderable.ReorderableItem
 
 @Composable
 fun LazyItemScope.ItemTrackEdit(
@@ -54,8 +52,11 @@ fun LazyItemScope.ItemTrackEdit(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
+                modifier = Modifier.clickable {
+                    onEvent(PlaylistEditUiEvent.OnDelete(trackId = track.id))
+                },
                 painter = painterResource(R.drawable.ic_stop_remove),
-                contentDescription = null,
+                contentDescription = "Delete",
                 tint = MaterialTheme.colorScheme.surfaceBright
             )
 
@@ -98,7 +99,7 @@ fun LazyItemScope.ItemTrackEdit(
                 }
             ),
             painter = painterResource(R.drawable.ic_burger),
-            contentDescription = null,
+            contentDescription = "Reorder",
             tint = MaterialTheme.colorScheme.surfaceBright
         )
     }
@@ -109,7 +110,9 @@ fun LazyItemScope.ItemTrackEdit(
 @Composable
 fun ItemTrackEditPreview() {
     PreviewTheme {
-        LazyColumn() {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             items(trackDummy) { item ->
                 ItemTrackEdit(
                     track = item,

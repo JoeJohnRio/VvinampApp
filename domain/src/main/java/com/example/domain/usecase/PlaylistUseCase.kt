@@ -17,7 +17,8 @@ data class PlaylistUseCase @Inject constructor(
     val getPlaylistTracksUseCase: GetPlaylistTracksUseCase,
     val getPlaylistUseCase: GetPlaylistUseCase,
     val getRecommendedTracksUseCase: GetRecommendedTracksUseCase,
-    val addSongToPlaylistUseCase: AddSongToPlaylistUseCase
+    val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
+    val editPlaylistUseCase: EditPlaylistUseCase
 )
 
 class GetMyPlaylistUseCase @Inject constructor(
@@ -62,6 +63,22 @@ class AddSongToPlaylistUseCase @Inject constructor(
         return repository.addSongToPlaylist(
             playlistId = playlistId,
             trackId = trackId
+        )
+    }
+}
+
+class EditPlaylistUseCase @Inject constructor(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(
+        playlistId: String,
+        deletedTrackIds: List<String>? = null,
+        repositionedSongs: List<Pair<String, Int>>? = null
+    ): Result<Boolean> {
+        return repository.editPlaylist(
+            playlistId = playlistId,
+            deletedTrackIds = deletedTrackIds,
+            repositionedSongs = repositionedSongs
         )
     }
 }

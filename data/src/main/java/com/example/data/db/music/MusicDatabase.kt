@@ -2,15 +2,20 @@ package com.example.data.db.music
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.data.entities.MusicDbData
-import com.example.data.entities.MusicRemoteKeyDbData
+import com.example.data.db.playlist.PlaylistRemoteKeyDao
+import com.example.data.db.playlist.PlaylistTrackDao
+import com.example.data.entities.PlaylistRemoteKeyEntity
+import com.example.data.entities.PlaylistTrackEntity
 
 @Database(
-    entities = [MusicDbData::class, MusicRemoteKeyDbData::class],
-    version = 1,
+    entities = [
+        PlaylistTrackEntity::class,
+        PlaylistRemoteKeyEntity::class
+    ],
+    version = 3, // Increased version because I removed entities
     exportSchema = false
 )
 abstract class MusicDatabase : RoomDatabase() {
-    abstract fun movieDao(): MusicDao
-    abstract fun movieRemoteKeysDao(): MusicRemoteKeyDao
+    abstract fun playlistTrackDao(): PlaylistTrackDao
+    abstract fun playlistRemoteKeyDao(): PlaylistRemoteKeyDao
 }

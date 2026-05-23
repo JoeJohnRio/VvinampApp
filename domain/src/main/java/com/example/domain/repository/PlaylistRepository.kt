@@ -21,4 +21,9 @@ interface PlaylistRepository {
     fun getPlaylistTracks(id: String, pageSize: Int): Flow<PagingData<TrackDomain>>
     suspend fun getRecommendedTracks(): Result<List<RecommendedTrackDomain>>
     suspend fun addSongToPlaylist(playlistId: String, trackId: String): Result<Boolean>
+    suspend fun editPlaylist(
+        playlistId: String,
+        deletedTrackIds: List<String>?,
+        repositionedSongs: List<Pair<String, Int>>?
+    ): Result<Boolean>
 }

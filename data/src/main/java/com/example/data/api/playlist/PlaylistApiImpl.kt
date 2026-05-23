@@ -7,6 +7,7 @@ import com.example.data.util.safeQuery
 import com.example.graphql.AddSongToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.DeletePlaylistMutation
+import com.example.graphql.EditPlaylistMutation
 import com.example.graphql.GetArtistScreenDataQuery
 import com.example.graphql.GetMyPlaylistFeedQuery
 import com.example.graphql.GetMyPlaylistsQuery
@@ -21,6 +22,7 @@ import com.example.graphql.UnsavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
+import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
 import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
@@ -31,6 +33,14 @@ import javax.inject.Inject
 class PlaylistApiImpl @Inject constructor(
     private val api: ApolloClient
 ) : PlaylistApi {
+
+    override suspend fun editPlaylist(input: EditPlaylistInput): Result<Boolean> {
+        return api.safeMutation(
+            EditPlaylistMutation(input)
+        ) {
+            it.editPlaylist
+        }
+    }
 
     override suspend fun getPlaylist(id: String): Result<GetPlaylistQuery.GetPlaylist> {
         return api.safeQuery(
