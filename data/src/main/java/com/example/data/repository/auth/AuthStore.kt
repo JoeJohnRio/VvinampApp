@@ -10,4 +10,5 @@ interface AuthStore {
     suspend fun clear()
     fun getSession(): Flow<AuthSession?>
     suspend fun saveTokens(access: String, refresh: String?, expiresAt: String)
+    suspend fun saveUser(userId: String, username: String, email: String, profilePicture: String?)
 }

@@ -24,6 +24,10 @@ class DataStoreAuthStore @Inject constructor(
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val EXPIRES_AT = stringPreferencesKey("expires_at")
+        val USER_ID = stringPreferencesKey("user_id")
+        val USERNAME = stringPreferencesKey("username")
+        val EMAIL = stringPreferencesKey("email")
+        val PROFILE_PICTURE = stringPreferencesKey("profile_picture")
     }
 
     override suspend fun saveTokens(access: String, refresh: String?, expiresAt: String) {
@@ -31,6 +35,20 @@ class DataStoreAuthStore @Inject constructor(
             preferences[ACCESS_TOKEN] = access
             refresh?.let { preferences[REFRESH_TOKEN] = it }
             preferences[EXPIRES_AT] = expiresAt
+        }
+    }
+
+    override suspend fun saveUser(
+        userId: String,
+        username: String,
+        email: String,
+        profilePicture: String?
+    ) {
+        context.dataStore.edit { preferences ->
+            preferences[USER_ID] = userId
+            preferences[USERNAME] = username
+            preferences[EMAIL] = email
+            profilePicture?.let { preferences[PROFILE_PICTURE] = it }
         }
     }
 
@@ -51,9 +69,21 @@ class DataStoreAuthStore @Inject constructor(
             val access = preferences[ACCESS_TOKEN]
             val refresh = preferences[REFRESH_TOKEN]
             val expiresAt = preferences[EXPIRES_AT]
+            val userId = preferences[USER_ID]
+            val username = preferences[USERNAME]
+            val email = preferences[EMAIL]
+            val profilePicture = preferences[PROFILE_PICTURE]
 
             if (access != null && expiresAt != null) {
-                AuthSession(access, refresh, expiresAt)
+                AuthSession(
+                    accessToken = access,
+                    refreshToken = refresh,
+                    expiresAt = expiresAt,
+                    userId = userId,
+                    username = username,
+                    email = email,
+                    profilePicture = profilePicture
+                )
             } else null
         }
     }
@@ -62,6 +92,11 @@ class DataStoreAuthStore @Inject constructor(
         context.dataStore.edit { preferences ->
             preferences.remove(ACCESS_TOKEN)
             preferences.remove(REFRESH_TOKEN)
+            preferences.remove(EXPIRES_AT)
+            preferences.remove(USER_ID)
+            preferences.remove(USERNAME)
+            preferences.remove(EMAIL)
+            preferences.remove(PROFILE_PICTURE)
         }
     }
 }

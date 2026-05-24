@@ -30,7 +30,7 @@ import com.example.presentation.ui.widget.image.ImageWithPlayButton
 import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
-fun LazyItemScope.ItemTrackEdit(
+fun LazyItemScope.ItemPlaylistTrackEdit(
     draggableHandle: Modifier,
     track: TrackDomain,
     onEvent: (PlaylistEditUiEvent) -> Unit = {}
@@ -63,7 +63,10 @@ fun LazyItemScope.ItemTrackEdit(
             Spacer(Modifier.width(8.dp))
 
             ImageWithPlayButton(
-                imageUrl = track.albumCoverUrl
+                imageUrl = track.albumCoverUrl,
+                onClick = {
+                    onEvent(PlaylistEditUiEvent.OnClickPlayTrack(track.id))
+                }
             )
 
 
@@ -108,13 +111,13 @@ fun LazyItemScope.ItemTrackEdit(
 
 @Preview
 @Composable
-fun ItemTrackEditPreview() {
+fun ItemPlaylistTrackEditPreview() {
     PreviewTheme {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(trackDummy) { item ->
-                ItemTrackEdit(
+                ItemPlaylistTrackEdit(
                     track = item,
                     onEvent = {
 

@@ -9,6 +9,8 @@ object PaddingSizeUtil {
 
     val PlaylistNoPhotoSize = 160.dp
     val LibraryItemSize = 64.dp
+    val PlaylistEditPhotoSize = 120.dp
+    val ListeningHistoryPhotoSize = 56.dp
 
     val NormalPadding = 16.dp
 

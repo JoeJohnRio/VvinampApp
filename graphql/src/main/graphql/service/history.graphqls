@@ -6,7 +6,7 @@ type ListeningHistory {
   progress: Int
   contentType: ContentType!
   contentName: String!
-  contentImage: String
+  contentImage: [String!]
   contentSubtitle: String
 }
 

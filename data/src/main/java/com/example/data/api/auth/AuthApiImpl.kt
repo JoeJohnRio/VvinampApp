@@ -4,6 +4,7 @@ import com.apollographql.apollo.ApolloClient
 import com.example.data.util.safeMutation
 import com.example.data.util.safeQuery
 import com.example.domain.entity.user.User
+import com.example.graphql.GetCurrentUserDetailQuery
 import com.example.graphql.LoginQuery
 import com.example.graphql.RegisterMutation
 import com.example.graphql.type.RegisterInput
@@ -21,7 +22,7 @@ class AuthApiImpl @Inject constructor(
                     email = user.email,
                     password = user.password,
                     name = user.name,
-                    //joel123 not implemented yet
+                    //joel456 not implemented yet
                     roles = listOf("Normal")
                 )
 
@@ -39,6 +40,14 @@ class AuthApiImpl @Inject constructor(
             )
         ) { data ->
             data.login
+        }
+    }
+
+    override suspend fun getCurrentUserDetail(): Result<GetCurrentUserDetailQuery.GetCurrentUserDetail> {
+        return apolloClient.safeQuery(
+            GetCurrentUserDetailQuery()
+        ) { data ->
+            data.getCurrentUserDetail
         }
     }
 }

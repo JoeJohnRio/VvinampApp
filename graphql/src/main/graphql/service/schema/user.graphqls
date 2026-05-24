@@ -24,6 +24,15 @@ type UserFollow {
   artist: Artist!
 }
 
+type UserDetail {
+  id: ID!
+  username: String!
+  email: String!
+  profilePicture: String
+  subscriptionType: String!
+}
+
 extend type Query {
   me: User!
+  getCurrentUserDetail: UserDetail!
 }

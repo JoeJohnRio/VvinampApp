@@ -1,7 +1,9 @@
 package com.example.presentation.ui.home
 
 import androidx.lifecycle.viewModelScope
+import com.example.data.repository.auth.AuthStore
 import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.usecase.AuthUseCases
 import com.example.domain.usecase.HistoryUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
@@ -11,6 +13,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -20,7 +23,9 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     val networkMonitor: NetworkMonitor,
-    val historyUseCase: HistoryUseCase
+    val historyUseCase: HistoryUseCase,
+    private val authUseCases: AuthUseCases,
+    private val authStore: AuthStore
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -66,6 +71,24 @@ class HomeViewModel @Inject constructor(
 
     init {
         observeNetworkStatus()
+        fetchUserDetailsIfNeeded()
+    }
+
+    private fun fetchUserDetailsIfNeeded() {
+        viewModelScope.launch {
+            val session = authStore.getSession().first()
+            // If we have tokens but no user ID/name, fetch details
+            if (session?.accessToken != null && session.userId == null) {
+                authUseCases.getCurrentUserDetail().onSuccess { userDetails ->
+                    authStore.saveUser(
+                        userId = userDetails.id,
+                        username = userDetails.username,
+                        email = userDetails.email,
+                        profilePicture = userDetails.profilePicture
+                    )
+                }
+            }
+        }
     }
 
     private fun observeNetworkStatus() {

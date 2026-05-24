@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -26,8 +27,10 @@ import com.example.domain.entity.ListeningHistoryDomain
 import com.example.presentation.ui.home.HomeUiEvent
 import com.example.presentation.ui.home.HomeViewModel
 import com.example.presentation.ui.home.artist.ArtistEvent
+import com.example.presentation.ui.home.library.widget.image.PlaylistCover
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.widget.ImageSize
+import com.example.presentation.util.PaddingSizeUtil
 
 @Composable
 fun ListeningHistoryCard(
@@ -45,9 +48,10 @@ fun ListeningHistoryCard(
         Row(
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            HistoryImage(
-                imageUrl = history.contentImage,
-                imageSize = ImageSize.getImageListeningHistorySize()
+            PlaylistCover(
+                covers = history.contentImage,
+                modifier = Modifier
+                    .size(PaddingSizeUtil.ListeningHistoryPhotoSize)
             )
 
             Spacer(modifier = Modifier.width(8.dp))

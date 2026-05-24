@@ -11,7 +11,7 @@ data class ListeningHistoryDomain(
     val contentTypeDomain: ContentTypeDomain,
     val contentSubtitle: String,
     val contentId: String,
-    val contentImage: String,
+    val contentImage: List<String>,
     val contentName: String
 )
 
@@ -23,7 +23,7 @@ val listeningHistoryDummy = listOf(
         progress = 65,
         contentTypeDomain = ContentTypeDomain.PLAYLIST,
         contentId = "playlist_80s_hits_classic",
-        contentImage = "https://example.com/80s_playlist_cover.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Ultimate 80s Classics",
         contentSubtitle = ""
     ),
@@ -35,7 +35,7 @@ val listeningHistoryDummy = listOf(
         progress = 45,
         contentTypeDomain = ContentTypeDomain.PODCAST_SERIES,
         contentId = "series_jre_spotify",
-        contentImage = "https://example.com/jre_cover.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "The Joe Rogan Experience",
         contentSubtitle = ""
     ),
@@ -47,7 +47,7 @@ val listeningHistoryDummy = listOf(
         progress = 85,
         contentTypeDomain = ContentTypeDomain.ALBUM,
         contentId = "album_thriller_mj_1982",
-        contentImage = "https://example.com/thriller_cover.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Thriller - Michael Jackson",
         contentSubtitle = ""
     ),
@@ -59,7 +59,7 @@ val listeningHistoryDummy = listOf(
         progress = 50,
         contentTypeDomain = ContentTypeDomain.ARTIST,
         contentId = "artist_madonna_radio",
-        contentImage = "https://example.com/madonna_profile.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Madonna Radio",
         contentSubtitle = ""
     ),
@@ -71,7 +71,7 @@ val listeningHistoryDummy = listOf(
         progress = 72,
         contentTypeDomain = ContentTypeDomain.PLAYLIST,
         contentId = "playlist_90s_rock_anthems",
-        contentImage = "https://example.com/90s_rock_playlist.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "90s Rock Anthems",
         contentSubtitle = ""
     ),
@@ -83,7 +83,7 @@ val listeningHistoryDummy = listOf(
         progress = 90,
         contentTypeDomain = ContentTypeDomain.ALBUM,
         contentId = "album_purple_rain_prince_1984",
-        contentImage = "https://example.com/purple_rain_cover.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Purple Rain - Prince",
         contentSubtitle = ""
     ),
@@ -95,7 +95,7 @@ val listeningHistoryDummy = listOf(
         progress = 30,
         contentTypeDomain = ContentTypeDomain.PODCAST_SERIES,
         contentId = "series_hardcore_history_dancarlin",
-        contentImage = "https://example.com/hardcore_history_cover.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Hardcore History - Dan Carlin",
         contentSubtitle = ""
     ),
@@ -107,7 +107,7 @@ val listeningHistoryDummy = listOf(
         progress = 0,
         contentTypeDomain = ContentTypeDomain.UNKNOWN__,
         contentId = "unknown_content_xyz",
-        contentImage = "https://example.com/placeholder.jpg",
+        contentImage = listOf("https://example.com/80s_playlist_cover.jpg"),
         contentName = "Unknown Content",
         contentSubtitle = ""
     )

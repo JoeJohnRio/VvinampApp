@@ -53,14 +53,27 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _loginState.value = UiState.Loading
             val result = authUseCases.login(userCred.email, userCred.password)
-            _loginState.value = result.toUiState()
 
             if (result.isSuccess) {
-                val user = result.getOrNull()
+                val sessionData = result.getOrNull()
 
-                user?.let {
+                sessionData?.let {
+                    // 1. Save tokens first so subsequent calls (like getCurrentUserDetail) are authenticated
                     authStore.saveTokens(it.accessToken, it.refreshToken, it.expiresAt)
+
+                    // 2. Fetch user details and save them
+                    authUseCases.getCurrentUserDetail().onSuccess { userDetails ->
+                        authStore.saveUser(
+                            userId = userDetails.id,
+                            username = userDetails.username,
+                            email = userDetails.email,
+                            profilePicture = userDetails.profilePicture
+                        )
+                    }
                 }
+                _loginState.value = result.toUiState()
+            } else {
+                _loginState.value = result.toUiState()
             }
         }
     }

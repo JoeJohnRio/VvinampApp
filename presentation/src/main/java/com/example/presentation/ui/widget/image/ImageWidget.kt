@@ -1,6 +1,7 @@
 package com.example.presentation.ui.widget.image
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
@@ -19,12 +20,14 @@ import com.example.presentation.R
 
 @Composable
 fun ImageWithPlayButton(
-    imageUrl: String
+    imageUrl: String,
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
             .size(48.dp)
-            .clip(RoundedCornerShape(4.dp)),
+            .clip(RoundedCornerShape(4.dp))
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         AsyncImage(

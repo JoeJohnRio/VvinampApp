@@ -19,7 +19,7 @@ fun ListeningHistoryDomain.toTrackDomain(): TrackDomain {
     return TrackDomain(
         id = contentId,
         artistName = contentSubtitle,
-        albumCoverUrl = contentImage,
+        albumCoverUrl = contentImage.firstOrNull().orEmpty(),
         title = contentName,
         duration = 0,
         streamCount = 0,

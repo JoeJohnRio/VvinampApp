@@ -158,7 +158,7 @@ fun EditPlaylistLibraryContent(
             items(tracks.size, key = { tracks[it].id }) { index ->
                 val track = tracks[index]
                 ReorderableItem(reorderableState, key = track.id) { isDragging ->
-                    ItemTrackEdit(
+                    ItemPlaylistTrackEdit(
                         track = track,
                         draggableHandle = Modifier.draggableHandle(),
                         onEvent = { event ->

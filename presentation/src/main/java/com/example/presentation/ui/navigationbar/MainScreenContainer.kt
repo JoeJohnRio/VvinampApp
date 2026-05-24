@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.router.BottomNavRouter
+import com.example.presentation.ui.home.library.CreatePlaylistBottomSheet
+import com.example.presentation.ui.home.library.LibraryUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.ui.main.player.PlayerState
@@ -47,6 +51,8 @@ fun MainScreenContainer(
     val navBars = WindowInsets.navigationBars
     val bottomPadding = navBars.asPaddingValues().calculateBottomPadding()
     val scope = rememberCoroutineScope()
+
+    var isCreatePlaylistOptionSheetVisible by remember { mutableStateOf(false) }
 
     val playerState = remember {
         AnchoredDraggableState(initialValue = PlayerState.COLLAPSED)
@@ -110,8 +116,7 @@ fun MainScreenContainer(
                 onItemClick = { bottomItem ->
                     when (bottomItem.page) {
                         BottomNavDestination.Home -> bottomNavRouter.navigateToHome()
-                        BottomNavDestination.Create -> bottomNavRouter.navigateToCreate()
-//                        BottomNavDestination.Library -> bottomNavRouter.navigateToLibrary()
+                        BottomNavDestination.Create -> isCreatePlaylistOptionSheetVisible = true
                         BottomNavDestination.Library -> bottomNavRouter.navigateToLibrary()
                         BottomNavDestination.Premium -> bottomNavRouter.navigateToPremium()
                         BottomNavDestination.Search -> bottomNavRouter.navigateToSearch()
@@ -122,6 +127,24 @@ fun MainScreenContainer(
                 }
             )
         }
+    }
+
+    if (isCreatePlaylistOptionSheetVisible) {
+        CreatePlaylistBottomSheet(
+            onEvent = { event ->
+                when (event) {
+                    LibraryUiEvent.onCreateNewPlaylistClicked -> {
+                        isCreatePlaylistOptionSheetVisible = false
+                        bottomNavRouter.navigateToCreatePlaylist()
+                    }
+
+                    else -> {
+
+                    }
+                }
+            },
+            onDismiss = { isCreatePlaylistOptionSheetVisible = false }
+        )
     }
 
     if (scrimAlpha > 0f) {

@@ -1,0 +1,9 @@
+query GetCurrentUserDetail {
+  getCurrentUserDetail {
+    id
+    username
+    email
+    profilePicture
+    subscriptionType
+  }
+}

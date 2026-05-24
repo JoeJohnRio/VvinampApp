@@ -1,15 +1,11 @@
 package com.example.data.repository.auth
 
-import android.util.Log
 import com.example.data.api.auth.AuthApi
 import com.example.data.util.toDomain
 import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
 import com.example.domain.entity.user.User
 import com.example.domain.repository.AuthRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -29,8 +25,12 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun logout() {
-        authStore.clear() // Just call your existing clear function
-        var x = authStore.getAccessToken()
+        authStore.clear()
     }
 
+    override suspend fun getCurrentUserDetail(): Result<RegisteredUser> {
+        return authApi.getCurrentUserDetail().map {
+            it.toDomain()
+        }
+    }
 }

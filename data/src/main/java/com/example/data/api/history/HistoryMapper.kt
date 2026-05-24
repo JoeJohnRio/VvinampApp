@@ -17,7 +17,7 @@ fun List<ListRecentHistoryQuery.ListRecentHistory?>.toDomain(): List<ListeningHi
                 contentTypeDomain = data.contentType.toContentType(),
                 contentId = data.contentId,
                 contentImage = data.contentImage.orEmpty(),
-                contentSubtitle = data.contentSubtitle.orEmpty()
+                contentSubtitle = data.contentSubtitle.orEmpty(),
             )
         }
     }

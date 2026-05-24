@@ -10,7 +10,8 @@ import kotlin.Result
 class AuthUseCases @Inject constructor(
     val login: LoginUseCase,
     val register: RegisterUseCase,
-    val logout: LogoutUseCase
+    val logout: LogoutUseCase,
+    val getCurrentUserDetail: GetCurrentUserDetailUseCase
 )
 
 class LoginUseCase @Inject constructor(
@@ -33,5 +34,13 @@ class LogoutUseCase @Inject constructor(
 ) {
     suspend operator fun invoke() {
         return repository.logout()
+    }
+}
+
+class GetCurrentUserDetailUseCase @Inject constructor(
+    private val repository: AuthRepository
+) {
+    suspend operator fun invoke(): Result<RegisteredUser> {
+        return repository.getCurrentUserDetail()
     }
 }
