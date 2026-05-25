@@ -84,7 +84,6 @@ class LibraryViewModel @Inject constructor(
 
     fun navigateToCreatePlaylist() {
         viewModelScope.launch {
-            Log.d("joel123", "launched")
             hideCreatePlaylistSheet()
             _events.emit(LibraryEvent.NavigateToCreatePlaylist)
         }

@@ -46,7 +46,6 @@ fun LibraryScreen(
         viewModel.events.collect { event ->
             when (event) {
                 LibraryEvent.NavigateToCreatePlaylist -> {
-                    Log.d("joel123", "bottomNav Navigate")
                     bottomNavRouter.navigateToCreatePlaylist()
                 }
 
@@ -83,7 +82,6 @@ fun LibraryScreen(
             }
 
             if (uiState.isCreatePlaylistOptionSheetVisible) {
-                Log.d("joel123", "test")
                 CreatePlaylistBottomSheet(
                     onEvent = {
                         viewModel.onEvent(it)
@@ -150,7 +148,6 @@ fun LibraryContent(
 
         when (pagingItems.loadState.refresh) {
             is LoadState.Loading -> item {
-                Log.d("joel123", "loading nih")
                 LoadingScreen()
             }
 

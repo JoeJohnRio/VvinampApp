@@ -50,11 +50,13 @@ fun PlaylistActionRow(
         playbackUiState,
         onEvent
     )
-    //joel456 when youre user you could edit
-    PlaylistActionBottomRow(
-        uiState,
-        onEvent
-    )
+
+    if (uiState.isPlaylistCreator) {
+        PlaylistActionBottomRow(
+            uiState,
+            onEvent
+        )
+    }
 }
 
 @Composable

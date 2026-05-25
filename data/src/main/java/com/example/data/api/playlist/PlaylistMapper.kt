@@ -3,6 +3,7 @@ package com.example.data.api.playlist
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.user.UserMinimal
@@ -13,6 +14,7 @@ import com.example.graphql.GetPlaylistTracksQuery
 import com.example.graphql.GetPlaylistsByUserQuery
 import com.example.graphql.RecommendedTracksQuery
 import com.example.graphql.type.PlaylistSortOrder
+import com.example.graphql.type.PlaylistTrackSortBy
 
 fun GetMyPlaylistsQuery.Node.toPlaylistMinimal(): PlaylistMinimal {
     return PlaylistMinimal(
@@ -40,6 +42,15 @@ fun GetPlaylistQuery.GetPlaylist.toDomain(): PlaylistComplete {
         totalDuration = this.totalDuration,
         isSavedByMe = this.isSavedByMe
     )
+}
+
+fun PlaylistTrackSortByDomain.toRemote(): PlaylistTrackSortBy {
+    return when (this) {
+        PlaylistTrackSortByDomain.TITLE -> PlaylistTrackSortBy.TITLE
+        PlaylistTrackSortByDomain.ARTIST_NAME -> PlaylistTrackSortBy.ARTIST_NAME
+        PlaylistTrackSortByDomain.ALBUM_NAME -> PlaylistTrackSortBy.ALBUM_NAME
+        PlaylistTrackSortByDomain.RECENTLY_ADDED -> PlaylistTrackSortBy.RECENTLY_ADDED
+    }
 }
 
 fun RecommendedTracksQuery.RecommendedTrack.toDomain(): RecommendedTrackDomain {

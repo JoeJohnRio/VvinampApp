@@ -24,6 +24,7 @@ import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
+import com.example.graphql.type.PlaylistTrackSortBy
 import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
 import com.example.graphql.type.UnsavePlaylistInput
@@ -72,12 +73,14 @@ class PlaylistApiImpl @Inject constructor(
 
     override suspend fun getPlaylistTracks(
         playlistId: String,
-        after: String?
+        after: String?,
+        sortBy: PlaylistTrackSortBy?,
     ): Result<GetPlaylistTracksQuery.GetPlaylistTracks> {
         return api.safeQuery(
             GetPlaylistTracksQuery(
                 playlistId = playlistId,
-                after = Optional.presentIfNotNull(after)
+                after = Optional.presentIfNotNull(after),
+                sortBy = Optional.presentIfNotNull(sortBy)
             )
         ) {
             it.getPlaylistTracks

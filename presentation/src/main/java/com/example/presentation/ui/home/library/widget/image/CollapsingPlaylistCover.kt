@@ -59,30 +59,3 @@ fun CollapsingPlaylistCover(
         }
     }
 }
-
-
-@Composable
-fun PlaylistCover(
-    covers: List<String>,
-    modifier: Modifier = Modifier
-) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(4.dp))
-    ) {
-        if (covers.size >= 4) {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Row(modifier = Modifier.weight(1f)) {
-                    CoverImage(model = covers[0], modifier = Modifier.weight(1f).fillMaxHeight())
-                    CoverImage(model = covers[1], modifier = Modifier.weight(1f).fillMaxHeight())
-                }
-                Row(modifier = Modifier.weight(1f)) {
-                    CoverImage(model = covers[2], modifier = Modifier.weight(1f).fillMaxHeight())
-                    CoverImage(model = covers[3], modifier = Modifier.weight(1f).fillMaxHeight())
-                }
-            }
-        } else {
-            CoverImage(model = covers.firstOrNull(), modifier = Modifier.fillMaxSize())
-        }
-    }
-}

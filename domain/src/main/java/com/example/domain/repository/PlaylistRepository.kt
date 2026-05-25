@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +19,12 @@ interface PlaylistRepository {
 
     suspend fun createPlaylist(title: String): Result<String>
     suspend fun getPlaylist(id: String): Result<PlaylistComplete>
-    fun getPlaylistTracks(id: String, pageSize: Int): Flow<PagingData<TrackDomain>>
+    fun getPlaylistTracks(
+        id: String,
+        pageSize: Int,
+        sortBy: PlaylistTrackSortByDomain
+    ): Flow<PagingData<TrackDomain>>
+
     suspend fun getRecommendedTracks(): Result<List<RecommendedTrackDomain>>
     suspend fun addSongToPlaylist(playlistId: String, trackId: String): Result<Boolean>
     suspend fun editPlaylist(

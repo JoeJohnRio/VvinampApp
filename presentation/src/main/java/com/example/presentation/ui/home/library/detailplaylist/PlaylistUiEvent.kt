@@ -16,12 +16,15 @@ sealed class PlaylistUiEvent {
     data class onClickTrackRecommended(
         val track: TrackDomain
     ) : PlaylistUiEvent()
+
     data class onClickPlayAll(
         val playlistId: String,
     ) : PlaylistUiEvent()
+
     data class onRowClickEdit(
         val playlistId: String
     ) : PlaylistUiEvent()
+
     object onClickChange : PlaylistUiEvent()
     object onClickShare : PlaylistUiEvent()
     object ToggleShuffleClicked : PlaylistUiEvent()
@@ -33,4 +36,11 @@ sealed class PlaylistUiEvent {
     object onRowClickSort : PlaylistUiEvent()
 
     object onRowClickEditDetail : PlaylistUiEvent()
+
+    data class onEditNameChanged(val name: String) : PlaylistUiEvent()
+    data class onEditDescriptionChanged(val description: String) : PlaylistUiEvent()
+    object onSaveEditDetail : PlaylistUiEvent()
+    object onCancelEditDetail : PlaylistUiEvent()
+    object onMakePrivate : PlaylistUiEvent()
+    object onDeletePlaylist : PlaylistUiEvent()
 }

@@ -66,7 +66,9 @@ fun RegisterNamePage(
                 )
             }
 
-            is UiState.Idle -> Log.d("joel123", "Idle")
+            is UiState.Idle -> {
+                // do nothing
+            }
             is UiState.Loading -> {
                 Log.d("joel123", "Loading ${isAnyLoading(registerState)}")
             }
@@ -203,7 +205,6 @@ fun RegisterNameFormContent(
             text = stringResource(R.string.label_i_would_prefer_not),
             isChecked = isUserReceiveMarketing,
             onCheckedChange = { value ->
-                Log.d("joel123", "RegisterNamePage: $value")
                 onMarketingChecked(value)
             }
         )

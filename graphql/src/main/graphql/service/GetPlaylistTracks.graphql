@@ -1,5 +1,5 @@
-query GetPlaylistTracks($playlistId: ID!, $after: String) {
-    getPlaylistTracks(playlistId: $playlistId, after: $after) {
+query GetPlaylistTracks($playlistId: ID!, $after: String, $sortBy: PlaylistTrackSortBy = RECENTLY_ADDED) {
+    getPlaylistTracks(playlistId: $playlistId, after: $after, sortBy: $sortBy) {
         edges {
             node {
                 track {

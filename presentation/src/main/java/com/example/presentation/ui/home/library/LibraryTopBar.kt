@@ -53,15 +53,12 @@ fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
                 ButtonData(
                     iconRes = R.drawable.ic_search,
                     onClick = {
-                        Log.d("joel123", "search clicked")
                         onEvent(LibraryUiEvent.onSearchClicked)
                     }
                 ),
                 ButtonData(
                     iconRes = R.drawable.ic_create_plus,
                     onClick = {
-
-                        Log.d("joel123", "oncreate clicked")
                         onEvent(LibraryUiEvent.onCreateClicked)
                     }
                 )

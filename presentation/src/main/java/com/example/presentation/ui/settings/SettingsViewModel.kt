@@ -28,7 +28,6 @@ class SettingsViewModel @Inject constructor(
         when (event) {
             is SettingsEvent.OnLogoutClicked -> {
                 viewModelScope.launch {
-                    //need remotely logged out too joel123
                     authUseCases.logout.invoke()
                 }
             }

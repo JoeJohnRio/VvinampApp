@@ -15,6 +15,7 @@ import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
+import com.example.graphql.type.PlaylistTrackSortBy
 import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
 import com.example.graphql.type.UnsavePlaylistInput
@@ -51,7 +52,8 @@ interface PlaylistApi {
     suspend fun createPlaylist(title: String): Result<CreatePlaylistMutation.CreatePlaylist>
     suspend fun getPlaylistTracks(
         playlistId: String,
-        after: String?
+        after: String?,
+        sortBy: PlaylistTrackSortBy? = null,
     ): Result<GetPlaylistTracksQuery.GetPlaylistTracks>
 
     suspend fun getRecommendedTracks(): Result<List<RecommendedTracksQuery.RecommendedTrack>>

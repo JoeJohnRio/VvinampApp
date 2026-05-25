@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaylistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +49,7 @@ class PlaylistEditViewModel @Inject constructor(
 
     val playlistTracks: Flow<PagingData<TrackDomain>> = uiState
         .flatMapLatest { uiState ->
-            useCase.getPlaylistTracksUseCase.invoke(uiState.playlistId)
+            useCase.getPlaylistTracksUseCase.invoke(uiState.playlistId, PlaylistTrackSortByDomain.RECENTLY_ADDED)
         }
         .cachedIn(viewModelScope)
 

@@ -17,6 +17,7 @@ import com.example.domain.entity.PageResponse
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
@@ -111,13 +112,14 @@ class PlaylistRepositoryImpl @Inject constructor(
     }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPlaylistTracks(id: String, pageSize: Int): Flow<PagingData<TrackDomain>> {
+    override fun getPlaylistTracks(id: String, pageSize: Int, sortBy: PlaylistTrackSortByDomain): Flow<PagingData<TrackDomain>> {
         return Pager(
             config = PagingConfig(pageSize = pageSize),
             remoteMediator = PlaylistTracksRemoteMediator(
                 playlistId = id,
                 api = api,
-                database = database
+                database = database,
+                sortBy = sortBy.toRemote()
             ),
             pagingSourceFactory = {
                 database.playlistTrackDao().getTracksByPlaylist(id)

@@ -111,6 +111,24 @@ fun PlaylistScreen(
                     viewModel.onEvent(it)
                 }
             )
+
+            if (uiState.isSortSheetVisible) {
+                PlaylistTrackSortBottomSheet(
+                    currentSort = uiState.sortBy,
+                    onSortSelected = { selectedSort ->
+                        viewModel.updateSort(selectedSort)
+                    },
+                    onDismiss = { viewModel.hideSortSheet() }
+                )
+            }
+
+            if (uiState.isEditDetailSheetVisible) {
+                EditPlaylistDetailBottomSheet(
+                    uiState = uiState,
+                    onEvent = { viewModel.onEvent(it) },
+                    onDismiss = { viewModel.onEvent(PlaylistUiEvent.onCancelEditDetail) }
+                )
+            }
         }
     )
 }
@@ -165,7 +183,6 @@ fun PlaylistContent(
             } else {
                 val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
 
-                Log.d("joel123", "currentScroll $currentScroll")
                 ScrollProgress(
                     topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(
                         0f,

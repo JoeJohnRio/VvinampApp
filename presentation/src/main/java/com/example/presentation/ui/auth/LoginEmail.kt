@@ -69,7 +69,9 @@ fun LoginEmailPage(
                 )
             }
 
-            is UiState.Idle -> Log.d("joel123", "Idle")
+            is UiState.Idle -> {
+
+            }
             is UiState.Loading -> {
                 Log.d("joel123", "Loading ${isAnyLoading(loginState)}")
             }
@@ -181,8 +183,6 @@ fun LoginEmailPage(
                     containerColor = MaterialTheme.colorScheme.onPrimary,
                     enabled = email.isNotEmpty(),
                     onClick = {
-                        Log.d("joel123", "token $token")
-
                         parentMainRouter.navigateToRootNav()
                     },
                     contentPadding = PaddingValues(horizontal = 12.dp),

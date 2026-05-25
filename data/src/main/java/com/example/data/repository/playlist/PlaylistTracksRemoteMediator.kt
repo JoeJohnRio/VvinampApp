@@ -11,10 +11,12 @@ import com.example.data.db.music.MusicDatabase
 import com.example.data.entities.PlaylistRemoteKeyEntity
 import com.example.data.entities.PlaylistTrackEntity
 import com.example.data.entities.toEntity
+import com.example.graphql.type.PlaylistTrackSortBy
 
 @OptIn(ExperimentalPagingApi::class)
 class PlaylistTracksRemoteMediator(
     private val playlistId: String,
+    private val sortBy: PlaylistTrackSortBy,
     private val api: PlaylistApiImpl,
     private val database: MusicDatabase
 ) : RemoteMediator<Int, PlaylistTrackEntity>() {
@@ -35,7 +37,7 @@ class PlaylistTracksRemoteMediator(
         }
 
         return try {
-            val result = api.getPlaylistTracks(playlistId, cursor)
+            val result = api.getPlaylistTracks(playlistId, cursor, sortBy)
             
             result.fold(
                 onSuccess = { listData ->

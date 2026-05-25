@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
+import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
@@ -32,8 +33,11 @@ class GetMyPlaylistUseCase @Inject constructor(
 class GetPlaylistTracksUseCase @Inject constructor(
     private val repository: PlaylistRepository
 ) {
-    operator fun invoke(id: String): Flow<PagingData<TrackDomain>> {
-        return repository.getPlaylistTracks(id, 10)
+    operator fun invoke(
+        id: String,
+        sortBy: PlaylistTrackSortByDomain
+    ): Flow<PagingData<TrackDomain>> {
+        return repository.getPlaylistTracks(id, 10, sortBy)
     }
 }
 

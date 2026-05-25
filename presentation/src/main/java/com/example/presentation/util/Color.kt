@@ -54,7 +54,6 @@ fun ExtractDominantColorEffect(
             val result = context.imageLoader.execute(request)
             if (result is SuccessResult) {
                 val bitmap = (result.image as? BitmapImage)?.bitmap
-                Log.d("joel123", "bitmap $bitmap")
                 bitmap?.let {
                     val palette = Palette
                         .from(it)
@@ -74,7 +73,6 @@ fun ExtractDominantColorEffect(
 
                     // Push the color back to the main thread / ViewModel
                     withContext(Dispatchers.Main) {
-                        Log.d("joel123", "extracted $extractedColorInt")
                         onColorExtracted(Color(extractedColorInt))
                     }
                 }
