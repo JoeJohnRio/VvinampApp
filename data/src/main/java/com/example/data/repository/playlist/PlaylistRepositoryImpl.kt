@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.apollographql.apollo.api.DefaultUpload
 import com.apollographql.apollo.api.Optional
 import com.example.data.api.playlist.PlaylistApiImpl
 import com.example.data.api.playlist.toDomain
@@ -25,6 +26,7 @@ import com.example.graphql.type.AddSongToPlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
 import com.example.graphql.type.RepositionSongInput
+import com.example.graphql.type.UpdatePlaylistInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -141,6 +143,34 @@ class PlaylistRepositoryImpl @Inject constructor(
                 }
             }
         }.flow
+    }
+
+    override suspend fun updatePlaylist(
+        id: String,
+        title: String?,
+        description: String?,
+        isPublic: Boolean?
+    ): Result<Boolean> {
+        val input = UpdatePlaylistInput(
+            title = Optional.presentIfNotNull(title),
+            description = Optional.presentIfNotNull(description),
+            isPublic = Optional.presentIfNotNull(isPublic)
+        )
+        return api.updatePlaylist(id, input).map { it != null }
+    }
+
+    override suspend fun uploadPlaylistCover(
+        playlistId: String,
+        fileName: String,
+        contentType: String,
+        content: ByteArray
+    ): Result<String> {
+        val upload = DefaultUpload.Builder()
+            .content(content)
+            .fileName(fileName)
+            .contentType(contentType)
+            .build()
+        return api.uploadPlaylistCover(playlistId, upload)
     }
 
     override suspend fun editPlaylist(

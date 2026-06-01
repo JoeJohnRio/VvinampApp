@@ -63,4 +63,8 @@ class PlaybackRepositoryImpl @Inject constructor(private val playbackApi: Playba
         )
         return playbackApi.playContext(input, offsetTrackId).map { it.toDomain() }
     }
+
+    override suspend fun playYoutube(youtubeId: String): Result<PlaybackInfoDomain> {
+        return playbackApi.playYoutube(youtubeId).map { it.toDomain() }
+    }
 }

@@ -17,7 +17,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun CollapsingPlaylistCover(
-    covers: List<String>,
+    coverUrl: String,
+    coverDefault: List<String>,
     scrollStateProvider: () -> Float,
     maxPx: Float,
     maxShrinkPx: Float,
@@ -43,19 +44,21 @@ fun CollapsingPlaylistCover(
             }
             .clip(RoundedCornerShape(4.dp))
     ) {
-        if (covers.size >= 4) {
+        if (coverDefault.size >= 4) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.weight(1f)) {
-                    CoverImage(model = covers[0], modifier = Modifier.weight(1f).fillMaxHeight())
-                    CoverImage(model = covers[1], modifier = Modifier.weight(1f).fillMaxHeight())
+                    CoverImage(model = coverDefault[0], modifier = Modifier.weight(1f).fillMaxHeight())
+                    CoverImage(model = coverDefault[1], modifier = Modifier.weight(1f).fillMaxHeight())
                 }
                 Row(modifier = Modifier.weight(1f)) {
-                    CoverImage(model = covers[2], modifier = Modifier.weight(1f).fillMaxHeight())
-                    CoverImage(model = covers[3], modifier = Modifier.weight(1f).fillMaxHeight())
+                    CoverImage(model = coverDefault[2], modifier = Modifier.weight(1f).fillMaxHeight())
+                    CoverImage(model = coverDefault[3], modifier = Modifier.weight(1f).fillMaxHeight())
                 }
             }
         } else {
-            CoverImage(model = covers.firstOrNull(), modifier = Modifier.fillMaxSize())
+            CoverImage(model = coverUrl.ifEmpty {
+                coverDefault.firstOrNull()
+            }, modifier = Modifier.fillMaxSize())
         }
     }
 }

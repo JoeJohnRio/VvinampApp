@@ -27,6 +27,7 @@ import com.example.data.datasource.local.DataStoreAuthStore
 import com.example.data.repository.auth.AuthStore
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import java.util.concurrent.TimeUnit
 
 
 @Module
@@ -78,6 +79,9 @@ class NetworkModule {
             .build()
 
         return OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // Time to establish connection
+            .readTimeout(60, TimeUnit.SECONDS)    // Time to wait for server response (Recommended for YT-DLP)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(authInterceptor)
             .authenticator(tokenAuthenticator)
             .addInterceptor(chucker)

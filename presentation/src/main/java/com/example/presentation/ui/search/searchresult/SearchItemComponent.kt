@@ -60,9 +60,76 @@ fun SearchItemComponent(
             "Item 5: ${domain}"
         )
 
+        is SearchItemDomain.YoutubeTrackSearch -> YoutubeSearchComponent(domain, onClicked, playbackUiState)
+
         null -> Text(
             "Item 6: ${domain}"
         )
+    }
+}
+
+@Composable
+fun YoutubeSearchComponent(
+    domain: SearchItemDomain.YoutubeTrackSearch,
+    onClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit,
+    playbackUiState: PlaybackUiState = PlaybackUiState()
+) {
+    val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == domain.id
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClicked(domain) },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = domain.thumbnail,
+                contentDescription = null,
+                placeholder = painterResource(R.drawable.bg_image),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(48.dp)
+                    .clip(RoundedCornerShape(4.dp))
+            )
+
+            Spacer(Modifier.width(12.dp))
+
+            Column(
+                verticalArrangement = Arrangement.Center
+            ) {
+                Row() {
+                    if (isCurrentTrackPlayed) {
+                        SpotifyPlayingIndicator(
+                            isPlaying = playbackUiState.isPlaying,
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+
+                        Spacer(Modifier.width(4.dp))
+                    }
+
+                    Text(
+                        text = domain.title,
+                        style = TSDisplayMediumWhite().copy(
+                            fontSize = 15.sp,
+                            color = if (isCurrentTrackPlayed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inversePrimary,
+                        )
+                    )
+                }
+
+                Text(
+                    text = "YouTube • ${domain.channel} • ${domain.durationString}",
+                    style = TSLabelMediumWhite().copy(
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.outline,
+                    )
+                )
+            }
+        }
     }
 }
 

@@ -19,18 +19,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.domain.entity.playlist.PlaylistMinimal
+import com.example.domain.entity.playlist.playlistMinimalDummy
+import com.example.domain.entity.playlist.playlistMinimalListDummy
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.widget.ButtonVariableOutlined
 import com.example.presentation.ui.widget.LoadingScreen
+import com.example.presentation.util.preview.PreviewTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -164,6 +172,25 @@ fun LibraryContent(
             }
 
             is LoadState.NotLoading -> Unit
+        }
+    }
+}
+
+@Preview
+@Composable
+fun LibraryScreenPreview() {
+    val fakeFlow = remember {
+        MutableStateFlow(PagingData.from(playlistMinimalListDummy))
+    }
+
+    val lazyPagingitems = fakeFlow.collectAsLazyPagingItems()
+
+    PreviewTheme {
+        LibraryContent(
+            uiState = LibraryUiState(),
+            pagingItems = lazyPagingitems,
+        ) {
+
         }
     }
 }

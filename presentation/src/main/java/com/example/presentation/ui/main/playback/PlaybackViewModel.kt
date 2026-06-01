@@ -139,6 +139,34 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             is PlaybackUiEvent.AddToQueue -> {
                 addToQueue(event.trackIds)
             }
+
+            is PlaybackUiEvent.OnYoutubeTrackClicked -> {
+                playYoutube(event.track)
+            }
+        }
+    }
+
+    private fun playYoutube(track: TrackDomain) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            playbackRepository.playYoutube(track.id).onSuccess { playbackInfo ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        playbackInfo = playbackInfo,
+                        currentTrack = track,
+                        error = null
+                    )
+                }
+                start(BuildConfig.BASE_URL + playbackInfo.hlsUrl)
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = error.message ?: "Failed to play YouTube track"
+                    )
+                }
+            }
         }
     }
 

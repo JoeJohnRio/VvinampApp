@@ -15,7 +15,8 @@ class PlaybackUseCase @Inject constructor(
     val skipToNext: SkipToNextUseCase,
     val skipToPrevious: SkipToPreviousUseCase,
     val clearQueue: ClearQueueUseCase,
-    val playContext: PlayContextUseCase
+    val playContext: PlayContextUseCase,
+    val playYoutube: PlayYoutubeUseCase
 )
 
 class PlaybackInfoUseCase @Inject constructor(
@@ -81,4 +82,11 @@ class PlayContextUseCase @Inject constructor(
             offsetTrackId = offsetTrackId
         )
     }
+}
+
+class PlayYoutubeUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(youtubeId: String): Result<PlaybackInfoDomain> =
+        repository.playYoutube(youtubeId)
 }

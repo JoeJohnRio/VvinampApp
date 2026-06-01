@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,10 +36,12 @@ import com.example.presentation.ui.main.ScreenWrapper
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.main.playback.PlaybackViewModel
+import com.example.presentation.ui.search.SearchType
 import com.example.presentation.ui.search.SearchUiState
 import com.example.presentation.ui.search.SearchViewModel
 import com.example.presentation.ui.theme.TSBodyMediumWhite
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
+import com.example.presentation.ui.widget.ButtonListWithState
 import com.example.presentation.ui.widget.TextFieldSearch
 
 @Composable
@@ -57,9 +61,11 @@ fun SearchResultsScreen(
             SearchResultsContent(
                 uiState = uiState,
                 playbackUiState = playbackUiState,
-                router = bottomNavRouter,
                 onTypeSearch = {
                     viewModel.onSearchInput(it)
+                },
+                onSearchTypeChanged = {
+                    viewModel.onSearchTypeChanged(it)
                 },
                 searchItems = searchItems,
                 onBackClicked = {
@@ -72,7 +78,14 @@ fun SearchResultsScreen(
                                 PlaybackUiEvent.OnTrackClicked(
                                     track = searchItem.toTrackDomain(),
                                     contentTypeDomain = ContentTypeDomain.TRACK,
-                                    contentId = searchItem.id
+                                    contentId = searchItem.id,
+                                )
+                            )
+                        }
+                        is SearchItemDomain.YoutubeTrackSearch -> {
+                            playbackViewModel.onEvent(
+                                PlaybackUiEvent.OnYoutubeTrackClicked(
+                                    track = searchItem.toTrackDomain()
                                 )
                             )
                         }
@@ -85,9 +98,6 @@ fun SearchResultsScreen(
                         else -> {
                             //do nothing
                         }
-//                        is SearchItemDomain.PlaylistSearch ->
-//                        is SearchItemDomain.PodcastEpisodeSearch ->
-//                        is SearchItemDomain.PodcastSeriesSearch ->
                     }
                 }
             )
@@ -98,8 +108,8 @@ fun SearchResultsScreen(
 @Composable
 fun SearchResultsContent(
     uiState: SearchUiState,
-    router: BottomNavRouter,
     onTypeSearch: (String) -> Unit,
+    onSearchTypeChanged: (SearchType) -> Unit,
     searchItems: LazyPagingItems<SearchItemDomain>,
     onBackClicked: () -> Unit = {},
     onItemClicked: (SearchItemDomain) -> Unit = {},
@@ -107,20 +117,45 @@ fun SearchResultsContent(
 ) {
     Scaffold(
         topBar = {
-            TextFieldSearch(
-                text = uiState.searchText,
-                onValueChanged = {
-                    onTypeSearch(it)
-                },
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .statusBarsPadding(),
-                onBackClicked = onBackClicked
-            )
+                    .statusBarsPadding()
+            ) {
+                TextFieldSearch(
+                    text = uiState.searchText,
+                    onValueChanged = {
+                        onTypeSearch(it)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClicked = onBackClicked
+                )
+
+                ButtonListWithState(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    buttonHorizontalPadding = 12.dp,
+                    buttonHeight = 32.dp,
+                    textStyle = TSDisplayMediumWhite().copy(fontSize = 11.sp),
+                    listButton = SearchType.entries.map { it.label },
+                    selectedButton = uiState.searchType.label,
+                    outlineColor = Color.Transparent,
+                    textColor = MaterialTheme.colorScheme.inversePrimary,
+                    textColorClicked = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    containerColorClicked = MaterialTheme.colorScheme.primary,
+                    onClick = { label ->
+                        SearchType.entries.find { it.label == label }?.let {
+                            onSearchTypeChanged(it)
+                        }
+                    }
+                )
+            }
         }
     ) { contentPadding ->
 
-        val isLoading = searchItems.loadState.refresh is LoadState.Loading
+        val isLoading = (searchItems.loadState.refresh is LoadState.Loading)
                 && uiState.searchText.isNotEmpty()
 
         val isEmpty = !isLoading
@@ -139,10 +174,9 @@ fun SearchResultsContent(
             items(
                 count = searchItems.itemCount,
                 key = { index ->
-                    // Unique key for stable lists (optional but recommended)
-                    val item = searchItems[index]
-                    when (item) {
+                    when (val item = searchItems[index]) {
                         is SearchItemDomain.TrackSearch -> "track_${item.id}"
+                        is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}"
                         is SearchItemDomain.AlbumSearch -> "album_${item.id}"
                         is SearchItemDomain.ArtistSearch -> "artist_${item.id}"
                         else -> index

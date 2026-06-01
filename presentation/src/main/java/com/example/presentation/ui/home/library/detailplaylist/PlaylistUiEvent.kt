@@ -1,5 +1,6 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
+import android.net.Uri
 import com.example.domain.entity.song.TrackDomain
 
 sealed class PlaylistUiEvent {
@@ -39,6 +40,7 @@ sealed class PlaylistUiEvent {
 
     data class onEditNameChanged(val name: String) : PlaylistUiEvent()
     data class onEditDescriptionChanged(val description: String) : PlaylistUiEvent()
+    data class onCoverImageChanged(val uri: Uri?) : PlaylistUiEvent()
     object onSaveEditDetail : PlaylistUiEvent()
     object onCancelEditDetail : PlaylistUiEvent()
     object onMakePrivate : PlaylistUiEvent()

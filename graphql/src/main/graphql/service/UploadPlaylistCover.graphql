@@ -1,0 +1,3 @@
+mutation UploadPlaylistCover($playlistId: ID!, $file: Upload!) {
+    uploadPlaylistCover(playlistId: $playlistId, file: $file)
+}

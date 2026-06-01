@@ -27,6 +27,13 @@ interface PlaylistRepository {
 
     suspend fun getRecommendedTracks(): Result<List<RecommendedTrackDomain>>
     suspend fun addSongToPlaylist(playlistId: String, trackId: String): Result<Boolean>
+    suspend fun uploadPlaylistCover(playlistId: String, fileName: String, contentType: String, content: ByteArray): Result<String>
+    suspend fun updatePlaylist(
+        id: String,
+        title: String?,
+        description: String?,
+        isPublic: Boolean?
+    ): Result<Boolean>
     suspend fun editPlaylist(
         playlistId: String,
         deletedTrackIds: List<String>?,

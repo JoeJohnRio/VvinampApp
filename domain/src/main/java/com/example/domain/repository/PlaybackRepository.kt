@@ -23,4 +23,5 @@ interface PlaybackRepository {
         trackIds: List<String>?,
         offsetTrackId: String
     ): Result<PlaybackStateDomain>
+    suspend fun playYoutube(youtubeId: String): Result<PlaybackInfoDomain>
 }

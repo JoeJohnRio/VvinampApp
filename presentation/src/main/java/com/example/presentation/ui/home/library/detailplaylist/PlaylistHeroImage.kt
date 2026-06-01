@@ -53,7 +53,8 @@ fun PlaylistHeroImage(
         Spacer(Modifier.height(innerPadding.calculateTopPadding() + (TopBarHeight/2)))
 
         CollapsingPlaylistCover(
-            covers = playlist?.albumCovers.orEmpty(),
+            coverUrl = playlist?.coverImage.orEmpty(),
+            coverDefault = playlist?.albumCovers.orEmpty(),
             scrollStateProvider = { scrollStateProvider() },
             maxPx = maxPx,
             maxShrinkPx = maxShrinkPx,

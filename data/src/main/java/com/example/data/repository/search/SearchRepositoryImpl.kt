@@ -26,4 +26,36 @@ class SearchRepositoryImpl @Inject constructor(private val api: SearchApiImpl) :
             }
         }.flow
     }
+
+    override fun searchYoutubeFromApi(query: String, pageSize: Int): Flow<PagingData<SearchItemDomain>> {
+        return Pager(PagingConfig(pageSize = pageSize)) {
+            GenericPagingSource { cursor ->
+                api.searchYoutubeFromApi(query, cursor, pageSize).map { searchData ->
+                    PageResponse(
+                        items = searchData.edges.map { it.node.toDomain() },
+                        endCursor = searchData.pageInfo.endCursor,
+                        hasNextPage = searchData.pageInfo.hasNextPage
+                    )
+                }
+            }
+        }.flow
+    }
+
+    override fun searchYoutubeFromYtDlp(query: String, pageSize: Int): Flow<PagingData<SearchItemDomain>> {
+        return Pager(PagingConfig(pageSize = pageSize)) {
+            GenericPagingSource { cursor ->
+                api.searchYoutubeFromYtDlp(query, cursor, pageSize).map { searchData ->
+                    PageResponse(
+                        items = searchData.edges.map { it.node.toDomain() },
+                        endCursor = searchData.pageInfo.endCursor,
+                        hasNextPage = searchData.pageInfo.hasNextPage
+                    )
+                }
+            }
+        }.flow
+    }
+
+    override suspend fun playYoutube(youtubeId: String): Result<Unit> {
+        return api.playYoutube(youtubeId).map { }
+    }
 }

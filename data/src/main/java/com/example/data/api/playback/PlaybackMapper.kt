@@ -13,6 +13,7 @@ import com.example.graphql.PlayContextMutation
 import com.example.graphql.PlaybackInfoQuery
 import com.example.graphql.SkipToNextMutation
 import com.example.graphql.SkipToPreviousMutation
+import com.example.graphql.PlayYoutubeMutation
 import com.example.graphql.type.ContextType
 import com.example.graphql.type.ContentType
 
@@ -279,5 +280,13 @@ fun ClearQueueMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         title = this.title ?: "",
         artist = this.artist ?: "",
         coverImageUrl = this.coverImageUrl ?: ""
+    )
+}
+
+fun PlayYoutubeMutation.PlayYoutube.toDomain(): PlaybackInfoDomain {
+    return PlaybackInfoDomain(
+        hlsUrl = this.hlsUrl,
+        mp3Fallback = "",
+        durationMs = 0
     )
 }

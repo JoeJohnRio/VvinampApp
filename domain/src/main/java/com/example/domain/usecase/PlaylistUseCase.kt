@@ -19,7 +19,9 @@ data class PlaylistUseCase @Inject constructor(
     val getPlaylistUseCase: GetPlaylistUseCase,
     val getRecommendedTracksUseCase: GetRecommendedTracksUseCase,
     val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
-    val editPlaylistUseCase: EditPlaylistUseCase
+    val editPlaylistUseCase: EditPlaylistUseCase,
+    val updatePlaylistUseCase: UpdatePlaylistUseCase,
+    val uploadPlaylistCoverUseCase: UploadPlaylistCoverUseCase
 )
 
 class GetMyPlaylistUseCase @Inject constructor(
@@ -84,6 +86,32 @@ class EditPlaylistUseCase @Inject constructor(
             deletedTrackIds = deletedTrackIds,
             repositionedSongs = repositionedSongs
         )
+    }
+}
+
+class UpdatePlaylistUseCase @Inject constructor(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(
+        id: String,
+        title: String? = null,
+        description: String? = null,
+        isPublic: Boolean? = null
+    ): Result<Boolean> {
+        return repository.updatePlaylist(id, title, description, isPublic)
+    }
+}
+
+class UploadPlaylistCoverUseCase @Inject constructor(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(
+        playlistId: String,
+        fileName: String,
+        contentType: String,
+        content: ByteArray
+    ): Result<String> {
+        return repository.uploadPlaylistCover(playlistId, fileName, contentType, content)
     }
 }
 

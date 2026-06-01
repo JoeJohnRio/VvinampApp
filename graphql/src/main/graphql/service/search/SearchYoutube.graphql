@@ -1,0 +1,13 @@
+query SearchYoutube($searchValue: String!) {
+    searchYoutube(query: $searchValue) {
+        id
+        title
+        url
+        webpageUrl
+        duration
+        durationString
+        viewCount
+        channel
+        thumbnail
+    }
+}

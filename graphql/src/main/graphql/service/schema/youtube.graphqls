@@ -1,0 +1,49 @@
+extend type Query {
+    searchYoutube(query: String!): [SearchResult!]!
+    searchYoutubeFromApi(query: String!): [SearchResult!]!
+    searchYoutubeFromYtDlp(query: String!): [SearchResult!]!
+    getDownloadTask(id: String!): DownloadTask
+    listDownloadTasks: [DownloadTask!]!
+}
+
+extend type Mutation {
+    startDownload(input: DownloadInput!): DownloadTask!
+    playYoutube(youtubeUrl: String!): YoutubePlaybackInfo!
+}
+
+type SearchResult {
+    id: ID!
+    title: String!
+    url: String!
+    webpageUrl: String!
+    duration: Int
+    durationString: String
+    viewCount: Int
+    channel: String
+    thumbnail: String
+}
+
+type DownloadTask {
+    id: ID!
+    title: String
+    youtubeUrl: String!
+    status: String!
+    progress: Int!
+    filePath: String
+    error: String
+    createdAt: DateTimeISO!
+    updatedAt: DateTimeISO!
+}
+
+input DownloadInput {
+    youtubeUrl: String!
+}
+
+type YoutubePlaybackInfo {
+    id: ID!
+    youtubeUrl: String!
+    title: String
+    filePath: String!
+    fileUrl: String!
+    hlsUrl: String!
+}

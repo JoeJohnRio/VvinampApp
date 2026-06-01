@@ -8,6 +8,7 @@ import com.example.graphql.AddToQueueMutation
 import com.example.graphql.ClearQueueMutation
 import com.example.graphql.GetPlayerQueueQuery
 import com.example.graphql.PlayContextMutation
+import com.example.graphql.PlayYoutubeMutation
 import com.example.graphql.PlaybackInfoQuery
 import com.example.graphql.SkipToNextMutation
 import com.example.graphql.SkipToPreviousMutation
@@ -59,4 +60,10 @@ class PlaybackApiImpl @Inject constructor(val apolloClient: ApolloClient) : Play
                 offsetTrackId = offsetTrackId
             )
         ) { it.playContext }
+
+    override suspend fun playYoutube(youtubeId: String): Result<PlayYoutubeMutation.PlayYoutube> {
+        return apolloClient.safeMutation(
+            PlayYoutubeMutation(youtubeId)
+        ) { it.playYoutube }
+    }
 }

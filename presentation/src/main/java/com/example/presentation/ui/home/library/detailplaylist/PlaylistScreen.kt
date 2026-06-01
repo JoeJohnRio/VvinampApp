@@ -198,7 +198,7 @@ fun PlaylistContent(
     }
 
     ExtractDominantColorEffect(
-        imageUrl = uiState.playlist?.albumCovers?.firstOrNull(),
+        imageUrl = uiState.playlist?.coverImage?.ifEmpty { uiState.playlist.albumCovers.firstOrNull() },
         onColorExtracted = { color ->
             updateDominantColor(color)
         }

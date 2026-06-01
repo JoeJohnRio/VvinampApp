@@ -51,6 +51,18 @@ sealed class SearchItemDomain {
         val coverArt: String?,
         val publisher: String?,
     ) : SearchItemDomain()
+
+    @Immutable
+    data class YoutubeTrackSearch(
+        val id: String,
+        val title: String,
+        val duration: Int,
+        val durationString: String,
+        val thumbnail: String,
+        val channel: String,
+        val viewCount: Long,
+        val fromApi: Boolean
+    ) : SearchItemDomain()
 }
 
 val dummySearchItems: List<SearchItemDomain> = listOf(

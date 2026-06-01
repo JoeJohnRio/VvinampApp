@@ -1,8 +1,9 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
-import android.util.Log
+import android.app.Application
+import android.net.Uri
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -25,9 +26,10 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class PlaylistViewModel @Inject constructor(
+    private val application: Application,
     private val authUseCases: AuthUseCases,
     private val useCase: PlaylistUseCase
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private val _uiState = MutableStateFlow(PlaylistUiState())
     val uiState = _uiState.asStateFlow()
 
@@ -128,6 +130,10 @@ class PlaylistViewModel @Inject constructor(
                 _uiState.update { it.copy(editDescription = event.description) }
             }
 
+            is PlaylistUiEvent.onCoverImageChanged -> {
+                _uiState.update { it.copy(editCoverUri = event.uri) }
+            }
+
             PlaylistUiEvent.onSaveEditDetail -> {
                 savePlaylistDetail()
             }
@@ -168,7 +174,9 @@ class PlaylistViewModel @Inject constructor(
             it.copy(
                 isEditDetailSheetVisible = true,
                 editName = it.playlist?.title.orEmpty(),
-                editDescription = it.playlist?.description.orEmpty()
+                editDescription = it.playlist?.description.orEmpty(),
+                editCoverUri = null,
+                error = null
             )
         }
     }
@@ -178,8 +186,42 @@ class PlaylistViewModel @Inject constructor(
     }
 
     private fun savePlaylistDetail() {
-        // Implement save logic via useCase
-        hideEditDetailSheet()
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSaving = true, error = null) }
+            val currentState = uiState.value
+            val playlistId = currentState.playlist?.id ?: return@launch
+
+            try {
+                // 1. Upload cover if changed
+                currentState.editCoverUri?.let { uri ->
+                    val inputStream = application.contentResolver.openInputStream(uri)
+                    val bytes = inputStream?.readBytes() ?: throw Exception("Failed to read image")
+                    inputStream.close()
+
+                    val fileName = "cover_${System.currentTimeMillis()}.jpg"
+                    useCase.uploadPlaylistCoverUseCase(
+                        playlistId = playlistId,
+                        fileName = fileName,
+                        contentType = "image/jpeg",
+                        content = bytes
+                    ).onFailure { throw Exception(it.message ?: "Upload failed") }
+                }
+
+                // 2. Update playlist details
+                useCase.updatePlaylistUseCase(
+                    id = playlistId,
+                    title = currentState.editName,
+                    description = currentState.editDescription
+                ).onSuccess {
+                    _uiState.update { it.copy(isSaving = false) }
+                    getPlaylist(playlistId) // Refresh playlist data
+                    hideEditDetailSheet()
+                }.onFailure { throw Exception(it.message ?: "Update failed") }
+
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isSaving = false, error = e.message) }
+            }
+        }
     }
 
     fun setIsPlaylistCreator() {

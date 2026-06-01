@@ -10,6 +10,7 @@ plugins {
 apollo {
     service("service") {
         packageName.set("com.example.graphql")
+        mapScalarToUpload("Upload")
     }
 }
 

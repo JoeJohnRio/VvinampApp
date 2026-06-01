@@ -1,0 +1,23 @@
+query SearchYoutubeFromYtDlp($searchValue: String!, $after: String, $first: Int) {
+    searchYoutubeFromYtDlp(query: $searchValue, after: $after, first: $first) {
+        edges {
+            cursor
+            node {
+                id
+                title
+                url
+                webpageUrl
+                duration
+                durationString
+                viewCount
+                channel
+                thumbnail
+            }
+        }
+        pageInfo {
+            endCursor
+            hasNextPage
+        }
+        totalCount
+    }
+}

@@ -14,3 +14,16 @@ fun SearchItemDomain.TrackSearch.toTrackDomain(): TrackDomain {
         releaseDate = "",
     )
 }
+
+fun SearchItemDomain.YoutubeTrackSearch.toTrackDomain(): TrackDomain {
+    return TrackDomain(
+        id = id,
+        title = title,
+        duration = duration,
+        albumCoverUrl = thumbnail,
+        artistName = channel,
+        streamCount = viewCount.toInt(),
+        explicit = false,
+        releaseDate = ""
+    )
+}

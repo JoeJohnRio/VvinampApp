@@ -1,7 +1,14 @@
 package com.example.presentation.ui.search
 
+enum class SearchType(val label: String) {
+    NORMAL("Normal"),
+    YOUTUBE_API("YouTube API"),
+    YOUTUBE_DL_P("YT-DLP")
+}
+
 data class SearchUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val searchText: String = "",
+    val searchType: SearchType = SearchType.NORMAL
 )

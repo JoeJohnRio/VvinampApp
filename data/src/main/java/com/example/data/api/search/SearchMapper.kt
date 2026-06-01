@@ -2,6 +2,8 @@ package com.example.data.api.search
 
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.graphql.SearchQuery
+import com.example.graphql.SearchYoutubeFromApiQuery
+import com.example.graphql.SearchYoutubeFromYtDlpQuery
 
 fun SearchQuery.Node.toDomain(): SearchItemDomain? {
     return when {
@@ -61,4 +63,30 @@ fun SearchQuery.Node.toDomain(): SearchItemDomain? {
 
         else -> null
     }
+}
+
+fun SearchYoutubeFromApiQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSearch {
+    return SearchItemDomain.YoutubeTrackSearch(
+        id = id,
+        title = title,
+        duration = duration ?: 0,
+        durationString = durationString ?: "",
+        thumbnail = thumbnail ?: "",
+        channel = channel ?: "",
+        viewCount = (viewCount ?: 0).toLong(),
+        fromApi = true
+    )
+}
+
+fun SearchYoutubeFromYtDlpQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSearch {
+    return SearchItemDomain.YoutubeTrackSearch(
+        id = id,
+        title = title,
+        duration = duration ?: 0,
+        durationString = durationString ?: "",
+        thumbnail = thumbnail ?: "",
+        channel = channel ?: "",
+        viewCount = (viewCount ?: 0).toLong(),
+        fromApi = false
+    )
 }

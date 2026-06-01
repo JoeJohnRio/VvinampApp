@@ -324,6 +324,7 @@ fun ButtonListWithState(
     modifier: Modifier = Modifier,
     listButton: List<String>,
     onClick: (String) -> Unit,
+    selectedButton: String? = null,
     buttonHorizontalPadding: Dp = 16.dp,
     buttonHeight: Dp = 45.dp,
     textStyle: TextStyle = TSBodyMediumWhite(),
@@ -335,12 +336,13 @@ fun ButtonListWithState(
     containerColorClicked: Color = containerColor.copy(alpha = 0.4f)
 ) {
     var clickedItem by remember { mutableStateOf<String?>(null) }
+    val currentSelected = selectedButton ?: clickedItem
 
     FlowRow(
         modifier = modifier,
     ) {
         listButton.forEach { data ->
-            val isClicked = clickedItem == data
+            val isClicked = currentSelected == data
             ButtonVariableOutlined(
                 modifier = Modifier
                     .padding(
@@ -354,7 +356,9 @@ fun ButtonListWithState(
                 containerColor = if (isClicked) containerColorClicked else containerColor,
                 outlineColor = if (isClicked) outlineColorClicked else outlineColor,
                 onClick = {
-                    clickedItem = data
+                    if (selectedButton == null) {
+                        clickedItem = data
+                    }
                     onClick(data)
                 }
             )

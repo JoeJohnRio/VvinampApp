@@ -1,5 +1,6 @@
 package com.example.data.api.playlist
 
+import com.apollographql.apollo.api.Upload
 import com.example.graphql.AddSongToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.EditPlaylistMutation
@@ -22,6 +23,7 @@ import com.example.graphql.type.UnsavePlaylistInput
 import com.example.graphql.type.UpdatePlaylistInput
 
 interface PlaylistApi {
+    suspend fun uploadPlaylistCover(playlistId: String, file: Upload): Result<String>
     suspend fun editPlaylist(input: EditPlaylistInput): Result<Boolean>
     suspend fun unsavePlaylist(input: UnsavePlaylistInput): Result<Boolean>
     suspend fun savePlaylist(input: SavePlaylistInput): Result<SavePlaylistMutation.SavePlaylist>

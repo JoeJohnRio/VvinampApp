@@ -13,34 +13,54 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val repository: SearchRepository
+    private val repository: SearchRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState: StateFlow<SearchUiState> = _uiState
 
-    // Example: Search triggered by user typing
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val searchResults: Flow<PagingData<SearchItemDomain>> = _uiState
-        .debounce(300)
-        .filter { it.searchText.isNotBlank() }
-        .flatMapLatest { uiState ->
-            repository.search(
-                query = uiState.searchText,
-                pageSize = 10
-            )
+        .map { it.searchText to it.searchType }
+        .distinctUntilChanged()
+        .debounce(500)
+        .flatMapLatest { (searchText, searchType) ->
+            if (searchText.isBlank()) return@flatMapLatest emptyFlow()
+
+            when (searchType) {
+                SearchType.NORMAL -> repository.search(
+                    query = searchText,
+                    pageSize = 10
+                )
+                SearchType.YOUTUBE_API -> repository.searchYoutubeFromApi(
+                    query = searchText,
+                    pageSize = 10
+                )
+                SearchType.YOUTUBE_DL_P -> repository.searchYoutubeFromYtDlp(
+                    query = searchText,
+                    pageSize = 10
+                )
+            }
         }
         .cachedIn(viewModelScope)
 
     fun onSearchInput(query: String) {
         _uiState.update {
             it.copy(searchText = query)
+        }
+    }
+
+    fun onSearchTypeChanged(type: SearchType) {
+        _uiState.update {
+            it.copy(searchType = type)
         }
     }
 }
