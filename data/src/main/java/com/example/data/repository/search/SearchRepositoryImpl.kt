@@ -28,9 +28,9 @@ class SearchRepositoryImpl @Inject constructor(private val api: SearchApiImpl) :
     }
 
     override fun searchYoutubeFromApi(query: String, pageSize: Int): Flow<PagingData<SearchItemDomain>> {
-        return Pager(PagingConfig(pageSize = pageSize)) {
+        return Pager(PagingConfig(pageSize = 5)) {
             GenericPagingSource { cursor ->
-                api.searchYoutubeFromApi(query, cursor, pageSize).map { searchData ->
+                api.searchYoutubeFromApi(query, cursor, 5).map { searchData ->
                     PageResponse(
                         items = searchData.edges.map { it.node.toDomain() },
                         endCursor = searchData.pageInfo.endCursor,
@@ -42,9 +42,9 @@ class SearchRepositoryImpl @Inject constructor(private val api: SearchApiImpl) :
     }
 
     override fun searchYoutubeFromYtDlp(query: String, pageSize: Int): Flow<PagingData<SearchItemDomain>> {
-        return Pager(PagingConfig(pageSize = pageSize)) {
+        return Pager(PagingConfig(pageSize = 5)) {
             GenericPagingSource { cursor ->
-                api.searchYoutubeFromYtDlp(query, cursor, pageSize).map { searchData ->
+                api.searchYoutubeFromYtDlp(query, cursor, 5).map { searchData ->
                     PageResponse(
                         items = searchData.edges.map { it.node.toDomain() },
                         endCursor = searchData.pageInfo.endCursor,

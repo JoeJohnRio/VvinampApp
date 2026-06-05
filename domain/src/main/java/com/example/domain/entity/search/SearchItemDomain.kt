@@ -61,6 +61,8 @@ sealed class SearchItemDomain {
         val thumbnail: String,
         val channel: String,
         val viewCount: Long,
+        val channelId: String,
+        val uploaderId: String,
         val fromApi: Boolean
     ) : SearchItemDomain()
 }

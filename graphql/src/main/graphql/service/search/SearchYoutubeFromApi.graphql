@@ -11,6 +11,8 @@ query SearchYoutubeFromApi($searchValue: String!, $after: String, $first: Int) {
                 durationString
                 viewCount
                 channel
+                channelId
+                uploaderId
                 thumbnail
             }
         }

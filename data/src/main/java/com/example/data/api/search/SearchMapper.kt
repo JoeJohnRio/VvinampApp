@@ -65,7 +65,7 @@ fun SearchQuery.Node.toDomain(): SearchItemDomain? {
     }
 }
 
-fun SearchYoutubeFromApiQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSearch {
+fun SearchYoutubeFromApiQuery.Node.toDomain(): SearchItemDomain {
     return SearchItemDomain.YoutubeTrackSearch(
         id = id,
         title = title,
@@ -73,12 +73,14 @@ fun SearchYoutubeFromApiQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSear
         durationString = durationString ?: "",
         thumbnail = thumbnail ?: "",
         channel = channel ?: "",
+        channelId = channelId.orEmpty(),
+        uploaderId = uploaderId.orEmpty(),
         viewCount = (viewCount ?: 0).toLong(),
         fromApi = true
     )
 }
 
-fun SearchYoutubeFromYtDlpQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSearch {
+fun SearchYoutubeFromYtDlpQuery.Node.toDomain(): SearchItemDomain {
     return SearchItemDomain.YoutubeTrackSearch(
         id = id,
         title = title,
@@ -87,6 +89,8 @@ fun SearchYoutubeFromYtDlpQuery.Node.toDomain(): SearchItemDomain.YoutubeTrackSe
         thumbnail = thumbnail ?: "",
         channel = channel ?: "",
         viewCount = (viewCount ?: 0).toLong(),
+        channelId = channelId.orEmpty(),
+        uploaderId = uploaderId.orEmpty(),
         fromApi = false
     )
 }
