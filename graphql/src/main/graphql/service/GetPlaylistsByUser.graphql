@@ -11,6 +11,7 @@ query GetPlaylistsByUser($userId: ID!, $after: String) {
                 id
                 title
                 albumCovers
+                coverImage
                 savedCount
                 isSavedByMe
                 creator {

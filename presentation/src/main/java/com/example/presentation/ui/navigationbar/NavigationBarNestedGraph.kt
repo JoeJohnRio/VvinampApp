@@ -106,13 +106,6 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
         )
     }
 
-    entry<BottomNavDestination.Premium> {
-        Text(
-            text = "Premium",
-            fontSize = 100.sp
-        )
-    }
-
     entry<BottomNavDestination.Create> {
         Text(
             text = "Create",

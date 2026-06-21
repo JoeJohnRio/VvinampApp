@@ -8,4 +8,5 @@ sealed class HomeEvent {
     data class NavigateToPlaylistScreen(val history: ListeningHistoryDomain): HomeEvent()
     data class NavigateToAlbumScreen(val history: ListeningHistoryDomain): HomeEvent()
     data object NavigateToSettingsScreen : HomeEvent()
+    data object NavigateToSearchResultScreen : HomeEvent()
 }

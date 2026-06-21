@@ -3,6 +3,7 @@ package com.example.domain.entity.playlist
 data class PlaylistMinimal(
     val id: String,
     val title: String,
+    val coverImage: String,
     val albumCovers: List<String>,
     val isSavedByMe: Boolean,
     val savedCount: Int,
@@ -15,7 +16,8 @@ val playlistMinimalDummy = PlaylistMinimal(
     albumCovers = listOf("https://picsum.photos/seed/coding/400"),
     isSavedByMe = true,
     savedCount = 1240,
-    username = "vvinamp_user"
+    username = "vvinamp_user",
+    coverImage = ""
 )
 
 val playlistMinimalListDummy = listOf(
@@ -26,7 +28,8 @@ val playlistMinimalListDummy = listOf(
         albumCovers = listOf("https://picsum.photos/seed/focus/400"),
         isSavedByMe = false,
         savedCount = 856,
-        username = "alex_dev"
+        username = "alex_dev",
+        coverImage = ""
     ),
     PlaylistMinimal(
         id = "pl-003",
@@ -34,7 +37,8 @@ val playlistMinimalListDummy = listOf(
         albumCovers = listOf(), // Testing placeholder/fallback UI
         isSavedByMe = false,
         savedCount = 12,
-        username = "johndoe"
+        username = "johndoe",
+        coverImage = ""
     ),
     PlaylistMinimal(
         id = "pl-004",
@@ -42,7 +46,8 @@ val playlistMinimalListDummy = listOf(
         albumCovers = listOf("https://picsum.photos/seed/gym/400"),
         isSavedByMe = true,
         savedCount = 3200,
-        username = "powerlifter_99"
+        username = "powerlifter_99",
+        coverImage = ""
     ),
     PlaylistMinimal(
         id = "pl-005",
@@ -50,6 +55,7 @@ val playlistMinimalListDummy = listOf(
         albumCovers = listOf("https://picsum.photos/seed/long/400"),
         isSavedByMe = false,
         savedCount = 150,
-        username = "curator_pro"
+        username = "curator_pro",
+        coverImage = ""
     )
 )

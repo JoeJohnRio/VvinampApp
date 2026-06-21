@@ -61,9 +61,15 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            is HomeUiEvent.OnSettingsClicked -> {
+            HomeUiEvent.OnSettingsClicked -> {
                 viewModelScope.launch {
                     _events.emit(HomeEvent.NavigateToSettingsScreen)
+                }
+            }
+
+            HomeUiEvent.OnSearchClicked -> {
+                viewModelScope.launch {
+                    _events.emit(HomeEvent.NavigateToSearchResultScreen)
                 }
             }
         }

@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,19 +27,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.domain.entity.playbackinfo.PlayerState
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.library.CreatePlaylistBottomSheet
 import com.example.presentation.ui.home.library.LibraryUiEvent
+import com.example.presentation.ui.main.playback.PlaybackEvent
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
-import com.example.presentation.ui.main.player.PlayerState
+import com.example.presentation.ui.main.player.BottomSheetState
 import com.example.presentation.ui.main.player.PlayerSheet
+import com.example.presentation.ui.navigationbar.util.ScrimAlphaBoxAnchored
 import com.example.presentation.util.ExtractDominantColorEffect
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenContainer(
     playbackViewModel: PlaybackViewModel,
@@ -51,29 +57,17 @@ fun MainScreenContainer(
     val navBars = WindowInsets.navigationBars
     val bottomPadding = navBars.asPaddingValues().calculateBottomPadding()
     val scope = rememberCoroutineScope()
-
-    var isCreatePlaylistOptionSheetVisible by remember { mutableStateOf(false) }
+    val trackOptionSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     val playerState = remember {
-        AnchoredDraggableState(initialValue = PlayerState.COLLAPSED)
+        AnchoredDraggableState(initialValue = BottomSheetState.COLLAPSED)
     }
 
-    // Convert the padding to DP to check the height
     val isButtonNav = with(density) {
         bottomPadding > 24.dp // Usually gesture bars are ~16dp-20dp, buttons are ~48dp+
     }
-
-// 1. Calculate the current offset, handling the initial NaN state before anchors are ready
-    val offset = if (playerState.offset.isNaN()) 0f else playerState.offset
-    val collapsedAnchor = playerState.anchors.positionOf(PlayerState.COLLAPSED).let {
-        if (it.isNaN() || it == 0f) 1f else it
-    }
-
-// 2. Calculate a progress fraction from 0f (fully collapsed) to 1f (fully expanded)
-    val expansionProgress = (1f - (offset / collapsedAnchor)).coerceIn(0f, 1f)
-
-// 3. Multiply progress by your maximum desired alpha (0.5f)
-    val scrimAlpha = expansionProgress * 0.5f
 
     ExtractDominantColorEffect(
         imageUrl = playbackUiState.currentTrack?.albumCoverUrl,
@@ -104,7 +98,7 @@ fun MainScreenContainer(
                     isPlaying = playbackUiState.isPlaying,
                     onClickTrack = {
                         scope.launch {
-                            playerState.animateTo(PlayerState.EXPANDED)
+                            playerState.animateTo(BottomSheetState.EXPANDED)
                         }
                     }
                 )
@@ -116,9 +110,8 @@ fun MainScreenContainer(
                 onItemClick = { bottomItem ->
                     when (bottomItem.page) {
                         BottomNavDestination.Home -> bottomNavRouter.navigateToHome()
-                        BottomNavDestination.Create -> isCreatePlaylistOptionSheetVisible = true
+                        BottomNavDestination.Create -> playbackViewModel.onEvent(PlaybackUiEvent.ToggleCreatePlaylistOptionSheet(true))
                         BottomNavDestination.Library -> bottomNavRouter.navigateToLibrary()
-                        BottomNavDestination.Premium -> bottomNavRouter.navigateToPremium()
                         BottomNavDestination.Search -> bottomNavRouter.navigateToSearch()
                         else -> {
 
@@ -129,12 +122,12 @@ fun MainScreenContainer(
         }
     }
 
-    if (isCreatePlaylistOptionSheetVisible) {
+    if (playbackUiState.isCreatePlaylistOptionSheet) {
         CreatePlaylistBottomSheet(
             onEvent = { event ->
                 when (event) {
                     LibraryUiEvent.onCreateNewPlaylistClicked -> {
-                        isCreatePlaylistOptionSheetVisible = false
+                        PlaybackUiEvent.ToggleCreatePlaylistOptionSheet(false)
                         bottomNavRouter.navigateToCreatePlaylist()
                     }
 
@@ -143,17 +136,11 @@ fun MainScreenContainer(
                     }
                 }
             },
-            onDismiss = { isCreatePlaylistOptionSheetVisible = false }
+            onDismiss = { playbackUiState.isCreatePlaylistOptionSheet }
         )
     }
 
-    if (scrimAlpha > 0f) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black.copy(alpha = scrimAlpha))
-        )
-    }
+    ScrimAlphaBoxAnchored(playerState)
 
     PlayerSheet(
         playbackUiState = playbackUiState,
@@ -162,5 +149,15 @@ fun MainScreenContainer(
         onEvent = { event ->
             playbackViewModel.onEvent(event)
         }
+    )
+
+//    ScrimAlphaBoxAnchored(trackOptionState)
+
+    TrackOptionBottomSheet(
+        onEvent = {
+            playbackViewModel.onEvent(it)
+        },
+        sheetState = trackOptionSheetState,
+        uiState = playbackUiState
     )
 }

@@ -47,6 +47,7 @@ class LibraryViewModel @Inject constructor(
                 showCreatePlaylistOptionSheet()
             }
             LibraryUiEvent.onSearchClicked -> {
+                navigateToSearchResultScreen()
             }
             LibraryUiEvent.onLibraryViewModesClicked -> {
                 toggleLibraryViewMode()
@@ -86,6 +87,13 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             hideCreatePlaylistSheet()
             _events.emit(LibraryEvent.NavigateToCreatePlaylist)
+        }
+    }
+
+    fun navigateToSearchResultScreen() {
+        viewModelScope.launch {
+            hideCreatePlaylistSheet()
+            _events.emit(LibraryEvent.NavigateToSearchResult)
         }
     }
 

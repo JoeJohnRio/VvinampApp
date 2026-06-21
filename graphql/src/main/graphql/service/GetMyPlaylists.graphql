@@ -12,6 +12,7 @@ query GetMyPlaylists($after: String) {
             node {
                 id
                 title
+                coverImage
                 albumCovers
                 savedCount
                 isSavedByMe

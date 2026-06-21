@@ -26,4 +26,6 @@ sealed class PlaybackUiEvent {
     data object ClearQueue : PlaybackUiEvent()
     data class AddToQueue(val trackIds: List<String>) : PlaybackUiEvent()
     data class OnYoutubeTrackClicked(val track: TrackDomain) : PlaybackUiEvent()
+    data class ToggleCreatePlaylistOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
+    data class ToggleTrackOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
 }

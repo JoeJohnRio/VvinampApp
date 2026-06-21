@@ -53,12 +53,16 @@ fun LibraryScreen(
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
             when (event) {
+                is LibraryEvent.NavigateToPlaylistDetail -> {
+                    bottomNavRouter.navigateToPlaylistDetail(event.playlistId)
+                }
+
                 LibraryEvent.NavigateToCreatePlaylist -> {
                     bottomNavRouter.navigateToCreatePlaylist()
                 }
 
-                is LibraryEvent.NavigateToPlaylistDetail -> {
-                    bottomNavRouter.navigateToPlaylistDetail(event.playlistId)
+                LibraryEvent.NavigateToSearchResult -> {
+                    bottomNavRouter.navigateToSearchResults()
                 }
             }
         }

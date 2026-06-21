@@ -22,16 +22,21 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
+import com.example.domain.entity.playlist.dummyPlaylists
 import com.example.domain.entity.song.TrackDomain
+import com.example.domain.entity.song.dummyRecommendedTracks
+import com.example.domain.entity.song.trackDummy
 import com.example.presentation.R
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.artist.AnimatedTopSlidingNameNavigation
@@ -42,6 +47,8 @@ import com.example.presentation.ui.main.playback.PlaybackViewModel
 import com.example.presentation.util.ExtractDominantColorEffect
 import com.example.presentation.util.orErrorNoText
 import com.example.presentation.util.orZero
+import com.example.presentation.util.preview.PreviewTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun PlaylistScreen(
@@ -331,6 +338,68 @@ fun PlaylistContent(
             onBackClick = {
                 onBackClicked()
             }
+        )
+    }
+}
+
+@Preview(name = "With Recommended Tracks Detailed", showBackground = true)
+@Composable
+fun PlaylistContentWithRecommendationsDetailedPreview() {
+    val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))
+    val lazyPaging = pagingDataFlow.collectAsLazyPagingItems()
+
+    PreviewTheme {
+        PlaylistContent(
+            uiState = PlaylistUiState(
+                recommendedTracks = dummyRecommendedTracks,
+                isPlaylistCreator = true,
+                playlist = dummyPlaylists.first()
+            ),
+            playbackUiState = PlaybackUiState(),
+            playlistTracks = lazyPaging,
+            updateDominantColor = { _ -> },
+            onBackClicked = {},
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "With Recommended Tracks", showBackground = true)
+@Composable
+fun PlaylistContentWithRecommendationsPreview() {
+    val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))
+    val lazyPaging = pagingDataFlow.collectAsLazyPagingItems()
+
+    PreviewTheme {
+        PlaylistContent(
+            uiState = PlaylistUiState(
+                recommendedTracks = dummyRecommendedTracks,
+            ),
+            playbackUiState = PlaybackUiState(),
+            playlistTracks = lazyPaging,
+            updateDominantColor = { _ -> },
+            onBackClicked = {},
+            onEvent = {}
+        )
+    }
+}
+
+@Preview(name = "Without Recommended Tracks", showBackground = true)
+@Composable
+fun PlaylistContentWithoutRecommendationsPreview() {
+    val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))
+    val lazyPaging = pagingDataFlow.collectAsLazyPagingItems()
+
+    PreviewTheme {
+        PlaylistContent(
+            uiState = PlaylistUiState(
+                recommendedTracks = emptyList() // List kosong
+            ),
+            playbackUiState = PlaybackUiState(),
+            playlistTracks = lazyPaging,
+            updateDominantColor = { _ -> },
+            onBackClicked = {},
+            onEvent = {}
         )
     }
 }

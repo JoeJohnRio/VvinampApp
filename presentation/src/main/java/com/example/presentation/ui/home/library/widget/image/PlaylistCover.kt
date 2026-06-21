@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun PlaylistCover(
+    coverImage: String,
     covers: List<String>,
     modifier: Modifier = Modifier
 ) {
@@ -20,7 +21,9 @@ fun PlaylistCover(
         modifier = modifier
             .clip(RoundedCornerShape(4.dp))
     ) {
-        if (covers.size >= 4) {
+        if (coverImage.isNotEmpty()) {
+            CoverImage(model = coverImage, modifier = Modifier.fillMaxSize())
+        } else if (covers.size >= 4) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(modifier = Modifier.weight(1f)) {
                     CoverImage(model = covers[0], modifier = Modifier.weight(1f).fillMaxHeight())

@@ -22,7 +22,6 @@ fun MainScreen(
             BottomNavDestination.Search,
             BottomNavDestination.Library,
             BottomNavDestination.Create,
-            BottomNavDestination.Premium
         )
     val navigationState = rememberNavigationState(
         startRoute = BottomNavDestination.Home,

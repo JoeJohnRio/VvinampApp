@@ -38,16 +38,6 @@ class BottomNavRouter(
     fun navigateToPlaylistEdit(playlistId: String) {
         navigator.navigate(BottomNavDestination.PlaylistEdit(playlistId))
     }
-
-
-    fun navigateToPremium() {
-        navigator.navigate(BottomNavDestination.Premium)
-    }
-
-    fun navigateToCreate() {
-        navigator.navigate(BottomNavDestination.Create)
-    }
-
     fun navigateToArtistPage(
         artistId: String
     ) {

@@ -23,7 +23,8 @@ fun GetMyPlaylistsQuery.Node.toPlaylistMinimal(): PlaylistMinimal {
         albumCovers = this.albumCovers.orEmpty(),
         isSavedByMe = this.isSavedByMe,
         savedCount = this.savedCount,
-        username = this.creator.username
+        username = this.creator.username,
+        coverImage = this.coverImage.orEmpty()
     )
 }
 
@@ -123,7 +124,8 @@ fun GetMyPlaylistFeedQuery.Node.toPlaylistMinimal(): PlaylistMinimal {
         albumCovers = this.albumCovers.orEmpty(),
         isSavedByMe = this.isSavedByMe,
         savedCount = this.savedCount,
-        username = this.creator.username
+        username = this.creator.username,
+        coverImage = this.coverImage.orEmpty()
     )
 }
 
@@ -134,7 +136,8 @@ fun GetPlaylistsByUserQuery.Node.toPlaylistMinimal(): PlaylistMinimal {
         albumCovers = this.albumCovers.orEmpty(),
         isSavedByMe = this.isSavedByMe,
         savedCount = this.savedCount,
-        username = this.creator.username
+        username = this.creator.username,
+        coverImage = this.coverImage.orEmpty()
     )
 }
 

@@ -2,6 +2,7 @@ package com.example.presentation.ui.main.playback
 
 import android.app.Application
 import android.content.ComponentName
+import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.AndroidViewModel
@@ -37,7 +38,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
     private val _uiState = MutableStateFlow(PlaybackUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _events = MutableSharedFlow<PlaybackUiEvent>()
+    private val _events = MutableSharedFlow<PlaybackEvent>()
     val events = _events.asSharedFlow()
 
     private val _mediaController = MutableStateFlow<MediaController?>(null)
@@ -142,6 +143,23 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
             is PlaybackUiEvent.OnYoutubeTrackClicked -> {
                 playYoutube(event.track)
+            }
+
+            is PlaybackUiEvent.ToggleCreatePlaylistOptionSheet -> {
+                if (event.isShow) {
+                    showCreatePlaylistOptionSheet()
+                } else {
+                    hideCreatePlaylistOptionSheet()
+                }
+            }
+
+            is PlaybackUiEvent.ToggleTrackOptionSheet -> {
+                Log.d("joel123", "toggle ${event.isShow}")
+                if (event.isShow) {
+                    showTrackOptionSheet()
+                } else {
+                    hideTrackOptionSheet()
+                }
             }
         }
     }
@@ -366,6 +384,38 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                     error = it.message ?: "Failed to toggle playback"
                 )
             }
+        }
+    }
+
+    fun showCreatePlaylistOptionSheet() {
+        _uiState.update {
+            it.copy(
+                isCreatePlaylistOptionSheet = true
+            )
+        }
+    }
+
+    fun hideCreatePlaylistOptionSheet() {
+        _uiState.update {
+            it.copy(
+                isCreatePlaylistOptionSheet = false
+            )
+        }
+    }
+
+    fun showTrackOptionSheet() {
+        _uiState.update {
+            it.copy(
+                isTrackOptionSheet = true
+            )
+        }
+    }
+
+    fun hideTrackOptionSheet() {
+        _uiState.update {
+            it.copy(
+                isTrackOptionSheet = false
+            )
         }
     }
 

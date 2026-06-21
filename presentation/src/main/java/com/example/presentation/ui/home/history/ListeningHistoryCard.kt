@@ -49,6 +49,7 @@ fun ListeningHistoryCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             PlaylistCover(
+                coverImage = "",
                 covers = history.contentImage,
                 modifier = Modifier
                     .size(PaddingSizeUtil.ListeningHistoryPhotoSize)

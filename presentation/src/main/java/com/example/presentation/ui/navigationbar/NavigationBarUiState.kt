@@ -22,7 +22,6 @@ data class NavigationBarUiState(
         BottomNavigationBarItem.Home,
         BottomNavigationBarItem.Search,
         BottomNavigationBarItem.Library,
-        BottomNavigationBarItem.Premium,
         BottomNavigationBarItem.Create
     )
 )
@@ -35,6 +34,5 @@ sealed class BottomNavigationBarItem(
     data object Home : BottomNavigationBarItem("Home", painter = @Composable{ painterResource(R.drawable.ic_home) }, BottomNavDestination.Home)
     data object Search : BottomNavigationBarItem("Search", painter = @Composable{ painterResource(R.drawable.ic_search) }, BottomNavDestination.Search)
     data object Library : BottomNavigationBarItem("Your Library", painter = @Composable{ painterResource(R.drawable.ic_library) }, BottomNavDestination.Library)
-    data object Premium : BottomNavigationBarItem("Premium", painter = @Composable{ painterResource(R.drawable.ic_vvinamp_white) }, BottomNavDestination.Premium)
     data object Create : BottomNavigationBarItem("Create", painter = @Composable{ painterResource(R.drawable.ic_create_plus) }, BottomNavDestination.Create)
 }

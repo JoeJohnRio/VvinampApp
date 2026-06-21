@@ -38,6 +38,7 @@ fun LibraryItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         PlaylistCover(
+            coverImage = playlistMinimal.coverImage,
             covers = playlistMinimal.albumCovers,
             modifier = Modifier
                 .size(PaddingSizeUtil.LibraryItemSize)

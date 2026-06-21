@@ -47,21 +47,26 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.Player
+import androidx.media3.session.MediaController
 import coil3.compose.AsyncImage
 import com.example.presentation.R
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.util.lockOrientationConditionally
+import com.example.presentation.util.preview.PreviewTheme
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+import androidx.compose.runtime.collectAsState
+import com.example.domain.entity.song.trackDummy
 
-// 1. Define the states
-enum class PlayerState { EXPANDED, COLLAPSED }
+enum class BottomSheetState { EXPANDED, COLLAPSED }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -69,7 +74,7 @@ fun PlayerSheet(
     onEvent: (PlaybackUiEvent) -> Unit,
     playbackUiState: PlaybackUiState,
     player: Player?,
-    state: AnchoredDraggableState<PlayerState>,
+    state: AnchoredDraggableState<BottomSheetState>,
 ) {
     val scope = rememberCoroutineScope()
     val entranceOffset = remember { Animatable(0f) }
@@ -78,10 +83,10 @@ fun PlayerSheet(
     val scrollState = rememberScrollState()
     var wasAtTopWhenGestureStarted by remember { mutableStateOf(true) }
 
-    BackHandler(enabled = state.targetValue == PlayerState.EXPANDED) {
+    BackHandler(enabled = state.targetValue == BottomSheetState.EXPANDED) {
         // When the back button is pressed, animate the sheet to collapsed
         scope.launch {
-            state.animateTo(PlayerState.COLLAPSED)
+            state.animateTo(BottomSheetState.COLLAPSED)
         }
     }
 
@@ -128,7 +133,7 @@ fun PlayerSheet(
 
                 // Flinging UP
                 return if (toFling < 0 && currentOffset > 0f) {
-                    state.animateTo(PlayerState.EXPANDED)
+                    state.animateTo(BottomSheetState.EXPANDED)
                     Velocity(x = 0f, y = toFling)
                 } else {
                     Velocity.Zero
@@ -141,15 +146,15 @@ fun PlayerSheet(
 
                 // If we allowed dragging the sheet down, handle what happens when the user lets go
                 if (wasAtTopWhenGestureStarted && currentOffset > 0f) {
-                    val collapsedAnchor = state.anchors.positionOf(PlayerState.COLLAPSED)
+                    val collapsedAnchor = state.anchors.positionOf(BottomSheetState.COLLAPSED)
                     val halfWay = if (collapsedAnchor.isNaN()) Float.MAX_VALUE else collapsedAnchor / 2f
 
                     // If they flung it down hard (velocity > 500) OR dragged past 50% of the screen
                     if (toFling > 500f || currentOffset > halfWay) {
-                        state.animateTo(PlayerState.COLLAPSED)
+                        state.animateTo(BottomSheetState.COLLAPSED)
                     } else {
                         // Otherwise, snap it back to fully expanded
-                        state.animateTo(PlayerState.EXPANDED)
+                        state.animateTo(BottomSheetState.EXPANDED)
                     }
                     return Velocity(x = 0f, y = toFling)
                 }
@@ -163,12 +168,12 @@ fun PlayerSheet(
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .lockOrientationConditionally(isLocked = state.targetValue == PlayerState.EXPANDED)
+            .lockOrientationConditionally(isLocked = state.targetValue == BottomSheetState.EXPANDED)
             .onSizeChanged { size ->
                 state.updateAnchors(
                     DraggableAnchors {
-                        PlayerState.EXPANDED at 0f
-                        PlayerState.COLLAPSED at size.height.toFloat()
+                        BottomSheetState.EXPANDED at 0f
+                        BottomSheetState.COLLAPSED at size.height.toFloat()
                     }
                 )
                 if (!entranceAnimated.value) {
@@ -191,13 +196,12 @@ fun PlayerSheet(
                     y = (state.requireOffset() + entranceOffset.value).roundToInt()
                 )
             }
-            .nestedScroll(nestedScrollConnection) // <-- moved here, ABOVE the clip
+            .nestedScroll(nestedScrollConnection)
             .anchoredDraggable(
                 state = state,
                 orientation = Orientation.Vertical
             )
             .clip(RoundedCornerShape(32.dp))
-        // anchoredDraggable REMOVED
     ) {
         PlayerSheetContent(
             uiState = playbackUiState,
@@ -206,7 +210,7 @@ fun PlayerSheet(
                 .verticalScroll(scrollState), // nestedScroll removed from here
             player = player,
             onCollapse = {
-                scope.launch { state.animateTo(PlayerState.COLLAPSED) }
+                scope.launch { state.animateTo(BottomSheetState.COLLAPSED) }
             },
             onEvent = onEvent,
             maxHeight = maxHeight
@@ -238,9 +242,9 @@ fun PlayerSheetContent(
     ) {
 
         PlayerTopBar(
+            onEvent = onEvent,
             uiState = uiState,
             onCollapse = onCollapse,
-            onMoreOptionClicked = {}
         )
 
         Spacer(Modifier.weight(1f))
@@ -330,5 +334,28 @@ fun ShareTrackComponent() {
                 )
             }
         }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PlayerSheetPreview() {
+    val _mediaController = MutableStateFlow<MediaController?>(null)
+    val playerState = remember {
+        AnchoredDraggableState(initialValue = BottomSheetState.EXPANDED)
+    }
+
+    PreviewTheme {
+        PlayerSheet(
+            onEvent = {
+
+            },
+            playbackUiState = PlaybackUiState(
+                currentTrack = trackDummy.first()
+            ),
+            player = _mediaController.collectAsState().value,
+            state = playerState
+        )
     }
 }

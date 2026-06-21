@@ -136,6 +136,7 @@ fun EditPlaylistDetailBottomSheet(
                         )
                     } else {
                         PlaylistCover(
+                            coverImage = uiState.playlist?.coverImage.orEmpty(),
                             covers = uiState.playlist?.albumCovers ?: emptyList(),
                             modifier = Modifier.size(PaddingSizeUtil.PlaylistEditPhotoSize)
                         )

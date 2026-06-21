@@ -60,6 +60,10 @@ fun HomeScreen(
                     bottomNavRouter.navigateToSettings()
                 }
 
+                is HomeEvent.NavigateToSearchResultScreen -> {
+                    bottomNavRouter.navigateToSearchResults()
+                }
+
                 is HomeEvent.NavigateToAlbumScreen -> {
                     bottomNavRouter.navigateToAlbum(event.history.contentId)
                 }
@@ -82,9 +86,6 @@ fun HomeScreen(
                 onEvent = {
                     viewModel.onEvent(it)
                 },
-                onSettingsClicked = {
-                    viewModel.onEvent(HomeUiEvent.OnSettingsClicked)
-                }
             )
         }
     )
@@ -93,16 +94,17 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     uiState: HomeUiState = HomeUiState(),
-    onSettingsClicked: () -> Unit = {},
     onEvent: (HomeUiEvent) -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             TopBar(
                 "",
-                onSearchClick = {},
+                onSearchClick = {
+                    onEvent(HomeUiEvent.OnSearchClicked)
+                },
                 onSettingsClick = {
-                    onSettingsClicked()
+                    onEvent(HomeUiEvent.OnSettingsClicked)
                 }
             )
         }

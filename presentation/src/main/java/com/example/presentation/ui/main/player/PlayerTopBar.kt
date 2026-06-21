@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.presentation.R
+import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackUiState
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
@@ -22,9 +23,9 @@ import com.example.presentation.util.orErrorNoText
 
 @Composable
 fun PlayerTopBar(
+    onEvent: (PlaybackUiEvent) -> Unit,
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
-    onMoreOptionClicked: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -65,7 +66,9 @@ fun PlayerTopBar(
         IconButton(
             modifier = Modifier
                 .size(24.dp),
-            onClick = onMoreOptionClicked
+            onClick = {
+                onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(true))
+            }
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
