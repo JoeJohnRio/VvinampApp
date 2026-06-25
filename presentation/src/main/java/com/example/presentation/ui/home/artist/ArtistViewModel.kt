@@ -47,6 +47,7 @@ class ArtistViewModel @Inject constructor(
     fun updateDominantColor(color: Color) {
         _uiState.update { it.copy(dominantColor = color) }
     }
+
     fun getArtistScreenData(artistId: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
