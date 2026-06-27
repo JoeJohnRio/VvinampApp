@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.presentation.R
 import com.example.presentation.ui.theme.TSDisplayMediumWhite
 import com.example.presentation.ui.theme.TSLabelMediumWhite
@@ -30,14 +31,19 @@ import com.example.presentation.util.preview.PreviewTheme
 
 @Composable
 fun IconWithTextOnly(
+    modifier: Modifier = Modifier,
     painter: Painter,
     text: String,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
+            .clickable(onClick = onClick)
             .fillMaxWidth()
-            .clickable(onClick = onClick),
+            .padding(
+                horizontal = 16.dp, vertical = 8.dp
+            )
+            .then(modifier),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -54,6 +60,7 @@ fun IconWithTextOnly(
             modifier = Modifier.weight(1f),
             text = text,
             style = TSDisplayMediumWhite().copy(
+                fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.inversePrimary
             )
         )

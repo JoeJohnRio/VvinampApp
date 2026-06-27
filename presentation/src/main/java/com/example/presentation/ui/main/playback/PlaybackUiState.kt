@@ -17,5 +17,7 @@ data class PlaybackUiState(
     val queue: PlayerQueueDomain? = null,
     val dominantColor: Color = AppColours.BackgroundBlack,
     val isCreatePlaylistOptionSheet: Boolean = false,
-    val isTrackOptionSheet: Boolean = false
+    val isTrackOptionSheet: Boolean = false,
+    val isSleepTimerSheetVisible: Boolean = false,
+    val activeSleepTimer: SleepTimerOption? = null
 )

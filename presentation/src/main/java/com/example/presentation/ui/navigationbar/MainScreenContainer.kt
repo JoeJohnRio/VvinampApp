@@ -1,6 +1,5 @@
 package com.example.presentation.ui.navigationbar
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Box
@@ -15,29 +14,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.domain.entity.playbackinfo.PlayerState
 import com.example.presentation.navigation.NavigationState
 import com.example.presentation.navigation.graph.BottomNavDestination
 import com.example.presentation.navigation.router.BottomNavRouter
 import com.example.presentation.ui.home.library.CreatePlaylistBottomSheet
 import com.example.presentation.ui.home.library.LibraryUiEvent
-import com.example.presentation.ui.main.playback.PlaybackEvent
 import com.example.presentation.ui.main.playback.PlaybackUiEvent
 import com.example.presentation.ui.main.playback.PlaybackViewModel
+import com.example.presentation.ui.main.playback.SleepTimerBottomSheet
 import com.example.presentation.ui.main.player.BottomSheetState
 import com.example.presentation.ui.main.player.PlayerSheet
+import com.example.presentation.ui.navigationbar.trackoption.TrackOptionBottomSheet
+import com.example.presentation.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.example.presentation.ui.navigationbar.util.ScrimAlphaBoxAnchored
 import com.example.presentation.util.ExtractDominantColorEffect
 import kotlinx.coroutines.launch
@@ -127,7 +123,7 @@ fun MainScreenContainer(
             onEvent = { event ->
                 when (event) {
                     LibraryUiEvent.onCreateNewPlaylistClicked -> {
-                        PlaybackUiEvent.ToggleCreatePlaylistOptionSheet(false)
+                        playbackViewModel.onEvent(PlaybackUiEvent.ToggleCreatePlaylistOptionSheet(false))
                         bottomNavRouter.navigateToCreatePlaylist()
                     }
 
@@ -136,7 +132,17 @@ fun MainScreenContainer(
                     }
                 }
             },
-            onDismiss = { playbackUiState.isCreatePlaylistOptionSheet }
+            onDismiss = { playbackViewModel.onEvent(PlaybackUiEvent.ToggleCreatePlaylistOptionSheet(false)) }
+        )
+    }
+
+    if (playbackUiState.isSleepTimerSheetVisible) {
+        SleepTimerBottomSheet(
+            currentOption = playbackUiState.activeSleepTimer,
+            onOptionSelected = { option ->
+                playbackViewModel.onEventTrackOptions(TrackOptionsUiEvent.OnSleepTimerSelected(option))
+            },
+            onDismiss = { playbackViewModel.hideSleepTimerSheet() }
         )
     }
 
@@ -156,6 +162,9 @@ fun MainScreenContainer(
     TrackOptionBottomSheet(
         onEvent = {
             playbackViewModel.onEvent(it)
+        },
+        onTrackOptionsEvent = {
+            playbackViewModel.onEventTrackOptions(it)
         },
         sheetState = trackOptionSheetState,
         uiState = playbackUiState

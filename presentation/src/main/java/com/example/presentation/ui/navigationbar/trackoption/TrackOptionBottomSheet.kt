@@ -1,4 +1,4 @@
-package com.example.presentation.ui.navigationbar
+package com.example.presentation.ui.navigationbar.trackoption
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +42,7 @@ import com.example.presentation.util.preview.PreviewTheme
 @Composable
 fun TrackOptionBottomSheet(
     onEvent: (PlaybackUiEvent) -> Unit,
+    onTrackOptionsEvent: (TrackOptionsUiEvent) -> Unit,
     sheetState: SheetState,
     uiState: PlaybackUiState
 ) {
@@ -57,7 +57,7 @@ fun TrackOptionBottomSheet(
         ) {
             TrackOptionBottomSheetComponent(
                 uiState = uiState,
-                onEvent = onEvent
+                onEvent = onTrackOptionsEvent
             )
         }
     }
@@ -65,7 +65,7 @@ fun TrackOptionBottomSheet(
 
 @Composable
 fun TrackOptionBottomSheetComponent(
-    onEvent: (PlaybackUiEvent) -> Unit,
+    onEvent: (TrackOptionsUiEvent) -> Unit,
     uiState: PlaybackUiState
 ) {
     Column(
@@ -119,8 +119,6 @@ fun TrackOptionBottomSheetComponent(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.outline
         )
-
-        Spacer(Modifier.height(16.dp))
 
         TrackOptionsContent(
             onEvent = onEvent

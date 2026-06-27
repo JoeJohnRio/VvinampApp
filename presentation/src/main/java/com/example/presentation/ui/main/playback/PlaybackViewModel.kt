@@ -18,8 +18,11 @@ import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
+import com.example.presentation.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.google.common.util.concurrent.MoreExecutors
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -43,6 +46,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
 
     private val _mediaController = MutableStateFlow<MediaController?>(null)
     val mediaController = _mediaController.asStateFlow()
+
+    private var sleepTimerJob: Job? = null
 
     init {
         val sessionToken =
@@ -69,8 +74,31 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         // Show loading spinner
                     }
                 }
+
+                override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                    super.onMediaItemTransition(mediaItem, reason)
+                    if (uiState.value.activeSleepTimer == SleepTimerOption.END_OF_TRACK && reason == Player.MEDIA_ITEM_TRANSITION_REASON_AUTO) {
+                        pause()
+                        setSleepTimer(null)
+                    }
+                }
             })
         }, MoreExecutors.directExecutor())
+    }
+
+    fun onEventTrackOptions(event: TrackOptionsUiEvent) {
+        when (event) {
+            is TrackOptionsUiEvent.OnSleepTimerClick -> {
+                showSleepTimerSheet()
+            }
+            is TrackOptionsUiEvent.OnSleepTimerSelected -> {
+                setSleepTimer(event.option)
+                hideSleepTimerSheet()
+            }
+            else -> {
+
+            }
+        }
     }
 
     fun onEvent(event: PlaybackUiEvent) {
@@ -162,6 +190,27 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                 }
             }
         }
+    }
+
+    private fun setSleepTimer(option: SleepTimerOption?) {
+        sleepTimerJob?.cancel()
+        _uiState.update { it.copy(activeSleepTimer = option) }
+
+        if (option != null && option.durationMillis != null) {
+            sleepTimerJob = viewModelScope.launch {
+                delay(option.durationMillis)
+                pause()
+                _uiState.update { it.copy(activeSleepTimer = null) }
+            }
+        }
+    }
+
+    fun showSleepTimerSheet() {
+        _uiState.update { it.copy(isSleepTimerSheetVisible = true) }
+    }
+
+    fun hideSleepTimerSheet() {
+        _uiState.update { it.copy(isSleepTimerSheetVisible = false) }
     }
 
     private fun playYoutube(track: TrackDomain) {
