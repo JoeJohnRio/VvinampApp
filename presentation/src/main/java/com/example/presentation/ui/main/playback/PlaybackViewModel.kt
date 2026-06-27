@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -84,6 +85,17 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                 }
             })
         }, MoreExecutors.directExecutor())
+
+        // Load persisted track on startup
+        viewModelScope.launch {
+            Log.d("joel123", "ini jalan ")
+            playbackRepository.getCurrentTrackFlow().collect { savedTrack ->
+                Log.d("joel123", "ini jalan ${savedTrack?.albumCoverUrl}")
+                if (savedTrack != null && _uiState.value.currentTrack == null) {
+                    _uiState.update { it.copy(currentTrack = savedTrack) }
+                }
+            }
+        }
     }
 
     fun onEventTrackOptions(event: TrackOptionsUiEvent) {
@@ -182,12 +194,16 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
             }
 
             is PlaybackUiEvent.ToggleTrackOptionSheet -> {
-                Log.d("joel123", "toggle ${event.isShow}")
                 if (event.isShow) {
                     showTrackOptionSheet()
                 } else {
                     hideTrackOptionSheet()
                 }
+            }
+
+            is PlaybackUiEvent.OnSleepTimerSelected -> {
+                setSleepTimer(event.option)
+                hideSleepTimerSheet()
             }
         }
     }
@@ -225,6 +241,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         error = null
                     )
                 }
+                Log.d("joel123", "playyoutube")
+                playbackRepository.saveCurrentTrack(track)
                 start(BuildConfig.BASE_URL + playbackInfo.hlsUrl)
             }.onFailure { error ->
                 _uiState.update {
@@ -249,6 +267,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         error = null
                     )
                 }
+                Log.d("joel123", "skiptonext")
+                trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
                     start(BuildConfig.BASE_URL + it.hlsUrl)
                 }
@@ -270,6 +290,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         error = null
                     )
                 }
+                Log.d("joel123", "skiptoprevious")
+                trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
                     start(BuildConfig.BASE_URL + it.hlsUrl)
                 }
@@ -323,6 +345,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                 trackIds = trackIds,
                 offsetTrackId = offsetTrackId
             ).onSuccess { state ->
+                Log.d("joel123", "playContext")
                 val trackDomain = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update {
                     it.copy(
@@ -333,6 +356,7 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                         error = null
                     )
                 }
+                trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
                     start(BuildConfig.BASE_URL + it.hlsUrl)
                 }
@@ -426,6 +450,8 @@ class PlaybackViewModel @OptIn(UnstableApi::class)
                     isLoading = false,
                     error = null
                 )
+                Log.d("joel123", "trackClicked")
+                playbackRepository.saveCurrentTrack(track)
                 start(BuildConfig.BASE_URL + it.hlsUrl)
             }.onFailure {
                 _uiState.value = _uiState.value.copy(

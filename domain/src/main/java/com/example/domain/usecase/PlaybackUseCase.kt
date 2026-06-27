@@ -5,7 +5,9 @@ import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.playbackinfo.PlaybackStateDomain
 import com.example.domain.entity.playbackinfo.PlayerQueueDomain
+import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaybackRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class PlaybackUseCase @Inject constructor(
@@ -16,7 +18,9 @@ class PlaybackUseCase @Inject constructor(
     val skipToPrevious: SkipToPreviousUseCase,
     val clearQueue: ClearQueueUseCase,
     val playContext: PlayContextUseCase,
-    val playYoutube: PlayYoutubeUseCase
+    val playYoutube: PlayYoutubeUseCase,
+    val saveCurrentTrack: SaveCurrentTrackUseCase,
+    val getCurrentTrackFlow: GetCurrentTrackFlowUseCase
 )
 
 class PlaybackInfoUseCase @Inject constructor(
@@ -89,4 +93,18 @@ class PlayYoutubeUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(youtubeId: String): Result<PlaybackInfoDomain> =
         repository.playYoutube(youtubeId)
+}
+
+class SaveCurrentTrackUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    suspend operator fun invoke(track: TrackDomain) {
+        repository.saveCurrentTrack(track)
+    }
+}
+
+class GetCurrentTrackFlowUseCase @Inject constructor(
+    private val repository: PlaybackRepository
+) {
+    operator fun invoke(): Flow<TrackDomain?> = repository.getCurrentTrackFlow()
 }

@@ -4,17 +4,25 @@ import com.apollographql.apollo.api.Optional
 import com.example.data.api.playback.PlaybackApi
 import com.example.data.api.playback.toDomain
 import com.example.data.api.playback.toGraphQL
+import com.example.data.db.playback.RecentPlaybackDao
+import com.example.data.entities.toDomain
+import com.example.data.entities.toRecentEntity
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.playbackinfo.PlaybackStateDomain
 import com.example.domain.entity.playbackinfo.PlayerQueueDomain
+import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaybackRepository
 import com.example.graphql.type.PlaybackContextInput
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PlaybackRepositoryImpl @Inject constructor(private val playbackApi: PlaybackApi) :
-    PlaybackRepository {
+class PlaybackRepositoryImpl @Inject constructor(
+    private val playbackApi: PlaybackApi,
+    private val recentPlaybackDao: RecentPlaybackDao
+) : PlaybackRepository {
 
     override suspend fun playbackInfo(
         trackId: String,
@@ -66,5 +74,13 @@ class PlaybackRepositoryImpl @Inject constructor(private val playbackApi: Playba
 
     override suspend fun playYoutube(youtubeId: String): Result<PlaybackInfoDomain> {
         return playbackApi.playYoutube(youtubeId).map { it.toDomain() }
+    }
+
+    override fun getCurrentTrackFlow(): Flow<TrackDomain?> {
+        return recentPlaybackDao.getCurrentTrackFlow().map { it?.toDomain() }
+    }
+
+    override suspend fun saveCurrentTrack(track: TrackDomain) {
+        recentPlaybackDao.saveCurrentTrack(track.toRecentEntity())
     }
 }

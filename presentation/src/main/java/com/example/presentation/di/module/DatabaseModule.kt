@@ -3,6 +3,7 @@ package com.example.presentation.di.module
 import android.content.Context
 import androidx.room.Room
 import com.example.data.db.music.MusicDatabase
+import com.example.data.db.playback.RecentPlaybackDao
 import com.example.data.db.playlist.PlaylistRemoteKeyDao
 import com.example.data.db.playlist.PlaylistTrackDao
 import com.example.data.util.DiskExecutor
@@ -40,5 +41,10 @@ class DatabaseModule {
     @Provides
     fun providePlaylistRemoteKeyDao(database: MusicDatabase): PlaylistRemoteKeyDao {
         return database.playlistRemoteKeyDao()
+    }
+
+    @Provides
+    fun provideRecentPlaybackDao(database: MusicDatabase): RecentPlaybackDao {
+        return database.recentPlaybackDao()
     }
 }

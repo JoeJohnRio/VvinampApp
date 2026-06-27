@@ -4,6 +4,8 @@ import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.playbackinfo.PlaybackStateDomain
 import com.example.domain.entity.playbackinfo.PlayerQueueDomain
+import com.example.domain.entity.song.TrackDomain
+import kotlinx.coroutines.flow.Flow
 
 interface PlaybackRepository {
     suspend fun playbackInfo(
@@ -24,4 +26,8 @@ interface PlaybackRepository {
         offsetTrackId: String
     ): Result<PlaybackStateDomain>
     suspend fun playYoutube(youtubeId: String): Result<PlaybackInfoDomain>
+    
+    // New methods for persistence
+    fun getCurrentTrackFlow(): Flow<TrackDomain?>
+    suspend fun saveCurrentTrack(track: TrackDomain)
 }

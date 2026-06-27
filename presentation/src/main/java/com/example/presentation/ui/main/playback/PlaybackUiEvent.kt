@@ -28,4 +28,5 @@ sealed class PlaybackUiEvent {
     data class OnYoutubeTrackClicked(val track: TrackDomain) : PlaybackUiEvent()
     data class ToggleCreatePlaylistOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
     data class ToggleTrackOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
+    data class OnSleepTimerSelected(val option: SleepTimerOption) : PlaybackUiEvent()
 }
