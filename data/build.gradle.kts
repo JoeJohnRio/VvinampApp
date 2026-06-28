@@ -1,85 +1,68 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.serialization)
+    alias(libs.plugins.hilt)
 }
 
-android {
-    namespace = "com.example.data"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
+kotlin {
+    androidLibrary {
+        namespace = "com.example.data"
+        compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"https://cirio.my.id\"")
-        buildConfigField("String", "BASE_URL_GRAPHQL", "\"/v1/graphql\"")
 
-        consumerProguardFiles("consumer-rules.pro")
+        compilerOptions {
+            jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+        }
     }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "data"
+            isStatic = true
         }
     }
 
-    buildFeatures {
-        buildConfig = true
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_11)
-    }
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":domain"))
+            implementation(project(":graphql"))
+            
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.room.runtime)
+            implementation(libs.room.paging)
+            implementation(libs.paging.common)
+            implementation(libs.datastore.preferences)
+            
+            // KMP Networking (Eventually replacing Retrofit)
+            // implementation("io.ktor:ktor-client-core:3.0.0")
+        }
+        androidMain.dependencies {
+            api(libs.hilt.dagger.android)
+            api(libs.hilt.work)
+            implementation(libs.retrofit)
+            implementation(libs.converter.gson)
+            implementation(libs.okhttp)
+            implementation(libs.logging.interceptor)
+        }
+        iosMain.dependencies {
+            // implementation("io.ktor:ktor-client-darwin:3.0.0")
+        }
     }
 }
 
 dependencies {
-    api(project(":domain"))
-    api(project(":graphql"))
-    testImplementation(project(":core-test"))
-    debugImplementation(libs.chucker.debug)
-    releaseImplementation(libs.chucker.release)
-    // Hilt
-    api(libs.hilt.dagger.android)
-    api(libs.hilt.work)
+    // KSP needs to be applied here for Room in KMP
+    add("kspAndroid", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
+    
     ksp(libs.hilt.dagger.compiler)
     ksp(libs.hilt.compiler)
-
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    implementation(libs.room.paging)
-    implementation(libs.paging.common.ktx)
-    ksp(libs.room.compiler)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.retrofit2.kotlin.coroutines.adapter)
-
-    // Security
-    implementation(libs.datastore.preferences)
 }

@@ -37,6 +37,7 @@ workRuntimeKtx = "2.10.0"
 detekt = "1.23.6"
 ksp = "2.3.6"
 kover = "0.8.2"
+koin = "4.2.2"
 serializationGradlePlugin = "1.9.0"
 jdk = "21"
 compileSdk = "36"
@@ -151,10 +152,16 @@ material = { group = "com.google.android.material", name = "material", version.r
 [bundles]
 media3 = ["media3-exoplayer", "media3-exoplayer-hls", "media3-ui", "media3-common", "media3-session", "media3-ui-compose-material3"]
 
+# Koin
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
 [plugins]
 compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinGradlePlugin"}
 android-application = { id = "com.android.application", version.ref = "androidAppGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidLibraryGradlePlugin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidLibraryGradlePlugin" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltDagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

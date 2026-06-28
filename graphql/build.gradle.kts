@@ -1,11 +1,15 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.apollo)
 }
 
 kotlin {
-    androidTarget {
+    androidLibrary {
+        namespace = "com.example.graphql"
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
+
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
         }
@@ -33,19 +37,5 @@ apollo {
     service("service") {
         packageName.set("com.example.graphql")
         mapScalarToUpload("Upload")
-    }
-}
-
-android {
-    namespace = "com.example.graphql"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 24
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
     }
 }

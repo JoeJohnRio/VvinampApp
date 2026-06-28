@@ -97,6 +97,9 @@ class NetworkModule {
         @Singleton
         fun provideAuthStore(
             @ApplicationContext context: Context
-        ): AuthStore = DataStoreAuthStore(context)
+        ): AuthStore {
+            val dataStore = com.example.data.datasource.local.DataStoreFactory(context).create()
+            return DataStoreAuthStore(dataStore)
+        }
     }
 }
