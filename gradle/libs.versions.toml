@@ -98,6 +98,7 @@ retrofit2-kotlin-coroutines-adapter = { module = "com.jakewharton.retrofit:retro
 
 # Paging
 paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "pagingCommonKtx" }
+paging-common = { module = "androidx.paging:paging-common", version.ref = "pagingCommonKtx" }
 paging-compose = { module = "androidx.paging:paging-compose", version.ref = "pagingCompose" }
 
 # Hilt
@@ -159,5 +160,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltDagger" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationGradlePlugin" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinGradlePlugin" }
 apollo = { id = "com.apollographql.apollo", version.ref = "apollo" }
 
