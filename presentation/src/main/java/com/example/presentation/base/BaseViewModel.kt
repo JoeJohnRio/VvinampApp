@@ -9,3 +9,4 @@ import kotlinx.coroutines.launch
 open class BaseViewModel : ViewModel() {
     protected fun launch(block: suspend CoroutineScope.() -> Unit): Job = viewModelScope.launch(block = block)
 }
+
