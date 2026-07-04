@@ -19,7 +19,7 @@
         android:theme="@style/Theme.Vvinamp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Vvinamp">
@@ -31,7 +31,7 @@
         </activity>
 
         <service
-            android:name="com.example.presentation.ui.main.playback.PlaybackService"
+            android:name="com.example.vvinamp.ui.main.playback.PlaybackService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="true">
             <intent-filter>
