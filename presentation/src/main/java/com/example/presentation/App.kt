@@ -9,8 +9,7 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.util.DebugLogger
-import com.example.data.di.initKoin
-import com.example.vvinamp.di.uiModule
+import com.example.vvinamp.di.initKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 
@@ -19,7 +18,7 @@ class App : Application(), SingletonImageLoader.Factory {
     override fun onCreate() {
         super.onCreate()
         
-        initKoin(additionalModules = listOf(uiModule)) {
+        initKoin {
             androidLogger()
             androidContext(this@App)
         }

@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.apollographql.apollo.api.DefaultUpload
 import com.apollographql.apollo.api.Optional
+import com.example.data.api.playlist.PlaylistApi
 import com.example.data.api.playlist.PlaylistApiImpl
 import com.example.data.api.playlist.toDomain
 import com.example.data.api.playlist.toPlaylistMinimal

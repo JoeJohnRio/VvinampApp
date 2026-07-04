@@ -1,10 +1,7 @@
 package com.example.domain.entity.search
 
-import javax.annotation.concurrent.Immutable
-
 sealed class SearchItemDomain {
     // Domain/Model/SearchItem.kt
-    @Immutable
     data class TrackSearch(
         val id: String,
         val title: String,
@@ -13,7 +10,6 @@ sealed class SearchItemDomain {
         val artistName: String,
     ) : SearchItemDomain()
 
-    @Immutable
     data class AlbumSearch(
         val id: String,
         val title: String,
@@ -21,7 +17,6 @@ sealed class SearchItemDomain {
         val artistName: String,
     ) : SearchItemDomain()
 
-    @Immutable
     data class ArtistSearch(
         val id: String,
         val name: String,
@@ -29,14 +24,12 @@ sealed class SearchItemDomain {
         val profileImage: String?,
     ) : SearchItemDomain()
 
-    @Immutable
     data class PlaylistSearch(
         val id: String,
         val title: String,
         val coverImage: String?,
     ) : SearchItemDomain()
 
-    @Immutable
     data class PodcastEpisodeSearch(
         val id: String,
         val title: String,
@@ -44,7 +37,6 @@ sealed class SearchItemDomain {
         val duration: Int,
     ) : SearchItemDomain()
 
-    @Immutable
     data class PodcastSeriesSearch(
         val id: String,
         val title: String,
@@ -52,7 +44,6 @@ sealed class SearchItemDomain {
         val publisher: String?,
     ) : SearchItemDomain()
 
-    @Immutable
     data class YoutubeTrackSearch(
         val id: String,
         val title: String,

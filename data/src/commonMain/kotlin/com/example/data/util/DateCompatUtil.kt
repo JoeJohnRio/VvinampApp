@@ -1,18 +1,18 @@
 package com.example.data.util
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-
-const val datePattern = "yyyy-MM-dd"
+import kotlin.time.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 fun String.toLocalDate(): LocalDate {
-    val formatter = DateTimeFormatter.ofPattern(datePattern)
-    if (this.isEmpty()) return LocalDate.now()
-    val localDate = LocalDate.parse(this, formatter)
-    return localDate
+    if (this.isEmpty()) {
+        // In the new core library, it is System instead of Clock.System
+        return Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    }
+    return LocalDate.parse(this)
 }
-
 fun String.dateToYear(): String {
     val dateTime = LocalDateTime.parse(this.replace("Z", ""))
     val year = dateTime.year

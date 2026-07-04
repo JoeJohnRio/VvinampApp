@@ -46,13 +46,16 @@ kotlin {
             
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            
-            implementation(libs.lifecycle.viewmodel.compose)
+
             implementation(libs.lifecycle.runtime.compose)
 
+            implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.paging.compose)
             implementation(libs.paging.common)
+
+            // UI Components
+            implementation(libs.reorderable)
+            implementation(libs.wheel.picker.compose)
             
             // Image loading
             implementation(libs.coil.compose)
@@ -60,6 +63,28 @@ kotlin {
         
         androidMain.dependencies {
             implementation(libs.koin.android)
+            implementation(libs.accompanist.systemuicontroller)
+            implementation(libs.palette)
+            implementation(libs.bundles.media3)
+
+            // Navigation 3 (Android only for now)
+            implementation(libs.navigation.runtime)
+            implementation(libs.navigation.ui)
+            implementation(libs.navigation.viewmodel)
+            
+            // Paging Compose (Android only for now)
+            implementation(libs.paging.compose)
+
+            // Network (Android-specific parts used in DI)
+            implementation(libs.retrofit)
+            implementation(libs.converter.gson)
+            implementation(libs.retrofit2.kotlin.coroutines.adapter)
+            implementation(libs.okhttp)
+            implementation(libs.logging.interceptor)
+            implementation(libs.chucker.debug)
+            
+            // Image Loading
+            implementation(libs.coil.network.okhttp)
         }
     }
 }

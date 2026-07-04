@@ -130,7 +130,6 @@ dependencies {
     implementation(libs.compose.material.icons.extended)
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation(libs.compose.ui.test.manifest)
-    implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.wheel.picker.compose)
 
@@ -143,7 +142,6 @@ dependencies {
     implementation(libs.navigation.runtime)
     implementation(libs.navigation.ui)
     implementation(libs.navigation.viewmodel)
-    implementation(libs.navigation.adaptive)
 
     //media3
     implementation(libs.bundles.media3)

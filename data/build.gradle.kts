@@ -34,14 +34,18 @@ kotlin {
             
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.room.runtime)
+            implementation(libs.room.ktx)
             implementation(libs.room.paging)
             implementation(libs.paging.common)
             implementation(libs.datastore.preferences)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.coroutines.core)
             
             api(libs.koin.core)
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
+            implementation(libs.room.ktx)
             implementation(libs.retrofit)
             implementation(libs.converter.gson)
             implementation(libs.okhttp)
