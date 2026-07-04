@@ -9,9 +9,7 @@ import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-
-data class PlaylistUseCase @Inject constructor(
+data class PlaylistUseCase(
     val getMyPlaylistUseCase: GetMyPlaylistUseCase,
     val getMyPlaylistFeedUseCase: GetMyPlaylistFeedUseCase,
     val createPlaylistUseCase: CreatePlaylistUseCase,
@@ -24,7 +22,7 @@ data class PlaylistUseCase @Inject constructor(
     val uploadPlaylistCoverUseCase: UploadPlaylistCoverUseCase
 )
 
-class GetMyPlaylistUseCase @Inject constructor(
+class GetMyPlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     operator fun invoke(): Flow<PagingData<PlaylistMinimal>> {
@@ -32,7 +30,7 @@ class GetMyPlaylistUseCase @Inject constructor(
     }
 }
 
-class GetPlaylistTracksUseCase @Inject constructor(
+class GetPlaylistTracksUseCase(
     private val repository: PlaylistRepository
 ) {
     operator fun invoke(
@@ -43,7 +41,7 @@ class GetPlaylistTracksUseCase @Inject constructor(
     }
 }
 
-class GetPlaylistUseCase @Inject constructor(
+class GetPlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(id: String): Result<PlaylistComplete> {
@@ -51,7 +49,7 @@ class GetPlaylistUseCase @Inject constructor(
     }
 }
 
-class GetRecommendedTracksUseCase @Inject constructor(
+class GetRecommendedTracksUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(): Result<List<RecommendedTrackDomain>> {
@@ -59,7 +57,7 @@ class GetRecommendedTracksUseCase @Inject constructor(
     }
 }
 
-class AddSongToPlaylistUseCase @Inject constructor(
+class AddSongToPlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(
@@ -73,7 +71,7 @@ class AddSongToPlaylistUseCase @Inject constructor(
     }
 }
 
-class EditPlaylistUseCase @Inject constructor(
+class EditPlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(
@@ -89,7 +87,7 @@ class EditPlaylistUseCase @Inject constructor(
     }
 }
 
-class UpdatePlaylistUseCase @Inject constructor(
+class UpdatePlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(
@@ -102,7 +100,7 @@ class UpdatePlaylistUseCase @Inject constructor(
     }
 }
 
-class UploadPlaylistCoverUseCase @Inject constructor(
+class UploadPlaylistCoverUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(
@@ -115,7 +113,7 @@ class UploadPlaylistCoverUseCase @Inject constructor(
     }
 }
 
-class GetMyPlaylistFeedUseCase @Inject constructor(
+class GetMyPlaylistFeedUseCase(
     private val repository: PlaylistRepository
 ) {
     operator fun invoke(sortOrder: PlaylistSortOrderDomain): Flow<PagingData<PlaylistMinimal>> {
@@ -123,7 +121,7 @@ class GetMyPlaylistFeedUseCase @Inject constructor(
     }
 }
 
-class CreatePlaylistUseCase @Inject constructor(
+class CreatePlaylistUseCase(
     private val repository: PlaylistRepository
 ) {
     suspend operator fun invoke(title: String): Result<String> {

@@ -8,9 +8,7 @@ import com.example.graphql.PlayYoutubeMutation
 import com.example.graphql.SearchQuery
 import com.example.graphql.SearchYoutubeFromApiQuery
 import com.example.graphql.SearchYoutubeFromYtDlpQuery
-import javax.inject.Inject
-
-class SearchApiImpl @Inject constructor(
+class SearchApiImpl(
     private val apolloClient: ApolloClient
 ): SearchApi {
 

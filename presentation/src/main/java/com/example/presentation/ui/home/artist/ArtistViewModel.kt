@@ -6,17 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.domain.usecase.ArtistUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.presentation.base.BaseViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class ArtistViewModel @Inject constructor(
+class ArtistViewModel(
     val artistUseCase: ArtistUseCase
 ) : ViewModel() {
 

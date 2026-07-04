@@ -30,6 +30,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.paging.common)
+            api(libs.koin.core)
         }
         androidMain.dependencies {
         }

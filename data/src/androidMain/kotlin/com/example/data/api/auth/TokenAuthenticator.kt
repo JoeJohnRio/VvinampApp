@@ -11,12 +11,9 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import javax.inject.Inject
-import javax.inject.Provider
-
-class TokenAuthenticator @Inject constructor(
+class TokenAuthenticator(
     private val authStore: AuthStore,
-    private val apolloClientProvider: Provider<ApolloClient>
+    private val apolloClient: ApolloClient
 ) : Authenticator {
 
     private val mutex = Mutex()
@@ -52,7 +49,6 @@ class TokenAuthenticator @Inject constructor(
         val refreshToken = authStore.getRefreshToken() ?: return null
 
         return try {
-            val apolloClient = apolloClientProvider.get()
             val response = apolloClient.mutation(RefreshTokenMutation(refreshToken)).execute()
 
             response.data?.let {

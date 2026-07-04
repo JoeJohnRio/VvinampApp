@@ -4,14 +4,11 @@ import com.example.domain.entity.AuthSession
 import com.example.domain.entity.artist.ArtistScreenDomain
 import com.example.domain.repository.ArtistRepository
 import com.example.domain.repository.AuthRepository
-import javax.inject.Inject
-
-
-class ArtistUseCase @Inject constructor(
+class ArtistUseCase(
     val getArtistScreenData: GetArtistScreenDataUseCase,
 )
 
-class GetArtistScreenDataUseCase @Inject constructor(
+class GetArtistScreenDataUseCase(
     private val repository: ArtistRepository
 ) {
     suspend operator fun invoke(artistId: String): Result<ArtistScreenDomain> {

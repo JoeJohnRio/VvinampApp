@@ -5,13 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.auth.AuthStore // Make sure this import is correct
 import com.example.domain.entity.SessionState
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val authStore: AuthStore
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MainUiState())

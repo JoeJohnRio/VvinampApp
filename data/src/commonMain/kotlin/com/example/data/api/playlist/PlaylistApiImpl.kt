@@ -31,9 +31,7 @@ import com.example.graphql.type.RemoveSongFromPlaylistInput
 import com.example.graphql.type.SavePlaylistInput
 import com.example.graphql.type.UnsavePlaylistInput
 import com.example.graphql.type.UpdatePlaylistInput
-import javax.inject.Inject
-
-class PlaylistApiImpl @Inject constructor(
+class PlaylistApiImpl(
     private val api: ApolloClient
 ) : PlaylistApi {
 

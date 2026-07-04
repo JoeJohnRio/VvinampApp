@@ -3,9 +3,7 @@ package com.example.data.api.album
 import com.apollographql.apollo.ApolloClient
 import com.example.data.util.safeQuery
 import com.example.graphql.GetAlbumQuery
-import javax.inject.Inject
-
-class AlbumApiImpl @Inject constructor(
+class AlbumApiImpl(
     private val apolloClient: ApolloClient
 ) : AlbumApi {
 

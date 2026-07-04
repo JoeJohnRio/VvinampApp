@@ -2,9 +2,6 @@ package com.example.presentation
 
 import android.app.Application
 import android.content.Context
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
-import androidx.work.WorkManager
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
@@ -12,31 +9,20 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.CachePolicy
 import coil3.util.DebugLogger
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.example.data.di.initKoin
+import com.example.vvinamp.di.uiModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 
-@HiltAndroidApp
-class App : Application(), Configuration.Provider, SingletonImageLoader.Factory {
-
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-
-    override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-
-//    @Inject
-//    lateinit var workManager: WorkManager
+class App : Application(), SingletonImageLoader.Factory {
 
     override fun onCreate() {
         super.onCreate()
-
-//        workManager.enqueueUniqueWork(
-//            SyncWork::class.java.simpleName,
-//            ExistingWorkPolicy.KEEP,
-//            SyncWork.getOneTimeWorkRequest()
-//        )
+        
+        initKoin(additionalModules = listOf(uiModule)) {
+            androidLogger()
+            androidContext(this@App)
+        }
     }
 
     override fun newImageLoader(context: Context): ImageLoader {

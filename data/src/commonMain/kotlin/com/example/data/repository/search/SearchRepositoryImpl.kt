@@ -3,16 +3,15 @@ package com.example.data.repository.search
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.data.api.search.SearchApiImpl
+import com.example.data.api.search.SearchApi
 import com.example.data.api.search.toDomain
 import com.example.data.repository.pagination.GenericPagingSource
 import com.example.domain.entity.PageResponse
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.repository.SearchRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class SearchRepositoryImpl @Inject constructor(private val api: SearchApiImpl) : SearchRepository {
+class SearchRepositoryImpl(private val api: SearchApi) : SearchRepository {
     override fun search(query: String, pageSize: Int): Flow<PagingData<SearchItemDomain>> {
         return Pager(PagingConfig(pageSize = pageSize)) {
             GenericPagingSource { cursor ->

@@ -1,9 +1,6 @@
 package com.example.presentation.ui.home.library.detailplaylist
 
-import android.app.Application
-import android.net.Uri
-import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
@@ -13,8 +10,6 @@ import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.AuthUseCases
 import com.example.domain.usecase.PlaylistUseCase
 import com.example.presentation.ui.home.library.detailplaylist.PlaylistEvent.*
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,12 +19,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class PlaylistViewModel @Inject constructor(
-    private val application: Application,
+class PlaylistViewModel(
     private val authUseCases: AuthUseCases,
     private val useCase: PlaylistUseCase
-) : AndroidViewModel(application) {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(PlaylistUiState())
     val uiState = _uiState.asStateFlow()
 

@@ -8,9 +8,7 @@ import com.example.domain.entity.playbackinfo.PlayerQueueDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaybackRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
-
-class PlaybackUseCase @Inject constructor(
+class PlaybackUseCase(
     val playbackInfo: PlaybackInfoUseCase,
     val getPlayerQueue: GetPlayerQueueUseCase,
     val addToQueue: AddToQueueUseCase,
@@ -23,7 +21,7 @@ class PlaybackUseCase @Inject constructor(
     val getCurrentTrackFlow: GetCurrentTrackFlowUseCase
 )
 
-class PlaybackInfoUseCase @Inject constructor(
+class PlaybackInfoUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(
@@ -39,38 +37,38 @@ class PlaybackInfoUseCase @Inject constructor(
     }
 }
 
-class GetPlayerQueueUseCase @Inject constructor(
+class GetPlayerQueueUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.getPlayerQueue()
 }
 
-class AddToQueueUseCase @Inject constructor(
+class AddToQueueUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(trackIds: List<String>): Result<PlayerQueueDomain> =
         repository.addToQueue(trackIds)
 }
 
-class SkipToNextUseCase @Inject constructor(
+class SkipToNextUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(): Result<PlaybackStateDomain> = repository.skipToNext()
 }
 
-class SkipToPreviousUseCase @Inject constructor(
+class SkipToPreviousUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(): Result<PlaybackStateDomain> = repository.skipToPrevious()
 }
 
-class ClearQueueUseCase @Inject constructor(
+class ClearQueueUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(): Result<PlayerQueueDomain> = repository.clearQueue()
 }
 
-class PlayContextUseCase @Inject constructor(
+class PlayContextUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(
@@ -88,14 +86,14 @@ class PlayContextUseCase @Inject constructor(
     }
 }
 
-class PlayYoutubeUseCase @Inject constructor(
+class PlayYoutubeUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(youtubeId: String): Result<PlaybackInfoDomain> =
         repository.playYoutube(youtubeId)
 }
 
-class SaveCurrentTrackUseCase @Inject constructor(
+class SaveCurrentTrackUseCase(
     private val repository: PlaybackRepository
 ) {
     suspend operator fun invoke(track: TrackDomain) {
@@ -103,7 +101,7 @@ class SaveCurrentTrackUseCase @Inject constructor(
     }
 }
 
-class GetCurrentTrackFlowUseCase @Inject constructor(
+class GetCurrentTrackFlowUseCase(
     private val repository: PlaybackRepository
 ) {
     operator fun invoke(): Flow<TrackDomain?> = repository.getCurrentTrackFlow()

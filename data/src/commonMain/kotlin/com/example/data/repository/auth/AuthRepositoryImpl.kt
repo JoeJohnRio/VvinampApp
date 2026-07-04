@@ -6,9 +6,7 @@ import com.example.domain.entity.AuthSession
 import com.example.domain.entity.RegisteredUser
 import com.example.domain.entity.user.User
 import com.example.domain.repository.AuthRepository
-import javax.inject.Inject
-
-class AuthRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl(
     private val authApi: AuthApi,
     private val authStore: AuthStore
 ) : AuthRepository {

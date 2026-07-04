@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
-    alias(libs.plugins.hilt)
 }
 
 kotlin {
@@ -39,19 +38,16 @@ kotlin {
             implementation(libs.paging.common)
             implementation(libs.datastore.preferences)
             
-            // KMP Networking (Eventually replacing Retrofit)
-            // implementation("io.ktor:ktor-client-core:3.0.0")
+            api(libs.koin.core)
         }
         androidMain.dependencies {
-            api(libs.hilt.dagger.android)
-            api(libs.hilt.work)
+            implementation(libs.koin.android)
             implementation(libs.retrofit)
             implementation(libs.converter.gson)
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
         }
         iosMain.dependencies {
-            // implementation("io.ktor:ktor-client-darwin:3.0.0")
         }
     }
 }
@@ -62,7 +58,4 @@ dependencies {
     add("kspIosX64", libs.room.compiler)
     add("kspIosArm64", libs.room.compiler)
     add("kspIosSimulatorArm64", libs.room.compiler)
-    
-    ksp(libs.hilt.dagger.compiler)
-    ksp(libs.hilt.compiler)
 }

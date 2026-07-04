@@ -10,21 +10,7 @@ import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
 import com.example.domain.usecase.PlaylistUseCase
 import com.example.presentation.ui.home.HomeEvent
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-@HiltViewModel
-class LibraryViewModel @Inject constructor(
+class LibraryViewModel(
     private val useCase: PlaylistUseCase
 ) : ViewModel() {
 

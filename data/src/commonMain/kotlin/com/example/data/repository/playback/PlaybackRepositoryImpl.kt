@@ -17,9 +17,7 @@ import com.example.domain.repository.PlaybackRepository
 import com.example.graphql.type.PlaybackContextInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-
-class PlaybackRepositoryImpl @Inject constructor(
+class PlaybackRepositoryImpl(
     private val playbackApi: PlaybackApi,
     private val recentPlaybackDao: RecentPlaybackDao
 ) : PlaybackRepository {

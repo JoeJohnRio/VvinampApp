@@ -7,8 +7,6 @@ import androidx.paging.cachedIn
 import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.PlaylistUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-@HiltViewModel
-class PlaylistEditViewModel @Inject constructor(
+class PlaylistEditViewModel(
     private val useCase: PlaylistUseCase
 ) : ViewModel() {
 

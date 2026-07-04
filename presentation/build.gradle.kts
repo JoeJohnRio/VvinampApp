@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
     alias(libs.plugins.compose)
@@ -62,6 +61,7 @@ kotlin {
 
 dependencies {
     api(project(":data"))
+    api(project(":composeApp"))
     testImplementation(project(":core-test"))
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)
@@ -97,11 +97,9 @@ dependencies {
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
 
-    // Hilt
-    api(libs.hilt.dagger.android)
-    api(libs.hilt.work)
-    ksp(libs.hilt.dagger.compiler)
-    ksp(libs.hilt.compiler)
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
@@ -142,7 +140,6 @@ dependencies {
 
     // Navigation
     implementation(libs.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
     implementation(libs.navigation.runtime)
     implementation(libs.navigation.ui)
     implementation(libs.navigation.viewmodel)

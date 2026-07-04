@@ -15,9 +15,7 @@ import com.example.graphql.SkipToPreviousMutation
 import com.example.graphql.type.ContentType
 import com.example.graphql.type.PlaybackContextInput
 import com.example.graphql.type.PlaybackInput
-import javax.inject.Inject
-
-class PlaybackApiImpl @Inject constructor(val apolloClient: ApolloClient) : PlaybackApi {
+class PlaybackApiImpl(val apolloClient: ApolloClient) : PlaybackApi {
     override suspend fun playbackInfo(
         trackId: String,
         contentType: ContentType,

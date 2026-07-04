@@ -1,0 +1,119 @@
+package com.example.vvinamp.ui.auth
+import vvinampapp.composeapp.generated.resources.*
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation3.runtime.rememberNavBackStack
+
+import com.example.vvinamp.navigation.graph.AuthDestination
+import com.example.vvinamp.navigation.router.AuthRouter
+import com.example.vvinamp.ui.theme.CircularSTD
+import com.example.vvinamp.ui.theme.whiteBlackGradientBackground
+import com.example.vvinamp.ui.widget.ButtonOutlined
+import com.example.vvinamp.ui.widget.ButtonSolid
+import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.navigatorDummy
+
+@Composable
+fun AuthPage(
+    authRouter: AuthRouter,
+) {
+    val backStack = rememberNavBackStack(AuthDestination.AuthRoot)
+    Column(
+        modifier = Modifier
+            .whiteBlackGradientBackground(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        ImageTextRegister(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.8f),
+            titleText = stringResource(Res.string.title_millions_of_songs)
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(0.2f)
+        ) {
+            ButtonSolid(
+                text = "Sign up free",
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .padding(bottom = 12.dp),
+                onClick = {
+                    authRouter.navigateToAuthMethodSelectionPage()
+                }
+            )
+            ButtonOutlined(
+                text = "Log in",
+                modifier = Modifier.padding(horizontal = 32.dp),
+                onClick = {
+                    authRouter.navigateToLoginMethodSelectionPage()
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ImageTextRegister(
+    modifier: Modifier,
+    titleText: String
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            modifier = Modifier.size(96.dp),
+            tint = Color.White,
+            painter = painterResource(id = Res.drawable.ic_new_v),
+            contentDescription = ""
+        )
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            text = titleText,
+            fontFamily = CircularSTD,
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Normal,
+            fontSize = 24.sp,
+            style = TextStyle(
+                letterSpacing = 0.sp,
+                lineHeight = 28.sp // ~140% of fontSize is usually good
+            )
+        )
+    }
+}
+
+
+@Preview(apiLevel = 36)
+@Composable
+private fun PagePreview() {
+    PreviewTheme {
+        AuthPage(
+            authRouter = AuthRouter(
+                navigatorDummy()
+            )
+        )
+    }
+}

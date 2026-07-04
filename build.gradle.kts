@@ -4,10 +4,10 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.detekt) apply false
-    alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kover) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
 }
 
 subprojects {
@@ -18,6 +18,9 @@ subprojects {
     }
     // Apply Detekt plugin for all modules (presentation, data, domain)
     apply(from = "$rootDir/detekt.gradle")
-    // Apply Kover plugin for all modules
-    apply(from = "$rootDir/kover.gradle")
+    // Apply Kover plugin for all modules except KMP ones (not supported by Kover yet)
+    val kmpModules = listOf("data", "domain", "graphql", "composeApp")
+    if (!kmpModules.contains(project.name)) {
+        apply(from = "$rootDir/kover.gradle")
+    }
 }

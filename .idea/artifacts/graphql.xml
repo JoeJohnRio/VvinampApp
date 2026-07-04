@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="graphql">
+    <output-path>$PROJECT_DIR$/graphql/build/libs</output-path>
+    <root id="archive" name="graphql.jar">
+      <element id="module-output" name="VvinampApp.graphql.androidMain" />
+    </root>
+  </artifact>
+</component>

@@ -20,7 +20,6 @@ import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.presentation.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.google.common.util.concurrent.MoreExecutors
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,12 +29,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
-@HiltViewModel
 class PlaybackViewModel @OptIn(UnstableApi::class)
-@Inject constructor(
+constructor(
     private val playbackRepository: PlaybackUseCase,
     private val application: Application
 ) : AndroidViewModel(application) {

@@ -4,9 +4,7 @@ import com.example.data.repository.auth.AuthStore
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
-
-class AuthInterceptor @Inject constructor(
+class AuthInterceptor(
     private val authStore: AuthStore
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {

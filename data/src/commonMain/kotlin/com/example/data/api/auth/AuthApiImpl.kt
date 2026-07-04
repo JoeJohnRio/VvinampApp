@@ -8,10 +8,7 @@ import com.example.graphql.GetCurrentUserDetailQuery
 import com.example.graphql.LoginQuery
 import com.example.graphql.RegisterMutation
 import com.example.graphql.type.RegisterInput
-import javax.inject.Inject
-
-
-class AuthApiImpl @Inject constructor(
+class AuthApiImpl(
     private val apolloClient: ApolloClient
 ) : AuthApi {
     override suspend fun register(user: User): Result<RegisterMutation.Register> {

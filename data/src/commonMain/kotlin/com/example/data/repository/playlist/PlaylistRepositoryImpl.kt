@@ -29,10 +29,8 @@ import com.example.graphql.type.RepositionSongInput
 import com.example.graphql.type.UpdatePlaylistInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-
-class PlaylistRepositoryImpl @Inject constructor(
-    private val api: PlaylistApiImpl,
+class PlaylistRepositoryImpl(
+    private val api: PlaylistApi,
     private val database: MusicDatabase
 ) : PlaylistRepository {
 

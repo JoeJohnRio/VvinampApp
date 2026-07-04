@@ -4,9 +4,7 @@ import com.example.data.api.history.HistoryApi
 import com.example.data.api.history.toDomain
 import com.example.domain.entity.ListeningHistoryDomain
 import com.example.domain.repository.HistoryRepository
-import javax.inject.Inject
-
-class HistoryRepositoryImpl @Inject constructor(
+class HistoryRepositoryImpl(
     private val historyApi: HistoryApi
 ): HistoryRepository {
     override suspend fun listRecentHistory(): Result<List<ListeningHistoryDomain>> {

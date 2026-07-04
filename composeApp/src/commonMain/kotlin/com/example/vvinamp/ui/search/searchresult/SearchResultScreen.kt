@@ -1,0 +1,234 @@
+package com.example.vvinamp.ui.search.searchresult
+import vvinampapp.composeapp.generated.resources.*
+
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import org.koin.compose.viewmodel.koinViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.entity.search.SearchItemDomain
+import com.example.domain.entity.search.toTrackDomain
+import com.example.vvinamp.navigation.router.BottomNavRouter
+import com.example.vvinamp.ui.main.ScreenWrapper
+import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
+import com.example.vvinamp.ui.main.playback.PlaybackUiState
+import com.example.vvinamp.ui.main.playback.PlaybackViewModel
+import com.example.vvinamp.ui.search.SearchType
+import com.example.vvinamp.ui.search.SearchUiState
+import com.example.vvinamp.ui.search.SearchViewModel
+import com.example.vvinamp.ui.theme.TSBodyMediumWhite
+import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
+import com.example.vvinamp.ui.widget.ButtonListWithState
+import com.example.vvinamp.ui.widget.TextFieldSearch
+
+@Composable
+fun SearchResultsScreen(
+    bottomNavRouter: BottomNavRouter,
+    playbackViewModel: PlaybackViewModel = koinViewModel(),
+) {
+    val viewModel: SearchViewModel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+    val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+
+    ScreenWrapper(
+        isLoading = uiState.isLoading,
+        error = uiState.error,
+        content = {
+            SearchResultsContent(
+                uiState = uiState,
+                playbackUiState = playbackUiState,
+                onTypeSearch = {
+                    viewModel.onSearchInput(it)
+                },
+                onSearchTypeChanged = {
+                    viewModel.onSearchTypeChanged(it)
+                },
+                searchItems = searchItems,
+                onBackClicked = {
+                    bottomNavRouter.navigateBack()
+                },
+                onItemClicked = { searchItem ->
+                    when (searchItem) {
+                        is SearchItemDomain.TrackSearch -> {
+                            playbackViewModel.onEvent(
+                                PlaybackUiEvent.OnTrackClicked(
+                                    track = searchItem.toTrackDomain(),
+                                    contentTypeDomain = ContentTypeDomain.TRACK,
+                                    contentId = searchItem.id,
+                                )
+                            )
+                        }
+                        is SearchItemDomain.YoutubeTrackSearch -> {
+                            playbackViewModel.onEvent(
+                                PlaybackUiEvent.OnYoutubeTrackClicked(
+                                    track = searchItem.toTrackDomain()
+                                )
+                            )
+                        }
+                        is SearchItemDomain.AlbumSearch -> {
+                            bottomNavRouter.navigateToAlbum(searchItem.id)
+                        }
+                        is SearchItemDomain.ArtistSearch -> {
+                            bottomNavRouter.navigateToArtistPage(searchItem.id)
+                        }
+                        else -> {
+                            //do nothing
+                        }
+                    }
+                }
+            )
+        }
+    )
+}
+
+@Composable
+fun SearchResultsContent(
+    uiState: SearchUiState,
+    onTypeSearch: (String) -> Unit,
+    onSearchTypeChanged: (SearchType) -> Unit,
+    searchItems: LazyPagingItems<SearchItemDomain>,
+    onBackClicked: () -> Unit = {},
+    onItemClicked: (SearchItemDomain) -> Unit = {},
+    playbackUiState: PlaybackUiState = PlaybackUiState()
+) {
+    Scaffold(
+        topBar = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .statusBarsPadding()
+            ) {
+                TextFieldSearch(
+                    text = uiState.searchText,
+                    onValueChanged = {
+                        onTypeSearch(it)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    onBackClicked = onBackClicked
+                )
+
+                ButtonListWithState(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                    buttonHorizontalPadding = 12.dp,
+                    buttonHeight = 32.dp,
+                    textStyle = TSDisplayMediumWhite().copy(fontSize = 11.sp),
+                    listButton = SearchType.entries.map { it.label },
+                    selectedButton = uiState.searchType.label,
+                    outlineColor = Color.Transparent,
+                    textColor = MaterialTheme.colorScheme.inversePrimary,
+                    textColorClicked = MaterialTheme.colorScheme.onPrimary,
+                    containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                    containerColorClicked = MaterialTheme.colorScheme.primary,
+                    onClick = { label ->
+                        SearchType.entries.find { it.label == label }?.let {
+                            onSearchTypeChanged(it)
+                        }
+                    }
+                )
+            }
+        }
+    ) { contentPadding ->
+
+        val isLoading = (searchItems.loadState.refresh is LoadState.Loading)
+                && uiState.searchText.isNotEmpty()
+
+        val isEmpty = !isLoading
+                && searchItems.loadState.append.endOfPaginationReached
+                && searchItems.itemCount == 0
+                && uiState.searchText.isNotEmpty()
+        LazyColumn(
+            modifier = Modifier
+                .padding(contentPadding)
+                .padding(horizontal = 16.dp)
+        ) {
+            item {
+                Spacer(Modifier.height(16.dp))
+            }
+
+            items(
+                count = searchItems.itemCount,
+                key = { index ->
+                    when (val item = searchItems[index]) {
+                        is SearchItemDomain.TrackSearch -> "track_${item.id}"
+                        is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}"
+                        is SearchItemDomain.AlbumSearch -> "album_${item.id}"
+                        is SearchItemDomain.ArtistSearch -> "artist_${item.id}"
+                        else -> index
+                    }
+                }
+            ) { index ->
+                SearchItemComponent(searchItems[index], onItemClicked, playbackUiState)
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            if (searchItems.loadState.append is LoadState.Loading) {
+                item {
+                    CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
+            }
+        }
+
+        when {
+            isLoading -> {
+                // Initial full-screen loading
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            isEmpty -> {
+                // Truly empty result
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = "No results found for \"${uiState.searchText}\"",
+                            style = TSBodyMediumWhite().copy(
+                                fontSize = 22.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                        Spacer(Modifier.height(16.dp))
+
+                        Text(
+                            text = "Please make sure your words are spelled correctly or use less or different keywords.",
+                            style = TSDisplayMediumWhite().copy(
+                                fontSize = 12.sp,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
