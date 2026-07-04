@@ -4,8 +4,8 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import androidx.room.
-
+import androidx.room.immediateTransaction
+import androidx.room.useWriterConnection
 import com.example.data.api.playlist.PlaylistApiImpl
 import com.example.data.api.playlist.toDomain
 import com.example.data.db.music.MusicDatabase
@@ -39,38 +39,41 @@ class PlaylistTracksRemoteMediator(
 
         return try {
             val result = api.getPlaylistTracks(playlistId, cursor, sortBy)
-            
+
             result.fold(
                 onSuccess = { listData ->
                     val endOfPaginationReached = !listData.pageInfo.hasNextPage
                     val tracks = listData.edges.mapNotNull { it.node.track.toDomain() }
 
-                    database.withTransaction {
-                        if (loadType == LoadType.REFRESH) {
-                            database.playlistTrackDao().clearTracksByPlaylist(playlistId)
-                            database.playlistRemoteKeyDao().clearRemoteKeysByPlaylist(playlistId)
-                        }
+                    // KMP Replacement for database.withTransaction
+                    database.useWriterConnection { transactor ->
+                        transactor.immediateTransaction {
+                            if (loadType == LoadType.REFRESH) {
+                                database.playlistTrackDao().clearTracksByPlaylist(playlistId)
+                                database.playlistRemoteKeyDao().clearRemoteKeysByPlaylist(playlistId)
+                            }
 
-                        val prevKey = cursor
-                        val nextKey = if (endOfPaginationReached) null else listData.pageInfo.endCursor
-                        
-                        var lastPosition = database.playlistTrackDao().getLastPosition(playlistId) ?: 0
-                        
-                        val entities = tracks.map { track ->
-                            track.toEntity(playlistId, ++lastPosition)
-                        }
-                        
-                        val keys = entities.map {
-                            PlaylistRemoteKeyEntity(
-                                trackId = it.id,
-                                playlistId = playlistId,
-                                prevKey = prevKey,
-                                nextKey = nextKey
-                            )
-                        }
+                            val prevKey = cursor
+                            val nextKey = if (endOfPaginationReached) null else listData.pageInfo.endCursor
 
-                        database.playlistTrackDao().insertAll(entities)
-                        database.playlistRemoteKeyDao().insertAll(keys)
+                            var lastPosition = database.playlistTrackDao().getLastPosition(playlistId) ?: 0
+
+                            val entities = tracks.map { track ->
+                                track.toEntity(playlistId, ++lastPosition)
+                            }
+
+                            val keys = entities.map {
+                                PlaylistRemoteKeyEntity(
+                                    trackId = it.id,
+                                    playlistId = playlistId,
+                                    prevKey = prevKey,
+                                    nextKey = nextKey
+                                )
+                            }
+
+                            database.playlistTrackDao().insertAll(entities)
+                            database.playlistRemoteKeyDao().insertAll(keys)
+                        }
                     }
                     MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
                 },

@@ -31,7 +31,7 @@ import com.example.graphql.type.UpdatePlaylistInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 class PlaylistRepositoryImpl(
-    private val api: PlaylistApi,
+    private val api: PlaylistApiImpl,
     private val database: MusicDatabase
 ) : PlaylistRepository {
 

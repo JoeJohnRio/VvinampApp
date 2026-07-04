@@ -36,6 +36,10 @@ kotlin {
             implementation(project(":data"))
             implementation(project(":graphql"))
 
+            // Navigation 3 (Android only for now)
+            implementation(libs.navigation.runtime)
+            implementation(libs.navigation.ui)
+            implementation(libs.navigation.viewmodel)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -59,6 +63,8 @@ kotlin {
             
             // Image loading
             implementation(libs.coil.compose)
+
+            implementation(libs.kotlinx.coroutines.core)
         }
         
         androidMain.dependencies {
@@ -85,6 +91,9 @@ kotlin {
             
             // Image Loading
             implementation(libs.coil.network.okhttp)
+
+
+            implementation(libs.kotlinx.coroutines.android)
         }
     }
 }

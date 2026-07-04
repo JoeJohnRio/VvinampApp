@@ -22,7 +22,7 @@ mockitoKotlin = "5.4.0"
 navigationCompose = "2.8.5"
 navigation3 = "1.1.4"
 lifecycleViewmodelNav3 = "2.8.7"
-okhttp = "5.0.0-alpha.2"
+ okhttp = "5.0.0-alpha.2"
 pagingCommonKtx = "3.3.4"
 pagingCompose = "3.3.4"
 retrofit = "2.9.0"
@@ -130,7 +130,7 @@ compose-material-icons-extended = { module = "androidx.compose.material:material
 compose-material3 = { module = "androidx.compose.material3:material3" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 navigation-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "navigation3" }
-navigation-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
+navigation-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3" }
 navigation-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "navigation3" }
 # Add-on libraries (only add if you need them)
 
