@@ -116,19 +116,6 @@ dependencies {
     implementation(libs.reorderable)
 
     // Compose
-    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1") // or latest version
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.ui.util)
-    implementation(libs.compose.animation)
-    implementation(libs.compose.runtime)
-    implementation(libs.compose.runtime.saveable)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material)
-    implementation(libs.compose.material.icons.extended)
-    debugImplementation(libs.compose.ui.tooling)
-    debugImplementation(libs.compose.ui.test.manifest)
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.wheel.picker.compose)
 
