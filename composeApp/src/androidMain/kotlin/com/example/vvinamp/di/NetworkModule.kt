@@ -5,7 +5,6 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.example.data.api.auth.AuthInterceptor
 import com.example.data.api.auth.TokenAuthenticator
 import com.example.data.BuildConfig
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
@@ -33,7 +32,6 @@ val networkModule = module {
 
     single {
         Retrofit.Builder()
-            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .client(get())
             .baseUrl(BuildConfig.BASE_URL)

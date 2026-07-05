@@ -34,7 +34,6 @@ kotlin {
             
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.room.runtime)
-            implementation(libs.room.ktx)
             implementation(libs.room.paging)
             implementation(libs.paging.common)
             implementation(libs.datastore.preferences)
@@ -50,7 +49,6 @@ kotlin {
             implementation(libs.converter.gson)
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
-            implementation(libs.kotlinx.coroutines.android)
         }
         iosMain.dependencies {
         }

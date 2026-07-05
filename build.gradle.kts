@@ -16,8 +16,17 @@ subprojects {
         mavenCentral()
         maven { url = uri("https://jitpack.io") }
     }
+    
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
+            force("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1")
+        }
+    }
+    
     // Apply Detekt plugin for all modules (presentation, data, domain)
     apply(from = "$rootDir/detekt.gradle")
+
     // Apply Kover plugin for all modules except KMP ones (not supported by Kover yet)
     val kmpModules = listOf("data", "domain", "graphql", "composeApp")
     if (!kmpModules.contains(project.name)) {

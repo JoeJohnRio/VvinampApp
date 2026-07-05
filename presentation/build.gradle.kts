@@ -91,7 +91,6 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    implementation(libs.retrofit2.kotlin.coroutines.adapter)
 
     // Room
     implementation(libs.room.runtime)
@@ -102,7 +101,7 @@ dependencies {
     implementation(libs.koin.compose)
 
     // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
+    // implementation(libs.kotlinx.coroutines.android)
 
     // Paging
     implementation(libs.paging.compose)
@@ -136,12 +135,6 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-
-    // Navigation
-    implementation(libs.navigation.compose)
-    implementation(libs.navigation.runtime)
-    implementation(libs.navigation.ui)
-    implementation(libs.navigation.viewmodel)
 
     //media3
     implementation(libs.bundles.media3)

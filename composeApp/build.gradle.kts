@@ -36,10 +36,6 @@ kotlin {
             implementation(project(":data"))
             implementation(project(":graphql"))
 
-            // Navigation 3 (Android only for now)
-            implementation(libs.navigation.runtime)
-            implementation(libs.navigation.ui)
-            implementation(libs.navigation.viewmodel)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
@@ -50,18 +46,15 @@ kotlin {
             
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-
+            
             implementation(libs.lifecycle.runtime.compose)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.paging.common)
 
-            // UI Components
-            implementation(libs.reorderable)
-            implementation(libs.wheel.picker.compose)
-            
-            // Image loading
+            implementation(libs.jetbrain.navigation.ui)
+
             implementation(libs.coil.compose)
 
             implementation(libs.kotlinx.coroutines.core)
@@ -73,27 +66,25 @@ kotlin {
             implementation(libs.palette)
             implementation(libs.bundles.media3)
 
-            // Navigation 3 (Android only for now)
-            implementation(libs.navigation.runtime)
-            implementation(libs.navigation.ui)
-            implementation(libs.navigation.viewmodel)
-            
-            // Paging Compose (Android only for now)
+            // Paging Compose (Currently Android only)
             implementation(libs.paging.compose)
+            
+            // UI Components (Moved to Android only as they might not be KMP ready)
+            implementation(libs.reorderable)
+            implementation(libs.wheel.picker.compose)
+            
+            // ViewModel Compose (Android specific parts if needed)
+            implementation(libs.lifecycle.viewmodel.compose)
 
             // Network (Android-specific parts used in DI)
             implementation(libs.retrofit)
             implementation(libs.converter.gson)
-            implementation(libs.retrofit2.kotlin.coroutines.adapter)
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
             implementation(libs.chucker.debug)
             
             // Image Loading
             implementation(libs.coil.network.okhttp)
-
-
-            implementation(libs.kotlinx.coroutines.android)
         }
     }
 }
