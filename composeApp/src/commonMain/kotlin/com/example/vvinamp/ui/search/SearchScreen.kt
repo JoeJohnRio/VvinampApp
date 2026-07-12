@@ -14,19 +14,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
-import androidx.paging.compose.collectAsLazyPagingItems
-
-import com.example.vvinamp.entities.ButtonData
 import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.main.ScreenWrapper
 import com.example.vvinamp.ui.search.component.StartBrowsingComponent
 import com.example.vvinamp.ui.widget.TextFieldSearchNoClick
 import com.example.vvinamp.ui.widget.TopNavigationWithButtons
+import com.example.vvinamp.util.ButtonData
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
 

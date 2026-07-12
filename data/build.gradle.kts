@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.ksp)
+//    alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
 }
 
@@ -15,7 +15,7 @@ kotlin {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
         }
     }
-    
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -52,11 +52,22 @@ kotlin {
         iosMain.dependencies {
         }
     }
-}
+    afterEvaluate {
+        println("=== TARGETS ===")
+        kotlin.targets.forEach {
+            println("${it.name} -> ${it::class.qualifiedName}")
+        }
 
-dependencies {
-    // KSP needs to be applied here for Room in KMP
-    add("kspAndroid", libs.room.compiler)
-    add("kspIosArm64", libs.room.compiler)
-    add("kspIosSimulatorArm64", libs.room.compiler)
+        println("=== KSP CONFIGS ===")
+        configurations.names
+            .filter { it.startsWith("ksp") }
+            .sorted()
+            .forEach(::println)
+    }
+
+//    targets.configureEach {
+//        // Let Gradle use the native name ("androidLibrary" -> "kspAndroidLibrary")
+//        val configurationName = "ksp${name.replaceFirstChar { it.uppercase() }}"
+//        dependencies.add(configurationName, libs.room.compiler)
+//    }
 }

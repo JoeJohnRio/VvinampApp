@@ -7,7 +7,7 @@ import com.example.vvinamp.navigation.graph.BottomNavDestination
 import com.example.vvinamp.navigation.graph.MainDestination
 import com.example.vvinamp.navigation.rememberNavigationState
 import com.example.vvinamp.ui.theme.AppTheme
-import com.example.vvinamp.ui.theme.AppTypography
+import com.example.vvinamp.ui.theme.appTypography
 import com.example.vvinamp.ui.theme.vvinampDarkColorScheme
 
 @Composable
@@ -26,7 +26,7 @@ fun PreviewTheme(
     // Apply the custom theme here just for the preview
     MaterialTheme(
         colorScheme = vvinampDarkColorScheme,
-        typography = AppTypography,
+        typography = appTypography(),
     ) {
         content()
     }

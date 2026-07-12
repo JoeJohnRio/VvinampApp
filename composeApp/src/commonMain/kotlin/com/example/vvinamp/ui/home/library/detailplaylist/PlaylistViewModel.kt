@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.home.library.detailplaylist
+import androidx.compose.ui.graphics.Color
 import vvinampapp.composeapp.generated.resources.*
 
 import androidx.lifecycle.ViewModel
@@ -190,7 +191,7 @@ class PlaylistViewModel(
                 currentState.editCoverUri?.let { uriString ->
                     val bytes = com.example.vvinamp.util.readBytesFromUri(uriString)
 
-                    val fileName = "cover_${System.currentTimeMillis()}.jpg"
+                    val fileName = "cover_${kotlin.time.Clock.System.now().toEpochMilliseconds()}.jpg"
                     useCase.uploadPlaylistCoverUseCase(
                         playlistId = playlistId,
                         fileName = fileName,

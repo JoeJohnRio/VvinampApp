@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -128,10 +128,7 @@ fun TrackOptionBottomSheetComponent(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(
-    name = "Track Option Bottom Sheet",
-    showBackground = true
-)
+@Preview
 @Composable
 fun TrackOptionBottomSheetPreview() {
     PreviewTheme {

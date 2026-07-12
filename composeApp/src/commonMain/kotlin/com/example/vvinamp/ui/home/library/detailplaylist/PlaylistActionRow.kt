@@ -32,7 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
@@ -100,7 +100,7 @@ fun PlaylistActionTopRow(
             onEvent(PlaylistUiEvent.ToggleShuffleClicked)
         }) {
             Icon(
-                painter = painterResource(id = Res.drawable.ic_shuffle),
+                painter = painterResource(Res.drawable.ic_shuffle),
                 contentDescription = "Shuffle",
                 tint = if (playbackUiState.isShuffle) {
                     MaterialTheme.colorScheme.primary

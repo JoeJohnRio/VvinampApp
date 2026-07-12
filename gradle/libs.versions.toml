@@ -2,14 +2,13 @@
 accompanistSystemuicontroller = "0.27.0"
 appcompat = "1.7.0"
 coilCompose = "3.1.0"
-composeBom = "2026.06.01"
 coreKtx = "1.15.0"
 coreTesting = "2.2.0"
 androidAppGradlePlugin = "9.0.1"
 androidLibraryGradlePlugin = "9.0.1"
 gson = "2.10.1"
 junit = "4.13.2"
-kotlinGradlePlugin = "2.3.0"
+kotlinGradlePlugin = "2.4.0"
 kotlinxCoroutines = "1.10.1"
 kotlinxSerializationJson = "1.6.3"
 lifecycleExtensions = "2.2.0"
@@ -17,19 +16,16 @@ lifecycle = "2.8.7"
 mockitoAndroid = "5.0.0"
 mockitoInline = "5.2.0"
 mockitoKotlin = "5.4.0"
-navigationCompose = "2.8.5"
-navigation3 = "1.2.0-alpha05"
-jetbrainNavigation3 = "1.0.0-alpha05"
-adaptive = "1.3.0-rc01"
+navigation3Version = "1.1.1"
 okhttp = "5.0.0-alpha.2"
 paging = "3.3.4"
 retrofit = "2.9.0"
-room = "2.7.2"
+room = "2.8.4"
 truth = "1.1.3"
 turbine = "0.12.1"
 workRuntimeKtx = "2.10.0"
 detekt = "1.23.6"
-ksp = "2.3.6"
+ksp = "2.3.9"
 kover = "0.8.2"
 koin = "4.2.2"
 kotlinxDatetime = "0.8.0"
@@ -41,16 +37,19 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 material = "1.12.0"
 wheelPickerCompose = "1.1.11"
-composeMultiplatform = "1.11.1"
-apollo = "4.4.0"
+composeMultiplatform = "1.7.3"
+apollo = "5.0.1"
 securityCrypto = "1.1.0"
 datastore = "1.1.7"
 media3 = "1.10.0-beta01"
 palette = "1.0.0"
 chucker = "4.3.1"
 reorderable = "3.1.0"
+constraintlayoutCompose = "1.1.1"
+adaptiveVersion = "1.0.0-alpha04"
 
 [libraries]
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 wheel-picker-compose = { module = "com.github.commandiron:WheelPickerCompose", version.ref = "wheelPickerCompose"}
@@ -111,15 +110,15 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "room" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 
-# Nav3
-jetbrain-navigation-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "jetbrainNavigation3" }
+# Navigation 3
+navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "navigation3Version" }
 
 # UniTest
 junit-junit = { module = "junit:junit", version.ref = "junit" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 mockito-android = { module = "org.mockito:mockito-android", version.ref = "mockitoAndroid" }
 mockito-inline = { module = "org.mockito:mockito-inline", version.ref = "mockitoInline" }
-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
+core-testing = { module = "androidx.ARCH_CORE:core-testing", version.ref = "coreTesting" }
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 truth = { module = "com.google.truth:truth", version.ref = "truth" }
 junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

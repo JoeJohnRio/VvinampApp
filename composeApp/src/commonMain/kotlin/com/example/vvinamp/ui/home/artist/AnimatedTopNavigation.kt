@@ -25,6 +25,7 @@ import com.example.vvinamp.util.getMiddleColor
 
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.PaddingSizeUtil.TopBarHeight
+import org.jetbrains.compose.resources.DrawableResource
 
 
 @Composable
@@ -32,7 +33,7 @@ fun AnimatedTopNavigation(
     innerPadding: PaddingValues,
     title: String,
     topBarAlpha: Float,
-    drawableId: Int = Res.drawable.ic_back_chevron,
+    drawableId: DrawableResource = Res.drawable.ic_back_chevron,
     onBackClick: () -> Unit,
     topBarNameAlpha: Float,
     topBarColor: Color
@@ -86,7 +87,7 @@ fun AnimatedTopSlidingNameNavigation(
     innerPadding: PaddingValues,
     title: String,
     topBarAlpha: Float,
-    drawableId: Int = Res.drawable.ic_back_chevron,
+    drawableId: DrawableResource = Res.drawable.ic_back_chevron,
     onBackClick: () -> Unit,
     titleProgress: Float,
     topBarColor: Color

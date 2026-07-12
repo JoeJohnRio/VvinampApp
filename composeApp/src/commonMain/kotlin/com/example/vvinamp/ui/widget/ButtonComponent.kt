@@ -21,7 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.outlined.Circle
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -43,7 +43,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -409,7 +409,7 @@ fun CircleCheckbox(
     selectedColorContainer: Color = MaterialTheme.colorScheme.primary,
     outlineColor: Color = MaterialTheme.colorScheme.outline,
 ) {
-    val imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.Circle
+    val imageVector = if (selected) Icons.Filled.CheckCircle else Icons.Outlined.CheckCircle
     val tint = if (selected) selectedColorContainer else outlineColor
     val background = if (selected) selectedColorIcon else Color.Transparent
 
@@ -426,7 +426,7 @@ fun CircleCheckbox(
     }
 }
 
-@Preview(apiLevel = 34)
+@Preview
 @Composable
 private fun ButtonsPreview() {
     PreviewTheme {
@@ -549,4 +549,3 @@ private fun ButtonsPreview() {
         }
     }
 }
-

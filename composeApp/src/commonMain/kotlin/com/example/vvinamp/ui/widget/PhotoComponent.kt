@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun NoImagePlaceholder() {
     Image(
-        painter = painterResource(id = Res.drawable.bg_image),
+        painter = painterResource(Res.drawable.bg_image),
         contentDescription = "",
         contentScale = ContentScale.Crop,
     )
@@ -24,7 +24,7 @@ fun NoImagePlaceholder() {
 @Composable
 fun ImageError() {
     Image(
-        painter = painterResource(id = Res.drawable.ic_image_not_supported_24),
+        painter = painterResource(Res.drawable.ic_image_not_supported_24),
         contentDescription = "Error loading image"
     )
     Text("Image failed to load", modifier = Modifier.padding(top = 6.dp))

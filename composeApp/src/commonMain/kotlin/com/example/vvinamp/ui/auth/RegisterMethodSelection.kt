@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.example.vvinamp.navigation.router.AuthRouter
@@ -114,7 +114,7 @@ fun RegisterSelectionButtons(
 }
 
 
-@Preview(apiLevel = 33)
+@Preview
 @Composable
 private fun PagePreview() {
     PreviewTheme {

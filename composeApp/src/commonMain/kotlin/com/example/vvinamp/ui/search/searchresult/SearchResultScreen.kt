@@ -53,7 +53,7 @@ fun SearchResultsScreen(
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
 
     ScreenWrapper(
         isLoading = uiState.isLoading,

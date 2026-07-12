@@ -17,14 +17,14 @@ import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation3.runtime.rememberNavBackStack
 
 import com.example.vvinamp.navigation.graph.AuthDestination
 import com.example.vvinamp.navigation.router.AuthRouter
-import com.example.vvinamp.ui.theme.CircularSTD
+import com.example.vvinamp.ui.theme.circularStdFontFamily
 import com.example.vvinamp.ui.theme.whiteBlackGradientBackground
 import com.example.vvinamp.ui.widget.ButtonOutlined
 import com.example.vvinamp.ui.widget.ButtonSolid
@@ -86,13 +86,13 @@ fun ImageTextRegister(
         Icon(
             modifier = Modifier.size(96.dp),
             tint = Color.White,
-            painter = painterResource(id = Res.drawable.ic_new_v),
+            painter = painterResource(Res.drawable.ic_new_v),
             contentDescription = ""
         )
         Text(
             modifier = Modifier.padding(top = 16.dp),
             text = titleText,
-            fontFamily = CircularSTD,
+            fontFamily = circularStdFontFamily(),
             color = Color.White,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Normal,
@@ -106,7 +106,7 @@ fun ImageTextRegister(
 }
 
 
-@Preview(apiLevel = 36)
+@Preview
 @Composable
 private fun PagePreview() {
     PreviewTheme {

@@ -43,7 +43,7 @@ fun AlbumScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playbackViewModel: PlaybackViewModel = koinViewModel()
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
 
     LaunchedEffect(Unit) {
         viewModel.getAlbum(albumId)

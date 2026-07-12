@@ -1,7 +1,5 @@
 package com.example.vvinamp.util
-import vvinampapp.composeapp.generated.resources.*
 
-import com.example.vvinamp.util.KmpLogger
 import android.util.LruCache
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,7 +18,7 @@ import kotlinx.coroutines.withContext
 
 private val dominantColorCache = LruCache<String, Int>(100)
 
-fun getMiddleColor(
+actual fun getMiddleColor(
     firstColor: Color,
     secondColor: Color
 ): Color {
@@ -28,7 +26,7 @@ fun getMiddleColor(
 }
 
 @Composable
-fun ExtractDominantColorEffect(
+actual fun ExtractDominantColorEffect(
     imageUrl: String?,
     onColorExtracted: (Color) -> Unit // Callback to update uiState
 ) {

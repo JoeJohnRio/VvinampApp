@@ -37,7 +37,9 @@ kotlin {
 
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(compose.material)
             implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -51,8 +53,7 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.paging.common)
 
-            implementation(libs.jetbrain.navigation.ui)
-
+            implementation(libs.navigation3.ui)
             implementation(libs.coil.compose)
 
             implementation(libs.kotlinx.coroutines.core)
@@ -64,6 +65,7 @@ kotlin {
             implementation(libs.palette)
             implementation(libs.bundles.media3)
 
+            implementation(libs.constraintlayout.compose)
             // Paging Compose (Currently Android only)
             implementation(libs.paging.compose)
             

@@ -23,7 +23,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -59,7 +59,7 @@ fun PlaylistScreen(
     playbackViewModel: PlaybackViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
     LaunchedEffect(playlistId) {
@@ -343,7 +343,7 @@ fun PlaylistContent(
     }
 }
 
-@Preview(name = "With Recommended Tracks Detailed", showBackground = true)
+@Preview
 @Composable
 fun PlaylistContentWithRecommendationsDetailedPreview() {
     val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))
@@ -385,7 +385,7 @@ fun PlaylistContentWithRecommendationsPreview() {
     }
 }
 
-@Preview(name = "Without Recommended Tracks", showBackground = true)
+@Preview
 @Composable
 fun PlaylistContentWithoutRecommendationsPreview() {
     val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))

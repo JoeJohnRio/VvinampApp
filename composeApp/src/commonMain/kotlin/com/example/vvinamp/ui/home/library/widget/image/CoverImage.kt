@@ -17,8 +17,8 @@ fun CoverImage(
     AsyncImage(
         model = model,
         contentDescription = null,
-        placeholder = painterResource(id = Res.drawable.bg_image),
-        error = painterResource(id = Res.drawable.bg_image),
+        placeholder = painterResource(Res.drawable.bg_image),
+        error = painterResource(Res.drawable.bg_image),
         contentScale = ContentScale.Crop,
         modifier = modifier
     )

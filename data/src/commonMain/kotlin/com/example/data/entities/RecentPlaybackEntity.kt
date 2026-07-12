@@ -3,6 +3,7 @@ package com.example.data.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.domain.entity.song.TrackDomain
+import kotlinx.datetime.Clock
 
 @Entity(tableName = "recent_playback")
 data class RecentPlaybackEntity(
@@ -12,7 +13,7 @@ data class RecentPlaybackEntity(
     val artistName: String,
     val albumCoverUrl: String,
     val duration: Int,
-    val lastPlayedAt: Long = System.currentTimeMillis()
+    val lastPlayedAt: Long = kotlin.time.Clock.System.now().toEpochMilliseconds()
 )
 
 fun RecentPlaybackEntity.toDomain() = TrackDomain(

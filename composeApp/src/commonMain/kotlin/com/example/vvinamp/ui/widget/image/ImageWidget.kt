@@ -46,7 +46,7 @@ fun ImageWithPlayButton(
         )
 
         Icon(
-            painter = painterResource(id = Res.drawable.ic_play),
+            painter = painterResource(Res.drawable.ic_play),
             contentDescription = "Play",
             tint = Color.White,
             modifier = Modifier.size(24.dp)

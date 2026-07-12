@@ -1,4 +1,4 @@
-@file:OptIn(InternalResourceApi::class)
+@file:OptIn(org.jetbrains.compose.resources.InternalResourceApi::class)
 
 package vvinampapp.composeapp.generated.resources
 
@@ -7,75 +7,129 @@ import kotlin.String
 import kotlin.collections.MutableMap
 import org.jetbrains.compose.resources.FontResource
 import org.jetbrains.compose.resources.InternalResourceApi
-import org.jetbrains.compose.resources.ResourceContentHash
-import org.jetbrains.compose.resources.ResourceItem
 
-private const val MD: String = "composeResources/vvinampapp.composeapp.generated.resources/"
+private object CommonMainFont0 {
+  public val circular_std_black: FontResource by 
+      lazy { init_circular_std_black() }
 
-@delegate:ResourceContentHash(1_466_424_049)
-internal val Res.font.circular_std_black: FontResource by lazy {
-      FontResource("font:circular_std_black", setOf(
-        ResourceItem(setOf(), "${MD}font/circular_std_black.otf", -1, -1),
-      ))
-    }
+  public val circular_std_bold: FontResource by 
+      lazy { init_circular_std_bold() }
 
-@delegate:ResourceContentHash(-1_699_408_366)
-internal val Res.font.circular_std_bold: FontResource by lazy {
-      FontResource("font:circular_std_bold", setOf(
-        ResourceItem(setOf(), "${MD}font/circular_std_bold.otf", -1, -1),
-      ))
-    }
+  public val circular_std_light: FontResource by 
+      lazy { init_circular_std_light() }
 
-@delegate:ResourceContentHash(-584_623_588)
-internal val Res.font.circular_std_light: FontResource by lazy {
-      FontResource("font:circular_std_light", setOf(
-        ResourceItem(setOf(), "${MD}font/circular_std_light.otf", -1, -1),
-      ))
-    }
+  public val circular_std_medium: FontResource by 
+      lazy { init_circular_std_medium() }
 
-@delegate:ResourceContentHash(839_902_046)
-internal val Res.font.circular_std_medium: FontResource by lazy {
-      FontResource("font:circular_std_medium", setOf(
-        ResourceItem(setOf(), "${MD}font/circular_std_medium.otf", -1, -1),
-      ))
-    }
+  public val gotham_bold: FontResource by 
+      lazy { init_gotham_bold() }
 
-@delegate:ResourceContentHash(-1_065_325_489)
-internal val Res.font.gotham_bold: FontResource by lazy {
-      FontResource("font:gotham_bold", setOf(
-        ResourceItem(setOf(), "${MD}font/gotham_bold.ttf", -1, -1),
-      ))
-    }
+  public val gotham_light: FontResource by 
+      lazy { init_gotham_light() }
 
-@delegate:ResourceContentHash(241_279_335)
-internal val Res.font.gotham_light: FontResource by lazy {
-      FontResource("font:gotham_light", setOf(
-        ResourceItem(setOf(), "${MD}font/gotham_light.ttf", -1, -1),
-      ))
-    }
+  public val gotham_medium: FontResource by 
+      lazy { init_gotham_medium() }
 
-@delegate:ResourceContentHash(-1_795_196_138)
-internal val Res.font.gotham_medium: FontResource by lazy {
-      FontResource("font:gotham_medium", setOf(
-        ResourceItem(setOf(), "${MD}font/gotham_medium.ttf", -1, -1),
-      ))
-    }
-
-@delegate:ResourceContentHash(1_731_408_076)
-internal val Res.font.gotham_regular: FontResource by lazy {
-      FontResource("font:gotham_regular", setOf(
-        ResourceItem(setOf(), "${MD}font/gotham_regular.otf", -1, -1),
-      ))
-    }
+  public val gotham_regular: FontResource by 
+      lazy { init_gotham_regular() }
+}
 
 @InternalResourceApi
 internal fun _collectCommonMainFont0Resources(map: MutableMap<String, FontResource>) {
-  map.put("circular_std_black", Res.font.circular_std_black)
-  map.put("circular_std_bold", Res.font.circular_std_bold)
-  map.put("circular_std_light", Res.font.circular_std_light)
-  map.put("circular_std_medium", Res.font.circular_std_medium)
-  map.put("gotham_bold", Res.font.gotham_bold)
-  map.put("gotham_light", Res.font.gotham_light)
-  map.put("gotham_medium", Res.font.gotham_medium)
-  map.put("gotham_regular", Res.font.gotham_regular)
+  map.put("circular_std_black", CommonMainFont0.circular_std_black)
+  map.put("circular_std_bold", CommonMainFont0.circular_std_bold)
+  map.put("circular_std_light", CommonMainFont0.circular_std_light)
+  map.put("circular_std_medium", CommonMainFont0.circular_std_medium)
+  map.put("gotham_bold", CommonMainFont0.gotham_bold)
+  map.put("gotham_light", CommonMainFont0.gotham_light)
+  map.put("gotham_medium", CommonMainFont0.gotham_medium)
+  map.put("gotham_regular", CommonMainFont0.gotham_regular)
 }
+
+internal val Res.font.circular_std_black: FontResource
+  get() = CommonMainFont0.circular_std_black
+
+private fun init_circular_std_black(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:circular_std_black",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/circular_std_black.otf", -1, -1),
+    )
+)
+
+internal val Res.font.circular_std_bold: FontResource
+  get() = CommonMainFont0.circular_std_bold
+
+private fun init_circular_std_bold(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:circular_std_bold",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/circular_std_bold.otf", -1, -1),
+    )
+)
+
+internal val Res.font.circular_std_light: FontResource
+  get() = CommonMainFont0.circular_std_light
+
+private fun init_circular_std_light(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:circular_std_light",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/circular_std_light.otf", -1, -1),
+    )
+)
+
+internal val Res.font.circular_std_medium: FontResource
+  get() = CommonMainFont0.circular_std_medium
+
+private fun init_circular_std_medium(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:circular_std_medium",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/circular_std_medium.otf", -1, -1),
+    )
+)
+
+internal val Res.font.gotham_bold: FontResource
+  get() = CommonMainFont0.gotham_bold
+
+private fun init_gotham_bold(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:gotham_bold",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/gotham_bold.ttf", -1, -1),
+    )
+)
+
+internal val Res.font.gotham_light: FontResource
+  get() = CommonMainFont0.gotham_light
+
+private fun init_gotham_light(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:gotham_light",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/gotham_light.ttf", -1, -1),
+    )
+)
+
+internal val Res.font.gotham_medium: FontResource
+  get() = CommonMainFont0.gotham_medium
+
+private fun init_gotham_medium(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:gotham_medium",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/gotham_medium.ttf", -1, -1),
+    )
+)
+
+internal val Res.font.gotham_regular: FontResource
+  get() = CommonMainFont0.gotham_regular
+
+private fun init_gotham_regular(): FontResource = org.jetbrains.compose.resources.FontResource(
+  "font:gotham_regular",
+    setOf(
+      org.jetbrains.compose.resources.ResourceItem(setOf(),
+    "composeResources/vvinampapp.composeapp.generated.resources/font/gotham_regular.otf", -1, -1),
+    )
+)

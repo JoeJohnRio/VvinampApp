@@ -1,11 +1,11 @@
 package com.example.vvinamp.ui.main.playback
 
-import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.util.Log
 import androidx.annotation.OptIn
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -26,18 +26,17 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-class PlaybackViewModel @OptIn(UnstableApi::class)
+actual class PlaybackViewModel @OptIn(UnstableApi::class)
 constructor(
     private val playbackRepository: PlaybackUseCase,
-    private val application: Application
-) : AndroidViewModel(application) {
+    private val context: Context
+) : ViewModel() {
     private val _uiState = MutableStateFlow(PlaybackUiState())
-    val uiState = _uiState.asStateFlow()
+    actual val uiState = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<PlaybackEvent>()
     val events = _events.asSharedFlow()
@@ -49,8 +48,8 @@ constructor(
 
     init {
         val sessionToken =
-            SessionToken(application, ComponentName(application, PlaybackService::class.java))
-        val controllerFuture = MediaController.Builder(application, sessionToken).buildAsync()
+            SessionToken(context, ComponentName(context, PlaybackService::class.java))
+        val controllerFuture = MediaController.Builder(context, sessionToken).buildAsync()
 
         // Inside your ViewModel
         controllerFuture.addListener({
@@ -110,7 +109,7 @@ constructor(
         }
     }
 
-    fun onEvent(event: PlaybackUiEvent) {
+    actual fun onEvent(event: PlaybackUiEvent) {
         when (event) {
             is PlaybackUiEvent.TogglePlayback -> {
                 togglePlayback()
@@ -491,9 +490,9 @@ constructor(
         }
     }
 
-    fun isPlaying(): Boolean = mediaController.value?.isPlaying == true
+    actual fun isPlaying(): Boolean = mediaController.value?.isPlaying == true
 
-    fun updateDominantColor(color: Color) {
+    actual fun updateDominantColor(color: Color) {
         _uiState.update { it.copy(dominantColor = color) }
     }
 

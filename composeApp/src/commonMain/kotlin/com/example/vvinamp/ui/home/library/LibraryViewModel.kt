@@ -11,6 +11,16 @@ import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.playlist.PlaylistSortOrderDomain
 import com.example.domain.usecase.PlaylistUseCase
 import com.example.vvinamp.ui.home.HomeEvent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
 class LibraryViewModel(
     private val useCase: PlaylistUseCase
 ) : ViewModel() {
@@ -50,6 +60,7 @@ class LibraryViewModel(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val myPlaylists: Flow<PagingData<PlaylistMinimal>> = uiState
         .flatMapLatest { uiState ->
             useCase.getMyPlaylistFeedUseCase.invoke(uiState.currentSort)

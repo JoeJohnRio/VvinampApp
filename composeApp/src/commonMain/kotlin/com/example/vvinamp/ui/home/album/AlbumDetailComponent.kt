@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.data.util.dateToYear
@@ -131,7 +131,7 @@ fun AlbumDetailComponent(
 
             IconButton(onClick = onShuffleClick) {
                 Icon(
-                    painter = painterResource(id = Res.drawable.ic_shuffle), // Use a shuffle drawable
+                    painter = painterResource(Res.drawable.ic_shuffle), // Use a shuffle drawable
                     contentDescription = "Shuffle",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(56.dp)
