@@ -1,7 +1,6 @@
 package com.example.vvinamp.ui.home.library
 import vvinampapp.composeapp.generated.resources.*
 
-import com.example.vvinamp.util.KmpLogger
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -62,8 +61,8 @@ class LibraryViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val myPlaylists: Flow<PagingData<PlaylistMinimal>> = uiState
-        .flatMapLatest { uiState ->
-            useCase.getMyPlaylistFeedUseCase.invoke(uiState.currentSort)
+        .flatMapLatest { state ->
+            useCase.getMyPlaylistFeedUseCase.invoke(state.currentSort)
         }
         .cachedIn(viewModelScope)
 

@@ -37,6 +37,7 @@ import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.example.vvinamp.ui.navigationbar.util.ScrimAlphaBoxAnchored
 import com.example.vvinamp.util.ExtractDominantColorEffect
 import kotlinx.coroutines.launch
+import com.example.vvinamp.ui.main.playback.PlaybackUiState
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -46,8 +47,8 @@ fun MainScreenContainer(
     navigationState: NavigationState,
     content: @Composable () -> Unit,
 ) {
-    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle()
-    val mediaController by playbackViewModel.mediaController.collectAsStateWithLifecycle()
+    val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
+    val mediaController by playbackViewModel.mediaController.collectAsStateWithLifecycle(null)
     val uiState = NavigationBarUiState()
     val density = LocalDensity.current
     val navBars = WindowInsets.navigationBars

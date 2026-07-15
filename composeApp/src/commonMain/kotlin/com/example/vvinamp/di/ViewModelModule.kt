@@ -1,3 +1,4 @@
+@file:JvmName("AndroidViewModelModuleKt")
 package com.example.vvinamp.di
 
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
@@ -13,6 +14,7 @@ import com.example.vvinamp.ui.search.SearchViewModel
 import com.example.vvinamp.ui.settings.SettingsViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import kotlin.jvm.JvmName
 
 val commonViewModelModule = module {
     viewModelOf(::AuthViewModel)

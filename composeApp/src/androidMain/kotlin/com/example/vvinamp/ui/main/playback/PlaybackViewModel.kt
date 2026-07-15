@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.StateFlow
 
 
 actual class PlaybackViewModel @OptIn(UnstableApi::class)
@@ -36,13 +37,13 @@ constructor(
     private val context: Context
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PlaybackUiState())
-    actual val uiState = _uiState.asStateFlow()
+    actual val uiState: StateFlow<PlaybackUiState> = _uiState.asStateFlow()
 
     private val _events = MutableSharedFlow<PlaybackEvent>()
     val events = _events.asSharedFlow()
 
     private val _mediaController = MutableStateFlow<MediaController?>(null)
-    val mediaController = _mediaController.asStateFlow()
+    actual val mediaController: StateFlow<Any?> = _mediaController.asStateFlow()
 
     private var sleepTimerJob: Job? = null
 
@@ -94,7 +95,7 @@ constructor(
         }
     }
 
-    fun onEventTrackOptions(event: TrackOptionsUiEvent) {
+    actual fun onEventTrackOptions(event: TrackOptionsUiEvent) {
         when (event) {
             is TrackOptionsUiEvent.OnSleepTimerClick -> {
                 showSleepTimerSheet()
@@ -221,7 +222,7 @@ constructor(
         _uiState.update { it.copy(isSleepTimerSheetVisible = true) }
     }
 
-    fun hideSleepTimerSheet() {
+    actual fun hideSleepTimerSheet() {
         _uiState.update { it.copy(isSleepTimerSheetVisible = false) }
     }
 
@@ -369,22 +370,22 @@ constructor(
 
     fun start(url: String) {
         val mediaItem = MediaItem.fromUri(url)
-        mediaController.value?.setMediaItem(mediaItem)
-        mediaController.value?.prepare()
-        mediaController.value?.play()
+        _mediaController.value?.setMediaItem(mediaItem)
+        _mediaController.value?.prepare()
+        _mediaController.value?.play()
     }
 
     override fun onCleared() {
         super.onCleared()
-        mediaController.value?.release()
+        _mediaController.value?.release()
     }
 
     fun play() {
-        mediaController.value?.play()
+        _mediaController.value?.play()
     }
 
     fun pause() {
-        mediaController.value?.pause()
+        _mediaController.value?.pause()
     }
 
     private fun togglePlayback() {
@@ -408,7 +409,7 @@ constructor(
     }
 
     fun Boolean.toRepeatInt(): Int {
-        if (true) {
+        if (this) {
             return Player.REPEAT_MODE_ALL
         } else {
             return Player.REPEAT_MODE_OFF
@@ -416,7 +417,7 @@ constructor(
     }
 
     fun setRepeatMode(mode: Int) {
-        mediaController.value?.repeatMode = mode
+        _mediaController.value?.repeatMode = mode
     }
 
     private fun toggleShuffleClicked() {
@@ -490,7 +491,7 @@ constructor(
         }
     }
 
-    actual fun isPlaying(): Boolean = mediaController.value?.isPlaying == true
+    actual fun isPlaying(): Boolean = _mediaController.value?.isPlaying == true
 
     actual fun updateDominantColor(color: Color) {
         _uiState.update { it.copy(dominantColor = color) }

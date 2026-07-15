@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
-import com.commandiron.wheel_picker_compose.WheelDatePicker
-import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.example.data.util.toLocalDate
 
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
@@ -44,9 +42,6 @@ fun RegisterBirthDatePage(
     authRouter: AuthRouter,
     viewModel: AuthViewModel = koinViewModel()
 ) {
-    val currentLocalDate by remember {
-        mutableStateOf(viewModel.user.birthDate.toLocalDate())
-    }
     Scaffold(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
@@ -79,22 +74,9 @@ fun RegisterBirthDatePage(
                     .padding(top = 32.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                WheelDatePicker (
-                    startDate = currentLocalDate,
-                    size = DpSize(300.dp, 150.dp),
-                    rowCount = 3,
-                    textStyle = MaterialTheme.typography.labelMedium
-                        .copy(fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium),
-                    textColor = MaterialTheme.colorScheme.inversePrimary,
-                    selectorProperties = WheelPickerDefaults.selectorProperties(
-                        enabled = false,
-                    )
-                ){ snappedDateTime ->
-                    viewModel.user = viewModel.user.copy(
-                        birthDate = snappedDateTime.toString()
-                    )
-                }
+                // TODO: Replace with a Multiplatform Date Picker. 
+                // WheelDatePicker is Android-only and requires java.time.LocalDate.
+                Text("Date Picker Placeholder", color = MaterialTheme.colorScheme.inversePrimary)
             }
 
             Row(

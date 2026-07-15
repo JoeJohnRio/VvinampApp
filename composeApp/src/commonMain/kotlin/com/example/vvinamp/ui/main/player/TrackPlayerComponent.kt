@@ -23,14 +23,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.media3.common.Player
-import androidx.media3.common.util.UnstableApi
 
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
-import com.example.vvinamp.ui.widget.CustomProgressSlider
+import com.example.vvinamp.ui.widget.playback.CustomProgressSlider
 import com.example.vvinamp.ui.widget.playback.CustomDurationText
 import com.example.vvinamp.ui.widget.playback.CustomPositionText
 import com.example.vvinamp.util.orErrorNoText
@@ -40,7 +38,7 @@ fun TrackPlayerComponent(
     uiState: PlaybackUiState,
     onEvent: (PlaybackUiEvent) -> Unit,
     onAddToPlaylistClicked: () -> Unit,
-    player: Player?,
+    player: Any?,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -91,9 +89,8 @@ fun TrackPlayerComponent(
     }
 }
 
-@androidx.annotation.OptIn(UnstableApi::class)
 @Composable
-fun PlayerProgressBar(player: Player?) {
+fun PlayerProgressBar(player: Any?) {
     if (player != null) {
         CustomProgressSlider(
             player = player,

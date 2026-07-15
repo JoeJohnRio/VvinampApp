@@ -19,4 +19,5 @@ object PaddingSizeUtil {
     val TopBarHeight = 56.dp
 
     val AlbumHeroSize = AlbumImageSize + BigPadding + 46.dp
+    val PlaylistHeroSize = PlaylistNoPhotoSize + BigPadding + 46.dp
 }

@@ -53,18 +53,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.Player
-import androidx.media3.session.MediaController
+
 import coil3.compose.AsyncImage
 
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.util.lockOrientation
 import com.example.vvinamp.util.preview.PreviewTheme
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-import androidx.compose.runtime.collectAsState
 import com.example.domain.entity.song.trackDummy
 
 enum class BottomSheetState { EXPANDED, COLLAPSED }
@@ -74,7 +71,7 @@ enum class BottomSheetState { EXPANDED, COLLAPSED }
 fun PlayerSheet(
     onEvent: (PlaybackUiEvent) -> Unit,
     playbackUiState: PlaybackUiState,
-    player: Player?,
+    player: Any?,
     state: AnchoredDraggableState<BottomSheetState>,
 ) {
     val scope = rememberCoroutineScope()
@@ -225,7 +222,7 @@ fun PlayerSheetContent(
     onEvent: (PlaybackUiEvent) -> Unit,
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
-    player: Player?,
+    player: Any?,
     maxHeight: Dp
 ) {
     Column(
@@ -342,7 +339,6 @@ fun ShareTrackComponent() {
 @Preview
 @Composable
 fun PlayerSheetPreview() {
-    val _mediaController = MutableStateFlow<MediaController?>(null)
     val playerState = remember {
         AnchoredDraggableState(initialValue = BottomSheetState.EXPANDED)
     }
@@ -355,7 +351,7 @@ fun PlayerSheetPreview() {
             playbackUiState = PlaybackUiState(
                 currentTrack = trackDummy.first()
             ),
-            player = _mediaController.collectAsState().value,
+            player = null,
             state = playerState
         )
     }

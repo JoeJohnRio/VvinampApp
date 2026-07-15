@@ -1,15 +1,7 @@
 package com.example.vvinamp.ui.widget.playback
 
-import androidx.annotation.OptIn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.media3.common.util.UnstableApi
-import androidx.media3.common.util.Util.getStringForTime
-import androidx.media3.ui.compose.material3.indicator.TimeFormat
-import androidx.media3.ui.compose.state.ProgressStateWithTickInterval
 import android.text.format.DateUtils
 import androidx.media3.common.C
 import androidx.compose.runtime.*
@@ -83,15 +75,18 @@ fun Long.formatAsTime(): String {
 }
 
 @Composable
-fun CustomPositionText(
-    player: Player,
-    color: Color = MaterialTheme.colorScheme.inversePrimary
+actual fun CustomPositionText(
+    player: Any?,
+    color: Color
 ) {
-    val position = rememberPlayerPosition(player)
+    val realPlayer = player as? Player ?: return
+    val position = rememberPlayerPosition(realPlayer)
+
+    val finalColor = if (color == Color.Unspecified) MaterialTheme.colorScheme.inversePrimary else color
 
     Text(
         text = position.formatAsTime(),
-        color = color,
+        color = finalColor,
         style = TSLabelMediumWhite().copy(
             fontSize = 12.sp
         )
@@ -99,15 +94,18 @@ fun CustomPositionText(
 }
 
 @Composable
-fun CustomDurationText(
-    player: Player,
-    color: Color = MaterialTheme.colorScheme.inversePrimary
+actual fun CustomDurationText(
+    player: Any?,
+    color: Color
 ) {
-    val duration = rememberPlayerDuration(player)
+    val realPlayer = player as? Player ?: return
+    val duration = rememberPlayerDuration(realPlayer)
+
+    val finalColor = if (color == Color.Unspecified) MaterialTheme.colorScheme.inversePrimary else color
 
     Text(
         text = duration.formatAsTime(),
-        color = color,
+        color = finalColor,
         style = TSLabelMediumWhite().copy(
             fontSize = 12.sp
         )

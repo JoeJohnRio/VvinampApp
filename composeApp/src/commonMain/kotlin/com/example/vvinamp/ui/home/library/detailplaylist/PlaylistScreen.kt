@@ -365,7 +365,7 @@ fun PlaylistContentWithRecommendationsDetailedPreview() {
     }
 }
 
-@Preview(name = "With Recommended Tracks", showBackground = true)
+@Preview
 @Composable
 fun PlaylistContentWithRecommendationsPreview() {
     val pagingDataFlow = MutableStateFlow(PagingData.from(trackDummy))

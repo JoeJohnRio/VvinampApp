@@ -26,12 +26,12 @@ import com.example.vvinamp.ui.widget.TopNavigationWithButtons
 import com.example.vvinamp.util.ButtonData
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
+import androidx.compose.foundation.ExperimentalFoundationApi
 
 @Composable
 fun SearchScreen(bottomNavRouter: BottomNavRouter) {
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.onSearchInput("")
@@ -52,6 +52,7 @@ fun SearchScreen(bottomNavRouter: BottomNavRouter) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch: () -> Unit) {
     val scrollState = rememberLazyListState()

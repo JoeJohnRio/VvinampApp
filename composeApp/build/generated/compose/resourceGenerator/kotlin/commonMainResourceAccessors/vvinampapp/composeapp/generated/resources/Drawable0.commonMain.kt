@@ -1,4 +1,4 @@
-@file:OptIn(org.jetbrains.compose.resources.InternalResourceApi::class)
+@file:OptIn(InternalResourceApi::class)
 
 package vvinampapp.composeapp.generated.resources
 
@@ -7,906 +7,475 @@ import kotlin.String
 import kotlin.collections.MutableMap
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.InternalResourceApi
+import org.jetbrains.compose.resources.ResourceContentHash
+import org.jetbrains.compose.resources.ResourceItem
 
-private object CommonMainDrawable0 {
-  public val bg_image: DrawableResource by 
-      lazy { init_bg_image() }
+private const val MD: String = "composeResources/vvinampapp.composeapp.generated.resources/"
 
-  public val ic_arrow_back: DrawableResource by 
-      lazy { init_ic_arrow_back() }
+@delegate:ResourceContentHash(1_870_468_419)
+public val Res.drawable.bg_image: DrawableResource by lazy {
+      DrawableResource("drawable:bg_image", setOf(
+        ResourceItem(setOf(), "${MD}drawable/bg_image.png", -1, -1),
+      ))
+    }
 
-  public val ic_arrow_left: DrawableResource by 
-      lazy { init_ic_arrow_left() }
+@delegate:ResourceContentHash(-903_687_293)
+public val Res.drawable.ic_arrow_back: DrawableResource by lazy {
+      DrawableResource("drawable:ic_arrow_back", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_arrow_back.xml", -1, -1),
+      ))
+    }
 
-  public val ic_arrow_up_down: DrawableResource by 
-      lazy { init_ic_arrow_up_down() }
+@delegate:ResourceContentHash(1_942_266_226)
+public val Res.drawable.ic_arrow_left: DrawableResource by lazy {
+      DrawableResource("drawable:ic_arrow_left", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_arrow_left.xml", -1, -1),
+      ))
+    }
 
-  public val ic_back_arrow: DrawableResource by 
-      lazy { init_ic_back_arrow() }
+@delegate:ResourceContentHash(1_568_036_516)
+public val Res.drawable.ic_arrow_up_down: DrawableResource by lazy {
+      DrawableResource("drawable:ic_arrow_up_down", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_arrow_up_down.xml", -1, -1),
+      ))
+    }
 
-  public val ic_back_chevron: DrawableResource by 
-      lazy { init_ic_back_chevron() }
+@delegate:ResourceContentHash(1_718_757_315)
+public val Res.drawable.ic_back_arrow: DrawableResource by lazy {
+      DrawableResource("drawable:ic_back_arrow", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_back_arrow.xml", -1, -1),
+      ))
+    }
 
-  public val ic_bullet_horizontal: DrawableResource by 
-      lazy { init_ic_bullet_horizontal() }
+@delegate:ResourceContentHash(-435_193_530)
+public val Res.drawable.ic_back_chevron: DrawableResource by lazy {
+      DrawableResource("drawable:ic_back_chevron", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_back_chevron.xml", -1, -1),
+      ))
+    }
 
-  public val ic_bullet_vertical: DrawableResource by 
-      lazy { init_ic_bullet_vertical() }
+@delegate:ResourceContentHash(938_027_793)
+public val Res.drawable.ic_bullet_horizontal: DrawableResource by lazy {
+      DrawableResource("drawable:ic_bullet_horizontal", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_bullet_horizontal.xml", -1, -1),
+      ))
+    }
 
-  public val ic_burger: DrawableResource by 
-      lazy { init_ic_burger() }
+@delegate:ResourceContentHash(-1_923_563_109)
+public val Res.drawable.ic_bullet_vertical: DrawableResource by lazy {
+      DrawableResource("drawable:ic_bullet_vertical", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_bullet_vertical.xml", -1, -1),
+      ))
+    }
 
-  public val ic_camera: DrawableResource by 
-      lazy { init_ic_camera() }
+@delegate:ResourceContentHash(570_394_464)
+public val Res.drawable.ic_burger: DrawableResource by lazy {
+      DrawableResource("drawable:ic_burger", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_burger.xml", -1, -1),
+      ))
+    }
 
-  public val ic_check: DrawableResource by 
-      lazy { init_ic_check() }
+@delegate:ResourceContentHash(-660_978_441)
+public val Res.drawable.ic_camera: DrawableResource by lazy {
+      DrawableResource("drawable:ic_camera", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_camera.xml", -1, -1),
+      ))
+    }
 
-  public val ic_chevron_down: DrawableResource by 
-      lazy { init_ic_chevron_down() }
+@delegate:ResourceContentHash(1_900_889_750)
+public val Res.drawable.ic_check: DrawableResource by lazy {
+      DrawableResource("drawable:ic_check", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_check.xml", -1, -1),
+      ))
+    }
 
-  public val ic_chevron_right_blue: DrawableResource by 
-      lazy { init_ic_chevron_right_blue() }
+@delegate:ResourceContentHash(-704_773_678)
+public val Res.drawable.ic_chevron_down: DrawableResource by lazy {
+      DrawableResource("drawable:ic_chevron_down", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_chevron_down.xml", -1, -1),
+      ))
+    }
 
-  public val ic_close: DrawableResource by 
-      lazy { init_ic_close() }
+@delegate:ResourceContentHash(1_740_265_004)
+public val Res.drawable.ic_chevron_right_blue: DrawableResource by lazy {
+      DrawableResource("drawable:ic_chevron_right_blue", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_chevron_right_blue.xml", -1, -1),
+      ))
+    }
 
-  public val ic_collaboration_group: DrawableResource by 
-      lazy { init_ic_collaboration_group() }
+@delegate:ResourceContentHash(1_391_820_222)
+public val Res.drawable.ic_close: DrawableResource by lazy {
+      DrawableResource("drawable:ic_close", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_close.xml", -1, -1),
+      ))
+    }
 
-  public val ic_create_plus: DrawableResource by 
-      lazy { init_ic_create_plus() }
+@delegate:ResourceContentHash(2_127_117_128)
+public val Res.drawable.ic_collaboration_group: DrawableResource by lazy {
+      DrawableResource("drawable:ic_collaboration_group", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_collaboration_group.xml", -1, -1),
+      ))
+    }
 
-  public val ic_download_circle: DrawableResource by 
-      lazy { init_ic_download_circle() }
+@delegate:ResourceContentHash(1_555_678_883)
+public val Res.drawable.ic_create_plus: DrawableResource by lazy {
+      DrawableResource("drawable:ic_create_plus", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_create_plus.xml", -1, -1),
+      ))
+    }
 
-  public val ic_edit: DrawableResource by 
-      lazy { init_ic_edit() }
+@delegate:ResourceContentHash(-745_580_867)
+public val Res.drawable.ic_download_circle: DrawableResource by lazy {
+      DrawableResource("drawable:ic_download_circle", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_download_circle.xml", -1, -1),
+      ))
+    }
 
-  public val ic_email: DrawableResource by 
-      lazy { init_ic_email() }
+@delegate:ResourceContentHash(1_809_296_615)
+public val Res.drawable.ic_edit: DrawableResource by lazy {
+      DrawableResource("drawable:ic_edit", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_edit.xml", -1, -1),
+      ))
+    }
 
-  public val ic_email_2: DrawableResource by 
-      lazy { init_ic_email_2() }
+@delegate:ResourceContentHash(1_661_943_758)
+public val Res.drawable.ic_email: DrawableResource by lazy {
+      DrawableResource("drawable:ic_email", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_email.xml", -1, -1),
+      ))
+    }
 
-  public val ic_facebook: DrawableResource by 
-      lazy { init_ic_facebook() }
+@delegate:ResourceContentHash(374_335_351)
+public val Res.drawable.ic_email_2: DrawableResource by lazy {
+      DrawableResource("drawable:ic_email_2", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_email_2.xml", -1, -1),
+      ))
+    }
 
-  public val ic_google: DrawableResource by 
-      lazy { init_ic_google() }
+@delegate:ResourceContentHash(1_866_113_464)
+public val Res.drawable.ic_facebook: DrawableResource by lazy {
+      DrawableResource("drawable:ic_facebook", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_facebook.xml", -1, -1),
+      ))
+    }
 
-  public val ic_grid: DrawableResource by 
-      lazy { init_ic_grid() }
+@delegate:ResourceContentHash(1_848_245_674)
+public val Res.drawable.ic_google: DrawableResource by lazy {
+      DrawableResource("drawable:ic_google", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_google.xml", -1, -1),
+      ))
+    }
 
-  public val ic_home: DrawableResource by 
-      lazy { init_ic_home() }
+@delegate:ResourceContentHash(2_119_426_967)
+public val Res.drawable.ic_grid: DrawableResource by lazy {
+      DrawableResource("drawable:ic_grid", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_grid.xml", -1, -1),
+      ))
+    }
 
-  public val ic_image_not_supported_24: DrawableResource by 
-      lazy { init_ic_image_not_supported_24() }
+@delegate:ResourceContentHash(1_229_486_672)
+public val Res.drawable.ic_home: DrawableResource by lazy {
+      DrawableResource("drawable:ic_home", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_home.xml", -1, -1),
+      ))
+    }
 
-  public val ic_launcher_background: DrawableResource by 
-      lazy { init_ic_launcher_background() }
+@delegate:ResourceContentHash(-469_007_426)
+public val Res.drawable.ic_image_not_supported_24: DrawableResource by lazy {
+      DrawableResource("drawable:ic_image_not_supported_24", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_image_not_supported_24.xml", -1, -1),
+      ))
+    }
 
-  public val ic_launcher_foreground: DrawableResource by 
-      lazy { init_ic_launcher_foreground() }
+@delegate:ResourceContentHash(1_269_302_106)
+public val Res.drawable.ic_launcher_background: DrawableResource by lazy {
+      DrawableResource("drawable:ic_launcher_background", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_launcher_background.xml", -1, -1),
+      ))
+    }
 
-  public val ic_library: DrawableResource by 
-      lazy { init_ic_library() }
+@delegate:ResourceContentHash(1_687_323_086)
+public val Res.drawable.ic_launcher_foreground: DrawableResource by lazy {
+      DrawableResource("drawable:ic_launcher_foreground", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_launcher_foreground.xml", -1, -1),
+      ))
+    }
 
-  public val ic_list: DrawableResource by 
-      lazy { init_ic_list() }
+@delegate:ResourceContentHash(1_686_969_515)
+public val Res.drawable.ic_library: DrawableResource by lazy {
+      DrawableResource("drawable:ic_library", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_library.xml", -1, -1),
+      ))
+    }
 
-  public val ic_list_music: DrawableResource by 
-      lazy { init_ic_list_music() }
+@delegate:ResourceContentHash(-416_826_821)
+public val Res.drawable.ic_list: DrawableResource by lazy {
+      DrawableResource("drawable:ic_list", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_list.xml", -1, -1),
+      ))
+    }
 
-  public val ic_lock: DrawableResource by 
-      lazy { init_ic_lock() }
+@delegate:ResourceContentHash(1_487_746_037)
+public val Res.drawable.ic_list_music: DrawableResource by lazy {
+      DrawableResource("drawable:ic_list_music", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_list_music.xml", -1, -1),
+      ))
+    }
 
-  public val ic_logout: DrawableResource by 
-      lazy { init_ic_logout() }
+@delegate:ResourceContentHash(1_972_673_765)
+public val Res.drawable.ic_lock: DrawableResource by lazy {
+      DrawableResource("drawable:ic_lock", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_lock.xml", -1, -1),
+      ))
+    }
 
-  public val ic_loop: DrawableResource by 
-      lazy { init_ic_loop() }
+@delegate:ResourceContentHash(-144_569_314)
+public val Res.drawable.ic_logout: DrawableResource by lazy {
+      DrawableResource("drawable:ic_logout", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_logout.xml", -1, -1),
+      ))
+    }
 
-  public val ic_multi_platform: DrawableResource by 
-      lazy { init_ic_multi_platform() }
+@delegate:ResourceContentHash(1_378_351_979)
+public val Res.drawable.ic_loop: DrawableResource by lazy {
+      DrawableResource("drawable:ic_loop", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_loop.xml", -1, -1),
+      ))
+    }
 
-  public val ic_music_note: DrawableResource by 
-      lazy { init_ic_music_note() }
+@delegate:ResourceContentHash(1_274_729_401)
+public val Res.drawable.ic_multi_platform: DrawableResource by lazy {
+      DrawableResource("drawable:ic_multi_platform", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_multi_platform.xml", -1, -1),
+      ))
+    }
 
-  public val ic_new_v: DrawableResource by 
-      lazy { init_ic_new_v() }
+@delegate:ResourceContentHash(-725_638_198)
+public val Res.drawable.ic_music_note: DrawableResource by lazy {
+      DrawableResource("drawable:ic_music_note", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_music_note.xml", -1, -1),
+      ))
+    }
 
-  public val ic_paragraph: DrawableResource by 
-      lazy { init_ic_paragraph() }
+@delegate:ResourceContentHash(1_027_232_246)
+public val Res.drawable.ic_new_v: DrawableResource by lazy {
+      DrawableResource("drawable:ic_new_v", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_new_v.xml", -1, -1),
+      ))
+    }
 
-  public val ic_pause: DrawableResource by 
-      lazy { init_ic_pause() }
+@delegate:ResourceContentHash(-924_935_237)
+public val Res.drawable.ic_paragraph: DrawableResource by lazy {
+      DrawableResource("drawable:ic_paragraph", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_paragraph.xml", -1, -1),
+      ))
+    }
 
-  public val ic_peoples_solid: DrawableResource by 
-      lazy { init_ic_peoples_solid() }
+@delegate:ResourceContentHash(-100_448_876)
+public val Res.drawable.ic_pause: DrawableResource by lazy {
+      DrawableResource("drawable:ic_pause", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_pause.xml", -1, -1),
+      ))
+    }
 
-  public val ic_pin: DrawableResource by 
-      lazy { init_ic_pin() }
+@delegate:ResourceContentHash(6_081_973)
+public val Res.drawable.ic_peoples_solid: DrawableResource by lazy {
+      DrawableResource("drawable:ic_peoples_solid", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_peoples_solid.xml", -1, -1),
+      ))
+    }
 
-  public val ic_play: DrawableResource by 
-      lazy { init_ic_play() }
+@delegate:ResourceContentHash(-348_637_979)
+public val Res.drawable.ic_pin: DrawableResource by lazy {
+      DrawableResource("drawable:ic_pin", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_pin.xml", -1, -1),
+      ))
+    }
 
-  public val ic_play_back: DrawableResource by 
-      lazy { init_ic_play_back() }
+@delegate:ResourceContentHash(-1_899_262_826)
+public val Res.drawable.ic_play: DrawableResource by lazy {
+      DrawableResource("drawable:ic_play", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_play.xml", -1, -1),
+      ))
+    }
 
-  public val ic_play_forward: DrawableResource by 
-      lazy { init_ic_play_forward() }
+@delegate:ResourceContentHash(-1_933_150_102)
+public val Res.drawable.ic_play_back: DrawableResource by lazy {
+      DrawableResource("drawable:ic_play_back", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_play_back.xml", -1, -1),
+      ))
+    }
 
-  public val ic_plus_circle: DrawableResource by 
-      lazy { init_ic_plus_circle() }
+@delegate:ResourceContentHash(-1_573_534_506)
+public val Res.drawable.ic_play_forward: DrawableResource by lazy {
+      DrawableResource("drawable:ic_play_forward", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_play_forward.xml", -1, -1),
+      ))
+    }
 
-  public val ic_public: DrawableResource by 
-      lazy { init_ic_public() }
+@delegate:ResourceContentHash(-1_929_221_939)
+public val Res.drawable.ic_plus_circle: DrawableResource by lazy {
+      DrawableResource("drawable:ic_plus_circle", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_plus_circle.xml", -1, -1),
+      ))
+    }
 
-  public val ic_search: DrawableResource by 
-      lazy { init_ic_search() }
+@delegate:ResourceContentHash(626_631_700)
+public val Res.drawable.ic_public: DrawableResource by lazy {
+      DrawableResource("drawable:ic_public", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_public.xml", -1, -1),
+      ))
+    }
 
-  public val ic_settings: DrawableResource by 
-      lazy { init_ic_settings() }
+@delegate:ResourceContentHash(-737_215_091)
+public val Res.drawable.ic_search: DrawableResource by lazy {
+      DrawableResource("drawable:ic_search", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_search.xml", -1, -1),
+      ))
+    }
 
-  public val ic_share: DrawableResource by 
-      lazy { init_ic_share() }
+@delegate:ResourceContentHash(1_317_551_218)
+public val Res.drawable.ic_settings: DrawableResource by lazy {
+      DrawableResource("drawable:ic_settings", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_settings.xml", -1, -1),
+      ))
+    }
 
-  public val ic_shuffle: DrawableResource by 
-      lazy { init_ic_shuffle() }
+@delegate:ResourceContentHash(1_830_611_181)
+public val Res.drawable.ic_share: DrawableResource by lazy {
+      DrawableResource("drawable:ic_share", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_share.xml", -1, -1),
+      ))
+    }
 
-  public val ic_smartphone: DrawableResource by 
-      lazy { init_ic_smartphone() }
+@delegate:ResourceContentHash(-148_033_097)
+public val Res.drawable.ic_shuffle: DrawableResource by lazy {
+      DrawableResource("drawable:ic_shuffle", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_shuffle.xml", -1, -1),
+      ))
+    }
 
-  public val ic_stop_remove: DrawableResource by 
-      lazy { init_ic_stop_remove() }
+@delegate:ResourceContentHash(1_049_414_652)
+public val Res.drawable.ic_smartphone: DrawableResource by lazy {
+      DrawableResource("drawable:ic_smartphone", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_smartphone.xml", -1, -1),
+      ))
+    }
 
-  public val ic_stopwatch: DrawableResource by 
-      lazy { init_ic_stopwatch() }
+@delegate:ResourceContentHash(348_660_884)
+public val Res.drawable.ic_stop_remove: DrawableResource by lazy {
+      DrawableResource("drawable:ic_stop_remove", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_stop_remove.xml", -1, -1),
+      ))
+    }
 
-  public val ic_target: DrawableResource by 
-      lazy { init_ic_target() }
+@delegate:ResourceContentHash(2_048_083_326)
+public val Res.drawable.ic_stopwatch: DrawableResource by lazy {
+      DrawableResource("drawable:ic_stopwatch", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_stopwatch.xml", -1, -1),
+      ))
+    }
 
-  public val ic_trash: DrawableResource by 
-      lazy { init_ic_trash() }
+@delegate:ResourceContentHash(520_334_799)
+public val Res.drawable.ic_target: DrawableResource by lazy {
+      DrawableResource("drawable:ic_target", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_target.xml", -1, -1),
+      ))
+    }
 
-  public val ic_venn: DrawableResource by 
-      lazy { init_ic_venn() }
+@delegate:ResourceContentHash(2_120_397_403)
+public val Res.drawable.ic_trash: DrawableResource by lazy {
+      DrawableResource("drawable:ic_trash", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_trash.xml", -1, -1),
+      ))
+    }
 
-  public val ic_vvinamp: DrawableResource by 
-      lazy { init_ic_vvinamp() }
+@delegate:ResourceContentHash(-2_056_915_641)
+public val Res.drawable.ic_venn: DrawableResource by lazy {
+      DrawableResource("drawable:ic_venn", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_venn.xml", -1, -1),
+      ))
+    }
 
-  public val ic_vvinamp_white: DrawableResource by 
-      lazy { init_ic_vvinamp_white() }
+@delegate:ResourceContentHash(-859_902_916)
+public val Res.drawable.ic_vvinamp: DrawableResource by lazy {
+      DrawableResource("drawable:ic_vvinamp", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_vvinamp.xml", -1, -1),
+      ))
+    }
 
-  public val ic_youtube: DrawableResource by 
-      lazy { init_ic_youtube() }
-}
+@delegate:ResourceContentHash(-1_523_157_055)
+public val Res.drawable.ic_vvinamp_white: DrawableResource by lazy {
+      DrawableResource("drawable:ic_vvinamp_white", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_vvinamp_white.xml", -1, -1),
+      ))
+    }
+
+@delegate:ResourceContentHash(-102_701_439)
+public val Res.drawable.ic_youtube: DrawableResource by lazy {
+      DrawableResource("drawable:ic_youtube", setOf(
+        ResourceItem(setOf(), "${MD}drawable/ic_youtube.xml", -1, -1),
+      ))
+    }
 
 @InternalResourceApi
 internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, DrawableResource>) {
-  map.put("bg_image", CommonMainDrawable0.bg_image)
-  map.put("ic_arrow_back", CommonMainDrawable0.ic_arrow_back)
-  map.put("ic_arrow_left", CommonMainDrawable0.ic_arrow_left)
-  map.put("ic_arrow_up_down", CommonMainDrawable0.ic_arrow_up_down)
-  map.put("ic_back_arrow", CommonMainDrawable0.ic_back_arrow)
-  map.put("ic_back_chevron", CommonMainDrawable0.ic_back_chevron)
-  map.put("ic_bullet_horizontal", CommonMainDrawable0.ic_bullet_horizontal)
-  map.put("ic_bullet_vertical", CommonMainDrawable0.ic_bullet_vertical)
-  map.put("ic_burger", CommonMainDrawable0.ic_burger)
-  map.put("ic_camera", CommonMainDrawable0.ic_camera)
-  map.put("ic_check", CommonMainDrawable0.ic_check)
-  map.put("ic_chevron_down", CommonMainDrawable0.ic_chevron_down)
-  map.put("ic_chevron_right_blue", CommonMainDrawable0.ic_chevron_right_blue)
-  map.put("ic_close", CommonMainDrawable0.ic_close)
-  map.put("ic_collaboration_group", CommonMainDrawable0.ic_collaboration_group)
-  map.put("ic_create_plus", CommonMainDrawable0.ic_create_plus)
-  map.put("ic_download_circle", CommonMainDrawable0.ic_download_circle)
-  map.put("ic_edit", CommonMainDrawable0.ic_edit)
-  map.put("ic_email", CommonMainDrawable0.ic_email)
-  map.put("ic_email_2", CommonMainDrawable0.ic_email_2)
-  map.put("ic_facebook", CommonMainDrawable0.ic_facebook)
-  map.put("ic_google", CommonMainDrawable0.ic_google)
-  map.put("ic_grid", CommonMainDrawable0.ic_grid)
-  map.put("ic_home", CommonMainDrawable0.ic_home)
-  map.put("ic_image_not_supported_24", CommonMainDrawable0.ic_image_not_supported_24)
-  map.put("ic_launcher_background", CommonMainDrawable0.ic_launcher_background)
-  map.put("ic_launcher_foreground", CommonMainDrawable0.ic_launcher_foreground)
-  map.put("ic_library", CommonMainDrawable0.ic_library)
-  map.put("ic_list", CommonMainDrawable0.ic_list)
-  map.put("ic_list_music", CommonMainDrawable0.ic_list_music)
-  map.put("ic_lock", CommonMainDrawable0.ic_lock)
-  map.put("ic_logout", CommonMainDrawable0.ic_logout)
-  map.put("ic_loop", CommonMainDrawable0.ic_loop)
-  map.put("ic_multi_platform", CommonMainDrawable0.ic_multi_platform)
-  map.put("ic_music_note", CommonMainDrawable0.ic_music_note)
-  map.put("ic_new_v", CommonMainDrawable0.ic_new_v)
-  map.put("ic_paragraph", CommonMainDrawable0.ic_paragraph)
-  map.put("ic_pause", CommonMainDrawable0.ic_pause)
-  map.put("ic_peoples_solid", CommonMainDrawable0.ic_peoples_solid)
-  map.put("ic_pin", CommonMainDrawable0.ic_pin)
-  map.put("ic_play", CommonMainDrawable0.ic_play)
-  map.put("ic_play_back", CommonMainDrawable0.ic_play_back)
-  map.put("ic_play_forward", CommonMainDrawable0.ic_play_forward)
-  map.put("ic_plus_circle", CommonMainDrawable0.ic_plus_circle)
-  map.put("ic_public", CommonMainDrawable0.ic_public)
-  map.put("ic_search", CommonMainDrawable0.ic_search)
-  map.put("ic_settings", CommonMainDrawable0.ic_settings)
-  map.put("ic_share", CommonMainDrawable0.ic_share)
-  map.put("ic_shuffle", CommonMainDrawable0.ic_shuffle)
-  map.put("ic_smartphone", CommonMainDrawable0.ic_smartphone)
-  map.put("ic_stop_remove", CommonMainDrawable0.ic_stop_remove)
-  map.put("ic_stopwatch", CommonMainDrawable0.ic_stopwatch)
-  map.put("ic_target", CommonMainDrawable0.ic_target)
-  map.put("ic_trash", CommonMainDrawable0.ic_trash)
-  map.put("ic_venn", CommonMainDrawable0.ic_venn)
-  map.put("ic_vvinamp", CommonMainDrawable0.ic_vvinamp)
-  map.put("ic_vvinamp_white", CommonMainDrawable0.ic_vvinamp_white)
-  map.put("ic_youtube", CommonMainDrawable0.ic_youtube)
+  map.put("bg_image", Res.drawable.bg_image)
+  map.put("ic_arrow_back", Res.drawable.ic_arrow_back)
+  map.put("ic_arrow_left", Res.drawable.ic_arrow_left)
+  map.put("ic_arrow_up_down", Res.drawable.ic_arrow_up_down)
+  map.put("ic_back_arrow", Res.drawable.ic_back_arrow)
+  map.put("ic_back_chevron", Res.drawable.ic_back_chevron)
+  map.put("ic_bullet_horizontal", Res.drawable.ic_bullet_horizontal)
+  map.put("ic_bullet_vertical", Res.drawable.ic_bullet_vertical)
+  map.put("ic_burger", Res.drawable.ic_burger)
+  map.put("ic_camera", Res.drawable.ic_camera)
+  map.put("ic_check", Res.drawable.ic_check)
+  map.put("ic_chevron_down", Res.drawable.ic_chevron_down)
+  map.put("ic_chevron_right_blue", Res.drawable.ic_chevron_right_blue)
+  map.put("ic_close", Res.drawable.ic_close)
+  map.put("ic_collaboration_group", Res.drawable.ic_collaboration_group)
+  map.put("ic_create_plus", Res.drawable.ic_create_plus)
+  map.put("ic_download_circle", Res.drawable.ic_download_circle)
+  map.put("ic_edit", Res.drawable.ic_edit)
+  map.put("ic_email", Res.drawable.ic_email)
+  map.put("ic_email_2", Res.drawable.ic_email_2)
+  map.put("ic_facebook", Res.drawable.ic_facebook)
+  map.put("ic_google", Res.drawable.ic_google)
+  map.put("ic_grid", Res.drawable.ic_grid)
+  map.put("ic_home", Res.drawable.ic_home)
+  map.put("ic_image_not_supported_24", Res.drawable.ic_image_not_supported_24)
+  map.put("ic_launcher_background", Res.drawable.ic_launcher_background)
+  map.put("ic_launcher_foreground", Res.drawable.ic_launcher_foreground)
+  map.put("ic_library", Res.drawable.ic_library)
+  map.put("ic_list", Res.drawable.ic_list)
+  map.put("ic_list_music", Res.drawable.ic_list_music)
+  map.put("ic_lock", Res.drawable.ic_lock)
+  map.put("ic_logout", Res.drawable.ic_logout)
+  map.put("ic_loop", Res.drawable.ic_loop)
+  map.put("ic_multi_platform", Res.drawable.ic_multi_platform)
+  map.put("ic_music_note", Res.drawable.ic_music_note)
+  map.put("ic_new_v", Res.drawable.ic_new_v)
+  map.put("ic_paragraph", Res.drawable.ic_paragraph)
+  map.put("ic_pause", Res.drawable.ic_pause)
+  map.put("ic_peoples_solid", Res.drawable.ic_peoples_solid)
+  map.put("ic_pin", Res.drawable.ic_pin)
+  map.put("ic_play", Res.drawable.ic_play)
+  map.put("ic_play_back", Res.drawable.ic_play_back)
+  map.put("ic_play_forward", Res.drawable.ic_play_forward)
+  map.put("ic_plus_circle", Res.drawable.ic_plus_circle)
+  map.put("ic_public", Res.drawable.ic_public)
+  map.put("ic_search", Res.drawable.ic_search)
+  map.put("ic_settings", Res.drawable.ic_settings)
+  map.put("ic_share", Res.drawable.ic_share)
+  map.put("ic_shuffle", Res.drawable.ic_shuffle)
+  map.put("ic_smartphone", Res.drawable.ic_smartphone)
+  map.put("ic_stop_remove", Res.drawable.ic_stop_remove)
+  map.put("ic_stopwatch", Res.drawable.ic_stopwatch)
+  map.put("ic_target", Res.drawable.ic_target)
+  map.put("ic_trash", Res.drawable.ic_trash)
+  map.put("ic_venn", Res.drawable.ic_venn)
+  map.put("ic_vvinamp", Res.drawable.ic_vvinamp)
+  map.put("ic_vvinamp_white", Res.drawable.ic_vvinamp_white)
+  map.put("ic_youtube", Res.drawable.ic_youtube)
 }
-
-internal val Res.drawable.bg_image: DrawableResource
-  get() = CommonMainDrawable0.bg_image
-
-private fun init_bg_image(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:bg_image",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/bg_image.png", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_arrow_back: DrawableResource
-  get() = CommonMainDrawable0.ic_arrow_back
-
-private fun init_ic_arrow_back(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_arrow_back",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_arrow_back.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_arrow_left: DrawableResource
-  get() = CommonMainDrawable0.ic_arrow_left
-
-private fun init_ic_arrow_left(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_arrow_left",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_arrow_left.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_arrow_up_down: DrawableResource
-  get() = CommonMainDrawable0.ic_arrow_up_down
-
-private fun init_ic_arrow_up_down(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_arrow_up_down",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_arrow_up_down.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_back_arrow: DrawableResource
-  get() = CommonMainDrawable0.ic_back_arrow
-
-private fun init_ic_back_arrow(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_back_arrow",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_back_arrow.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_back_chevron: DrawableResource
-  get() = CommonMainDrawable0.ic_back_chevron
-
-private fun init_ic_back_chevron(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_back_chevron",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_back_chevron.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_bullet_horizontal: DrawableResource
-  get() = CommonMainDrawable0.ic_bullet_horizontal
-
-private fun init_ic_bullet_horizontal(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_bullet_horizontal",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_bullet_horizontal.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_bullet_vertical: DrawableResource
-  get() = CommonMainDrawable0.ic_bullet_vertical
-
-private fun init_ic_bullet_vertical(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_bullet_vertical",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_bullet_vertical.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_burger: DrawableResource
-  get() = CommonMainDrawable0.ic_burger
-
-private fun init_ic_burger(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_burger",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_burger.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_camera: DrawableResource
-  get() = CommonMainDrawable0.ic_camera
-
-private fun init_ic_camera(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_camera",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_camera.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_check: DrawableResource
-  get() = CommonMainDrawable0.ic_check
-
-private fun init_ic_check(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_check",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_check.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_chevron_down: DrawableResource
-  get() = CommonMainDrawable0.ic_chevron_down
-
-private fun init_ic_chevron_down(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_chevron_down",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_chevron_down.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_chevron_right_blue: DrawableResource
-  get() = CommonMainDrawable0.ic_chevron_right_blue
-
-private fun init_ic_chevron_right_blue(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_chevron_right_blue",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_chevron_right_blue.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_close: DrawableResource
-  get() = CommonMainDrawable0.ic_close
-
-private fun init_ic_close(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_close",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_close.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_collaboration_group: DrawableResource
-  get() = CommonMainDrawable0.ic_collaboration_group
-
-private fun init_ic_collaboration_group(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_collaboration_group",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_collaboration_group.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_create_plus: DrawableResource
-  get() = CommonMainDrawable0.ic_create_plus
-
-private fun init_ic_create_plus(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_create_plus",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_create_plus.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_download_circle: DrawableResource
-  get() = CommonMainDrawable0.ic_download_circle
-
-private fun init_ic_download_circle(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_download_circle",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_download_circle.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_edit: DrawableResource
-  get() = CommonMainDrawable0.ic_edit
-
-private fun init_ic_edit(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_edit",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_edit.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_email: DrawableResource
-  get() = CommonMainDrawable0.ic_email
-
-private fun init_ic_email(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_email",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_email.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_email_2: DrawableResource
-  get() = CommonMainDrawable0.ic_email_2
-
-private fun init_ic_email_2(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_email_2",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_email_2.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_facebook: DrawableResource
-  get() = CommonMainDrawable0.ic_facebook
-
-private fun init_ic_facebook(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_facebook",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_facebook.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_google: DrawableResource
-  get() = CommonMainDrawable0.ic_google
-
-private fun init_ic_google(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_google",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_google.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_grid: DrawableResource
-  get() = CommonMainDrawable0.ic_grid
-
-private fun init_ic_grid(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_grid",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_grid.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_home: DrawableResource
-  get() = CommonMainDrawable0.ic_home
-
-private fun init_ic_home(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_home",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_home.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_image_not_supported_24: DrawableResource
-  get() = CommonMainDrawable0.ic_image_not_supported_24
-
-private fun init_ic_image_not_supported_24(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_image_not_supported_24",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_image_not_supported_24.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_launcher_background: DrawableResource
-  get() = CommonMainDrawable0.ic_launcher_background
-
-private fun init_ic_launcher_background(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_launcher_background",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_launcher_background.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_launcher_foreground: DrawableResource
-  get() = CommonMainDrawable0.ic_launcher_foreground
-
-private fun init_ic_launcher_foreground(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_launcher_foreground",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_launcher_foreground.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_library: DrawableResource
-  get() = CommonMainDrawable0.ic_library
-
-private fun init_ic_library(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_library",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_library.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_list: DrawableResource
-  get() = CommonMainDrawable0.ic_list
-
-private fun init_ic_list(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_list",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_list.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_list_music: DrawableResource
-  get() = CommonMainDrawable0.ic_list_music
-
-private fun init_ic_list_music(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_list_music",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_list_music.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_lock: DrawableResource
-  get() = CommonMainDrawable0.ic_lock
-
-private fun init_ic_lock(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_lock",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_lock.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_logout: DrawableResource
-  get() = CommonMainDrawable0.ic_logout
-
-private fun init_ic_logout(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_logout",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_logout.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_loop: DrawableResource
-  get() = CommonMainDrawable0.ic_loop
-
-private fun init_ic_loop(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_loop",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_loop.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_multi_platform: DrawableResource
-  get() = CommonMainDrawable0.ic_multi_platform
-
-private fun init_ic_multi_platform(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_multi_platform",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_multi_platform.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_music_note: DrawableResource
-  get() = CommonMainDrawable0.ic_music_note
-
-private fun init_ic_music_note(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_music_note",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_music_note.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_new_v: DrawableResource
-  get() = CommonMainDrawable0.ic_new_v
-
-private fun init_ic_new_v(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_new_v",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_new_v.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_paragraph: DrawableResource
-  get() = CommonMainDrawable0.ic_paragraph
-
-private fun init_ic_paragraph(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_paragraph",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_paragraph.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_pause: DrawableResource
-  get() = CommonMainDrawable0.ic_pause
-
-private fun init_ic_pause(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_pause",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_pause.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_peoples_solid: DrawableResource
-  get() = CommonMainDrawable0.ic_peoples_solid
-
-private fun init_ic_peoples_solid(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_peoples_solid",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_peoples_solid.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_pin: DrawableResource
-  get() = CommonMainDrawable0.ic_pin
-
-private fun init_ic_pin(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_pin",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_pin.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_play: DrawableResource
-  get() = CommonMainDrawable0.ic_play
-
-private fun init_ic_play(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_play",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_play.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_play_back: DrawableResource
-  get() = CommonMainDrawable0.ic_play_back
-
-private fun init_ic_play_back(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_play_back",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_play_back.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_play_forward: DrawableResource
-  get() = CommonMainDrawable0.ic_play_forward
-
-private fun init_ic_play_forward(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_play_forward",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_play_forward.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_plus_circle: DrawableResource
-  get() = CommonMainDrawable0.ic_plus_circle
-
-private fun init_ic_plus_circle(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_plus_circle",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_plus_circle.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_public: DrawableResource
-  get() = CommonMainDrawable0.ic_public
-
-private fun init_ic_public(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_public",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_public.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_search: DrawableResource
-  get() = CommonMainDrawable0.ic_search
-
-private fun init_ic_search(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_search",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_search.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_settings: DrawableResource
-  get() = CommonMainDrawable0.ic_settings
-
-private fun init_ic_settings(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_settings",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_settings.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_share: DrawableResource
-  get() = CommonMainDrawable0.ic_share
-
-private fun init_ic_share(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_share",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_share.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_shuffle: DrawableResource
-  get() = CommonMainDrawable0.ic_shuffle
-
-private fun init_ic_shuffle(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_shuffle",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_shuffle.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_smartphone: DrawableResource
-  get() = CommonMainDrawable0.ic_smartphone
-
-private fun init_ic_smartphone(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_smartphone",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_smartphone.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_stop_remove: DrawableResource
-  get() = CommonMainDrawable0.ic_stop_remove
-
-private fun init_ic_stop_remove(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_stop_remove",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_stop_remove.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_stopwatch: DrawableResource
-  get() = CommonMainDrawable0.ic_stopwatch
-
-private fun init_ic_stopwatch(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_stopwatch",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_stopwatch.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_target: DrawableResource
-  get() = CommonMainDrawable0.ic_target
-
-private fun init_ic_target(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_target",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_target.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_trash: DrawableResource
-  get() = CommonMainDrawable0.ic_trash
-
-private fun init_ic_trash(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_trash",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_trash.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_venn: DrawableResource
-  get() = CommonMainDrawable0.ic_venn
-
-private fun init_ic_venn(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_venn",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_venn.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_vvinamp: DrawableResource
-  get() = CommonMainDrawable0.ic_vvinamp
-
-private fun init_ic_vvinamp(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_vvinamp",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_vvinamp.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_vvinamp_white: DrawableResource
-  get() = CommonMainDrawable0.ic_vvinamp_white
-
-private fun init_ic_vvinamp_white(): DrawableResource =
-    org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_vvinamp_white",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_vvinamp_white.xml", -1, -1),
-    )
-)
-
-internal val Res.drawable.ic_youtube: DrawableResource
-  get() = CommonMainDrawable0.ic_youtube
-
-private fun init_ic_youtube(): DrawableResource = org.jetbrains.compose.resources.DrawableResource(
-  "drawable:ic_youtube",
-    setOf(
-      org.jetbrains.compose.resources.ResourceItem(setOf(),
-    "composeResources/vvinampapp.composeapp.generated.resources/drawable/ic_youtube.xml", -1, -1),
-    )
-)
