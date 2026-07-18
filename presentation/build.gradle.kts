@@ -49,6 +49,13 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.kotlinGradlePlugin.get()
     }
+    sourceSets {
+        getByName("main") {
+            assets.srcDir(
+                "${project(":composeApp").layout.buildDirectory.get().asFile}/generated/composeResourcesForAndroid/assets"
+            )
+        }
+    }
 }
 
 kotlin {
@@ -129,3 +136,14 @@ dependencies {
     // Serialization
     implementation(libs.kotlinx.serialization.json)
 }
+// Force compose resources to be copied before Android's asset merge
+afterEvaluate {
+    tasks.matching {
+        (it.name.startsWith("merge") && it.name.contains("Assets")) ||
+        it.name.startsWith("package") ||
+        it.name.startsWith("bundle")
+    }.configureEach {
+        dependsOn(":composeApp:copyComposeResourcesToAndroidAssets")
+    }
+}
+

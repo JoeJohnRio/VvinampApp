@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.compose)
+    alias(libs.plugins.serialization)
 }
 
 kotlin {
@@ -87,4 +88,20 @@ kotlin {
             implementation(libs.coil.network.okhttp)
         }
     }
+}
+
+compose.resources {
+    publicResClass = true
+    generateResClass = always
+    packageOfResClass = "vvinampapp.composeapp.generated.resources"
+}
+
+// Workaround: Compose Multiplatform's Android task pipeline doesn't include
+// commonMain resources when using com.android.kotlin.multiplatform.library
+// plugin (AGP 9.0). Expose the prepared commonMain resources at a known
+// location so the consuming app (`presentation`) can include them as assets.
+val copyComposeResourcesToAndroidAssets by tasks.registering(Copy::class) {
+    dependsOn("prepareComposeResourcesTaskForCommonMain")
+    from(layout.buildDirectory.dir("generated/compose/resourceGenerator/preparedResources/commonMain"))
+    into(layout.buildDirectory.dir("generated/composeResourcesForAndroid/assets"))
 }

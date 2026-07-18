@@ -3,6 +3,7 @@ package com.example.vvinamp.navigation.graph
 import androidx.navigation3.runtime.NavKey
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface AuthDestination: NavKey {
     @Serializable
     data object Auth : AuthDestination
