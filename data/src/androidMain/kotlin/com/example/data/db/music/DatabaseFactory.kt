@@ -10,7 +10,8 @@ actual class DatabaseFactory(private val context: Context) {
         val dbFile = appContext.getDatabasePath("music_database.db")
         return Room.databaseBuilder<MusicDatabase>(
             context = appContext,
-            name = dbFile.absolutePath
+            name = dbFile.absolutePath,
+            factory = { MusicDatabaseConstructor.initialize() }
         )
     }
 }

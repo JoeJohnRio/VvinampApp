@@ -168,6 +168,7 @@ fun LoginEmailPage(
                     onClick = {
 //                        mainRouter.navigateToNavigationBar()
 
+                        println("joel123 jalan nih 2")
                         viewModel.login(userCred = User(
                             email = email,
                             password = password

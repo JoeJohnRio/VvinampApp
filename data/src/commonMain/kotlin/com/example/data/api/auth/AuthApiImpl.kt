@@ -8,6 +8,8 @@ import com.example.graphql.GetCurrentUserDetailQuery
 import com.example.graphql.LoginQuery
 import com.example.graphql.RegisterMutation
 import com.example.graphql.type.RegisterInput
+import kotlinx.coroutines.withTimeout
+
 class AuthApiImpl(
     private val apolloClient: ApolloClient
 ) : AuthApi {
@@ -30,6 +32,17 @@ class AuthApiImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<LoginQuery.Login> {
+
+        println("joel123 Before execute")
+//        val response = withTimeout(5000) {
+//            apolloClient
+//                .query(LoginQuery(email, password))
+//                .execute()
+//        }
+//
+//        println("joel123 After execute")
+//        println("joel123 response $response")
+        println("joel123 LoginApiImpl")
         return apolloClient.safeQuery(
             LoginQuery(
                 email = email,

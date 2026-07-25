@@ -15,6 +15,8 @@ class LoginUseCase(
     private val repository: AuthRepository
 ) {
     suspend operator fun invoke(email: String, password: String): Result<AuthSession> {
+
+        println("joel123 LoginUseCase")
         return repository.login(email, password)
     }
 }

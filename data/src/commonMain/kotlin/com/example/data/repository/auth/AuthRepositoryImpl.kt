@@ -17,6 +17,8 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<AuthSession> {
+
+        println("joel123 AuthRepositoryImpl")
         return authApi.login(email, password).map {
             it.toDomain()
         }

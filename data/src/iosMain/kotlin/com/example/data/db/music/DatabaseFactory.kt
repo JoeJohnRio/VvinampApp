@@ -9,7 +9,7 @@ actual class DatabaseFactory {
         val dbFile = NSHomeDirectory() + "/music_database.db"
         return Room.databaseBuilder<MusicDatabase>(
             name = dbFile,
-            factory = { MusicDatabase::class.instantiateImpl() }
+            factory = { MusicDatabaseConstructor.initialize() }
         )
     }
 }

@@ -78,8 +78,6 @@ kotlin {
             implementation(libs.lifecycle.viewmodel.compose)
 
             // Network (Android-specific parts used in DI)
-            implementation(libs.retrofit)
-            implementation(libs.converter.gson)
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
             implementation(libs.chucker.debug)
@@ -102,6 +100,6 @@ compose.resources {
 // location so the consuming app (`presentation`) can include them as assets.
 val copyComposeResourcesToAndroidAssets by tasks.registering(Copy::class) {
     dependsOn("prepareComposeResourcesTaskForCommonMain")
-    from(layout.buildDirectory.dir("generated/compose/resourceGenerator/preparedResources/commonMain"))
-    into(layout.buildDirectory.dir("generated/composeResourcesForAndroid/assets"))
+    from(layout.buildDirectory.dir("generated/compose/resourceGenerator/preparedResources/commonMain/composeResources"))
+    into(layout.buildDirectory.dir("generated/composeResourcesForAndroid/assets/composeResources/vvinampapp.composeapp.generated.resources"))
 }

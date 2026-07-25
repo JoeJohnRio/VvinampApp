@@ -92,13 +92,6 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
-    // GSON
-    implementation(libs.gson)
-
-    // Retrofit
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
     // Room
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)

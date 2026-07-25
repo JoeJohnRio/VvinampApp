@@ -1,7 +1,9 @@
 package com.example.data.db.music
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import com.example.data.db.playback.RecentPlaybackDao
 import com.example.data.db.playlist.PlaylistRemoteKeyDao
 import com.example.data.db.playlist.PlaylistTrackDao
@@ -18,8 +20,13 @@ import com.example.data.entities.RecentPlaybackEntity
     version = 4, // Increased version for new entity
     exportSchema = false
 )
+@ConstructedBy(MusicDatabaseConstructor::class)
 abstract class MusicDatabase : RoomDatabase() {
     abstract fun playlistTrackDao(): PlaylistTrackDao
     abstract fun playlistRemoteKeyDao(): PlaylistRemoteKeyDao
     abstract fun recentPlaybackDao(): RecentPlaybackDao
+}
+
+expect object MusicDatabaseConstructor : RoomDatabaseConstructor<MusicDatabase> {
+    override fun initialize(): MusicDatabase
 }

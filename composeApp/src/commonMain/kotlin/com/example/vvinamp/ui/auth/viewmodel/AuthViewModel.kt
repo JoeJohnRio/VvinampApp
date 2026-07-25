@@ -51,6 +51,7 @@ class AuthViewModel(
             val result = authUseCases.login(userCred.email, userCred.password)
 
             if (result.isSuccess) {
+                println("joel123 Login Success: ${result}")
                 val sessionData = result.getOrNull()
 
                 sessionData?.let {
@@ -69,6 +70,7 @@ class AuthViewModel(
                 }
                 _loginState.value = result.toUiState()
             } else {
+                println("joel123 Login gagal: ${result}")
                 _loginState.value = result.toUiState()
             }
         }
