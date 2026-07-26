@@ -25,6 +25,10 @@ kotlin {
         }
     }
 
+//    wasmJs {
+//        browser()
+//    }
+
     sourceSets {
         commonMain.dependencies {
             api(libs.apollo.runtime)

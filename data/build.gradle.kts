@@ -35,6 +35,10 @@ kotlin {
         }
     }
 
+//    wasmJs {
+//        browser()
+//    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(project(":domain"))
@@ -60,7 +64,7 @@ kotlin {
         }
         androidMain.dependencies {
             implementation(libs.koin.android)
-            implementation(libs.room.ktx)
+//            implementation(libs.room.ktx)
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
             implementation(libs.chucker.debug)

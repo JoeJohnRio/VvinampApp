@@ -1,9 +1,9 @@
 package com.example.data.db.music
 
-import androidx.room.ConstructedBy
-import androidx.room.Database
-import androidx.room.RoomDatabase
-import androidx.room.RoomDatabaseConstructor
+import androidx.room3.ConstructedBy
+import androidx.room3.Database
+import androidx.room3.RoomDatabase
+import androidx.room3.RoomDatabaseConstructor
 import com.example.data.db.playback.RecentPlaybackDao
 import com.example.data.db.playlist.PlaylistRemoteKeyDao
 import com.example.data.db.playlist.PlaylistTrackDao

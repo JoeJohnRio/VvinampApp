@@ -30,6 +30,11 @@ kotlin {
         }
     }
 
+//    wasmJs {
+//        browser()
+//        binaries.executable()
+//    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(project(":domain"))
@@ -85,6 +90,12 @@ kotlin {
             // Image Loading
             implementation(libs.coil.network.okhttp)
         }
+
+//        val wasmJsMain by getting {
+//            dependencies {
+//                implementation(libs.ktor.client.js)
+//            }
+//        }
     }
 }
 

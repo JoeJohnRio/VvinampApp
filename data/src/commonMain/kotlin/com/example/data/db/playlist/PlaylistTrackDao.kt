@@ -1,13 +1,16 @@
 package com.example.data.db.playlist
 
 import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room3.Dao
+import androidx.room3.DaoReturnTypeConverters
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Query
+import androidx.room3.paging.PagingSourceDaoReturnTypeConverter
 import com.example.data.entities.PlaylistTrackEntity
 
 @Dao
+@DaoReturnTypeConverters(PagingSourceDaoReturnTypeConverter::class)
 interface PlaylistTrackDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
