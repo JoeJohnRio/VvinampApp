@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -90,7 +90,7 @@ fun RegisterNamePage(
             containerColor = MaterialTheme.colorScheme.onPrimary,
             topBar = {
                 TopBarCustom(
-                    title = stringResource(Res.string.title_create_account),
+                    title = previewSafeString(Res.string.title_create_account, "Create account"),
                     onBackClick = {
                         authRouter.navigateBack()
                     }
@@ -145,7 +145,7 @@ fun RegisterNameFormContent(
             .padding(32.dp)
     ) {
         Text(
-            text = stringResource(Res.string.title_what_is_your_name),
+            text = previewSafeString(Res.string.title_what_is_your_name, "What's your name?"),
             style = TSBodyMediumWhite().copy(
                 fontSize = 26.sp
             )
@@ -159,7 +159,7 @@ fun RegisterNameFormContent(
             onValueChanged = {
                 onNameChange(it)
             },
-            textFieldInfo = stringResource(Res.string.label_this_appears_on_your)
+            textFieldInfo = previewSafeString(Res.string.label_this_appears_on_your, "This appears on your Vvinamp profile.")
         )
 
         HorizontalDivider(
@@ -170,7 +170,7 @@ fun RegisterNameFormContent(
 
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = stringResource(Res.string.label_by_tapping_create_account_terms_of_use),
+            text = previewSafeString(Res.string.label_by_tapping_create_account_terms_of_use, "By tapping \"Create account\", you agree to the Vvinamp Terms of Use."),
             style = TSDisplayMediumWhite().copy(
                 fontSize = 9.5.sp,
             )
@@ -178,7 +178,7 @@ fun RegisterNameFormContent(
 
         Text(
             modifier = Modifier.padding(bottom = 24.dp),
-            text = stringResource(Res.string.label_terms_of_use),
+            text = previewSafeString(Res.string.label_terms_of_use, "Terms of Use"),
             style = TSDisplayMediumWhite().copy(
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 9.5.sp,
@@ -187,7 +187,7 @@ fun RegisterNameFormContent(
 
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = stringResource(Res.string.label_by_tapping_create_account_privacy_policy),
+            text = previewSafeString(Res.string.label_by_tapping_create_account_privacy_policy, "By tapping \"Create account\", you agree to the Vvinamp Privacy Policy."),
             style = TSDisplayMediumWhite().copy(
                 fontSize = 9.5.sp,
             )
@@ -195,7 +195,7 @@ fun RegisterNameFormContent(
 
         Text(
             modifier = Modifier.padding(bottom = 16.dp),
-            text = stringResource(Res.string.label_privacy_policy),
+            text = previewSafeString(Res.string.label_privacy_policy, "Privacy Policy"),
             style = TSDisplayMediumWhite().copy(
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 9.5.sp,
@@ -204,7 +204,7 @@ fun RegisterNameFormContent(
 
         RowWithRoundCheckbox(
             modifier = Modifier.padding(bottom = 4.dp),
-            text = stringResource(Res.string.label_i_would_prefer_not),
+            text = previewSafeString(Res.string.label_i_would_prefer_not, "I would prefer not to receive marketing messages from Vvinamp."),
             isChecked = isUserReceiveMarketing,
             onCheckedChange = { value ->
                 onMarketingChecked(value)
@@ -212,7 +212,7 @@ fun RegisterNameFormContent(
         )
 
         RowWithRoundCheckbox(
-            text = stringResource(Res.string.label_share_my_registration_data),
+            text = previewSafeString(Res.string.label_share_my_registration_data, "Share my registration data with Vvinamp's content providers for marketing purposes."),
             isChecked = isUserShareRegistrationData,
             onCheckedChange = { value ->
                 onDataSharingChecked(value)
@@ -234,7 +234,7 @@ fun RegisterNameBottom(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ButtonVariableSizeSolid(
-            text = stringResource(Res.string.title_create_account),
+            text = previewSafeString(Res.string.title_create_account, "Create account"),
             containerColor = MaterialTheme.colorScheme.onBackground,
             enabled = nameValue.isNotEmpty(),
             onClick = {

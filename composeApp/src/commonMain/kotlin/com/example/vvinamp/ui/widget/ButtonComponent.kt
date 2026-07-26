@@ -45,7 +45,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Smartphone
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -586,7 +586,7 @@ private fun ButtonsPreview() {
             )
 
             RowWithRoundCheckbox(
-                text = stringResource(Res.string.label_i_would_prefer_not),
+                text = previewSafeString(Res.string.label_i_would_prefer_not, "I would prefer not to receive marketing messages from Vvinamp."),
                 isChecked = false,
                 onCheckedChange = {}
             )

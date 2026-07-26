@@ -13,7 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +39,7 @@ fun RegisterGenderPage(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(Res.string.title_create_account),
+                title = previewSafeString(Res.string.title_create_account, "Create account"),
                 onBackClick = {
                     authRouter.navigateBack()
                 }
@@ -55,7 +55,7 @@ fun RegisterGenderPage(
                 .padding(32.dp)
         ) {
             Text(
-                text = stringResource(Res.string.title_what_is_your_gender),
+                text = previewSafeString(Res.string.title_what_is_your_gender, "What's your gender?"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -66,11 +66,11 @@ fun RegisterGenderPage(
                     .padding(top = 24.dp)
                     .fillMaxWidth(),
                 listButton = listOf(
-                    stringResource(Res.string.label_female),
-                    stringResource(Res.string.label_male),
-                    stringResource(Res.string.label_non_binary),
-                    stringResource(Res.string.label_other),
-                    stringResource(Res.string.label_prefer_not_to_say),
+                    previewSafeString(Res.string.label_female, "Female"),
+                    previewSafeString(Res.string.label_male, "Male"),
+                    previewSafeString(Res.string.label_non_binary, "Non-Binary"),
+                    previewSafeString(Res.string.label_other, "Other"),
+                    previewSafeString(Res.string.label_prefer_not_to_say, "Prefer not to say"),
                 ),
                 outlineColor = AppColours.Outline,
                 textColor = AppColours.OffWhite,

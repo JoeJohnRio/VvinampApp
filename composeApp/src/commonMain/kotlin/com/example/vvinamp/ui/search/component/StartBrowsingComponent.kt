@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,7 +75,7 @@ fun StartBrowsingComponent() {
 
 
     Text(
-        text = stringResource(Res.string.label_start_browsing),
+        text = previewSafeString(Res.string.label_start_browsing, "Start browsing"),
         style = TSDisplayMediumWhite().copy(
             fontSize = 22.sp,
             color = MaterialTheme.colorScheme.inversePrimary

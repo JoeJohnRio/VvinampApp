@@ -15,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +41,7 @@ fun RegisterPasswordPage(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(Res.string.title_create_account),
+                title = previewSafeString(Res.string.title_create_account, "Create account"),
                 onBackClick = {
                     authRouter.navigateBack()
                 }
@@ -57,7 +57,7 @@ fun RegisterPasswordPage(
                 .padding(32.dp)
         ) {
             Text(
-                text = stringResource(Res.string.title_create_a_password),
+                text = previewSafeString(Res.string.title_create_a_password, "Create a password"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -73,7 +73,7 @@ fun RegisterPasswordPage(
                 isError = {
                     !isValidPassword(viewModel.user.password)
                 },
-                textFieldInfo = stringResource(Res.string.label_atleast_10_characters)
+                textFieldInfo = previewSafeString(Res.string.label_atleast_10_characters, "Use at least 10 characters.")
             )
 
             Row(
@@ -83,7 +83,7 @@ fun RegisterPasswordPage(
                 ButtonVariableSizeSolid(
                     modifier = Modifier.padding(top = 32.dp),
                     modifierText = Modifier.padding(horizontal = 16.dp),
-                    text = stringResource(Res.string.label_continue),
+                    text = previewSafeString(Res.string.label_continue, "Next"),
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     enabled = isValidPassword(viewModel.user.password),
                     onClick = {

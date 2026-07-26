@@ -18,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +33,7 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafeString
 import com.example.vvinamp.util.verticalGradientEdge
 
 @Composable
@@ -57,7 +57,7 @@ fun TopSongsComponent(
     ) {
         Text(
             modifier = Modifier.padding(start = 16.dp),
-            text = stringResource(Res.string.title_popular),
+            text = previewSafeString(Res.string.title_popular, "Popular"),
             style = TSHeadlineMediumWhite().copy(
                 fontSize = 20.sp
             )

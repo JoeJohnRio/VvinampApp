@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -46,7 +46,7 @@ fun AuthPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.8f),
-            titleText = stringResource(Res.string.title_millions_of_songs)
+            titleText = previewSafeString(Res.string.title_millions_of_songs, "Millions of songs.\nFor Free.")
         )
 
         Column(

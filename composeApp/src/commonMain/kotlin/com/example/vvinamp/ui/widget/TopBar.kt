@@ -21,7 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -76,7 +76,7 @@ fun TopBar(
 @Composable
 @Preview
 fun TopBarCustom(
-    title: String = stringResource(Res.string.title_create_account),
+    title: String = previewSafeString(Res.string.title_create_account, "Create account"),
     style: TextStyle = TSBodyMediumWhite(),
     onBackClick: () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors().copy(

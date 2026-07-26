@@ -13,7 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,7 +34,7 @@ fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
         )
     ) {
         TopNavigationWithButtons(
-            title = stringResource(Res.string.title_your_library),
+            title = previewSafeString(Res.string.title_your_library, "Your Library"),
             listOfButtons = listOf(
                 ButtonData(
                     imageVector = Icons.Default.Search,

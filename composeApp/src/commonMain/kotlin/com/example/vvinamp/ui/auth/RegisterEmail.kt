@@ -15,7 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +41,7 @@ fun RegisterEmailPage(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(Res.string.title_create_account),
+                title = previewSafeString(Res.string.title_create_account, "Create account"),
                 onBackClick = {
                     authRouter.navigateBack()
                 }
@@ -58,7 +58,7 @@ fun RegisterEmailPage(
         ) {
 
             Text(
-                text = stringResource(Res.string.title_what_is_your_email),
+                text = previewSafeString(Res.string.title_what_is_your_email, "What's your email?"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -81,7 +81,7 @@ fun RegisterEmailPage(
                         true
                     }
                 },
-                textFieldInfo = stringResource(Res.string.label_you_need_to_confirm_this)
+                textFieldInfo = previewSafeString(Res.string.label_you_need_to_confirm_this, "You'll need to confirm this email later.")
             )
 
             Row(
@@ -91,7 +91,7 @@ fun RegisterEmailPage(
                 ButtonVariableSizeSolid(
                     modifier = Modifier.padding(top = 32.dp),
                     modifierText = Modifier.padding(horizontal = 16.dp),
-                    text = stringResource(Res.string.label_continue),
+                    text = previewSafeString(Res.string.label_continue, "Next"),
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     enabled = isValidEmail(viewModel.user.email),
                     onClick = {

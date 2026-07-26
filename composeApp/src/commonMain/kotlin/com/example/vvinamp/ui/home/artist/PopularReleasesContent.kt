@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +33,7 @@ import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.previewSafePainter
+import com.example.vvinamp.util.preview.previewSafeString
 
 @Composable
 fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (String) -> Unit = {}) {
@@ -50,7 +50,7 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (
         ) {
             Text(
                 modifier = Modifier,
-                text = stringResource(Res.string.title_popular_releases),
+                text = previewSafeString(Res.string.title_popular_releases, "Popular Releases"),
                 style = TSHeadlineMediumWhite().copy(
                     fontSize = 17.sp
                 )
@@ -58,7 +58,7 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (
 
             Text(
                 modifier = Modifier,
-                text = stringResource(Res.string.label_show_all),
+                text = previewSafeString(Res.string.label_show_all, "Show All"),
                 style = TSHeadlineMediumWhite().copy(
                     color = MaterialTheme.colorScheme.onSurface,
                     fontSize = 12.sp

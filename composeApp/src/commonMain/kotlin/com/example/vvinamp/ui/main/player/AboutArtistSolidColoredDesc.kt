@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -139,7 +139,7 @@ fun ImageAboutArtist(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(top = 16.dp, start = 16.dp),
-            text = stringResource(Res.string.title_about_the_artist),
+            text = previewSafeString(Res.string.title_about_the_artist, "About the artist"),
             style = TSHeadlineMediumWhite().copy(
                 fontSize = 13.sp
             ),

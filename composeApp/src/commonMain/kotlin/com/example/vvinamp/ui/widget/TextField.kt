@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -134,7 +134,7 @@ fun TextFieldSearchNoClick(
                 },
                 placeholder = @Composable {
                     Text(
-                        text = stringResource(Res.string.label_what_do_you_want_to_play),
+                        text = previewSafeString(Res.string.label_what_do_you_want_to_play, "What do you want to play?"),
                         style = TSDisplayMediumWhite().copy(
                             color = MaterialTheme.colorScheme.background,
                             fontSize = 15.sp,

@@ -43,8 +43,8 @@ import com.example.vvinamp.util.auth.isValidEmail
 import com.example.vvinamp.util.auth.isValidPassword
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
+import com.example.vvinamp.util.preview.previewSafeString
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import vvinampapp.composeapp.generated.resources.Res
 import vvinampapp.composeapp.generated.resources.label_log_in
@@ -99,7 +99,7 @@ fun LoginEmailPage(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(Res.string.title_login),
+                title = previewSafeString(Res.string.title_login, "Login"),
                 onBackClick = {
                     authRouter.navigateBack()
                 }
@@ -116,7 +116,7 @@ fun LoginEmailPage(
         ) {
 
             Text(
-                text = stringResource(Res.string.title_email_or_username),
+                text = previewSafeString(Res.string.title_email_or_username, "Email or username"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -134,7 +134,7 @@ fun LoginEmailPage(
 
             Text(
                 modifier = Modifier.padding(top = 32.dp),
-                text = stringResource(Res.string.title_password),
+                text = previewSafeString(Res.string.title_password, "Password"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -160,7 +160,7 @@ fun LoginEmailPage(
                 ButtonVariableSizeSolid(
                     modifier = Modifier.padding(top = 32.dp),
                     modifierText = Modifier.padding(horizontal = 16.dp),
-                    text = stringResource(Res.string.label_log_in),
+                    text = previewSafeString(Res.string.label_log_in, "Log in"),
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     enabled = isValidEmail(email) && isValidPassword(password),
                     onClick = {
@@ -181,7 +181,7 @@ fun LoginEmailPage(
             ) {
                 ButtonVariableOutlined(
                     modifier = Modifier.padding(top = 32.dp),
-                    text = stringResource(Res.string.label_login_without_password),
+                    text = previewSafeString(Res.string.label_login_without_password, "Log in without password"),
                     textStyle = TSDisplayMediumWhite().copy(
                         fontSize = 8.sp
                     ),

@@ -16,8 +16,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Smartphone
 import com.example.vvinamp.util.preview.previewSafePainter
+import com.example.vvinamp.util.preview.previewSafeString
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +44,7 @@ fun LoginMethodSelectionPage(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(0.6f),
-            titleText = stringResource(Res.string.title_sign_up_to_start_listening)
+            titleText = previewSafeString(Res.string.title_sign_up_to_start_listening, "Sign up to start listening")
         )
 
         Column(
@@ -67,7 +67,7 @@ fun LoginSelectionButtons(
     ButtonSolid(
         modifier = Modifier
             .padding(bottom = 12.dp),
-        text = stringResource(Res.string.label_continue_with_email),
+        text = previewSafeString(Res.string.label_continue_with_email, "Continue with email"),
         imageVector = Icons.Default.Email,
         onClick = {
             mainRouter.navigateToLoginEmailPage()
@@ -76,14 +76,14 @@ fun LoginSelectionButtons(
 
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 12.dp),
-        text = stringResource(Res.string.label_continue_with_phone),
+        text = previewSafeString(Res.string.label_continue_with_phone, "Continue with phone number"),
         imageVector = Icons.Default.Smartphone,
         onClick = {}
     )
 
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 12.dp),
-        text = stringResource(Res.string.label_continue_with_google),
+        text = previewSafeString(Res.string.label_continue_with_google, "Continue with Google"),
         icon = previewSafePainter(Res.drawable.ic_google),
         iconTint = Color.Unspecified,
         onClick = {}
@@ -91,7 +91,7 @@ fun LoginSelectionButtons(
 
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 48.dp),
-        text = stringResource(Res.string.label_continue_with_facebook),
+        text = previewSafeString(Res.string.label_continue_with_facebook, "Continue with Facebook"),
         icon = previewSafePainter(Res.drawable.ic_facebook),
         iconTint = Color.Unspecified,
         onClick = {}
@@ -102,7 +102,7 @@ fun LoginSelectionButtons(
         modifier = Modifier
             .padding(bottom = 24.dp)
             .fillMaxWidth(),
-        text = stringResource(Res.string.label_already_have_account),
+        text = previewSafeString(Res.string.label_already_have_account, "Already have an account?"),
         style = TSDisplayMediumWhite().copy(
             textAlign = TextAlign.Center,
             color = AppColours.Outline
@@ -118,7 +118,7 @@ fun LoginSelectionButtons(
                 }
             )
             .fillMaxWidth(),
-        text = stringResource(Res.string.label_log_in),
+        text = previewSafeString(Res.string.label_log_in, "Log in"),
         style = TSBodyMediumWhite().copy(
             textAlign = TextAlign.Center,
             color = AppColours.White

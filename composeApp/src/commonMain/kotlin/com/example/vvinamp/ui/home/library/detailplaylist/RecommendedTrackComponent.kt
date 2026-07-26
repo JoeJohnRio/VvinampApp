@@ -11,7 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +29,7 @@ fun RecommendedTrackComponent(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            text = stringResource(Res.string.title_recommended_songs),
+            text = previewSafeString(Res.string.title_recommended_songs, "Recommended Songs"),
             style = TSHeadlineMediumWhite().copy(
                 fontSize = 20.sp,
                 color = MaterialTheme.colorScheme.inversePrimary

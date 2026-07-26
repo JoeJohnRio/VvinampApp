@@ -18,7 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
@@ -46,7 +46,7 @@ fun RegisterBirthDatePage(
         containerColor = MaterialTheme.colorScheme.onPrimary,
         topBar = {
             TopBarCustom(
-                title = stringResource(Res.string.title_create_account),
+                title = previewSafeString(Res.string.title_create_account, "Create account"),
                 onBackClick = {
                     authRouter.navigateBack()
                 }
@@ -62,7 +62,7 @@ fun RegisterBirthDatePage(
                 .padding(32.dp)
         ) {
             Text(
-                text = stringResource(Res.string.title_what_is_your_date_of_birth),
+                text = previewSafeString(Res.string.title_what_is_your_date_of_birth, "What's your date of birth?"),
                 style = TSBodyMediumWhite().copy(
                     fontSize = 26.sp
                 )
@@ -85,7 +85,7 @@ fun RegisterBirthDatePage(
                 ButtonVariableSizeSolid(
                     modifier = Modifier.padding(top = 32.dp),
                     modifierText = Modifier.padding(horizontal = 16.dp),
-                    text = stringResource(Res.string.label_continue),
+                    text = previewSafeString(Res.string.label_continue, "Next"),
                     containerColor = MaterialTheme.colorScheme.onBackground,
                     enabled = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld(),
                     onClick = {

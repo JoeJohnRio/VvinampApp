@@ -16,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -29,6 +28,7 @@ import com.example.vvinamp.ui.widget.TopNavigationWithButtons
 import com.example.vvinamp.util.ButtonData
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
+import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.foundation.ExperimentalFoundationApi
 
 @Composable
@@ -70,7 +70,7 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
         ) {
             item {
                 TopNavigationWithButtons(
-                    title = stringResource(Res.string.title_search),
+                    title = previewSafeString(Res.string.title_search, "Search"),
                     listOfButtons = listOf(
                         ButtonData(
                             imageVector = Icons.Default.PhotoCamera,
