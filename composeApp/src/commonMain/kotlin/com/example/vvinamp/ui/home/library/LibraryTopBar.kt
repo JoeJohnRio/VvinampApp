@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.entity.playlist.LibraryCategory
@@ -34,13 +37,13 @@ fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
             title = stringResource(Res.string.title_your_library),
             listOfButtons = listOf(
                 ButtonData(
-                    iconRes = Res.drawable.ic_search,
+                    imageVector = Icons.Default.Search,
                     onClick = {
                         onEvent(LibraryUiEvent.onSearchClicked)
                     }
                 ),
                 ButtonData(
-                    iconRes = Res.drawable.ic_create_plus,
+                    imageVector = Icons.Default.Add,
                     onClick = {
                         onEvent(LibraryUiEvent.onCreateClicked)
                     }

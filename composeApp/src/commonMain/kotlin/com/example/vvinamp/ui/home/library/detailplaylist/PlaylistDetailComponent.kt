@@ -17,6 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -32,7 +37,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -78,7 +83,7 @@ fun PlaylistDetailComponent(
         ) {
             Icon(
                 modifier = Modifier.align(Alignment.Center),
-                painter = painterResource(Res.drawable.ic_music_note),
+                imageVector = Icons.Default.MusicNote,
                 tint = MaterialTheme.colorScheme.surfaceBright,
                 contentDescription = null
             )
@@ -132,7 +137,7 @@ fun PlaylistDetailComponent(
     Spacer(Modifier.height(8.dp))
 
     Icon(
-        painter = painterResource(Res.drawable.ic_public),
+        imageVector = Icons.Default.Public,
         contentDescription = null,
         tint = MaterialTheme.colorScheme.surfaceBright
     )
@@ -144,7 +149,7 @@ fun PlaylistDetailComponent(
             modifier = Modifier.clickable {
                 onClickShare()
             },
-            painter = painterResource(Res.drawable.ic_share),
+            imageVector = Icons.Default.Share,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.surfaceBright
         )
@@ -156,7 +161,7 @@ fun PlaylistDetailComponent(
             modifier = Modifier.clickable {
                 onClickMore()
             },
-            painter = painterResource(Res.drawable.ic_bullet_vertical),
+            imageVector = Icons.Filled.MoreVert,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.surfaceBright
         )

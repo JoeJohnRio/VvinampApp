@@ -47,8 +47,12 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.filled.Devices
+import androidx.compose.material.icons.filled.Share
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
@@ -63,6 +67,7 @@ import com.example.vvinamp.util.preview.PreviewTheme
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import com.example.domain.entity.song.trackDummy
+import com.example.vvinamp.util.preview.previewSafePainter
 
 enum class BottomSheetState { EXPANDED, COLLAPSED }
 
@@ -256,7 +261,7 @@ fun PlayerSheetContent(
             AsyncImage(
                 model = uiState.currentTrack?.albumCoverUrl,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -302,7 +307,7 @@ fun ShareTrackComponent() {
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = painterResource(Res.drawable.ic_multi_platform),
+                imageVector = Icons.Default.Devices,
                 contentDescription = "Multi Platform",
             )
         }
@@ -315,7 +320,7 @@ fun ShareTrackComponent() {
             ) {
                 Icon(
                     tint = MaterialTheme.colorScheme.inversePrimary,
-                    painter = painterResource(Res.drawable.ic_share),
+                    imageVector = Icons.Default.Share,
                     contentDescription = "Share",
                 )
             }
@@ -327,7 +332,7 @@ fun ShareTrackComponent() {
             ) {
                 Icon(
                     tint = MaterialTheme.colorScheme.inversePrimary,
-                    painter = painterResource(Res.drawable.ic_list),
+                    imageVector = Icons.AutoMirrored.Filled.List,
                     contentDescription = "List",
                 )
             }

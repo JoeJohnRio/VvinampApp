@@ -34,7 +34,7 @@ import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -46,6 +46,7 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.ui.widget.SpotifyPlayingIndicator
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 import com.example.vvinamp.util.verticalGradientEdge
 
 @Composable
@@ -77,7 +78,7 @@ fun SongRow(
         Image(
             painter = rememberAsyncImagePainter(
                 model = song.albumCoverUrl,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
             ),
             contentDescription = null,
             modifier = Modifier

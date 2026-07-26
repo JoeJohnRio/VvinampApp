@@ -36,14 +36,14 @@ kotlin {
             implementation(project(":data"))
             implementation(project(":graphql"))
 
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.material.icons.extended)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.resources)
+            implementation(libs.compose.ui.tooling)
             
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.paging.common)
+            implementation(libs.paging.compose)
 
             implementation(libs.navigation3.ui)
             implementation(libs.coil.compose)
@@ -61,14 +62,13 @@ kotlin {
         }
         
         androidMain.dependencies {
+            implementation("org.jetbrains.compose.ui:ui-tooling:${libs.versions.composeMultiplatform.get()}")
             implementation(libs.koin.android)
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.palette)
             implementation(libs.bundles.media3)
 
             implementation(libs.constraintlayout.compose)
-            // Paging Compose (Currently Android only)
-            implementation(libs.paging.compose)
             
             // UI Components (Moved to Android only as they might not be KMP ready)
             implementation(libs.reorderable)
@@ -102,4 +102,8 @@ val copyComposeResourcesToAndroidAssets by tasks.registering(Copy::class) {
     dependsOn("prepareComposeResourcesTaskForCommonMain")
     from(layout.buildDirectory.dir("generated/compose/resourceGenerator/preparedResources/commonMain/composeResources"))
     into(layout.buildDirectory.dir("generated/composeResourcesForAndroid/assets/composeResources/vvinampapp.composeapp.generated.resources"))
+}
+
+dependencies {
+    "androidRuntimeClasspath"("org.jetbrains.compose.ui:ui-tooling:${libs.versions.composeMultiplatform.get()}")
 }

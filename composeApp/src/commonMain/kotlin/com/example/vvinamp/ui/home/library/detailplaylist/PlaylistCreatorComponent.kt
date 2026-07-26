@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -30,6 +32,8 @@ import com.example.domain.entity.playlist.PlaylistComplete
 
 import com.example.vvinamp.util.PaddingSizeUtil
 import com.example.vvinamp.util.orErrorNoText
+import com.example.vvinamp.util.preview.previewSafePainter
+
 @Composable
 fun PlaylistCreatorComponent(playlist: PlaylistComplete?) {
     val dummyCreators = listOf(playlist?.creator, playlist?.creator)
@@ -53,7 +57,7 @@ fun PlaylistCreatorComponent(playlist: PlaylistComplete?) {
                 modifier = Modifier
                     .size(20.dp)
                     .align(Alignment.Center),
-                painter = painterResource(Res.drawable.ic_create_plus),
+                imageVector = Icons.Default.Add,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -77,7 +81,7 @@ fun PlaylistCreatorComponent(playlist: PlaylistComplete?) {
                 AsyncImage(
                     model = dummyCreator?.profilePicture,
                     contentDescription = null,
-                    placeholder = painterResource(Res.drawable.bg_image),
+                    placeholder = previewSafePainter(Res.drawable.bg_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.size(PaddingSizeUtil.LibraryItemSize)
                 )

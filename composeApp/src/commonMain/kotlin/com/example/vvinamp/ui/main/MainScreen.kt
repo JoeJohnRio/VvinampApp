@@ -7,6 +7,7 @@ import com.example.vvinamp.navigation.Navigator
 import com.example.vvinamp.navigation.graph.BottomNavDestination
 import com.example.vvinamp.navigation.rememberNavigationState
 import com.example.vvinamp.navigation.router.BottomNavRouter
+import com.example.vvinamp.navigation.router.BottomNavRouterImpl
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
 import com.example.vvinamp.ui.navigationbar.MainNavDisplay
@@ -28,7 +29,7 @@ fun MainScreen(
         topLevelRoutes = appTopLevel,
     )
     val navigator = remember { Navigator(navigationState) }
-    val bottomNavRouter = BottomNavRouter(navigator)
+    val bottomNavRouter = BottomNavRouterImpl(navigator)
 
     MainScreenContainer(
         playbackViewModel = playbackViewModel,

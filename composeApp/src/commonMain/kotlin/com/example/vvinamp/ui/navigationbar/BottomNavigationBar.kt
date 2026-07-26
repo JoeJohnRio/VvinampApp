@@ -52,7 +52,11 @@ fun BottomNavigationBar(
                 selected = isSelected,
                 onClick = { onItemClick(item) },
                 icon = {
-                    Icon(painter = item.painter.invoke(), contentDescription = null)
+                    if (item.imageVector != null) {
+                        Icon(imageVector = item.imageVector, contentDescription = null)
+                    } else if (item.painter != null) {
+                        Icon(painter = item.painter.invoke(), contentDescription = null)
+                    }
                 },
                 label = {
                     Text(

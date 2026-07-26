@@ -28,6 +28,7 @@ import com.example.domain.entity.artist.ArtistProfileDomain
 
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.PaddingSizeUtil
+import com.example.vvinamp.util.preview.previewSafePainter
 
 
 @Composable
@@ -40,7 +41,7 @@ fun BoxScope.ArtistHeroImage(
     Image(
         painter = rememberAsyncImagePainter(
             model = artistProfile.profileImage,
-            placeholder = painterResource(Res.drawable.bg_image),
+            placeholder = previewSafePainter(Res.drawable.bg_image),
         ),
         contentDescription = null,
         contentScale = ContentScale.Crop,

@@ -24,7 +24,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -37,6 +37,7 @@ import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.util.addCommas
 import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 import com.example.vvinamp.util.verticalGradientEdge
 
 @Composable
@@ -64,7 +65,7 @@ fun ArtistAbout(artistProfile: ArtistProfileDomain = artistProfileDummy) {
                     .verticalGradientEdge(MaterialTheme.colorScheme.background),
                 painter = rememberAsyncImagePainter(
                     model = artistProfile.profileImage,
-                    placeholder = painterResource(Res.drawable.bg_image),
+                    placeholder = previewSafePainter(Res.drawable.bg_image),
                 ),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,

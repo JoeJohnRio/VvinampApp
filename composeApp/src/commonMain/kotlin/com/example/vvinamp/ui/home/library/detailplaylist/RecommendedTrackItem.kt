@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.CheckCircle
+import org.jetbrains.compose.resources.painterResource
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -33,6 +36,7 @@ import com.example.domain.entity.song.dummyRecommendedTracks
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 
 @Composable
@@ -60,7 +64,7 @@ fun RecommendedTrackItem(
             AsyncImage(
                 model = track.albumCoverUrl,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -94,7 +98,7 @@ fun RecommendedTrackItem(
 
         if (track.isAdded) {
             Icon(
-                painter = painterResource(Res.drawable.ic_check),
+                imageVector = Icons.Default.CheckCircle,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.primary
             )
@@ -110,7 +114,7 @@ fun RecommendedTrackItem(
                         )
                     }
                 ),
-                painter = painterResource(Res.drawable.ic_plus_circle),
+                imageVector = Icons.Filled.AddCircle,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.surfaceBright
             )

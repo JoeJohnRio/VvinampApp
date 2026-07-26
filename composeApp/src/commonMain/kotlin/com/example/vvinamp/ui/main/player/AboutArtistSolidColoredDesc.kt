@@ -33,6 +33,7 @@ import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.ui.widget.text.ExpandableText
 import com.example.vvinamp.util.orErrorNoText
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun AboutArtistSolidColoredDesc(
@@ -121,7 +122,7 @@ fun ImageAboutArtist(
             modifier = Modifier.fillMaxSize(),
             model = artistImageUrl,
             contentDescription = null,
-            placeholder = painterResource(Res.drawable.bg_image),
+            placeholder = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop
         )
         Box(

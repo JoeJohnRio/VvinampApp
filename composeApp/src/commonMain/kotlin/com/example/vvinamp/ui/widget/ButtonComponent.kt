@@ -39,11 +39,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Smartphone
+import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,6 +67,7 @@ fun ButtonSolid(
     containerColor: Color = MaterialTheme.colorScheme.primary,
     disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
     icon: Painter? = null,
+    imageVector: ImageVector? = null,
     iconTint: Color = MaterialTheme.colorScheme.onPrimary,
     contentDescription: String? = null,
     enabled: Boolean = true
@@ -82,15 +88,24 @@ fun ButtonSolid(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            icon?.let {
+            val iconModifier = Modifier
+                .padding(start = 4.dp)
+                .align(Alignment.CenterStart)
+                .size(24.dp)
+
+            if (imageVector != null) {
                 Icon(
-                    painter = it,
+                    imageVector = imageVector,
                     contentDescription = contentDescription,
                     tint = iconTint,
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .align(Alignment.CenterStart)
-                        .size(24.dp)
+                    modifier = iconModifier
+                )
+            } else if (icon != null) {
+                Icon(
+                    painter = icon,
+                    contentDescription = contentDescription,
+                    tint = iconTint,
+                    modifier = iconModifier
                 )
             }
 
@@ -112,6 +127,7 @@ fun ButtonSolidCloseIconAndText(
     containerColor: Color = MaterialTheme.colorScheme.primary,
     disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
     icon: Painter? = null,
+    imageVector: ImageVector? = null,
     iconTint: Color = MaterialTheme.colorScheme.onPrimary,
     contentDescription: String? = null,
     enabled: Boolean = true
@@ -133,14 +149,23 @@ fun ButtonSolidCloseIconAndText(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            icon?.let {
+            val iconModifier = Modifier
+                .padding(end = 4.dp)
+                .size(24.dp)
+
+            if (imageVector != null) {
                 Icon(
-                    painter = it,
+                    imageVector = imageVector,
                     contentDescription = contentDescription,
                     tint = iconTint,
-                    modifier = Modifier
-                        .padding(end = 4.dp)
-                        .size(24.dp)
+                    modifier = iconModifier
+                )
+            } else if (icon != null) {
+                Icon(
+                    painter = icon,
+                    contentDescription = contentDescription,
+                    tint = iconTint,
+                    modifier = iconModifier
                 )
             }
 
@@ -160,6 +185,7 @@ fun ButtonBlackSmallIcon(
     onClick: () -> Unit = {},
     disabledContainerColor: Color = MaterialTheme.colorScheme.outline,
     icon: Painter? = null,
+    imageVector: ImageVector? = null,
     contentDescription: String? = null,
     enabled: Boolean = true
 ) {
@@ -174,13 +200,21 @@ fun ButtonBlackSmallIcon(
         shape = RoundedCornerShape(25.dp),
         contentPadding = PaddingValues(horizontal = 8.dp)
     ) {
-        icon?.let {
+        val iconModifier = Modifier.size(24.dp)
+
+        if (imageVector != null) {
             Icon(
-                painter = it,
+                imageVector = imageVector,
                 contentDescription = contentDescription,
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                modifier = Modifier
-                    .size(24.dp)
+                modifier = iconModifier
+            )
+        } else if (icon != null) {
+            Icon(
+                painter = icon,
+                contentDescription = contentDescription,
+                tint = MaterialTheme.colorScheme.inversePrimary,
+                modifier = iconModifier
             )
         }
 
@@ -244,6 +278,7 @@ fun ButtonOutlined(
     containerColor: Color = MaterialTheme.colorScheme.onPrimary,
     iconTint: Color = MaterialTheme.colorScheme.inversePrimary,
     icon: Painter? = null,
+    imageVector: ImageVector? = null,
     contentDescription: String? = null
 ) {
     OutlinedButton(
@@ -262,15 +297,24 @@ fun ButtonOutlined(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            icon?.let {
+            val iconModifier = Modifier
+                .padding(start = 4.dp)
+                .align(Alignment.CenterStart)
+                .size(24.dp)
+
+            if (imageVector != null) {
                 Icon(
-                    painter = it,
+                    imageVector = imageVector,
                     contentDescription = contentDescription,
                     tint = iconTint,
-                    modifier = Modifier
-                        .padding(start = 4.dp)
-                        .align(Alignment.CenterStart)
-                        .size(24.dp)
+                    modifier = iconModifier
+                )
+            } else if (icon != null) {
+                Icon(
+                    painter = icon,
+                    contentDescription = contentDescription,
+                    tint = iconTint,
+                    modifier = iconModifier
                 )
             }
 
@@ -440,7 +484,7 @@ private fun ButtonsPreview() {
                 text = "Sign up free",
                 textColor = AppColours.OnPrimaryBlack,
                 containerColor = AppColours.PrimaryGreen,
-                icon = painterResource(Res.drawable.ic_email),
+                imageVector = Icons.Default.Email,
                 iconTint = AppColours.OnPrimaryBlack
             )
             Spacer(
@@ -452,7 +496,7 @@ private fun ButtonsPreview() {
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    icon = painterResource(Res.drawable.ic_create_plus),
+                    imageVector = Icons.Default.Add,
                 )
 
                 Spacer(Modifier.width(8.dp))
@@ -462,7 +506,7 @@ private fun ButtonsPreview() {
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    icon = painterResource(Res.drawable.ic_create_plus),
+                    imageVector = Icons.Default.Add,
                 )
 
                 Spacer(Modifier.width(8.dp))
@@ -472,7 +516,7 @@ private fun ButtonsPreview() {
                         .padding(top = 12.dp)
                         .height(30.dp),
                     text = "Add",
-                    icon = painterResource(Res.drawable.ic_create_plus),
+                    imageVector = Icons.Default.Add,
                 )
             }
             Spacer(
@@ -493,7 +537,7 @@ private fun ButtonsPreview() {
                 text = "Logout",
                 textColor = AppColours.error,
                 containerColor = AppColours.errorContainer,
-                icon = painterResource(Res.drawable.ic_logout),
+                imageVector = Icons.AutoMirrored.Filled.Logout,
                 iconTint = AppColours.error
             )
             ButtonOutlined(
@@ -502,7 +546,7 @@ private fun ButtonsPreview() {
                 outlineColor = AppColours.Outline,
                 textColor = AppColours.OffWhite,
                 containerColor = AppColours.OnPrimaryBlack,
-                icon = painterResource(Res.drawable.ic_smartphone),
+                imageVector = Icons.Default.Smartphone,
                 iconTint = AppColours.OffWhite,
                 contentDescription = "Log in"
             )

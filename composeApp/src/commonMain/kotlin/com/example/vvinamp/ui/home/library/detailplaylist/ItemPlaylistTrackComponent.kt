@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -27,6 +29,7 @@ import com.example.domain.entity.song.TrackDomain
 
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun ItemPlaylistTrackComponent(
@@ -52,7 +55,7 @@ fun ItemPlaylistTrackComponent(
             AsyncImage(
                 model = track.albumCoverUrl,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -89,7 +92,7 @@ fun ItemPlaylistTrackComponent(
                 onClick = {
                 }
             ),
-            painter = painterResource(Res.drawable.ic_bullet_vertical),
+            imageVector = Icons.Filled.MoreVert,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.surfaceBright
         )

@@ -1,56 +1,66 @@
 package com.example.vvinamp.navigation.router
-import vvinampapp.composeapp.generated.resources.*
 
-import com.example.domain.entity.ListeningHistoryDomain
 import com.example.vvinamp.navigation.Navigator
 import com.example.vvinamp.navigation.graph.BottomNavDestination
 
-class BottomNavRouter(
+interface BottomNavRouter {
+    fun navigateToHome()
+    fun navigateToAlbum(albumId: String)
+    fun navigateToSearch()
+    fun navigateToSearchResults()
+    fun navigateToLibrary()
+    fun navigateToCreatePlaylist()
+    fun navigateToPlaylistDetail(playlistId: String)
+    fun navigateToPlaylistEdit(playlistId: String)
+    fun navigateToArtistPage(artistId: String)
+    fun navigateToSettings()
+    fun navigateBack()
+}
+
+class BottomNavRouterImpl(
     private val navigator: Navigator
-) {
-    fun navigateToHome() {
+) : BottomNavRouter {
+    override fun navigateToHome() {
         navigator.navigate(BottomNavDestination.Home)
     }
 
-    fun navigateToAlbum(albumId: String) {
+    override fun navigateToAlbum(albumId: String) {
         navigator.navigate(BottomNavDestination.Album(albumId))
     }
 
-    fun navigateToSearch() {
+    override fun navigateToSearch() {
         navigator.navigate(BottomNavDestination.Search)
     }
 
-    fun navigateToSearchResults() {
+    override fun navigateToSearchResults() {
         navigator.navigate(BottomNavDestination.SearchResults)
     }
 
-    fun navigateToLibrary() {
+    override fun navigateToLibrary() {
         navigator.navigate(BottomNavDestination.Library)
     }
 
-    fun navigateToCreatePlaylist() {
+    override fun navigateToCreatePlaylist() {
         navigator.navigate(BottomNavDestination.CreatePlaylist)
     }
 
-    fun navigateToPlaylistDetail(playlistId: String) {
+    override fun navigateToPlaylistDetail(playlistId: String) {
         navigator.navigate(BottomNavDestination.PlaylistDetail(playlistId))
     }
 
-    fun navigateToPlaylistEdit(playlistId: String) {
+    override fun navigateToPlaylistEdit(playlistId: String) {
         navigator.navigate(BottomNavDestination.PlaylistEdit(playlistId))
     }
-    fun navigateToArtistPage(
-        artistId: String
-    ) {
+
+    override fun navigateToArtistPage(artistId: String) {
         navigator.navigate(BottomNavDestination.Artist(artistId))
     }
 
-    fun navigateToSettings() {
+    override fun navigateToSettings() {
         navigator.navigate(BottomNavDestination.Settings)
     }
 
-    fun navigateBack() {
+    override fun navigateBack() {
         navigator.goBack()
     }
-
 }

@@ -32,6 +32,7 @@ import com.example.domain.entity.album.AlbumDomain
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.PaddingSizeUtil
 import com.example.vvinamp.util.orErrorNoText
+import com.example.vvinamp.util.preview.previewSafePainter
 
 
 @Composable
@@ -71,7 +72,7 @@ fun AlbumHeroImage(
             AsyncImage(
                 model = albumDomain?.coverArt,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(RoundedCornerShape(4.dp))

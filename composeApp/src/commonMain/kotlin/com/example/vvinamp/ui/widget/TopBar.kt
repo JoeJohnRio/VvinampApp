@@ -5,7 +5,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,7 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,7 +65,7 @@ fun TopBar(
                         onSettingsClick()
                     }
                 ) {
-                    Icon(painter = painterResource(Res.drawable.ic_settings), contentDescription = "Dark Mode")
+                    Icon(imageVector = Icons.Default.Settings, contentDescription = "Dark Mode")
                 }
             }
         )
@@ -76,7 +78,6 @@ fun TopBar(
 fun TopBarCustom(
     title: String = stringResource(Res.string.title_create_account),
     style: TextStyle = TSBodyMediumWhite(),
-    icon: Painter? = painterResource(Res.drawable.ic_back_arrow),
     onBackClick: () -> Unit = {},
     colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors().copy(
         containerColor = MaterialTheme.colorScheme.onPrimary
@@ -91,15 +92,10 @@ fun TopBarCustom(
         },
         colors = colors,
         navigationIcon = {
-            icon?.let {
+            IconButton(onClick = onBackClick) {
                 Icon(
-                    modifier = Modifier
-                        .clickable {
-                            onBackClick()
-                        }
-                        .padding(start = 12.dp),
-                    painter = painterResource(Res.drawable.ic_back_arrow),
-                    contentDescription = null
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back"
                 )
             }
         },

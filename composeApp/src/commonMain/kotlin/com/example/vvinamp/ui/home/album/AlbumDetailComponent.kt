@@ -12,7 +12,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowCircleDown
+import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.example.data.util.dateToYear
@@ -37,6 +41,7 @@ import com.example.vvinamp.ui.home.artist.VerticalVideoFeedPreview
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun AlbumDetailComponent(
@@ -58,7 +63,7 @@ fun AlbumDetailComponent(
             AsyncImage(
                 model = data?.artistImage,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(20.dp)
@@ -101,7 +106,7 @@ fun AlbumDetailComponent(
 
             }) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_plus_circle),
+                    imageVector = Icons.Filled.AddCircle,
                     contentDescription = "More",
                     tint = MaterialTheme.colorScheme.outline,
                 )
@@ -111,7 +116,7 @@ fun AlbumDetailComponent(
 
             IconButton(onClick = { /* Open Menu */ }) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_download_circle),
+                    imageVector = Icons.Default.ArrowCircleDown,
                     contentDescription = "More",
                     tint = MaterialTheme.colorScheme.outline,
                 )
@@ -121,7 +126,7 @@ fun AlbumDetailComponent(
 
             IconButton(onClick = { /* Open Menu */ }) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_bullet_horizontal),
+                    imageVector = Icons.Default.MoreHoriz,
                     contentDescription = "More",
                     tint = MaterialTheme.colorScheme.outline,
                 )
@@ -131,7 +136,7 @@ fun AlbumDetailComponent(
 
             IconButton(onClick = onShuffleClick) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_shuffle), // Use a shuffle drawable
+                    imageVector = Icons.Default.Shuffle, // Use a shuffle drawable
                     contentDescription = "Shuffle",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(56.dp)

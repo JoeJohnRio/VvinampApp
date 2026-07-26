@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -19,13 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.jetbrains.compose.resources.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.ButtonData
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 
 @Composable
@@ -47,7 +52,7 @@ fun TopNavigationWithButtons(
                     .size(32.dp),
                 painter = rememberAsyncImagePainter(
                     model = "https://avatars.githubusercontent.com/u/42718154?v=4",
-                    placeholder = painterResource(Res.drawable.bg_image),
+                    placeholder = previewSafePainter(Res.drawable.bg_image),
                 ),
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
@@ -65,13 +70,25 @@ fun TopNavigationWithButtons(
         }
 
         Row() {
-            listOfButtons.forEach { (iconRes, onClick) ->
+            listOfButtons.forEach { (iconRes, imageVector, onClick) ->
                 IconButton(onClick = { onClick() }) {
-                    Icon(
-                        contentDescription = "",
-                        painter = painterResource(iconRes),
-                        tint = MaterialTheme.colorScheme.inversePrimary
-                    )
+                    val iconModifier = Modifier
+
+                    if (imageVector != null) {
+                        Icon(
+                            imageVector = imageVector,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.inversePrimary,
+                            modifier = iconModifier
+                        )
+                    } else if (iconRes != null) {
+                        Icon(
+                            painter = previewSafePainter(iconRes),
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.inversePrimary,
+                            modifier = iconModifier
+                        )
+                    }
                 }
             }
         }
@@ -89,11 +106,11 @@ fun TopNavigationWithButtonsPreview() {
                 title = "Title",
                 listOfButtons = listOf(
                     ButtonData(
-                        iconRes = Res.drawable.ic_search,
+                        imageVector = Icons.Default.Search,
                         onClick = {}
                     ),
                     ButtonData(
-                        iconRes = Res.drawable.ic_create_plus,
+                        imageVector = Icons.Default.Add,
                         onClick = {}
                     )
                 )

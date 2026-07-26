@@ -18,7 +18,7 @@ mockitoInline = "5.2.0"
 mockitoKotlin = "5.4.0"
 navigation3Version = "1.1.1"
 okhttp = "5.0.0-alpha.2"
-paging = "3.3.4"
+paging = "3.5.0"
 room = "2.8.4"
 truth = "1.1.3"
 turbine = "0.12.1"
@@ -38,6 +38,8 @@ espressoCore = "3.6.1"
 material = "1.12.0"
 wheelPickerCompose = "1.1.11"
 composeMultiplatform = "1.11.1"
+composeMultiplatformMaterial3 = "1.11.0-alpha07"
+composeMultiplatformIcons = "1.7.3"
 apollo = "5.0.1"
 apollo-engine-ktor = "1.0.0-alpha.0"
 securityCrypto = "1.1.0"
@@ -52,6 +54,9 @@ adaptiveVersion = "1.0.0-alpha04"
 [libraries]
 constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 reorderable = { module = "sh.calvin.reorderable:reorderable", version.ref = "reorderable" }
+jetbrains-compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "composeMultiplatform" }
+jetbrains-compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version = "composeMultiplatform" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 wheel-picker-compose = { module = "com.github.commandiron:WheelPickerCompose", version.ref = "wheelPickerCompose"}
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -105,6 +110,17 @@ chucker-release = { module = "com.github.chuckerteam.chucker:library-no-op", ver
 # Apollo
 apollo-runtime = { module = "com.apollographql.apollo:apollo-runtime", version.ref = "apollo" }
 apollo-ktor = { module = "com.apollographql.ktor:apollo-engine-ktor", version.ref = "apollo-engine-ktor" }
+
+# Compose
+compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "composeMultiplatform" }
+compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "composeMultiplatform" }
+compose-foundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
+compose-material = { module = "org.jetbrains.compose.material:material", version.ref = "composeMultiplatform" }
+compose-material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatformMaterial3" }
+compose-ui = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+compose-material-icons-extended = { module = "org.jetbrains.compose.material:material-icons-extended", version.ref = "composeMultiplatformIcons" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "composeMultiplatform" }
+
 
 # Paging
 paging-common-ktx = { module = "androidx.paging:paging-common-ktx", version.ref = "paging" }

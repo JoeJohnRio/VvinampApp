@@ -12,10 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Smartphone
+import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.example.vvinamp.navigation.router.AuthRouter
@@ -64,7 +68,7 @@ fun LoginSelectionButtons(
         modifier = Modifier
             .padding(bottom = 12.dp),
         text = stringResource(Res.string.label_continue_with_email),
-        icon = painterResource(Res.drawable.ic_email),
+        imageVector = Icons.Default.Email,
         onClick = {
             mainRouter.navigateToLoginEmailPage()
         }
@@ -73,14 +77,14 @@ fun LoginSelectionButtons(
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 12.dp),
         text = stringResource(Res.string.label_continue_with_phone),
-        icon = painterResource(Res.drawable.ic_smartphone),
+        imageVector = Icons.Default.Smartphone,
         onClick = {}
     )
 
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 12.dp),
         text = stringResource(Res.string.label_continue_with_google),
-        icon = painterResource(Res.drawable.ic_google),
+        icon = previewSafePainter(Res.drawable.ic_google),
         iconTint = Color.Unspecified,
         onClick = {}
     )
@@ -88,7 +92,7 @@ fun LoginSelectionButtons(
     ButtonOutlined(
         modifier = Modifier.padding(bottom = 48.dp),
         text = stringResource(Res.string.label_continue_with_facebook),
-        icon = painterResource(Res.drawable.ic_facebook),
+        icon = previewSafePainter(Res.drawable.ic_facebook),
         iconTint = Color.Unspecified,
         onClick = {}
     )

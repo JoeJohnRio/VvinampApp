@@ -11,6 +11,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Notes
+import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +45,7 @@ fun LibrarySortBar(
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = painterResource(Res.drawable.ic_arrow_up_down),
+                imageVector = Icons.Default.SwapVert,
                 contentDescription = null,
             )
 
@@ -60,8 +64,8 @@ fun LibrarySortBar(
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
-                painter = if (isLibraryViewModeGrid) painterResource(Res.drawable.ic_grid)
-                else painterResource(Res.drawable.ic_paragraph),
+                imageVector = if (isLibraryViewModeGrid) Icons.Default.GridView
+                else Icons.AutoMirrored.Filled.Notes,
                 contentDescription = null,
             )
         }

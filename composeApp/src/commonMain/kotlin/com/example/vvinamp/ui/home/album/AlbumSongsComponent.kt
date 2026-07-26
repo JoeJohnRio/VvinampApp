@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -18,7 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.entity.album.SimplifiedTrackDomain
@@ -111,7 +113,7 @@ fun ListSongsComponent(
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_bullet_vertical),
+                    imageVector = Icons.Filled.MoreVert,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)

@@ -9,16 +9,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import com.example.vvinamp.navigation.router.BottomNavRouter
+import com.example.vvinamp.navigation.router.BottomNavRouterImpl
 import com.example.vvinamp.ui.main.ScreenWrapper
 import com.example.vvinamp.ui.search.component.StartBrowsingComponent
 import com.example.vvinamp.ui.widget.TextFieldSearchNoClick
@@ -70,7 +73,7 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
                     title = stringResource(Res.string.title_search),
                     listOfButtons = listOf(
                         ButtonData(
-                            iconRes = Res.drawable.ic_camera,
+                            imageVector = Icons.Default.PhotoCamera,
                             onClick = {
 
                             }
@@ -116,7 +119,7 @@ fun SearchContentPreview() {
     PreviewTheme {
         SearchContent(
             uiState = SearchUiState(),
-            router = BottomNavRouter(navigatorDummy()),
+            router = BottomNavRouterImpl(navigatorDummy()),
             onClickSearch = {}
         )
     }

@@ -14,9 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.example.vvinamp.util.preview.previewSafePainter
 
 
 @Composable
@@ -34,7 +37,7 @@ fun ImageWithPlayButton(
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
-            placeholder = painterResource(Res.drawable.bg_image),
+            placeholder = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
         )
@@ -46,7 +49,7 @@ fun ImageWithPlayButton(
         )
 
         Icon(
-            painter = painterResource(Res.drawable.ic_play),
+            imageVector = Icons.Default.PlayArrow,
             contentDescription = "Play",
             tint = Color.White,
             modifier = Modifier.size(24.dp)

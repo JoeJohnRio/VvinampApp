@@ -1,5 +1,4 @@
 package com.example.vvinamp.ui.search
-import vvinampapp.composeapp.generated.resources.*
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -13,6 +13,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.IconButton
@@ -25,8 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -69,7 +74,7 @@ fun PlaybackCurrentSongComponent(
                 .clip(RoundedCornerShape(4.dp)),
             painter = rememberAsyncImagePainter(
                 model = currentlyPlaying.albumCoverUrl,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
             ),
             contentDescription = null,
             contentScale = ContentScale.Crop
@@ -103,7 +108,7 @@ fun PlaybackCurrentSongComponent(
 
         Icon(
             modifier = Modifier.size(24.dp),
-            painter = painterResource(Res.drawable.ic_plus_circle),
+            imageVector = Icons.Filled.AddCircle,
             tint = MaterialTheme.colorScheme.inversePrimary,
             contentDescription = null,
         )
@@ -115,10 +120,8 @@ fun PlaybackCurrentSongComponent(
             modifier = Modifier.size(32.dp) // Standard IconButton size
         ) {
             Icon(
-                painter = painterResource(
-                    if (isPlaying) Res.drawable.ic_pause
-                    else Res.drawable.ic_play
-                ),
+                imageVector = if (isPlaying) Icons.Default.Pause
+                    else Icons.Default.PlayArrow,
                 contentDescription = if (isPlaying) "Pause" else "Play",
                 tint = MaterialTheme.colorScheme.inversePrimary,
                 modifier = Modifier.size(32.dp)

@@ -15,8 +15,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PushPin
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.entity.playlist.PlaylistMinimal
@@ -61,7 +63,7 @@ fun LibraryItem(
             ) {
                 if (true) {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_pin),
+                        imageVector = Icons.Default.PushPin,
                         tint = MaterialTheme.colorScheme.primary,
                         contentDescription = null,
                     )

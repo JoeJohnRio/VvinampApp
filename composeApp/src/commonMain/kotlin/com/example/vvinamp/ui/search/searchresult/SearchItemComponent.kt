@@ -12,6 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -21,8 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -34,7 +36,8 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.ui.widget.SpotifyPlayingIndicator
 import com.example.vvinamp.util.preview.PreviewTheme
-
+import com.example.vvinamp.util.preview.previewSafePainter
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun SearchItemComponent(
@@ -91,7 +94,7 @@ fun YoutubeSearchComponent(
             AsyncImage(
                 model = domain.thumbnail,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -156,7 +159,7 @@ fun TrackSearchComponent(
             AsyncImage(
                 model = domain.albumCoverUrl,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                 placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -207,7 +210,7 @@ fun TrackSearchComponent(
                 modifier = Modifier.size(48.dp) // Standard IconButton size
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_bullet_vertical),
+                    imageVector = Icons.Filled.MoreVert,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
@@ -221,7 +224,7 @@ fun TrackSearchComponent(
                 modifier = Modifier.size(48.dp) // Standard IconButton size
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_plus_circle),
+                    imageVector = Icons.Filled.AddCircle,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
@@ -251,7 +254,7 @@ fun AlbumSearchComponent(
             AsyncImage(
                 model = domain.coverArt,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -289,7 +292,7 @@ fun AlbumSearchComponent(
                 modifier = Modifier.size(48.dp) // Standard IconButton size
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_plus_circle),
+                    imageVector = Icons.Filled.AddCircle,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
@@ -319,7 +322,7 @@ fun ArtistSearchComponent(
             AsyncImage(
                 model = domain.profileImage,
                 contentDescription = null,
-                placeholder = painterResource(Res.drawable.bg_image),
+                placeholder = previewSafePainter(Res.drawable.bg_image),
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(48.dp)
@@ -357,7 +360,7 @@ fun ArtistSearchComponent(
                 modifier = Modifier.size(48.dp) // Standard IconButton size
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_bullet_vertical),
+                    imageVector = Icons.Filled.MoreVert,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
@@ -371,7 +374,7 @@ fun ArtistSearchComponent(
                 modifier = Modifier.size(48.dp) // Standard IconButton size
             ) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_plus_circle),
+                    imageVector = Icons.Filled.AddCircle,
                     contentDescription = "",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)

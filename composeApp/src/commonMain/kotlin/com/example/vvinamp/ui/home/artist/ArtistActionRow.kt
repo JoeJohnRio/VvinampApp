@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Shuffle
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -45,6 +46,7 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.util.ListenerUtils
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun ArtistActionsRow(
@@ -108,7 +110,7 @@ fun ArtistActionsRow(
 
             IconButton(onClick = onShuffleClick) {
                 Icon(
-                    painter = painterResource(Res.drawable.ic_shuffle), // Use a shuffle drawable
+                    imageVector = Icons.Default.Shuffle, // Use a shuffle drawable
                     contentDescription = "Shuffle",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(56.dp)
@@ -149,7 +151,7 @@ fun VerticalVideoFeedPreview(imageUrl: String) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
-            placeholder = painterResource(Res.drawable.bg_image),
+            placeholder = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()

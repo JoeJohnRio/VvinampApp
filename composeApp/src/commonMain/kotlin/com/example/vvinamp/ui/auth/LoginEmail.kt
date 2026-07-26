@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.domain.entity.user.User
@@ -44,10 +45,8 @@ import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import vvinampapp.composeapp.generated.resources.Res
-import vvinampapp.composeapp.generated.resources.ic_back_arrow
 import vvinampapp.composeapp.generated.resources.label_log_in
 import vvinampapp.composeapp.generated.resources.label_login_without_password
 import vvinampapp.composeapp.generated.resources.title_email_or_username
@@ -101,7 +100,6 @@ fun LoginEmailPage(
         topBar = {
             TopBarCustom(
                 title = stringResource(Res.string.title_login),
-                icon = painterResource(Res.drawable.ic_back_arrow),
                 onBackClick = {
                     authRouter.navigateBack()
                 }

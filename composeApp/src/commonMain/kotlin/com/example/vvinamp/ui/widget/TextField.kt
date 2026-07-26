@@ -10,6 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
@@ -32,7 +35,7 @@ import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -140,7 +143,7 @@ fun TextFieldSearchNoClick(
                 },
                 leadingIcon = @Composable {
                     Icon(
-                        painter = painterResource(Res.drawable.ic_search),
+                        imageVector = Icons.Default.Search,
                         tint = MaterialTheme.colorScheme.background,
                         contentDescription = null
                     )
@@ -211,8 +214,8 @@ fun TextFieldSearch(
                         modifier = Modifier.clickable {
                             onBackClicked()
                         },
-                        painter = painterResource(Res.drawable.ic_arrow_back),
-                        contentDescription = null
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
                     )
                 }
             ,
@@ -222,8 +225,8 @@ fun TextFieldSearch(
                         modifier = Modifier.clickable {
                             onValueChanged("")
                         },
-                        contentDescription = null,
-                        painter = painterResource(Res.drawable.ic_close)
+                        contentDescription = "Clear",
+                        imageVector = Icons.Default.Close
                     )
                 }
             } else null,

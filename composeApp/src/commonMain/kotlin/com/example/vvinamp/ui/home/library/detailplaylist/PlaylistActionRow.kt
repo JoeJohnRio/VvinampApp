@@ -19,8 +19,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Notes
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.SwapVert
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,13 +38,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.ui.widget.ButtonBlackSmallIcon
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun PlaylistActionRow(
@@ -78,7 +85,7 @@ fun PlaylistActionTopRow(
 
         IconButton(onClick = { /* Open Menu */ }) {
             Icon(
-                painter = painterResource(Res.drawable.ic_share),
+                imageVector = Icons.Default.Share,
                 contentDescription = "More",
                 tint = Color.Gray
             )
@@ -100,7 +107,7 @@ fun PlaylistActionTopRow(
             onEvent(PlaylistUiEvent.ToggleShuffleClicked)
         }) {
             Icon(
-                painter = painterResource(Res.drawable.ic_shuffle),
+                imageVector = Icons.Default.Shuffle,
                 contentDescription = "Shuffle",
                 tint = if (playbackUiState.isShuffle) {
                     MaterialTheme.colorScheme.primary
@@ -146,7 +153,7 @@ fun VerticalVideoFeedPreview(imageUrl: String) {
         AsyncImage(
             model = imageUrl,
             contentDescription = null,
-            placeholder = painterResource(Res.drawable.bg_image),
+            placeholder = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxSize()
@@ -176,7 +183,7 @@ fun PlaylistActionBottomRow(
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Add",
-            icon = painterResource(Res.drawable.ic_create_plus),
+            imageVector = Icons.Default.Add,
         )
 
         Spacer(Modifier.width(8.dp))
@@ -189,7 +196,7 @@ fun PlaylistActionBottomRow(
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Edit",
-            icon = painterResource(Res.drawable.ic_paragraph),
+            imageVector = Icons.AutoMirrored.Filled.Notes,
         )
 
         Spacer(Modifier.width(8.dp))
@@ -202,7 +209,7 @@ fun PlaylistActionBottomRow(
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Sort",
-            icon = painterResource(Res.drawable.ic_arrow_up_down),
+            imageVector = Icons.Default.SwapVert,
         )
 
         Spacer(Modifier.width(8.dp))
@@ -215,7 +222,7 @@ fun PlaylistActionBottomRow(
                 .padding(top = 12.dp)
                 .height(30.dp),
             text = "Name & details",
-            icon = painterResource(Res.drawable.ic_edit),
+            imageVector = Icons.Default.Edit,
         )
 
         Spacer(Modifier.width(8.dp))

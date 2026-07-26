@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +36,7 @@ fun AnimatedTopNavigation(
     innerPadding: PaddingValues,
     title: String,
     topBarAlpha: Float,
-    drawableId: DrawableResource = Res.drawable.ic_back_chevron,
+    imageVector: ImageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
     onBackClick: () -> Unit,
     topBarNameAlpha: Float,
     topBarColor: Color
@@ -62,7 +65,7 @@ fun AnimatedTopNavigation(
                     .align(Alignment.CenterStart)
             ) {
                 Icon(
-                    painter = painterResource(drawableId),
+                    imageVector = imageVector,
                     contentDescription = "Back"
                 )
             }
@@ -87,7 +90,7 @@ fun AnimatedTopSlidingNameNavigation(
     innerPadding: PaddingValues,
     title: String,
     topBarAlpha: Float,
-    drawableId: DrawableResource = Res.drawable.ic_back_chevron,
+    imageVector: ImageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
     onBackClick: () -> Unit,
     titleProgress: Float,
     topBarColor: Color
@@ -117,7 +120,7 @@ fun AnimatedTopSlidingNameNavigation(
                     .align(Alignment.CenterStart)
             ) {
                 Icon(
-                    painter = painterResource(drawableId),
+                    imageVector = imageVector,
                     contentDescription = "Back"
                 )
             }

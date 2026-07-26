@@ -8,6 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -45,7 +47,7 @@ fun SettingsContent(
         text = "Logout",
         textColor = MaterialTheme.colorScheme.error,
         containerColor = MaterialTheme.colorScheme.errorContainer,
-        icon = painterResource(Res.drawable.ic_logout),
+        imageVector = Icons.AutoMirrored.Filled.Logout,
         iconTint = MaterialTheme.colorScheme.error,
     )
 }

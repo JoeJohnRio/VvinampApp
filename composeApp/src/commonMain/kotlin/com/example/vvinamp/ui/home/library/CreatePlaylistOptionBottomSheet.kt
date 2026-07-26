@@ -24,8 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.MusicNote
+import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -58,7 +63,7 @@ fun CreatePlaylistBottomSheet(
             ActionMenuItem(
                 title = "Playlist",
                 description = "Create a playlist with songs or episodes",
-                icon = painterResource(Res.drawable.ic_music_note),
+                imageVector = Icons.Default.MusicNote,
                 onClick = {
                     onEvent(LibraryUiEvent.onCreateNewPlaylistClicked)
                 }
@@ -69,7 +74,7 @@ fun CreatePlaylistBottomSheet(
             ActionMenuItem(
                 title = "Collaborative playlist",
                 description = "create a playlist together with friends",
-                icon = painterResource(Res.drawable.ic_collaboration_group),
+                imageVector = Icons.Default.Group,
                 onClick = {
 
                 }
@@ -80,7 +85,7 @@ fun CreatePlaylistBottomSheet(
             ActionMenuItem(
                 title = "Blend",
                 description = "Combine your frineds' tastes into a playlist",
-                icon = painterResource(Res.drawable.ic_venn),
+                painter = previewSafePainter(Res.drawable.ic_venn),
                 onClick = {
 
                 }
@@ -93,7 +98,8 @@ fun CreatePlaylistBottomSheet(
 fun ActionMenuItem(
     title: String,
     description: String,
-    icon: Painter,
+    painter: Painter? = null,
+    imageVector: ImageVector? = null,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -110,15 +116,26 @@ fun ActionMenuItem(
                     shape = CircleShape
                 )
         ) {
-            Icon(
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(8.dp)
-                    .align(Alignment.Center),
-                painter = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.surfaceBright
-            )
+            val iconModifier = Modifier
+                .size(48.dp)
+                .padding(8.dp)
+                .align(Alignment.Center)
+
+            if (imageVector != null) {
+                Icon(
+                    modifier = iconModifier,
+                    imageVector = imageVector,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceBright
+                )
+            } else if (painter != null) {
+                Icon(
+                    modifier = iconModifier,
+                    painter = painter,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surfaceBright
+                )
+            }
         }
 
         Spacer(Modifier.width(16.dp))

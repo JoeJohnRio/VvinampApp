@@ -1,6 +1,4 @@
 package com.example.vvinamp.ui.search.searchresult
-import vvinampapp.composeapp.generated.resources.*
-
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,11 +22,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.PagingData
+import com.example.vvinamp.util.preview.PreviewContainer
+import kotlinx.coroutines.flow.flowOf
+import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.entity.search.toTrackDomain
@@ -48,11 +51,11 @@ import com.example.vvinamp.ui.widget.TextFieldSearch
 @Composable
 fun SearchResultsScreen(
     bottomNavRouter: BottomNavRouter,
-    playbackViewModel: PlaybackViewModel = koinViewModel(),
 ) {
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
+    val playbackViewModel: PlaybackViewModel = koinViewModel()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
 
     ScreenWrapper(
@@ -117,6 +120,7 @@ fun SearchResultsContent(
     playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     Scaffold(
+        modifier = Modifier.fillMaxSize(),
         topBar = {
             Column(
                 modifier = Modifier
@@ -155,80 +159,154 @@ fun SearchResultsContent(
             }
         }
     ) { contentPadding ->
-
-        val isLoading = (searchItems.loadState.refresh is LoadState.Loading)
-                && uiState.searchText.isNotEmpty()
-
-        val isEmpty = !isLoading
-                && searchItems.loadState.append.endOfPaginationReached
-                && searchItems.itemCount == 0
-                && uiState.searchText.isNotEmpty()
-        LazyColumn(
+        Box(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(contentPadding)
-                .padding(horizontal = 16.dp)
         ) {
-            item {
-                Spacer(Modifier.height(16.dp))
-            }
+            val isLoading = (searchItems.loadState.refresh is LoadState.Loading)
+                    && uiState.searchText.isNotEmpty()
 
-            items(
-                count = searchItems.itemCount,
-                key = { index ->
-                    when (val item = searchItems[index]) {
-                        is SearchItemDomain.TrackSearch -> "track_${item.id}"
-                        is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}"
-                        is SearchItemDomain.AlbumSearch -> "album_${item.id}"
-                        is SearchItemDomain.ArtistSearch -> "artist_${item.id}"
-                        else -> index
+            val isEmpty = !isLoading
+                    && searchItems.loadState.append.endOfPaginationReached
+                    && searchItems.itemCount == 0
+                    && uiState.searchText.isNotEmpty()
+
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                item {
+                    Spacer(Modifier.height(16.dp))
+                }
+
+                items(
+                    count = searchItems.itemCount,
+                    key = searchItems.itemKey { item ->
+                        when (item) {
+                            is SearchItemDomain.TrackSearch -> "track_${item.id}"
+                            is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}"
+                            is SearchItemDomain.AlbumSearch -> "album_${item.id}"
+                            is SearchItemDomain.ArtistSearch -> "artist_${item.id}"
+                            else -> item.hashCode()
+                        }
+                    }
+                ) { index ->
+                    SearchItemComponent(searchItems[index], onItemClicked, playbackUiState)
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                if (searchItems.loadState.append is LoadState.Loading) {
+                    item {
+                        CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
                     }
                 }
-            ) { index ->
-                SearchItemComponent(searchItems[index], onItemClicked, playbackUiState)
-                Spacer(modifier = Modifier.height(16.dp))
             }
 
-            if (searchItems.loadState.append is LoadState.Loading) {
-                item {
-                    CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
+            when {
+                isLoading -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
                 }
-            }
-        }
-
-        when {
-            isLoading -> {
-                // Initial full-screen loading
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-            isEmpty -> {
-                // Truly empty result
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = "No results found for \"${uiState.searchText}\"",
-                            style = TSBodyMediumWhite().copy(
-                                fontSize = 22.sp,
-                                textAlign = TextAlign.Center
+                isEmpty -> {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Text(
+                                text = "No results found for \"${uiState.searchText}\"",
+                                style = TSBodyMediumWhite().copy(
+                                    fontSize = 22.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             )
-                        )
-                        Spacer(Modifier.height(16.dp))
+                            Spacer(Modifier.height(16.dp))
 
-                        Text(
-                            text = "Please make sure your words are spelled correctly or use less or different keywords.",
-                            style = TSDisplayMediumWhite().copy(
-                                fontSize = 12.sp,
-                                textAlign = TextAlign.Center
+                            Text(
+                                text = "Please make sure your words are spelled correctly or use less or different keywords.",
+                                style = TSDisplayMediumWhite().copy(
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
         }
     }
+}
 
+@Preview
+@Composable
+fun SearchResultsScreenPreview() {
+    val sampleTracks = listOf(
+        SearchItemDomain.TrackSearch(
+            id = "1",
+            title = "Sample Track 1",
+            duration = 180,
+            albumCoverUrl = "",
+            artistName = "Sample Artist 1"
+        ),
+        SearchItemDomain.TrackSearch(
+            id = "2",
+            title = "Sample Track 2",
+            duration = 240,
+            albumCoverUrl = "",
+            artistName = "Sample Artist 2"
+        ),
+        SearchItemDomain.AlbumSearch(
+            id = "3",
+            title = "Sample Album",
+            coverArt = "",
+            artistName = "Sample Artist"
+        ),
+        SearchItemDomain.ArtistSearch(
+            id = "4",
+            name = "Sample Artist",
+            verified = true,
+            profileImage = ""
+        )
+    )
+
+    val pagingData = PagingData.from(sampleTracks)
+    val searchItems = flowOf(pagingData).collectAsLazyPagingItems()
+
+    PreviewContainer {
+        SearchResultsContent(
+            uiState = SearchUiState(
+                searchText = "Sample",
+                searchType = SearchType.NORMAL
+            ),
+            onTypeSearch = {},
+            onSearchTypeChanged = {},
+            searchItems = searchItems,
+            onBackClicked = {},
+            onItemClicked = {},
+            playbackUiState = PlaybackUiState()
+        )
+    }
+}
+
+@Preview
+@Composable
+fun SearchResultsScreenEmptyPreview() {
+    val pagingData = PagingData.from(emptyList<SearchItemDomain>())
+    val searchItems = flowOf(pagingData).collectAsLazyPagingItems()
+
+    PreviewContainer {
+        SearchResultsContent(
+            uiState = SearchUiState(
+                searchText = "Unknown",
+                searchType = SearchType.NORMAL
+            ),
+            onTypeSearch = {},
+            onSearchTypeChanged = {},
+            searchItems = searchItems,
+            onBackClicked = {},
+            onItemClicked = {},
+            playbackUiState = PlaybackUiState()
+        )
+    }
 }

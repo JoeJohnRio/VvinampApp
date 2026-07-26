@@ -21,7 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.rememberAsyncImagePainter
@@ -33,6 +33,7 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (String) -> Unit = {}) {
@@ -82,7 +83,7 @@ fun PopularReleasesContent(topReleasesDomain: TopReleasesDomain, onClickAlbum: (
                         .size(80.dp),
                     painter = rememberAsyncImagePainter(
                         model = album.coverArt,
-                        placeholder = painterResource(Res.drawable.bg_image),
+                        placeholder = previewSafePainter(Res.drawable.bg_image),
                     ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop
