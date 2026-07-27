@@ -25,9 +25,9 @@ kotlin {
         }
     }
 
-//    wasmJs {
-//        browser()
-//    }
+    wasmJs {
+        browser()
+    }
 
     sourceSets {
         commonMain.dependencies {

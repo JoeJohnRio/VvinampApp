@@ -30,10 +30,10 @@ kotlin {
         }
     }
 
-//    wasmJs {
-//        browser()
-//        binaries.executable()
-//    }
+    wasmJs {
+        browser()
+        binaries.executable()
+    }
 
     sourceSets {
         commonMain.dependencies {
@@ -91,11 +91,11 @@ kotlin {
             implementation(libs.coil.network.okhttp)
         }
 
-//        val wasmJsMain by getting {
-//            dependencies {
-//                implementation(libs.ktor.client.js)
-//            }
-//        }
+        val wasmJsMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.js)
+            }
+        }
     }
 }
 
