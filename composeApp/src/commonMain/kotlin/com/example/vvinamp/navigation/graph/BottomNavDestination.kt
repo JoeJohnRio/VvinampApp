@@ -5,31 +5,32 @@ import androidx.navigation3.runtime.NavKey
 import com.example.domain.entity.ListeningHistoryDomain
 import kotlinx.serialization.Serializable
 
+@Serializable
 sealed interface BottomNavDestination: NavKey {
     @Serializable
-    data object Home : MainDestination
+    data object Home : BottomNavDestination
 
     @Serializable
-    data object Search : MainDestination
+    data object Search : BottomNavDestination
 
     @Serializable
-    data object Library : MainDestination
+    data object Library : BottomNavDestination
     @Serializable
-    data object CreatePlaylist : MainDestination
+    data object CreatePlaylist : BottomNavDestination
     @Serializable
-    data class PlaylistDetail(val id: String): MainDestination
+    data class PlaylistDetail(val id: String): BottomNavDestination
     @Serializable
-    data class PlaylistEdit(val id: String): MainDestination
+    data class PlaylistEdit(val id: String): BottomNavDestination
     @Serializable
-    data object SearchResults : MainDestination
+    data object SearchResults : BottomNavDestination
 
     @Serializable
-    data object Create : MainDestination
+    data object Create : BottomNavDestination
 
     @Serializable
-    data class Artist(val artistId: String) : MainDestination
+    data class Artist(val artistId: String) : BottomNavDestination
     @Serializable
-    data class Album(val albumId: String) : MainDestination
+    data class Album(val albumId: String) : BottomNavDestination
     @Serializable
-    data object Settings : MainDestination
+    data object Settings : BottomNavDestination
 }

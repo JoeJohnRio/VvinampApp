@@ -163,7 +163,7 @@ fun EditPlaylistLibraryContent(
                         draggableHandle = Modifier.draggableHandle(),
                         onEvent = { event ->
                             if (event is PlaylistEditUiEvent.OnDelete) {
-                                tracks.removeIf { it.id == event.trackId }
+                                tracks.removeAll { it.id == event.trackId }
                                 deletedTrackIds.add(event.trackId)
                                 movedTrackIds.remove(event.trackId)
                             } else {

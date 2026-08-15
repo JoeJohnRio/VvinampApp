@@ -12,7 +12,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.session.MediaController
 import androidx.media3.session.SessionToken
-import com.example.data.BuildConfig
+import com.example.data.BuildKonfig
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
@@ -240,7 +240,7 @@ constructor(
                 }
                 Log.d("joel123", "playyoutube")
                 playbackRepository.saveCurrentTrack(track)
-                start(BuildConfig.BASE_URL + playbackInfo.hlsUrl)
+                start(BuildKonfig.BASE_URL + playbackInfo.hlsUrl)
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(
@@ -267,7 +267,7 @@ constructor(
                 Log.d("joel123", "skiptonext")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildConfig.BASE_URL + it.hlsUrl)
+                    start(BuildKonfig.BASE_URL + it.hlsUrl)
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -290,7 +290,7 @@ constructor(
                 Log.d("joel123", "skiptoprevious")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildConfig.BASE_URL + it.hlsUrl)
+                    start(BuildKonfig.BASE_URL + it.hlsUrl)
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -355,7 +355,7 @@ constructor(
                 }
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildConfig.BASE_URL + it.hlsUrl)
+                    start(BuildKonfig.BASE_URL + it.hlsUrl)
                 }
             }.onFailure { error ->
                 _uiState.update {
@@ -449,7 +449,7 @@ constructor(
                 )
                 Log.d("joel123", "trackClicked")
                 playbackRepository.saveCurrentTrack(track)
-                start(BuildConfig.BASE_URL + it.hlsUrl)
+                start(BuildKonfig.BASE_URL + it.hlsUrl)
             }.onFailure {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

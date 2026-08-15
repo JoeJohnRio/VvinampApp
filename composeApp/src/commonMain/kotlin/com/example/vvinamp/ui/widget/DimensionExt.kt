@@ -1,10 +1,10 @@
 package com.example.vvinamp.ui.widget
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.vvinamp.util.getScreenWidthDp
 
 @Composable
 fun Dp.toPX(): Int {
@@ -19,9 +19,9 @@ class ImageSize(
     companion object {
         @Composable
         fun getImageFixedSize(): ImageSize {
-            val configuration = LocalConfiguration.current
+            val screenWidth = getScreenWidthDp()
             val aspectRatio = 19f / 6f
-            val imageWidth = configuration.screenWidthDp.dp / 3
+            val imageWidth = screenWidth / 3
             val imageHeight = imageWidth * aspectRatio
             return ImageSize(imageWidth, imageHeight)
         }

@@ -15,8 +15,15 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberDecoratedNavEntries
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
-import androidx.navigation3.runtime.serialization.NavKeySerializer
-import androidx.savedstate.compose.serialization.serializers.MutableStateSerializer
+import androidx.savedstate.serialization.SavedStateConfiguration
+import com.example.vvinamp.navigation.graph.AuthDestination
+import com.example.vvinamp.navigation.graph.BottomNavDestination
+import com.example.vvinamp.navigation.graph.MainDestination
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.PolymorphicSerializer
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 
 /**
  * Create a navigation state that persists config changes and process death.
@@ -27,14 +34,85 @@ fun rememberNavigationState(
     topLevelRoutes: Set<NavKey>
 ): NavigationState {
 
+    val savedStateConfig = remember(topLevelRoutes) {
+        SavedStateConfiguration {
+            serializersModule = SerializersModule {
+                polymorphic(NavKey::class) {
+                    // AuthDestination
+                    subclass(AuthDestination.Auth::class)
+                    subclass(AuthDestination.AuthRoot::class)
+                    subclass(AuthDestination.RegisterEmail::class)
+                    subclass(AuthDestination.RegisterPassword::class)
+                    subclass(AuthDestination.RegisterBirthDate::class)
+                    subclass(AuthDestination.RegisterGender::class)
+                    subclass(AuthDestination.RegisterName::class)
+                    subclass(AuthDestination.RegisterMethodSelection::class)
+                    subclass(AuthDestination.LoginEmail::class)
+                    subclass(AuthDestination.LoginMethodSelection::class)
+
+                    // MainDestination
+                    subclass(MainDestination.NavigationBar::class)
+                    subclass(MainDestination.Root::class)
+                    subclass(MainDestination.Main::class)
+
+                    // BottomNavDestination
+                    subclass(BottomNavDestination.Home::class)
+                    subclass(BottomNavDestination.Search::class)
+                    subclass(BottomNavDestination.Library::class)
+                    subclass(BottomNavDestination.CreatePlaylist::class)
+                    subclass(BottomNavDestination.PlaylistDetail::class)
+                    subclass(BottomNavDestination.PlaylistEdit::class)
+                    subclass(BottomNavDestination.SearchResults::class)
+                    subclass(BottomNavDestination.Create::class)
+                    subclass(BottomNavDestination.Artist::class)
+                    subclass(BottomNavDestination.Album::class)
+                    subclass(BottomNavDestination.Settings::class)
+                }
+                polymorphic(AuthDestination::class) {
+                    subclass(AuthDestination.Auth::class)
+                    subclass(AuthDestination.AuthRoot::class)
+                    subclass(AuthDestination.RegisterEmail::class)
+                    subclass(AuthDestination.RegisterPassword::class)
+                    subclass(AuthDestination.RegisterBirthDate::class)
+                    subclass(AuthDestination.RegisterGender::class)
+                    subclass(AuthDestination.RegisterName::class)
+                    subclass(AuthDestination.RegisterMethodSelection::class)
+                    subclass(AuthDestination.LoginEmail::class)
+                    subclass(AuthDestination.LoginMethodSelection::class)
+                }
+                polymorphic(MainDestination::class) {
+                    subclass(MainDestination.NavigationBar::class)
+                    subclass(MainDestination.Root::class)
+                    subclass(MainDestination.Main::class)
+                }
+                polymorphic(BottomNavDestination::class) {
+                    subclass(BottomNavDestination.Home::class)
+                    subclass(BottomNavDestination.Search::class)
+                    subclass(BottomNavDestination.Library::class)
+                    subclass(BottomNavDestination.CreatePlaylist::class)
+                    subclass(BottomNavDestination.PlaylistDetail::class)
+                    subclass(BottomNavDestination.PlaylistEdit::class)
+                    subclass(BottomNavDestination.SearchResults::class)
+                    subclass(BottomNavDestination.Create::class)
+                    subclass(BottomNavDestination.Artist::class)
+                    subclass(BottomNavDestination.Album::class)
+                    subclass(BottomNavDestination.Settings::class)
+                }
+            }
+        }
+    }
+
     val topLevelRoute = rememberSerializable(
         startRoute, topLevelRoutes,
-        serializer = MutableStateSerializer(NavKeySerializer())
+        stateSerializer = PolymorphicSerializer(NavKey::class) as KSerializer<NavKey>,
+        configuration = savedStateConfig
     ) {
         mutableStateOf(startRoute)
     }
 
-    val backStacks = topLevelRoutes.associateWith { key -> rememberNavBackStack(key) }
+    val backStacks = topLevelRoutes.associateWith { key ->
+        rememberNavBackStack(configuration = savedStateConfig, elements = arrayOf(key))
+    }
 
     return remember(startRoute, topLevelRoutes) {
         NavigationState(

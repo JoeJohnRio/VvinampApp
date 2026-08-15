@@ -1,7 +1,7 @@
 package com.example.vvinamp.ui.main.player
 import vvinampapp.composeapp.generated.resources.*
 
-import androidx.activity.compose.BackHandler
+import com.example.vvinamp.util.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring

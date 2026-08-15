@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.vvinamp.util.SetStatusBarColor
 
 val vvinampDarkColorScheme = darkColorScheme(
     primary = AppColours.PrimaryGreen,
@@ -70,8 +70,6 @@ fun AppTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val systemUiController = rememberSystemUiController()
-
 //    colors = if (darkTheme) {
 //        darkColors
 //    } else {
@@ -79,7 +77,7 @@ fun AppTheme(
 //    }
     colors = vvinampDarkColorScheme
 
-    systemUiController.setStatusBarColor(color = vvinampDarkColorScheme.primary)
+    SetStatusBarColor(color = vvinampDarkColorScheme.primary)
 
     MaterialTheme(
         colorScheme = colors,

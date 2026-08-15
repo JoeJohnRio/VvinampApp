@@ -35,6 +35,7 @@ kotlin {
         }
     }
 
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
     }
@@ -59,6 +60,7 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
+//            implementation(libs.sqlite.bundled)
             
             api(libs.koin.core)
         }
@@ -72,6 +74,9 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
     afterEvaluate {
@@ -96,7 +101,7 @@ kotlin {
     }
 }
 buildkonfig {
-    packageName = "com.example.data"
+    packageName = "com.example.data.generated"
 
     // default config is required
     defaultConfigs {

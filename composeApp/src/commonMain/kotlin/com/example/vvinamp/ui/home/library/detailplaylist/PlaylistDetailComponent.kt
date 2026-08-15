@@ -41,9 +41,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.constraintlayout.compose.ChainStyle
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.dummyPlaylists
@@ -92,24 +89,14 @@ fun PlaylistDetailComponent(
         Spacer(Modifier.width(16.dp))
 
         Column() {
-            ConstraintLayout(
-                modifier = Modifier
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                val (textRef, btnRef) = createRefs()
-
-                createHorizontalChain(
-                    textRef,
-                    btnRef,
-                    chainStyle = ChainStyle.Packed(0f)
-                )
-
                 Text(
                     modifier = Modifier
                         .padding(end = 8.dp)
-                        .constrainAs(textRef) {
-                            width = Dimension.preferredWrapContent
-                            centerVerticallyTo(parent)
-                        },
+                        .weight(1f, fill = false),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     text = playlist?.title.orEmpty(),
@@ -119,11 +106,7 @@ fun PlaylistDetailComponent(
                 )
 
                 ButtonVariableSizeSolid(
-                    modifier = Modifier
-                        .height(36.dp)
-                        .constrainAs(btnRef) {
-                            centerVerticallyTo(textRef)
-                        },
+                    modifier = Modifier.height(36.dp),
                     text = "Change",
                     textColor = MaterialTheme.colorScheme.onSecondary,
                     containerColor = MaterialTheme.colorScheme.secondary

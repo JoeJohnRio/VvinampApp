@@ -1,11 +1,7 @@
 package com.example.vvinamp.ui.home.library.detailplaylist
+import com.example.vvinamp.util.rememberImagePickerLauncher
 import com.example.vvinamp.util.showToast
 import vvinampapp.composeapp.generated.resources.*
-
-
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.PickVisualMediaRequest
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import org.jetbrains.compose.resources.painterResource
@@ -54,17 +49,12 @@ fun EditPlaylistDetailBottomSheet(
     onEvent: (PlaylistUiEvent) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val context = LocalContext.current
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
 
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        if (uri != null) {
-            onEvent(PlaylistUiEvent.onCoverImageChanged(uri.toString()))
-        }
+    val launcher = rememberImagePickerLauncher { uriString ->
+        onEvent(PlaylistUiEvent.onCoverImageChanged(uriString))
     }
 
     val isChanged = uiState.editName != (uiState.playlist?.title ?: "") || 
@@ -152,7 +142,7 @@ fun EditPlaylistDetailBottomSheet(
                             .size(32.dp)
                             .background(Color.Black.copy(alpha = 0.5f), CircleShape)
                             .clickable {
-                                launcher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                                launcher.launch()
                             },
                         contentAlignment = Alignment.Center
                     ) {

@@ -2,7 +2,6 @@ package com.example.data.di
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.ktor.http.KtorHttpEngine
-import com.example.data.BuildConfig
 import com.example.data.BuildKonfig
 import com.example.data.repository.auth.AuthStore
 import com.example.graphql.RefreshTokenMutation

@@ -13,23 +13,31 @@ import platform.Foundation.NSUserDomainMask
 import okio.Path.Companion.toPath
 
 actual class DataStoreFactory {
-    @OptIn(ExperimentalForeignApi::class)
+    companion object {
+        private var _instance: DataStore<Preferences>? = null
+
+        @OptIn(ExperimentalForeignApi::class)
+        private fun getInstance(): DataStore<Preferences> {
+            return _instance ?: PreferenceDataStoreFactory.create(
+                storage = OkioStorage(
+                    fileSystem = FileSystem.SYSTEM,
+                    serializer = PreferencesSerializer,
+                    producePath = {
+                        val directory = NSFileManager.defaultManager.URLForDirectory(
+                            directory = NSDocumentDirectory,
+                            inDomain = NSUserDomainMask,
+                            appropriateForURL = null,
+                            create = false,
+                            error = null
+                        )
+                        (directory?.path + "/$AUTH_PREFERENCES").toPath()
+                    }
+                )
+            ).also { _instance = it }
+        }
+    }
+
     actual fun create(): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create(
-            storage = OkioStorage(
-                fileSystem = FileSystem.SYSTEM,
-                serializer = PreferencesSerializer,
-                producePath = {
-                    val directory = NSFileManager.defaultManager.URLForDirectory(
-                        directory = NSDocumentDirectory,
-                        inDomain = NSUserDomainMask,
-                        appropriateForURL = null,
-                        create = false,
-                        error = null
-                    )
-                    (directory?.path + "/$AUTH_PREFERENCES").toPath()
-                }
-            )
-        )
+        return getInstance()
     }
 }

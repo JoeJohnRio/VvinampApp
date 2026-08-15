@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.painterResource
-import androidx.compose.ui.res.vectorResource
 
 import com.example.vvinamp.navigation.graph.BottomNavDestination
 import com.example.vvinamp.navigation.graph.MainDestination
@@ -28,7 +27,7 @@ sealed class BottomNavigationBarItem(
     val tabName: String,
     val painter: (@Composable () -> Painter)? = null,
     val imageVector: ImageVector? = null,
-    val page: MainDestination,
+    val page: BottomNavDestination,
 ) {
     data object Home : BottomNavigationBarItem(
         tabName = "Home",
