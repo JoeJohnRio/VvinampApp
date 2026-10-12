@@ -49,10 +49,10 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.resources)
             implementation(libs.compose.ui.tooling)
-            
+
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-            
+
             implementation(libs.lifecycle.runtime.compose)
 
             implementation(libs.kotlinx.datetime)
@@ -67,7 +67,7 @@ kotlin {
 
             implementation(libs.kotlinx.coroutines.core)
         }
-        
+
         androidMain.dependencies {
             implementation("org.jetbrains.compose.ui:ui-tooling:${libs.versions.composeMultiplatform.get()}")
             implementation(libs.koin.android)
@@ -79,7 +79,7 @@ kotlin {
 
             // UI Components (Moved to Android only as they might not be KMP ready)
             implementation(libs.wheel.picker.compose)
-            
+
             // ViewModel Compose (Android specific parts if needed)
             implementation(libs.lifecycle.viewmodel.compose)
 
@@ -87,15 +87,14 @@ kotlin {
             implementation(libs.okhttp)
             implementation(libs.logging.interceptor)
             implementation(libs.chucker.debug)
-            
+
             // Image Loading
             implementation(libs.coil.network.okhttp)
         }
 
-        val wasmJsMain by getting {
-            dependencies {
-                implementation(libs.ktor.client.js)
-            }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.client.js)
+            implementation(libs.coil.network.ktor3)
         }
     }
 }

@@ -11,11 +11,13 @@ import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSUserDomainMask
 import okio.Path.Companion.toPath
+import kotlin.native.concurrent.ThreadLocal
+
+@ThreadLocal
+private var _instance: DataStore<Preferences>? = null
 
 actual class DataStoreFactory {
     companion object {
-        private var _instance: DataStore<Preferences>? = null
-
         @OptIn(ExperimentalForeignApi::class)
         private fun getInstance(): DataStore<Preferences> {
             return _instance ?: PreferenceDataStoreFactory.create(

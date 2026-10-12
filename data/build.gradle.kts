@@ -38,6 +38,15 @@ kotlin {
     @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
+        binaries.executable()
+    }
+
+    sourceSets {
+        val wasmJsMain by getting {
+            dependencies {
+                implementation("org.jetbrains.kotlinx:kotlinx-browser:0.3")
+            }
+        }
     }
 
     sourceSets {
@@ -60,7 +69,6 @@ kotlin {
             implementation(libs.datastore.preferences)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines.core)
-//            implementation(libs.sqlite.bundled)
             
             api(libs.koin.core)
         }
@@ -74,9 +82,11 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.sqlite.bundled)
         }
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
+            implementation(libs.sqlite.web)
         }
     }
     afterEvaluate {

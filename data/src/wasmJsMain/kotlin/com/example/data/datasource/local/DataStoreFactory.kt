@@ -8,8 +8,10 @@ import okio.Path.Companion.toPath
 actual class DataStoreFactory {
     companion object {
         private var _instance: DataStore<Preferences>? = null
+        private val lock = Any()
 
         private fun getInstance(): DataStore<Preferences> {
+            // WasmJs is single-threaded in the browser, but for consistency:
             return _instance ?: PreferenceDataStoreFactory.createWithPath(
                 produceFile = { AUTH_PREFERENCES.toPath() },
             ).also { _instance = it }
@@ -20,4 +22,3 @@ actual class DataStoreFactory {
         return getInstance()
     }
 }
-

@@ -34,6 +34,18 @@ actual class PlaybackViewModel(
         onpause = { _uiState.update { it.copy(isPlaying = false) } }
         onwaiting = { _uiState.update { it.copy(isLoading = true) } }
         onplaying = { _uiState.update { it.copy(isLoading = false) } }
+        addEventListener("error", {
+            val code = error?.code?.toInt() ?: 0
+            val errorMsg = when (code) {
+                1 -> "Playback aborted"
+                2 -> "Network error"
+                3 -> "Decoding error"
+                4 -> "Source not supported (Possible HLS issue)"
+                else -> "Unknown playback error"
+            }
+            println("Audio Error: $errorMsg (code: $code)")
+            _uiState.update { it.copy(isLoading = false, error = errorMsg) }
+        })
     }
 
     private var sleepTimerJob: Job? = null
@@ -41,10 +53,14 @@ actual class PlaybackViewModel(
     init {
         _mediaController.value = audioElement
         viewModelScope.launch {
-            playbackRepository.getCurrentTrackFlow().collect { savedTrack ->
-                if (savedTrack != null && _uiState.value.currentTrack == null) {
-                    _uiState.update { it.copy(currentTrack = savedTrack) }
+            try {
+                playbackRepository.getCurrentTrackFlow().collect { savedTrack ->
+                    if (savedTrack != null && _uiState.value.currentTrack == null) {
+                        _uiState.update { it.copy(currentTrack = savedTrack) }
+                    }
                 }
+            } catch (e: Exception) {
+                println("Failed to load initial track from database: ${e.message}")
             }
         }
     }
@@ -99,8 +115,17 @@ actual class PlaybackViewModel(
             _uiState.update { it.copy(isLoading = true) }
             playbackRepository.playYoutube(track.id).onSuccess { playbackInfo ->
                 _uiState.update { it.copy(isLoading = false, playbackInfo = playbackInfo, currentTrack = track, error = null) }
-                playbackRepository.saveCurrentTrack(track)
-                start(BuildKonfig.BASE_URL + playbackInfo.hlsUrl)
+                try {
+                    playbackRepository.saveCurrentTrack(track)
+                } catch (e: Exception) {
+                    println("Failed to save current track: ${e.message}")
+                }
+                val url = if (playbackInfo.mp3Fallback != null && !canPlayHls()) {
+                    BuildKonfig.BASE_URL + playbackInfo.mp3Fallback
+                } else {
+                    BuildKonfig.BASE_URL + playbackInfo.hlsUrl
+                }
+                start(url)
             }.onFailure { error ->
                 _uiState.update { it.copy(isLoading = false, error = error.message) }
             }
@@ -112,8 +137,19 @@ actual class PlaybackViewModel(
             playbackRepository.skipToNext().onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update { it.copy(queue = state.queue, playbackInfo = state.playbackInfo, currentTrack = track, error = null) }
-                track?.let { playbackRepository.saveCurrentTrack(it) }
-                start(BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl)
+                track?.let { 
+                    try {
+                        playbackRepository.saveCurrentTrack(it)
+                    } catch (e: Exception) {
+                        println("Failed to save current track: ${e.message}")
+                    }
+                }
+                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
+                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
+                } else {
+                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
+                }
+                start(url)
             }
         }
     }
@@ -123,8 +159,19 @@ actual class PlaybackViewModel(
             playbackRepository.skipToPrevious().onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update { it.copy(queue = state.queue, playbackInfo = state.playbackInfo, currentTrack = track, error = null) }
-                track?.let { playbackRepository.saveCurrentTrack(it) }
-                start(BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl)
+                track?.let { 
+                    try {
+                        playbackRepository.saveCurrentTrack(it)
+                    } catch (e: Exception) {
+                        println("Failed to save current track: ${e.message}")
+                    }
+                }
+                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
+                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
+                } else {
+                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
+                }
+                start(url)
             }
         }
     }
@@ -135,8 +182,19 @@ actual class PlaybackViewModel(
             playbackRepository.playContext(type, id, trackIds, offset).onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
                 _uiState.update { it.copy(isLoading = false, playbackInfo = state.playbackInfo, queue = state.queue, currentTrack = track, error = null) }
-                track?.let { playbackRepository.saveCurrentTrack(it) }
-                start(BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl)
+                track?.let { 
+                    try {
+                        playbackRepository.saveCurrentTrack(it)
+                    } catch (e: Exception) {
+                        println("Failed to save current track: ${e.message}")
+                    }
+                }
+                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
+                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
+                } else {
+                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
+                }
+                start(url)
             }
         }
     }
@@ -146,13 +204,27 @@ actual class PlaybackViewModel(
             _uiState.update { it.copy(isLoading = true) }
             playbackRepository.playbackInfo(track.id, type, id).onSuccess { info ->
                 _uiState.update { it.copy(playbackInfo = info, currentTrack = track, isLoading = false, error = null) }
-                playbackRepository.saveCurrentTrack(track)
-                start(BuildKonfig.BASE_URL + info.hlsUrl)
+                try {
+                    playbackRepository.saveCurrentTrack(track)
+                } catch (e: Exception) {
+                    println("Failed to save current track: ${e.message}")
+                }
+                val url = if (info.mp3Fallback != null && !canPlayHls()) {
+                    BuildKonfig.BASE_URL + info.mp3Fallback
+                } else {
+                    BuildKonfig.BASE_URL + info.hlsUrl
+                }
+                start(url)
             }
         }
     }
 
+    private fun canPlayHls(): Boolean {
+        return audioElement.canPlayType("application/vnd.apple.mpegurl").toString() != ""
+    }
+
     fun start(url: String) {
+        println("Starting playback with URL: $url")
         audioElement.src = url
         audioElement.load()
         audioElement.play()
