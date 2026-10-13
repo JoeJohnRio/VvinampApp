@@ -83,7 +83,7 @@ fun PlaylistActionTopRow(
 
         Spacer(modifier = Modifier.width(24.dp))
 
-        IconButton(onClick = { /* Open Menu */ }) {
+        IconButton(onClick = { com.example.vvinamp.util.showToast("Coming soon") }) {
             Icon(
                 imageVector = Icons.Default.Share,
                 contentDescription = "More",
@@ -93,7 +93,7 @@ fun PlaylistActionTopRow(
 
         Spacer(modifier = Modifier.width(8.dp))
 
-        IconButton(onClick = { /* Open Menu */ }) {
+        IconButton(onClick = { com.example.vvinamp.util.showToast("Coming soon") }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "More",

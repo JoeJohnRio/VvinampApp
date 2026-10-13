@@ -17,7 +17,10 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -29,10 +32,13 @@ class PlaylistViewModel(
     val uiState = _uiState.asStateFlow()
 
     val playlistTracks: Flow<PagingData<TrackDomain>> = uiState
-        .flatMapLatest { state ->
+        .map { it.playlist?.id to it.sortBy }
+        .filter { (id, _) -> !id.isNullOrBlank() }
+        .distinctUntilChanged()
+        .flatMapLatest { (id, sortBy) ->
             useCase.getPlaylistTracksUseCase.invoke(
-                id = state.playlist?.id.orEmpty(),
-                sortBy = state.sortBy
+                id = id!!,
+                sortBy = sortBy
             )
         }
         .cachedIn(viewModelScope)

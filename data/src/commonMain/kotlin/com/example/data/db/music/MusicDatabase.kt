@@ -17,7 +17,7 @@ import com.example.data.entities.RecentPlaybackEntity
         PlaylistRemoteKeyEntity::class,
         RecentPlaybackEntity::class
     ],
-    version = 4, // Increased version for new entity
+    version = 5,
     exportSchema = false
 )
 @ConstructedBy(MusicDatabaseConstructor::class)

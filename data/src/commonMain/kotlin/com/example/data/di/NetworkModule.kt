@@ -14,6 +14,7 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val networkModule = module {
@@ -25,12 +26,24 @@ val networkModule = module {
         }
     }
 
+    single(named("unauthenticatedHttpClient")) {
+        HttpClient(get()) {
+            install(ContentNegotiation) {
+                json(get())
+            }
+        }
+    }
+
+    single(named("unauthenticatedApolloClient")) {
+        ApolloClient.Builder()
+            .serverUrl(BuildKonfig.BASE_URL + BuildKonfig.BASE_URL_GRAPHQL)
+            .httpEngine(KtorHttpEngine(get<HttpClient>(named("unauthenticatedHttpClient"))))
+            .build()
+    }
+
     single {
         val authStore = get<AuthStore>()
-
-        // We need a way to refresh tokens using Apollo, but Apollo will use THIS HttpClient.
-        // To avoid circular dependency, we can provide the HttpClient, and then
-        // the Auth plugin will use a separate mechanism or we lazy-load the ApolloClient.
+        val refreshApollo = get<ApolloClient>(named("unauthenticatedApolloClient"))
 
         HttpClient(get()) {
             install(ContentNegotiation) {
@@ -38,7 +51,7 @@ val networkModule = module {
             }
 
             install(Logging) {
-                level = LogLevel.ALL
+                level = LogLevel.NONE
             }
 
             install(Auth) {
@@ -54,23 +67,10 @@ val networkModule = module {
                     }
 
                     refreshTokens {
-                        println(">>> joel123 refreshTokens")
-                        // Use a basic HttpClient or a specialized call to refresh token 
-                        // to avoid circular dependency with the main ApolloClient if it uses this HttpClient.
-                        // However, Apollo RefreshTokenMutation is GraphQL.
-                        
-                        // Option: Use a separate simple HttpClient for refresh, or just call the endpoint directly.
-                        // For simplicity in this migration, we'll assume the AuthStore might have a refresh method
-                        // or we use the provided apolloClient lazily.
-                        
                         val refreshToken = authStore.getRefreshToken() ?: return@refreshTokens null
-                        
-                        // We can't easily use the 'apolloClient' here if it's not yet created or depends on this.
-                        // But in Koin, we can use get() inside the block.
-                        val apolloClient = get<ApolloClient>() 
 
                         try {
-                            val response = apolloClient.mutation(RefreshTokenMutation(refreshToken)).execute()
+                            val response = refreshApollo.mutation(RefreshTokenMutation(refreshToken)).execute()
                             val session = response.data?.refreshToken?.session
                             if (session != null) {
                                 authStore.saveTokens(

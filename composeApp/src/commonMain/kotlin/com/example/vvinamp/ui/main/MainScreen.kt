@@ -39,7 +39,8 @@ fun MainScreen(
         MainNavDisplay(
             navigationState = navigationState,
             navigator = navigator,
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 }

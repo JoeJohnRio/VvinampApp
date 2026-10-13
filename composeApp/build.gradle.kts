@@ -30,6 +30,7 @@ kotlin {
         }
     }
 
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
@@ -74,11 +75,6 @@ kotlin {
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.palette)
             implementation(libs.bundles.media3)
-
-            implementation(libs.constraintlayout.compose)
-
-            // UI Components (Moved to Android only as they might not be KMP ready)
-            implementation(libs.wheel.picker.compose)
 
             // ViewModel Compose (Android specific parts if needed)
             implementation(libs.lifecycle.viewmodel.compose)

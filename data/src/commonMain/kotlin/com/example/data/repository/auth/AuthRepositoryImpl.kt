@@ -17,11 +17,21 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun login(email: String, password: String): Result<AuthSession> {
-
-        println("joel123 AuthRepositoryImpl")
-        return authApi.login(email, password).map {
+        val result = authApi.login(email, password).map {
             it.toDomain()
         }
+        result.getOrNull()?.let { session ->
+            authStore.saveTokens(session.accessToken, session.refreshToken, session.expiresAt)
+            getCurrentUserDetail().getOrNull()?.let { user ->
+                authStore.saveUser(
+                    userId = user.id,
+                    username = user.username,
+                    email = user.email,
+                    profilePicture = user.profilePicture
+                )
+            }
+        }
+        return result
     }
 
     override suspend fun logout() {

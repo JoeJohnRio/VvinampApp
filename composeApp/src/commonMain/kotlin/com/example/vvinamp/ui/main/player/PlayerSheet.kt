@@ -277,7 +277,7 @@ fun PlayerSheetContent(
             uiState = uiState,
             onEvent = onEvent,
             player = player,
-            onAddToPlaylistClicked = {}
+            onAddToPlaylistClicked = { com.example.vvinamp.util.showToast("Coming soon") }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -303,7 +303,7 @@ fun ShareTrackComponent() {
         IconButton(
             modifier = Modifier
                 .size(24.dp),
-            onClick = {}
+            onClick = { com.example.vvinamp.util.showToast("Coming soon") }
         ) {
             Icon(
                 tint = MaterialTheme.colorScheme.inversePrimary,
@@ -316,7 +316,7 @@ fun ShareTrackComponent() {
             IconButton(
                 modifier = Modifier
                     .size(24.dp),
-                onClick = {}
+                onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             ) {
                 Icon(
                     tint = MaterialTheme.colorScheme.inversePrimary,
@@ -328,7 +328,7 @@ fun ShareTrackComponent() {
             IconButton(
                 modifier = Modifier
                     .size(24.dp),
-                onClick = {}
+                onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             ) {
                 Icon(
                     tint = MaterialTheme.colorScheme.inversePrimary,

@@ -27,15 +27,19 @@ import com.example.vvinamp.ui.search.SearchScreen
 import com.example.vvinamp.ui.search.searchresult.SearchResultsScreen
 import com.example.vvinamp.ui.settings.SettingsScreen
 
+import com.example.vvinamp.ui.main.playback.PlaybackViewModel
+
 @Composable
 fun MainNavDisplay(
     navigationState: NavigationState,
     navigator: Navigator,
-    bottomNavRouter: BottomNavRouter
+    bottomNavRouter: BottomNavRouter,
+    playbackViewModel: PlaybackViewModel
 ) {
     val entryProvider = entryProvider {
         MainNavGraph(
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
     NavDisplay(
@@ -58,11 +62,13 @@ fun MainNavDisplay(
 
 @Composable
 fun EntryProviderScope<NavKey>.MainNavGraph(
-    bottomNavRouter: BottomNavRouter
+    bottomNavRouter: BottomNavRouter,
+    playbackViewModel: PlaybackViewModel
 ) {
     entry<BottomNavDestination.Home> {
         HomeScreen(
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 
@@ -74,7 +80,8 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
 
     entry<BottomNavDestination.SearchResults> {
         SearchResultsScreen(
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 
@@ -96,14 +103,16 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
     entry<BottomNavDestination.PlaylistDetail> {
         PlaylistScreen(
             playlistId = it.id,
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 
     entry<BottomNavDestination.PlaylistEdit> {
         PlaylistEditScreen(
             playlistId = it.id,
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 
@@ -122,14 +131,16 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
         ArtistScreen(
             artistId = key.artistId,
             onBackClick = bottomNavRouter::navigateBack,
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 
     entry<BottomNavDestination.Album> {
         AlbumScreen(
             albumId = it.albumId,
-            bottomNavRouter = bottomNavRouter
+            bottomNavRouter = bottomNavRouter,
+            playbackViewModel = playbackViewModel
         )
     }
 }

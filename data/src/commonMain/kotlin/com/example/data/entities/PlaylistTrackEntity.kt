@@ -4,9 +4,12 @@ import androidx.room3.Entity
 import androidx.room3.PrimaryKey
 import com.example.domain.entity.song.TrackDomain
 
-@Entity(tableName = "playlist_tracks")
+@Entity(
+    tableName = "playlist_tracks",
+    primaryKeys = ["playlistId", "id"]
+)
 data class PlaylistTrackEntity(
-    @PrimaryKey val id: String,
+    val id: String,
     val playlistId: String,
     val artistName: String,
     val albumCoverUrl: String,

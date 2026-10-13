@@ -1,3 +1,5 @@
+@file:OptIn(kotlin.js.ExperimentalWasmJsInterop::class)
+
 package com.example.vvinamp.ui.main.playback
 
 import androidx.compose.ui.graphics.Color
@@ -6,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.data.BuildKonfig
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
+import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
@@ -19,6 +22,52 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.browser.document
 import org.w3c.dom.HTMLAudioElement
+
+@JsFun(
+    """(audioElement, url) => {
+        if (window.vvinampHls) {
+            window.vvinampHls.destroy();
+            window.vvinampHls = null;
+        }
+        if (typeof Hls !== 'undefined' && Hls.isSupported() && url.includes('.m3u8')) {
+            const hls = new Hls();
+            window.vvinampHls = hls;
+            hls.loadSource(url);
+            hls.attachMedia(audioElement);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                audioElement.play().catch(e => console.warn('Autoplay blocked:', e));
+            });
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                console.error('HLS error:', data);
+            });
+        } else {
+            audioElement.src = url;
+            audioElement.load();
+            audioElement.play().catch(e => console.warn('Autoplay blocked:', e));
+        }
+    }"""
+)
+private external fun playAudioSource(audioElement: HTMLAudioElement, url: String)
+
+@JsFun(
+    """(audioElement) => {
+        audioElement.play().catch(e => console.warn('Autoplay blocked:', e));
+    }"""
+)
+private external fun playAudioElement(audioElement: HTMLAudioElement)
+
+@JsFun(
+    """() => {
+        if (window.vvinampHls) {
+            window.vvinampHls.destroy();
+            window.vvinampHls = null;
+        }
+    }"""
+)
+private external fun destroyHls()
+
+@JsFun("""() => typeof Hls !== 'undefined' && Hls.isSupported()""")
+private external fun isHlsJsSupported(): Boolean
 
 actual class PlaybackViewModel(
     private val playbackRepository: PlaybackUseCase
@@ -34,6 +83,11 @@ actual class PlaybackViewModel(
         onpause = { _uiState.update { it.copy(isPlaying = false) } }
         onwaiting = { _uiState.update { it.copy(isLoading = true) } }
         onplaying = { _uiState.update { it.copy(isLoading = false) } }
+        onended = {
+            if (!_uiState.value.isLooping) {
+                skipToNext()
+            }
+        }
         addEventListener("error", {
             val code = error?.code?.toInt() ?: 0
             val errorMsg = when (code) {
@@ -67,7 +121,7 @@ actual class PlaybackViewModel(
 
     actual fun onEventTrackOptions(event: TrackOptionsUiEvent) {
         when (event) {
-            is TrackOptionsUiEvent.OnSleepTimerClick -> { _uiState.update { it.copy(isSleepTimerSheetVisible = true) } }
+            is TrackOptionsUiEvent.OnSleepTimerClick -> showSleepTimerSheet()
             is TrackOptionsUiEvent.OnSleepTimerSelected -> {
                 setSleepTimer(event.option)
                 hideSleepTimerSheet()
@@ -82,17 +136,48 @@ actual class PlaybackViewModel(
             is PlaybackUiEvent.ToggleLoopClicked -> toggleLoopClicked()
             is PlaybackUiEvent.ToggleShuffleClicked -> toggleShuffleClicked()
             is PlaybackUiEvent.OnTrackClicked -> {
-                trackClicked(event.track, event.contentTypeDomain ?: ContentTypeDomain.TRACK, event.contentId ?: event.track.id)
+                when (event.contentTypeDomain) {
+                    ContentTypeDomain.TRACK -> {
+                        trackClicked(
+                            track = event.track,
+                            id = event.track.id,
+                            type = ContentTypeDomain.TRACK
+                        )
+                    }
+                    ContentTypeDomain.PLAYLIST, ContentTypeDomain.ALBUM, ContentTypeDomain.ARTIST -> {
+                        trackClicked(
+                            track = event.track,
+                            id = event.contentId,
+                            type = event.contentTypeDomain
+                        )
+                    }
+                    else -> {
+                        trackClicked(
+                            track = event.track,
+                            id = event.track.id,
+                            type = ContentTypeDomain.TRACK
+                        )
+                    }
+                }
             }
             is PlaybackUiEvent.PlayContext -> {
                 playContext(event.contextType, event.contextId, event.trackIds, event.offsetTrackId)
             }
             is PlaybackUiEvent.SkipToNext -> skipToNext()
             is PlaybackUiEvent.SkipToPrevious -> skipToPrevious()
+            is PlaybackUiEvent.ClearQueue -> clearQueue()
+            is PlaybackUiEvent.AddToQueue -> addToQueue(event.trackIds)
             is PlaybackUiEvent.OnYoutubeTrackClicked -> playYoutube(event.track)
-            is PlaybackUiEvent.ToggleCreatePlaylistOptionSheet -> _uiState.update { it.copy(isCreatePlaylistOptionSheet = event.isShow) }
-            is PlaybackUiEvent.ToggleTrackOptionSheet -> _uiState.update { it.copy(isTrackOptionSheet = event.isShow) }
-            else -> {}
+            is PlaybackUiEvent.ToggleCreatePlaylistOptionSheet -> {
+                if (event.isShow) showCreatePlaylistOptionSheet() else hideCreatePlaylistOptionSheet()
+            }
+            is PlaybackUiEvent.ToggleTrackOptionSheet -> {
+                if (event.isShow) showTrackOptionSheet() else hideTrackOptionSheet()
+            }
+            is PlaybackUiEvent.OnSleepTimerSelected -> {
+                setSleepTimer(event.option)
+                hideSleepTimerSheet()
+            }
         }
     }
 
@@ -108,26 +193,51 @@ actual class PlaybackViewModel(
         }
     }
 
-    actual fun hideSleepTimerSheet() { _uiState.update { it.copy(isSleepTimerSheetVisible = false) } }
+    fun showSleepTimerSheet() {
+        _uiState.update { it.copy(isSleepTimerSheetVisible = true) }
+    }
+
+    actual fun hideSleepTimerSheet() {
+        _uiState.update { it.copy(isSleepTimerSheetVisible = false) }
+    }
+
+    fun showCreatePlaylistOptionSheet() {
+        _uiState.update { it.copy(isCreatePlaylistOptionSheet = true) }
+    }
+
+    fun hideCreatePlaylistOptionSheet() {
+        _uiState.update { it.copy(isCreatePlaylistOptionSheet = false) }
+    }
+
+    fun showTrackOptionSheet() {
+        _uiState.update { it.copy(isTrackOptionSheet = true) }
+    }
+
+    fun hideTrackOptionSheet() {
+        _uiState.update { it.copy(isTrackOptionSheet = false) }
+    }
 
     private fun playYoutube(track: TrackDomain) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             playbackRepository.playYoutube(track.id).onSuccess { playbackInfo ->
-                _uiState.update { it.copy(isLoading = false, playbackInfo = playbackInfo, currentTrack = track, error = null) }
-                try {
-                    playbackRepository.saveCurrentTrack(track)
-                } catch (e: Exception) {
-                    println("Failed to save current track: ${e.message}")
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        playbackInfo = playbackInfo,
+                        currentTrack = track,
+                        error = null
+                    )
                 }
-                val url = if (playbackInfo.mp3Fallback != null && !canPlayHls()) {
-                    BuildKonfig.BASE_URL + playbackInfo.mp3Fallback
-                } else {
-                    BuildKonfig.BASE_URL + playbackInfo.hlsUrl
-                }
-                start(url)
+                start(selectPlaybackUrl(playbackInfo))
+                saveTrackInBackground(track)
             }.onFailure { error ->
-                _uiState.update { it.copy(isLoading = false, error = error.message) }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = error.message ?: "Failed to play YouTube track"
+                    )
+                }
             }
         }
     }
@@ -136,20 +246,18 @@ actual class PlaybackViewModel(
         viewModelScope.launch {
             playbackRepository.skipToNext().onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
-                _uiState.update { it.copy(queue = state.queue, playbackInfo = state.playbackInfo, currentTrack = track, error = null) }
-                track?.let { 
-                    try {
-                        playbackRepository.saveCurrentTrack(it)
-                    } catch (e: Exception) {
-                        println("Failed to save current track: ${e.message}")
-                    }
+                _uiState.update {
+                    it.copy(
+                        queue = state.queue,
+                        playbackInfo = state.playbackInfo,
+                        currentTrack = track,
+                        error = null
+                    )
                 }
-                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
-                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
-                } else {
-                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
-                }
-                start(url)
+                start(selectPlaybackUrl(state.playbackInfo))
+                saveTrackInBackground(track)
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
             }
         }
     }
@@ -158,20 +266,48 @@ actual class PlaybackViewModel(
         viewModelScope.launch {
             playbackRepository.skipToPrevious().onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
-                _uiState.update { it.copy(queue = state.queue, playbackInfo = state.playbackInfo, currentTrack = track, error = null) }
-                track?.let { 
-                    try {
-                        playbackRepository.saveCurrentTrack(it)
-                    } catch (e: Exception) {
-                        println("Failed to save current track: ${e.message}")
-                    }
+                _uiState.update {
+                    it.copy(
+                        queue = state.queue,
+                        playbackInfo = state.playbackInfo,
+                        currentTrack = track,
+                        error = null
+                    )
                 }
-                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
-                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
-                } else {
-                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
+                start(selectPlaybackUrl(state.playbackInfo))
+                saveTrackInBackground(track)
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun clearQueue() {
+        viewModelScope.launch {
+            playbackRepository.clearQueue().onSuccess { queue ->
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        error = null
+                    )
                 }
-                start(url)
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
+            }
+        }
+    }
+
+    private fun addToQueue(trackIds: List<String>) {
+        viewModelScope.launch {
+            playbackRepository.addToQueue(trackIds).onSuccess { queue ->
+                _uiState.update {
+                    it.copy(
+                        queue = queue,
+                        error = null
+                    )
+                }
+            }.onFailure { error ->
+                _uiState.update { it.copy(error = error.message) }
             }
         }
     }
@@ -181,70 +317,133 @@ actual class PlaybackViewModel(
             _uiState.update { it.copy(isLoading = true) }
             playbackRepository.playContext(type, id, trackIds, offset).onSuccess { state ->
                 val track = state.queue.currentTrack?.toTrackDomain()
-                _uiState.update { it.copy(isLoading = false, playbackInfo = state.playbackInfo, queue = state.queue, currentTrack = track, error = null) }
-                track?.let { 
-                    try {
-                        playbackRepository.saveCurrentTrack(it)
-                    } catch (e: Exception) {
-                        println("Failed to save current track: ${e.message}")
-                    }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        playbackInfo = state.playbackInfo,
+                        queue = state.queue,
+                        currentTrack = track,
+                        error = null
+                    )
                 }
-                val url = if (state.playbackInfo.mp3Fallback != null && !canPlayHls()) {
-                    BuildKonfig.BASE_URL + state.playbackInfo.mp3Fallback
-                } else {
-                    BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl
+                start(selectPlaybackUrl(state.playbackInfo))
+                saveTrackInBackground(track)
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = error.message ?: "Failed to play context"
+                    )
                 }
-                start(url)
             }
         }
     }
 
-    private fun trackClicked(track: TrackDomain, type: ContentTypeDomain, id: String) {
+    private fun trackClicked(
+        track: TrackDomain,
+        type: ContentTypeDomain = ContentTypeDomain.TRACK,
+        id: String = track.id
+    ) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             playbackRepository.playbackInfo(track.id, type, id).onSuccess { info ->
-                _uiState.update { it.copy(playbackInfo = info, currentTrack = track, isLoading = false, error = null) }
-                try {
-                    playbackRepository.saveCurrentTrack(track)
-                } catch (e: Exception) {
-                    println("Failed to save current track: ${e.message}")
+                _uiState.update {
+                    it.copy(
+                        playbackInfo = info,
+                        currentTrack = track,
+                        isLoading = false,
+                        error = null
+                    )
                 }
-                val url = if (info.mp3Fallback != null && !canPlayHls()) {
-                    BuildKonfig.BASE_URL + info.mp3Fallback
-                } else {
-                    BuildKonfig.BASE_URL + info.hlsUrl
+                start(selectPlaybackUrl(info))
+                saveTrackInBackground(track)
+            }.onFailure { error ->
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = error.message ?: "Failed to play track"
+                    )
                 }
-                start(url)
             }
+        }
+    }
+
+    private fun saveTrackInBackground(track: TrackDomain?) {
+        if (track == null) return
+        viewModelScope.launch {
+            try {
+                playbackRepository.saveCurrentTrack(track)
+            } catch (e: Exception) {
+                println("Failed to save current track: ${e.message}")
+            }
+        }
+    }
+
+    private fun resolveAudioUrl(path: String): String {
+        return if (path.startsWith("http://") || path.startsWith("https://")) {
+            path
+        } else if (path.startsWith("/")) {
+            BuildKonfig.BASE_URL + path
+        } else {
+            BuildKonfig.BASE_URL + "/" + path
+        }
+    }
+
+    private fun selectPlaybackUrl(playbackInfo: PlaybackInfoDomain): String {
+        val mp3 = playbackInfo.mp3Fallback
+        return if (!mp3.isNullOrBlank() && !canPlayHls()) {
+            resolveAudioUrl(mp3)
+        } else {
+            resolveAudioUrl(playbackInfo.hlsUrl)
         }
     }
 
     private fun canPlayHls(): Boolean {
-        return audioElement.canPlayType("application/vnd.apple.mpegurl").toString() != ""
+        val nativeHls = audioElement.canPlayType("application/vnd.apple.mpegurl").toString() != ""
+        return nativeHls || isHlsJsSupported()
     }
 
     fun start(url: String) {
         println("Starting playback with URL: $url")
-        audioElement.src = url
-        audioElement.load()
-        audioElement.play()
+        playAudioSource(audioElement, url)
     }
 
-    fun play() { audioElement.play() }
-    fun pause() { audioElement.pause() }
+    fun play() {
+        playAudioElement(audioElement)
+    }
 
-    private fun togglePlayback() { if (isPlaying()) pause() else play() }
+    fun pause() {
+        audioElement.pause()
+    }
+
+    private fun togglePlayback() {
+        if (isPlaying()) {
+            pause()
+        } else {
+            val current = _uiState.value.currentTrack
+            if (_uiState.value.playbackInfo == null && current != null) {
+                trackClicked(current)
+            } else {
+                play()
+            }
+        }
+    }
+
     private fun toggleLoopClicked() {
         _uiState.update { it.copy(isLooping = !it.isLooping) }
         audioElement.loop = _uiState.value.isLooping
     }
-    private fun toggleShuffleClicked() { _uiState.update { it.copy(isShuffle = !it.isShuffle) } }
+
+    private fun toggleShuffleClicked() {
+        _uiState.update { it.copy(isShuffle = !it.isShuffle) }
+    }
 
     actual fun isPlaying(): Boolean = _uiState.value.isPlaying
     actual fun updateDominantColor(color: Color) { _uiState.update { it.copy(dominantColor = color) } }
 
     override fun onCleared() {
         super.onCleared()
+        destroyHls()
         audioElement.pause()
         audioElement.src = ""
     }

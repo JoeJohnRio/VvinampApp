@@ -1,6 +1,5 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.serialization)
     alias(libs.plugins.compose)
 }
@@ -74,61 +73,15 @@ dependencies {
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)
 
-    // Kover Coverage (All Modules)
-    kover(project(":data"))
-    kover(project(":domain"))
-
-    // Kotlin
-    implementation(libs.kotlin.stdlib.jdk8)
-
-    // AndroidX
+    // AndroidX & Koin
     implementation(libs.appcompat)
-    implementation(libs.lifecycle.viewmodel.ktx)
-
-    // Extensions
     implementation(libs.core.ktx)
-    implementation(libs.lifecycle.extensions)
-
-    // okHttp
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
-
-    // Room
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-
-    // Koin
+    implementation("androidx.activity:activity-compose:1.10.0")
     implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-
-    // Coroutines
-    // implementation(libs.kotlinx.coroutines.android)
-
-    // Paging
-    implementation(libs.paging.compose)
-
-    // WorkManager
-    implementation(libs.work.runtime.ktx)
-
-    // Palette
-    implementation(libs.palette)
-
-    // Reorderable
-    implementation(libs.reorderable)
-
-    // Compose
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.wheel.picker.compose)
 
     // Coil
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-
-    //media3
-    implementation(libs.bundles.media3)
-
-    // Serialization
-    implementation(libs.kotlinx.serialization.json)
 }
 // Force compose resources to be copied before Android's asset merge
 afterEvaluate {

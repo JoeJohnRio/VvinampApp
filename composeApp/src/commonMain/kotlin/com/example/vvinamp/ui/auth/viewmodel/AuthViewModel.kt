@@ -49,30 +49,7 @@ class AuthViewModel(
         viewModelScope.launch {
             _loginState.value = UiState.Loading
             val result = authUseCases.login(userCred.email, userCred.password)
-
-            if (result.isSuccess) {
-                println("joel123 Login Success: ${result}")
-                val sessionData = result.getOrNull()
-
-                sessionData?.let {
-                    // 1. Save tokens first so subsequent calls (like getCurrentUserDetail) are authenticated
-                    authStore.saveTokens(it.accessToken, it.refreshToken, it.expiresAt)
-
-                    // 2. Fetch user details and save them
-                    authUseCases.getCurrentUserDetail().onSuccess { userDetails ->
-                        authStore.saveUser(
-                            userId = userDetails.id,
-                            username = userDetails.username,
-                            email = userDetails.email,
-                            profilePicture = userDetails.profilePicture
-                        )
-                    }
-                }
-                _loginState.value = result.toUiState()
-            } else {
-                println("joel123 Login gagal: ${result}")
-                _loginState.value = result.toUiState()
-            }
+            _loginState.value = result.toUiState()
         }
     }
 

@@ -8,6 +8,8 @@ import com.apollographql.apollo.exception.ApolloGraphQLException
 import com.apollographql.apollo.exception.DefaultApolloException
 import com.example.graphql.RegisterMutation
 
+import kotlinx.coroutines.CancellationException
+
 suspend fun <D : Mutation.Data, T> ApolloClient.safeMutation(
     mutation: Mutation<D>,
     extract: (D) -> T?
@@ -34,6 +36,7 @@ suspend fun <D : Mutation.Data, T> ApolloClient.safeMutation(
             }
         }
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Result.failure(e)
     }
 }
@@ -63,6 +66,7 @@ suspend fun <D : Query.Data, T> ApolloClient.safeQuery(
             }
         }
     } catch (e: Exception) {
+        if (e is CancellationException) throw e
         Result.failure(e)
     }
 }

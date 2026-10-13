@@ -39,10 +39,10 @@ import com.example.vvinamp.util.orErrorNoText
 fun AlbumScreen(
     albumId: String,
     bottomNavRouter: BottomNavRouter,
-    viewModel: AlbumViewModel = koinViewModel()
+    viewModel: AlbumViewModel = koinViewModel(),
+    playbackViewModel: PlaybackViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val playbackViewModel: PlaybackViewModel = koinViewModel()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
 
     LaunchedEffect(Unit) {

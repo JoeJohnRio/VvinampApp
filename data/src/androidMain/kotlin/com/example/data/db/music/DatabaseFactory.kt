@@ -12,6 +12,6 @@ actual class DatabaseFactory(private val context: Context) {
             context = appContext,
             name = dbFile.absolutePath,
             factory = { MusicDatabaseConstructor.initialize() }
-        )
+        ).fallbackToDestructiveMigration(true)
     }
 }

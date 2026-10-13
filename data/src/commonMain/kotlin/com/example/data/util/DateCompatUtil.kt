@@ -14,7 +14,7 @@ fun String.toLocalDate(): LocalDate {
 }
 
 fun String.dateToYear(): String {
-    val dateTime = LocalDateTime.parse(this.replace("Z", ""))
-    val year = dateTime.year
-    return year.toString()
+    if (this.isBlank()) return ""
+    val yearPart = this.substringBefore("-").trim()
+    return if (yearPart.length == 4 && yearPart.all { it.isDigit() }) yearPart else ""
 }

@@ -51,11 +51,11 @@ import com.example.vvinamp.ui.widget.TextFieldSearch
 @Composable
 fun SearchResultsScreen(
     bottomNavRouter: BottomNavRouter,
+    playbackViewModel: PlaybackViewModel = koinViewModel(),
 ) {
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
-    val playbackViewModel: PlaybackViewModel = koinViewModel()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
 
     ScreenWrapper(

@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.compose) apply false
     alias(libs.plugins.detekt) apply false
     alias(libs.plugins.ksp) apply false
-    alias(libs.plugins.kover) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.composeMultiplatform) apply false
 }
@@ -27,10 +26,4 @@ subprojects {
     
     // Apply Detekt plugin for all modules (presentation, data, domain)
     apply(from = "$rootDir/detekt.gradle")
-
-    // Apply Kover plugin for all modules except KMP ones (not supported by Kover yet)
-    val kmpModules = listOf("data", "domain", "graphql", "composeApp")
-    if (!kmpModules.contains(project.name)) {
-        apply(from = "$rootDir/kover.gradle")
-    }
 }
