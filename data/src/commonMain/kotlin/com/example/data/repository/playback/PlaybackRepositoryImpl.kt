@@ -14,9 +14,12 @@ import com.example.domain.entity.playbackinfo.PlaybackStateDomain
 import com.example.domain.entity.playbackinfo.PlayerQueueDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaybackRepository
+import com.example.domain.entity.youtube.YoutubeDownloadState
 import com.example.graphql.type.PlaybackContextInput
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.takeWhile
 class PlaybackRepositoryImpl(
     private val playbackApi: PlaybackApi,
     private val recentPlaybackDao: RecentPlaybackDao
@@ -72,6 +75,52 @@ class PlaybackRepositoryImpl(
 
     override suspend fun playYoutube(youtubeId: String): Result<PlaybackInfoDomain> {
         return playbackApi.playYoutube(youtubeId).map { it.toDomain() }
+    }
+
+    override fun downloadAndPlayYoutube(youtubeUrl: String): Flow<YoutubeDownloadState> = flow {
+        val startResult = playbackApi.startDownload(youtubeUrl)
+        val task = startResult.getOrElse { e ->
+            emit(YoutubeDownloadState.Error(e.message ?: "Failed to start download"))
+            return@flow
+        }
+
+        if (task.status.equals("completed", ignoreCase = true)) {
+            val playbackResult = playbackApi.playYoutube(youtubeUrl)
+            playbackResult.fold(
+                onSuccess = { emit(YoutubeDownloadState.Completed(it.toDomain())) },
+                onFailure = { emit(YoutubeDownloadState.Error(it.message ?: "Failed to load playback")) }
+            )
+            return@flow
+        }
+
+        emit(YoutubeDownloadState.Progress(task.progress))
+
+        var isDone = false
+        playbackApi.downloadProgress(task.id)
+            .takeWhile { !isDone }
+            .collect { result ->
+                result.fold(
+                    onSuccess = { progressData ->
+                        if (!progressData.error.isNullOrBlank() || progressData.status.equals("failed", ignoreCase = true)) {
+                            isDone = true
+                            emit(YoutubeDownloadState.Error(progressData.error ?: "Download failed"))
+                        } else if (progressData.status.equals("completed", ignoreCase = true)) {
+                            isDone = true
+                            val playbackResult = playbackApi.playYoutube(youtubeUrl)
+                            playbackResult.fold(
+                                onSuccess = { emit(YoutubeDownloadState.Completed(it.toDomain())) },
+                                onFailure = { emit(YoutubeDownloadState.Error(it.message ?: "Failed to load playback")) }
+                            )
+                        } else {
+                            emit(YoutubeDownloadState.Progress(progressData.progress))
+                        }
+                    },
+                    onFailure = { error ->
+                        isDone = true
+                        emit(YoutubeDownloadState.Error(error.message ?: "Subscription error"))
+                    }
+                )
+            }
     }
 
     override fun getCurrentTrackFlow(): Flow<TrackDomain?> {

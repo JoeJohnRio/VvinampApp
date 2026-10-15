@@ -94,8 +94,12 @@ val networkModule = module {
     }
 
     single {
+        val httpUrl = BuildKonfig.BASE_URL + BuildKonfig.BASE_URL_GRAPHQL
+        val wsUrl = httpUrl.replaceFirst("https://", "wss://").replaceFirst("http://", "ws://")
+
         ApolloClient.Builder()
-            .serverUrl(BuildKonfig.BASE_URL + BuildKonfig.BASE_URL_GRAPHQL)
+            .serverUrl(httpUrl)
+            .webSocketServerUrl(wsUrl)
             .httpEngine(KtorHttpEngine(get<HttpClient>()))
             .build()
     }

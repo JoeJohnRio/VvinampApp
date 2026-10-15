@@ -17,6 +17,7 @@ import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
+import com.example.domain.entity.youtube.YoutubeDownloadState
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.google.common.util.concurrent.MoreExecutors
@@ -228,25 +229,42 @@ constructor(
 
     private fun playYoutube(track: TrackDomain) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            playbackRepository.playYoutube(track.id).onSuccess { playbackInfo ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        playbackInfo = playbackInfo,
-                        currentTrack = track,
-                        error = null
-                    )
-                }
-                Log.d("joel123", "playyoutube")
-                playbackRepository.saveCurrentTrack(track)
-                start(BuildKonfig.BASE_URL + playbackInfo.hlsUrl)
-            }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = error.message ?: "Failed to play YouTube track"
-                    )
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    isDownloading = true,
+                    downloadProgress = 0,
+                    currentTrack = track,
+                    error = null
+                )
+            }
+            playbackRepository.playYoutube.downloadAndPlay(track.id).collect { state ->
+                when (state) {
+                    is YoutubeDownloadState.Progress -> {
+                        _uiState.update { it.copy(downloadProgress = state.progress) }
+                    }
+                    is YoutubeDownloadState.Completed -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                isDownloading = false,
+                                playbackInfo = state.playbackInfo,
+                                currentTrack = track,
+                                error = null
+                            )
+                        }
+                        playbackRepository.saveCurrentTrack(track)
+                        start(BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl)
+                    }
+                    is YoutubeDownloadState.Error -> {
+                        _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                isDownloading = false,
+                                error = state.message
+                            )
+                        }
+                    }
                 }
             }
         }

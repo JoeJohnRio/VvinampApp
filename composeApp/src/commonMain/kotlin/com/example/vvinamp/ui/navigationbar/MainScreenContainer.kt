@@ -38,6 +38,7 @@ import com.example.vvinamp.ui.navigationbar.util.ScrimAlphaBoxAnchored
 import com.example.vvinamp.util.ExtractDominantColorEffect
 import kotlinx.coroutines.launch
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
+import com.example.vvinamp.ui.widget.playback.DownloadProgressDialog
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -144,6 +145,13 @@ fun MainScreenContainer(
                 playbackViewModel.onEventTrackOptions(TrackOptionsUiEvent.OnSleepTimerSelected(option))
             },
             onDismiss = { playbackViewModel.hideSleepTimerSheet() }
+        )
+    }
+
+    if (playbackUiState.isDownloading) {
+        DownloadProgressDialog(
+            progress = playbackUiState.downloadProgress,
+            trackTitle = playbackUiState.currentTrack?.title.orEmpty()
         )
     }
 

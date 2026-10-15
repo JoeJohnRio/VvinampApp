@@ -19,5 +19,7 @@ data class PlaybackUiState(
     val isCreatePlaylistOptionSheet: Boolean = false,
     val isTrackOptionSheet: Boolean = false,
     val isSleepTimerSheetVisible: Boolean = false,
-    val activeSleepTimer: SleepTimerOption? = null
+    val activeSleepTimer: SleepTimerOption? = null,
+    val isDownloading: Boolean = false,
+    val downloadProgress: Int = 0
 )

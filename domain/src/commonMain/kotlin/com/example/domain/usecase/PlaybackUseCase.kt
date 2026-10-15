@@ -6,6 +6,7 @@ import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.playbackinfo.PlaybackStateDomain
 import com.example.domain.entity.playbackinfo.PlayerQueueDomain
 import com.example.domain.entity.song.TrackDomain
+import com.example.domain.entity.youtube.YoutubeDownloadState
 import com.example.domain.repository.PlaybackRepository
 import kotlinx.coroutines.flow.Flow
 class PlaybackUseCase(
@@ -91,6 +92,9 @@ class PlayYoutubeUseCase(
 ) {
     suspend operator fun invoke(youtubeId: String): Result<PlaybackInfoDomain> =
         repository.playYoutube(youtubeId)
+
+    fun downloadAndPlay(youtubeUrl: String): Flow<YoutubeDownloadState> =
+        repository.downloadAndPlayYoutube(youtubeUrl)
 }
 
 class SaveCurrentTrackUseCase(
