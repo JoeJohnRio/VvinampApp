@@ -1,0 +1,8 @@
+subscription DownloadProgress($id: String!) {
+    downloadProgress(id: $id) {
+        id
+        status
+        progress
+        error
+    }
+}

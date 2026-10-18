@@ -69,7 +69,6 @@ dependencies {
     api(project(":data"))
     api(project(":composeApp"))
     debugImplementation(libs.androidx.compose.ui.tooling)
-    testImplementation(project(":core-test"))
     debugImplementation(libs.chucker.debug)
     releaseImplementation(libs.chucker.release)
 

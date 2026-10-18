@@ -9,7 +9,6 @@ pluginManagement {
 rootProject.name = "VvinampApp"
 include(":data")
 include(":domain")
-include(":core-test")
 include(":presentation")
 include(":graphql")
 include(":composeApp")

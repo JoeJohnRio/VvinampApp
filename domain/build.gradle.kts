@@ -13,6 +13,8 @@ kotlin {
         compilerOptions {
             jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
         }
+        withHostTest {
+        }
     }
     
     listOf(
@@ -34,6 +36,9 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.paging.common)
             api(libs.koin.core)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
         }
         androidMain.dependencies {
         }

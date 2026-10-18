@@ -1,0 +1,10 @@
+mutation StartDownload($input: DownloadInput!) {
+    startDownload(input: $input) {
+        id
+        status
+        progress
+        error
+        youtubeUrl
+        title
+    }
+}
