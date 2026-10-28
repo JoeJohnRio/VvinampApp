@@ -11,6 +11,7 @@ class FakeAuthStore(
 
     val sessionFlow = MutableStateFlow<AuthSession?>(initialSession)
     var clearCallCount: Int = 0
+    var saveUserCallCount: Int = 0
 
     override fun getSession(): Flow<AuthSession?> = sessionFlow
 
@@ -44,6 +45,7 @@ class FakeAuthStore(
         email: String,
         profilePicture: String?
     ) {
+        saveUserCallCount++
         val current = sessionFlow.value
         sessionFlow.value = current?.copy(
             userId = userId,
