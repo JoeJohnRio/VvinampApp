@@ -18,6 +18,11 @@ class FakePlaylistRepository : PlaylistRepository {
     var createPlaylistCallCount: Int = 0
     var lastCreatedPlaylistTitle: String? = null
 
+    var getMyPlaylistFeedCallCount: Int = 0
+    var lastFeedPageSize: Int? = null
+    var lastFeedSortOrder: PlaylistSortOrderDomain? = null
+    var myPlaylistFeedFlow: Flow<PagingData<PlaylistMinimal>> = flowOf(PagingData.empty())
+
     override suspend fun createPlaylist(title: String): Result<String> {
         createPlaylistCallCount++
         lastCreatedPlaylistTitle = title
@@ -33,7 +38,12 @@ class FakePlaylistRepository : PlaylistRepository {
     override fun getMyPlaylistFeed(
         pageSize: Int,
         sortOrder: PlaylistSortOrderDomain
-    ): Flow<PagingData<PlaylistMinimal>> = flowOf(PagingData.empty())
+    ): Flow<PagingData<PlaylistMinimal>> {
+        getMyPlaylistFeedCallCount++
+        lastFeedPageSize = pageSize
+        lastFeedSortOrder = sortOrder
+        return myPlaylistFeedFlow
+    }
 
     override suspend fun getPlaylist(id: String): Result<PlaylistComplete> =
         Result.failure(NotImplementedError())
