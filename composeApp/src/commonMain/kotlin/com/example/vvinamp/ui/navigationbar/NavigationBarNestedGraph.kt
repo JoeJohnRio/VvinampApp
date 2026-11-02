@@ -124,7 +124,9 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
     }
 
     entry<BottomNavDestination.Settings> {
-        SettingsScreen()
+        SettingsScreen(
+            bottomNavRouter = bottomNavRouter
+        )
     }
 
     entry<BottomNavDestination.Artist> { key ->

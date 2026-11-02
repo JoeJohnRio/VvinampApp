@@ -3,6 +3,7 @@ package com.example.vvinamp.ui.main
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import org.koin.compose.viewmodel.koinViewModel
+import com.example.vvinamp.navigation.BindBrowserNavigation
 import com.example.vvinamp.navigation.Navigator
 import com.example.vvinamp.navigation.graph.BottomNavDestination
 import com.example.vvinamp.navigation.rememberNavigationState
@@ -30,6 +31,8 @@ fun MainScreen(
     )
     val navigator = remember { Navigator(navigationState) }
     val bottomNavRouter = BottomNavRouterImpl(navigator)
+
+    BindBrowserNavigation(navigator, navigationState)
 
     MainScreenContainer(
         playbackViewModel = playbackViewModel,

@@ -15,14 +15,22 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import androidx.navigation3.runtime.NavKey
-
+import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.widget.ButtonSolidCloseIconAndText
+import com.example.vvinamp.ui.widget.TopBarCustom
 
 @Composable
-fun EntryProviderScope<NavKey>.SettingsScreen() {
+fun EntryProviderScope<NavKey>.SettingsScreen(
+    bottomNavRouter: BottomNavRouter
+) {
     Scaffold(
         topBar = {
-
+            TopBarCustom(
+                title = "Settings",
+                onBackClick = {
+                    bottomNavRouter.navigateBack()
+                }
+            )
         }
     ) { paddingValues ->
         Column(
