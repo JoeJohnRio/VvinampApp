@@ -2,19 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>VvinampApp</title>
     <style>
         html, body {
             width: 100%;
             height: 100%;
+            height: 100dvh;
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background-color: black;
+            background-color: #121212;
+            overscroll-behavior: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         #ComposeTarget {
             width: 100%;
             height: 100%;
+            display: block;
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
