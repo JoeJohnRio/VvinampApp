@@ -1,11 +1,14 @@
 package com.example.vvinamp.ui.home
-import vvinampapp.composeapp.generated.resources.*
 
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.auth.AuthStore
 import com.example.domain.entity.enum.ContentTypeDomain
+import com.example.domain.entity.playlist.playlistMinimalListDummy
+import com.example.domain.entity.song.dummyRecommendedTracks
 import com.example.domain.usecase.AuthUseCases
+import com.example.domain.usecase.GetRecommendedTracksUseCase
 import com.example.domain.usecase.HistoryUseCase
+import com.example.domain.usecase.PlaylistUseCase
 import com.example.domain.util.NetworkMonitor
 import com.example.vvinamp.base.BaseViewModel
 import com.example.vvinamp.util.singleSharedFlowJoel
@@ -18,11 +21,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
 class HomeViewModel(
     val networkMonitor: NetworkMonitor,
     val historyUseCase: HistoryUseCase,
     private val authUseCases: AuthUseCases,
-    private val authStore: AuthStore
+    private val authStore: AuthStore,
+    private val getRecommendedTracksUseCase: GetRecommendedTracksUseCase? = null,
+    private val playlistUseCase: PlaylistUseCase? = null
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -51,10 +57,20 @@ class HomeViewModel(
                         ContentTypeDomain.ARTIST -> {
                             _events.emit(HomeEvent.NavigateToArtistScreen(event.history))
                         }
-                        else -> {
-
-                        }
+                        else -> {}
                     }
+                }
+            }
+
+            is HomeUiEvent.OnRecommendedTrackClicked -> {
+                viewModelScope.launch {
+                    _events.emit(HomeEvent.PlayRecommendedTrack(event.track))
+                }
+            }
+
+            is HomeUiEvent.OnPlaylistClicked -> {
+                viewModelScope.launch {
+                    _events.emit(HomeEvent.NavigateToPlaylistDetail(event.playlistId))
                 }
             }
 
@@ -80,6 +96,14 @@ class HomeViewModel(
     private fun fetchUserDetailsIfNeeded() {
         viewModelScope.launch {
             val session = authStore.getSession().first()
+            val username = session?.username
+            val email = session?.email
+            if (username != null) {
+                _uiState.update { it.copy(username = username) }
+            } else if (email != null) {
+                _uiState.update { it.copy(username = email.substringBefore("@")) }
+            }
+
             // If we have tokens but no user ID/name, fetch details
             if (session?.accessToken != null && session.userId == null) {
                 authUseCases.getCurrentUserDetail().onSuccess { userDetails ->
@@ -89,6 +113,7 @@ class HomeViewModel(
                         email = userDetails.email,
                         profilePicture = userDetails.profilePicture
                     )
+                    _uiState.update { it.copy(username = userDetails.username) }
                 }
             }
         }
@@ -100,9 +125,15 @@ class HomeViewModel(
             .launchIn(viewModelScope)
     }
 
+    fun loadHomeData() {
+        getListeningHistory()
+        getRecommendedTracks()
+        getFeaturedPlaylists()
+    }
+
     fun getListeningHistory() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.update { it.copy(isLoading = true) }
 
             val result = historyUseCase.getListRecentHistoryUseCase.invoke()
 
@@ -125,8 +156,39 @@ class HomeViewModel(
         }
     }
 
-    fun onRefresh() = launch {
-        _refreshListState.emit(Unit)
+    fun getRecommendedTracks() {
+        viewModelScope.launch {
+            val result = getRecommendedTracksUseCase?.invoke()
+            result?.onSuccess { tracks ->
+                if (tracks.isNotEmpty()) {
+                    _uiState.update { it.copy(recommendedTracks = tracks) }
+                } else {
+                    _uiState.update { it.copy(recommendedTracks = dummyRecommendedTracks) }
+                }
+            }?.onFailure {
+                _uiState.update {
+                    if (it.recommendedTracks.isEmpty()) it.copy(recommendedTracks = dummyRecommendedTracks)
+                    else it
+                }
+            } ?: run {
+                _uiState.update {
+                    if (it.recommendedTracks.isEmpty()) it.copy(recommendedTracks = dummyRecommendedTracks)
+                    else it
+                }
+            }
+        }
     }
 
+    fun getFeaturedPlaylists() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(featuredPlaylists = playlistMinimalListDummy)
+            }
+        }
+    }
+
+    fun onRefresh() = launch {
+        loadHomeData()
+        _refreshListState.emit(Unit)
+    }
 }

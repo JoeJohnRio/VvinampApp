@@ -25,30 +25,63 @@ import kotlinx.browser.document
 import org.w3c.dom.HTMLAudioElement
 
 @JsFun(
-    """(audioElement, url) => {
+    """(audioElement, url, fallbackUrl) => {
         if (window.vvinampHls) {
             window.vvinampHls.destroy();
             window.vvinampHls = null;
         }
+        window.vvinampFallbackMp3 = fallbackUrl || '';
+        const playWithCatch = (target) => {
+            const p = target.play();
+            if (p && typeof p.catch === 'function') {
+                p.catch(e => console.warn('Playback play() was blocked or prevented:', e));
+            }
+        };
         if (typeof Hls !== 'undefined' && Hls.isSupported() && url.includes('.m3u8')) {
-            const hls = new Hls();
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: true
+            });
             window.vvinampHls = hls;
             hls.loadSource(url);
             hls.attachMedia(audioElement);
             hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                audioElement.play().catch(e => console.warn('Autoplay blocked:', e));
+                playWithCatch(audioElement);
             });
             hls.on(Hls.Events.ERROR, (event, data) => {
-                console.error('HLS error:', data);
+                console.warn('HLS event error:', data);
+                if (data.fatal) {
+                    if (window.vvinampFallbackMp3 && window.vvinampFallbackMp3 !== url) {
+                        console.log('HLS fatal, switching to fallback URL:', window.vvinampFallbackMp3);
+                        hls.destroy();
+                        window.vvinampHls = null;
+                        audioElement.src = window.vvinampFallbackMp3;
+                        audioElement.load();
+                        playWithCatch(audioElement);
+                    } else if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+                        hls.startLoad();
+                    } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+                        hls.recoverMediaError();
+                    } else {
+                        hls.destroy();
+                    }
+                }
             });
         } else {
             audioElement.src = url;
             audioElement.load();
-            audioElement.play().catch(e => console.warn('Autoplay blocked:', e));
+            playWithCatch(audioElement);
         }
     }"""
 )
-private external fun playAudioSource(audioElement: HTMLAudioElement, url: String)
+private external fun playAudioSource(audioElement: HTMLAudioElement, url: String, fallbackUrl: String = definedExternally)
+
+@JsFun(
+    """(audioElement) => {
+        audioElement.load();
+    }"""
+)
+private external fun primeAudioElement(audioElement: HTMLAudioElement)
 
 @JsFun(
     """(audioElement) => {
@@ -219,6 +252,7 @@ actual class PlaybackViewModel(
     }
 
     private fun playYoutube(track: TrackDomain) {
+        primeAudioElement(audioElement)
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -244,7 +278,9 @@ actual class PlaybackViewModel(
                                 error = null
                             )
                         }
-                        start(selectPlaybackUrl(state.playbackInfo))
+                        val primaryUrl = selectPlaybackUrl(state.playbackInfo)
+                        val fallback = state.playbackInfo.mp3Fallback?.let { resolveAudioUrl(it) } ?: ""
+                        start(primaryUrl, fallback)
                         saveTrackInBackground(track)
                     }
                     is YoutubeDownloadState.Error -> {
@@ -413,12 +449,19 @@ actual class PlaybackViewModel(
     }
 
     private fun selectPlaybackUrl(playbackInfo: PlaybackInfoDomain): String {
-        val mp3 = playbackInfo.mp3Fallback
-        return if (!mp3.isNullOrBlank() && !canPlayHls()) {
-            resolveAudioUrl(mp3)
-        } else {
-            resolveAudioUrl(playbackInfo.hlsUrl)
+        val hls = playbackInfo.hlsUrl.trim()
+        val mp3 = playbackInfo.mp3Fallback?.trim()
+
+        if ((hls.isEmpty() || !hls.contains(".m3u8")) && !mp3.isNullOrEmpty()) {
+            return resolveAudioUrl(mp3)
         }
+        if (!mp3.isNullOrEmpty() && !canPlayHls()) {
+            return resolveAudioUrl(mp3)
+        }
+        if (hls.isNotEmpty()) {
+            return resolveAudioUrl(hls)
+        }
+        return resolveAudioUrl(mp3.orEmpty())
     }
 
     private fun canPlayHls(): Boolean {
@@ -426,9 +469,9 @@ actual class PlaybackViewModel(
         return nativeHls || isHlsJsSupported()
     }
 
-    fun start(url: String) {
-        println("Starting playback with URL: $url")
-        playAudioSource(audioElement, url)
+    fun start(url: String, fallbackUrl: String = "") {
+        println("Starting playback with URL: $url, fallback: $fallbackUrl")
+        playAudioSource(audioElement, url, fallbackUrl)
     }
 
     fun play() {

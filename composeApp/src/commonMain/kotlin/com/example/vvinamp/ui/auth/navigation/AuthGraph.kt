@@ -27,6 +27,7 @@ fun EntryProviderScope<NavKey>.AuthGraph(
     entry<AuthDestination.AuthRoot> {
         AuthPage(
             authRouter = authRouter,
+            viewModel = viewModel
         )
     }
 

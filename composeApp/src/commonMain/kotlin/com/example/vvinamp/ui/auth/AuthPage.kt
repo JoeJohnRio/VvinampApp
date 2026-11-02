@@ -3,75 +3,127 @@ import vvinampapp.composeapp.generated.resources.*
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.vvinamp.util.preview.previewSafePainter
-import org.jetbrains.compose.resources.painterResource
-import com.example.vvinamp.util.preview.previewSafeString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.savedstate.serialization.SavedStateConfiguration
-import kotlinx.serialization.modules.SerializersModule
-
-import com.example.vvinamp.navigation.graph.AuthDestination
+import com.example.domain.entity.user.User
 import com.example.vvinamp.navigation.router.AuthRouter
+import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
+import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.circularStdFontFamily
 import com.example.vvinamp.ui.theme.whiteBlackGradientBackground
 import com.example.vvinamp.ui.widget.ButtonOutlined
 import com.example.vvinamp.ui.widget.ButtonSolid
+import com.example.vvinamp.ui.widget.SnackbarStyledHost
+import com.example.vvinamp.util.UiState
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
+import com.example.vvinamp.util.preview.previewSafePainter
+import com.example.vvinamp.util.preview.previewSafeString
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun AuthPage(
     authRouter: AuthRouter,
+    viewModel: AuthViewModel = koinViewModel()
 ) {
-    Column(
-        modifier = Modifier
-            .whiteBlackGradientBackground(),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        ImageTextRegister(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.8f),
-            titleText = previewSafeString(Res.string.title_millions_of_songs, "Millions of songs.\nFor Free.")
-        )
+    val loginState by viewModel.loginState.collectAsState()
+    val isLoggingIn = loginState is UiState.Loading
+    val snackbarHostState = remember { SnackbarHostState() }
 
+    LaunchedEffect(loginState) {
+        if (loginState is UiState.Error) {
+            val error = (loginState as UiState.Error).exception
+            snackbarHostState.showSnackbar(
+                message = error.message ?: "Failed to log in as guest"
+            )
+        }
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarStyledHost(snackbarHostState)
+        },
+        containerColor = Color.Transparent,
+        modifier = Modifier.whiteBlackGradientBackground()
+    ) { contentPadding ->
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.2f)
+                .fillMaxSize()
+                .padding(contentPadding),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            ButtonSolid(
-                text = "Sign up free",
+            ImageTextRegister(
                 modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(0.62f),
+                titleText = previewSafeString(Res.string.title_millions_of_songs, "Millions of songs.\nFor Free.")
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 32.dp)
-                    .padding(bottom = 12.dp),
-                onClick = {
-                    authRouter.navigateToAuthMethodSelectionPage()
-                }
-            )
-            ButtonOutlined(
-                text = "Log in",
-                modifier = Modifier.padding(horizontal = 32.dp),
-                onClick = {
-                    authRouter.navigateToLoginMethodSelectionPage()
-                }
-            )
+                    .padding(bottom = 28.dp)
+                    .weight(0.38f),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                ButtonSolid(
+                    text = if (isLoggingIn) "Logging in as Guest..." else "Try as Guest (Demo)",
+                    modifier = Modifier.fillMaxWidth(),
+                    imageVector = Icons.Default.Person,
+                    containerColor = AppColours.PrimaryGreen,
+                    textColor = AppColours.OnPrimaryBlack,
+                    enabled = !isLoggingIn,
+                    onClick = {
+                        viewModel.login(
+                            userCred = User(
+                                email = "joel@joel.joel",
+                                password = "joel123password"
+                            )
+                        )
+                    }
+                )
+
+                ButtonSolid(
+                    text = "Sign up free",
+                    modifier = Modifier.fillMaxWidth(),
+                    containerColor = AppColours.White,
+                    textColor = AppColours.OnPrimaryBlack,
+                    onClick = {
+                        authRouter.navigateToAuthMethodSelectionPage()
+                    }
+                )
+
+                ButtonOutlined(
+                    text = "Log in",
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = {
+                        authRouter.navigateToLoginMethodSelectionPage()
+                    }
+                )
+            }
         }
     }
 }
@@ -107,7 +159,6 @@ fun ImageTextRegister(
         )
     }
 }
-
 
 @Preview
 @Composable

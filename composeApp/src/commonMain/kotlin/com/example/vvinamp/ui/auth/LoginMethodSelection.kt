@@ -54,7 +54,7 @@ fun LoginMethodSelectionPage(
                 .weight(0.5f)
         ) {
             LoginSelectionButtons(
-                authRouter
+                mainRouter = authRouter
             )
         }
     }
@@ -64,6 +64,7 @@ fun LoginMethodSelectionPage(
 fun LoginSelectionButtons(
     mainRouter: AuthRouter
 ) {
+
     ButtonSolid(
         modifier = Modifier
             .padding(bottom = 12.dp),

@@ -254,7 +254,12 @@ constructor(
                             )
                         }
                         playbackRepository.saveCurrentTrack(track)
-                        start(resolveAudioUrl(state.playbackInfo.hlsUrl))
+                        val audioUrl = if (state.playbackInfo.hlsUrl.isNotBlank()) {
+                            state.playbackInfo.hlsUrl
+                        } else {
+                            state.playbackInfo.mp3Fallback.orEmpty()
+                        }
+                        start(resolveAudioUrl(audioUrl))
                     }
                     is YoutubeDownloadState.Error -> {
                         _uiState.update {

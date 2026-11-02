@@ -286,7 +286,7 @@ fun ClearQueueMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
 fun PlayYoutubeMutation.PlayYoutube.toDomain(): PlaybackInfoDomain {
     return PlaybackInfoDomain(
         hlsUrl = this.hlsUrl,
-        mp3Fallback = "",
+        mp3Fallback = this.fileUrl,
         durationMs = 0
     )
 }

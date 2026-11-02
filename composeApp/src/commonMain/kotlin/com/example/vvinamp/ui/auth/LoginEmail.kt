@@ -28,6 +28,7 @@ import com.example.domain.entity.user.User
 import com.example.vvinamp.navigation.router.AuthRouter
 import com.example.vvinamp.navigation.router.MainRouter
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
+import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
@@ -180,7 +181,7 @@ fun LoginEmailPage(
                 horizontalArrangement = Arrangement.Center
             ) {
                 ButtonVariableOutlined(
-                    modifier = Modifier.padding(top = 32.dp),
+                    modifier = Modifier.padding(top = 24.dp),
                     text = previewSafeString(Res.string.label_login_without_password, "Log in without password"),
                     textStyle = TSDisplayMediumWhite().copy(
                         fontSize = 8.sp

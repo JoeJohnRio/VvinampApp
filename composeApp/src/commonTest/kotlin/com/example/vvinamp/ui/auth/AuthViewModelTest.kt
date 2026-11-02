@@ -166,7 +166,7 @@ class AuthViewModelTest {
     }
 
     @Test
-    fun `resetAndPopBackStack resets user, resets registerState, and pops router to AuthRoot`() = runTest(testDispatcher) {
+    fun `resetAndPopBackStack resets user resets registerState and pops router to AuthRoot`() = runTest(testDispatcher) {
         viewModel.user = User(name = "Modified User", email = "modified@example.com")
 
         val backStack = NavBackStack<NavKey>(AuthDestination.AuthRoot, AuthDestination.RegisterEmail)
