@@ -55,7 +55,7 @@ fun StartBrowsingComponent() {
         StartBrowsingDomain(
             title = "Podcast",
             idPlaylist = "1",
-            imageUrl = "https://cirio.my.id/artist/f54f9e61-1c9a-4f9b-b127-5563a1cd0a4c/bernadya.jpg",
+            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/bernadya/bernadya.jpg",
             colorHex = 0xff016450
         ),
         StartBrowsingDomain(

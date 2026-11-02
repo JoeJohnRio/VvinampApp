@@ -399,12 +399,16 @@ actual class PlaybackViewModel(
     }
 
     private fun resolveAudioUrl(path: String): String {
-        return if (path.startsWith("http://") || path.startsWith("https://")) {
-            path
-        } else if (path.startsWith("/")) {
-            BuildKonfig.BASE_URL + path
+        var clean = path.trim()
+        if (clean.startsWith(BuildKonfig.BASE_URL + "http://") || clean.startsWith(BuildKonfig.BASE_URL + "https://")) {
+            clean = clean.removePrefix(BuildKonfig.BASE_URL)
+        }
+        return if (clean.startsWith("http://") || clean.startsWith("https://")) {
+            clean
+        } else if (clean.startsWith("/")) {
+            BuildKonfig.BASE_URL + clean
         } else {
-            BuildKonfig.BASE_URL + "/" + path
+            BuildKonfig.BASE_URL + "/" + clean
         }
     }
 

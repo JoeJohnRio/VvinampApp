@@ -99,6 +99,7 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
             implementation(libs.coil.network.ktor3)
+            implementation(npm("sqlite-web-worker", file("../data/sqlite-web-worker")))
         }
     }
 }

@@ -254,7 +254,7 @@ constructor(
                             )
                         }
                         playbackRepository.saveCurrentTrack(track)
-                        start(BuildKonfig.BASE_URL + state.playbackInfo.hlsUrl)
+                        start(resolveAudioUrl(state.playbackInfo.hlsUrl))
                     }
                     is YoutubeDownloadState.Error -> {
                         _uiState.update {
@@ -285,7 +285,7 @@ constructor(
                 Log.d("joel123", "skiptonext")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildKonfig.BASE_URL + it.hlsUrl)
+                    start(resolveAudioUrl(it.hlsUrl))
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -308,7 +308,7 @@ constructor(
                 Log.d("joel123", "skiptoprevious")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildKonfig.BASE_URL + it.hlsUrl)
+                    start(resolveAudioUrl(it.hlsUrl))
                 }
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -373,7 +373,7 @@ constructor(
                 }
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
                 state.playbackInfo.let {
-                    start(BuildKonfig.BASE_URL + it.hlsUrl)
+                    start(resolveAudioUrl(it.hlsUrl))
                 }
             }.onFailure { error ->
                 _uiState.update {
@@ -386,8 +386,23 @@ constructor(
         }
     }
 
+    private fun resolveAudioUrl(path: String): String {
+        var clean = path.trim()
+        if (clean.startsWith(BuildKonfig.BASE_URL + "http://") || clean.startsWith(BuildKonfig.BASE_URL + "https://")) {
+            clean = clean.removePrefix(BuildKonfig.BASE_URL)
+        }
+        return if (clean.startsWith("http://") || clean.startsWith("https://")) {
+            clean
+        } else if (clean.startsWith("/")) {
+            BuildKonfig.BASE_URL + clean
+        } else {
+            BuildKonfig.BASE_URL + "/" + clean
+        }
+    }
+
     fun start(url: String) {
-        val mediaItem = MediaItem.fromUri(url)
+        val resolvedUrl = resolveAudioUrl(url)
+        val mediaItem = MediaItem.fromUri(resolvedUrl)
         _mediaController.value?.setMediaItem(mediaItem)
         _mediaController.value?.prepare()
         _mediaController.value?.play()
@@ -467,7 +482,7 @@ constructor(
                 )
                 Log.d("joel123", "trackClicked")
                 playbackRepository.saveCurrentTrack(track)
-                start(BuildKonfig.BASE_URL + it.hlsUrl)
+                start(resolveAudioUrl(it.hlsUrl))
             }.onFailure {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

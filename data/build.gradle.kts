@@ -87,6 +87,7 @@ kotlin {
         wasmJsMain.dependencies {
             implementation(libs.ktor.client.js)
             implementation(libs.sqlite.web)
+            implementation(npm("sqlite-web-worker", file("sqlite-web-worker")))
         }
     }
     afterEvaluate {
