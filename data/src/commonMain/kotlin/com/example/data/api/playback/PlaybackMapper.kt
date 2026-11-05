@@ -144,7 +144,10 @@ fun PlayContextMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -153,7 +156,10 @@ fun PlayContextMutation.UpcomingTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -162,7 +168,10 @@ fun PlayContextMutation.PreviousTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -171,7 +180,10 @@ fun GetPlayerQueueQuery.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -180,7 +192,10 @@ fun GetPlayerQueueQuery.UpcomingTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -189,7 +204,10 @@ fun GetPlayerQueueQuery.PreviousTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -198,7 +216,10 @@ fun AddToQueueMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -207,7 +228,10 @@ fun AddToQueueMutation.UpcomingTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -216,7 +240,10 @@ fun AddToQueueMutation.PreviousTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -225,7 +252,10 @@ fun SkipToNextMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -234,7 +264,10 @@ fun SkipToNextMutation.UpcomingTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -243,7 +276,10 @@ fun SkipToNextMutation.PreviousTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -252,7 +288,10 @@ fun SkipToPreviousMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -261,7 +300,10 @@ fun SkipToPreviousMutation.UpcomingTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -270,7 +312,10 @@ fun SkipToPreviousMutation.PreviousTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 
@@ -279,7 +324,10 @@ fun ClearQueueMutation.CurrentTrack.toDomain(): TrackMinimalDomain {
         trackId = this.trackId,
         title = this.title ?: "",
         artist = this.artist ?: "",
-        coverImageUrl = this.coverImageUrl ?: ""
+        coverImageUrl = this.coverImageUrl ?: "",
+        artistBio = this.artistBio,
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistMonthlyListeners = this.artistMonthlyListeners?.toLong()
     )
 }
 

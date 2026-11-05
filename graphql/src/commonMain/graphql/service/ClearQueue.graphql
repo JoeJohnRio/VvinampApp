@@ -5,6 +5,9 @@ mutation ClearQueue {
       title
       artist
       coverImageUrl
+      artistBio
+      artistProfileImageUrl
+      artistMonthlyListeners
     }
   }
 }

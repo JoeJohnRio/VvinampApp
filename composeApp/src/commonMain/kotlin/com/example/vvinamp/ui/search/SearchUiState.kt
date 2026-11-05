@@ -10,5 +10,6 @@ data class SearchUiState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val searchText: String = "",
-    val searchType: SearchType = SearchType.NORMAL
+    val searchType: SearchType = SearchType.NORMAL,
+    val statusNotice: String? = null
 )

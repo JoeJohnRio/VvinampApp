@@ -5,18 +5,27 @@ query GetPlayerQueue {
       title
       artist
       coverImageUrl
+      artistBio
+      artistProfileImageUrl
+      artistMonthlyListeners
     }
     upcomingTrack {
       trackId
       title
       artist
       coverImageUrl
+      artistBio
+      artistProfileImageUrl
+      artistMonthlyListeners
     }
     previousTrack {
       trackId
       title
       artist
       coverImageUrl
+      artistBio
+      artistProfileImageUrl
+      artistMonthlyListeners
     }
   }
 }

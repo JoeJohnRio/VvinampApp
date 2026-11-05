@@ -3,6 +3,7 @@ package com.example.vvinamp.ui.search
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
@@ -187,6 +188,73 @@ class SearchViewModelTest {
             // Turbine confirms no new emission occurred!
             expectNoEvents()
             assertEquals(1, fakeRepository.searchCallCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `when YouTube API throws 403 quotaExceeded error, falls back to yt-dlp and sets statusNotice`() = runTest(testDispatcher) {
+        fakeRepository.ytApiFlowToReturn = flow {
+            throw RuntimeException("403 Forbidden: quotaExceeded")
+        }
+
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+
+        viewModel.searchResults.test {
+            viewModel.onSearchInput("Bohemian Rhapsody")
+            advanceTimeBy(600)
+
+            awaitItem() // emits fallback yt-dlp PagingData
+
+            assertEquals(1, fakeRepository.ytApiCallCount)
+            assertEquals(1, fakeRepository.ytDlpCallCount)
+            assertEquals("Bohemian Rhapsody", fakeRepository.lastYtDlpQuery)
+            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `dismissStatusNotice clears statusNotice`() = runTest(testDispatcher) {
+        fakeRepository.ytApiFlowToReturn = flow {
+            throw RuntimeException("403 Forbidden: quotaExceeded")
+        }
+
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+
+        viewModel.searchResults.test {
+            viewModel.onSearchInput("Bohemian Rhapsody")
+            advanceTimeBy(600)
+
+            awaitItem()
+            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
+
+            viewModel.dismissStatusNotice()
+            assertNull(viewModel.uiState.value.statusNotice)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `switching searchType away from YOUTUBE_API clears statusNotice`() = runTest(testDispatcher) {
+        fakeRepository.ytApiFlowToReturn = flow {
+            throw RuntimeException("403 Forbidden: quotaExceeded")
+        }
+
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+
+        viewModel.searchResults.test {
+            viewModel.onSearchInput("Bohemian Rhapsody")
+            advanceTimeBy(600)
+
+            awaitItem()
+            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
+
+            viewModel.onSearchTypeChanged(SearchType.NORMAL)
+            assertNull(viewModel.uiState.value.statusNotice)
 
             cancelAndIgnoreRemainingEvents()
         }

@@ -11,6 +11,9 @@ fun TrackMinimalDomain.toTrackDomain(): TrackDomain {
         duration = 0, // Not available in TrackMinimal
         streamCount = 0,
         explicit = false,
-        releaseDate = ""
+        releaseDate = "",
+        artistProfileImageUrl = this.artistProfileImageUrl,
+        artistBio = this.artistBio,
+        artistMonthlyListeners = this.artistMonthlyListeners
     )
 }
