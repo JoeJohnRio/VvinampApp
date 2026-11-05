@@ -74,7 +74,11 @@ fun ArtistScreen(
                     onTrackClicked = { track ->
                         playbackViewModel.onEvent(
                             PlaybackUiEvent.OnTrackClicked(
-                                track = track,
+                                track = track.copy(
+                                    artistProfileImageUrl = it.profileImage,
+                                    artistBio = it.bio,
+                                    artistMonthlyListeners = it.monthlyListeners.toLong()
+                                ),
                                 contentTypeDomain = ContentTypeDomain.ARTIST,
                                 contentId = artistId
                             )

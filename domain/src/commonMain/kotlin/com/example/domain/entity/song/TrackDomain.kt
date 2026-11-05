@@ -13,6 +13,9 @@ data class TrackDomain(
     val streamCount: Int,
     val explicit: Boolean,
     val releaseDate: String,
+    val artistProfileImageUrl: String? = null,
+    val artistBio: String? = null,
+    val artistMonthlyListeners: Long? = null,
 )
 //joel456 Temporary
 fun ListeningHistoryDomain.toTrackDomain(): TrackDomain {

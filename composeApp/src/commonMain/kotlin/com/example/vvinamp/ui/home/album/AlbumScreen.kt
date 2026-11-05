@@ -61,7 +61,9 @@ fun AlbumScreen(
                 onSongClick = { searchItem ->
                     playbackViewModel.onEvent(
                         PlaybackUiEvent.OnTrackClicked(
-                            track = searchItem.toTrackDomain(),
+                            track = searchItem.toTrackDomain().copy(
+                                artistProfileImageUrl = uiState.album?.artistImage
+                            ),
                             contentTypeDomain = ContentTypeDomain.ALBUM,
                             contentId = albumId
                         )

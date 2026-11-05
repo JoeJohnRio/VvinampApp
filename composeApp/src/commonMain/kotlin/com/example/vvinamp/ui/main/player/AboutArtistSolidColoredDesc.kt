@@ -32,21 +32,54 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.ui.widget.text.ExpandableText
+import com.example.vvinamp.util.ListenerUtils
 import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.preview.previewSafePainter
+
+fun resolveArtistImageUrl(track: TrackDomain?): String {
+    if (track == null) return ""
+    val explicitImage = track.artistProfileImageUrl
+    if (!explicitImage.isNullOrBlank()) {
+        return explicitImage
+    }
+
+    val albumCover = track.albumCoverUrl
+    val artistMatch = Regex("""(.+/media/artist/([^/]+))/album/.*""").find(albumCover)
+    if (artistMatch != null) {
+        val baseArtistPath = artistMatch.groupValues[1]
+        val artistSlug = artistMatch.groupValues[2]
+        return "$baseArtistPath/$artistSlug.jpg"
+    }
+
+    val slug = track.artistName.trim().lowercase()
+        .replace(Regex("""[^a-z0-9]+"""), "_")
+        .trim('_')
+    if (slug.isNotBlank()) {
+        return "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/$slug/$slug.jpg"
+    }
+
+    return albumCover
+}
 
 @Composable
 fun AboutArtistSolidColoredDesc(
     uiState: PlaybackUiState
 ) {
+    val currentTrack = uiState.currentTrack
+    val artistImageUrl = resolveArtistImageUrl(currentTrack)
+    val fallbackImageUrl = currentTrack?.albumCoverUrl.orEmpty()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
     ) {
-        ImageAboutArtist(uiState.currentTrack?.albumCoverUrl.orEmpty())
+        ImageAboutArtist(
+            artistImageUrl = artistImageUrl,
+            fallbackImageUrl = fallbackImageUrl
+        )
 
-        ArtistAboutDetail(uiState.currentTrack)
+        ArtistAboutDetail(currentTrack)
     }
 }
 
@@ -76,8 +109,20 @@ fun ArtistAboutDetail(currentTrack: TrackDomain?) {
 
                 Spacer(Modifier.height(4.dp))
 
+                val listeners = currentTrack?.artistMonthlyListeners
+                val streamCount = currentTrack?.streamCount
+                val monthlyListenersText = when {
+                    listeners != null && listeners > 0L -> {
+                        "${ListenerUtils.formatCompact(listeners)} monthly listeners"
+                    }
+                    streamCount != null && streamCount > 0 -> {
+                        "${ListenerUtils.formatCompact(streamCount.toLong())} monthly listeners"
+                    }
+                    else -> "Verified Artist"
+                }
+
                 Text(
-                    text = "13.6M monthly listeners",
+                    text = monthlyListenersText,
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.surfaceBright
@@ -98,8 +143,17 @@ fun ArtistAboutDetail(currentTrack: TrackDomain?) {
 
         Spacer(Modifier.height(16.dp))
 
+        val explicitBio = currentTrack?.artistBio
+        val bioText = if (!explicitBio.isNullOrBlank()) {
+            explicitBio
+        } else {
+            currentTrack?.artistName?.takeIf { it.isNotBlank() }?.let {
+                "$it is a featured recording artist on Vvinamp."
+            } ?: "Discover music and releases on Vvinamp."
+        }
+
         ExpandableText(
-            text = "Sheila on 7 is an alternative rock band from Yogyakarta, Indonesia. They have changed their lineup several times since their formation on 6 May 1996. Their first lineup consisted of Akhdiyat Duta Modjo (also known as Duta, vocals), Saktia \"Sakti\" Ari Seno (guitar), Eross Candra (guitar), Adam Muhammad Subarkah (bass), and Anton Widiastanto (drums). Anton left the group in 2004, while Sakti left in 2006, leaving their current lineup as it is, but with Brian Kresna Putro replacing Anton in the drums until his departure in 2022.",
+            text = bioText,
             textStyle = TSDisplayMediumWhite().copy(
                 fontSize = 11.sp,
                 color = MaterialTheme.colorScheme.surfaceBright
@@ -110,7 +164,8 @@ fun ArtistAboutDetail(currentTrack: TrackDomain?) {
 
 @Composable
 fun ImageAboutArtist(
-    artistImageUrl: String = ""
+    artistImageUrl: String = "",
+    fallbackImageUrl: String = ""
 ) {
     Box(
         modifier = Modifier
@@ -120,7 +175,7 @@ fun ImageAboutArtist(
 
         AsyncImage(
             modifier = Modifier.fillMaxSize(),
-            model = artistImageUrl,
+            model = artistImageUrl.ifBlank { fallbackImageUrl },
             contentDescription = null,
             placeholder = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop
