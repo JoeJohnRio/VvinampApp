@@ -1,0 +1,6 @@
+mutation AddYoutubeTrackToPlaylist($input: AddYoutubeTrackToPlaylistInput!) {
+    addYoutubeTrackToPlaylist(input: $input) {
+        id
+        totalDuration
+    }
+}

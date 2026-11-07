@@ -6,6 +6,7 @@ import com.apollographql.apollo.api.Upload
 import com.example.data.util.safeMutation
 import com.example.data.util.safeQuery
 import com.example.graphql.AddSongToPlaylistMutation
+import com.example.graphql.AddYoutubeTrackToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.DeletePlaylistMutation
 import com.example.graphql.EditPlaylistMutation
@@ -23,6 +24,7 @@ import com.example.graphql.UnsavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.UploadPlaylistCoverMutation
 import com.example.graphql.type.AddSongToPlaylistInput
+import com.example.graphql.type.AddYoutubeTrackToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
@@ -171,6 +173,16 @@ class PlaylistApiImpl(
             AddSongToPlaylistMutation(input)
         ) {
             it.addSongToPlaylist
+        }
+    }
+
+    override suspend fun addYoutubeTrackToPlaylist(
+        input: AddYoutubeTrackToPlaylistInput
+    ): Result<AddYoutubeTrackToPlaylistMutation.AddYoutubeTrackToPlaylist> {
+        return api.safeMutation(
+            AddYoutubeTrackToPlaylistMutation(input)
+        ) {
+            it.addYoutubeTrackToPlaylist
         }
     }
 

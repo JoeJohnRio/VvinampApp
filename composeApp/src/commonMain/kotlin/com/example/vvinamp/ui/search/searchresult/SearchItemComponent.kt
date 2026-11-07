@@ -43,7 +43,8 @@ import org.jetbrains.compose.resources.painterResource
 fun SearchItemComponent(
     domain: SearchItemDomain?,
     onClicked: (SearchItemDomain) -> Unit = {},
-    playbackUiState: PlaybackUiState = PlaybackUiState()
+    playbackUiState: PlaybackUiState = PlaybackUiState(),
+    onAddToPlaylistClicked: ((SearchItemDomain.YoutubeTrackSearch) -> Unit)? = null
 ) {
     when (domain) {
         is SearchItemDomain.TrackSearch -> TrackSearchComponent(domain, onClicked, playbackUiState)
@@ -64,7 +65,12 @@ fun SearchItemComponent(
             "Item 5: ${domain}"
         )
 
-        is SearchItemDomain.YoutubeTrackSearch -> YoutubeSearchComponent(domain, onClicked, playbackUiState)
+        is SearchItemDomain.YoutubeTrackSearch -> YoutubeSearchComponent(
+            domain = domain,
+            onClicked = onClicked,
+            playbackUiState = playbackUiState,
+            onAddToPlaylistClicked = onAddToPlaylistClicked
+        )
 
         null -> Text(
             "Item 6: ${domain}"
@@ -76,7 +82,8 @@ fun SearchItemComponent(
 fun YoutubeSearchComponent(
     domain: SearchItemDomain.YoutubeTrackSearch,
     onClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit,
-    playbackUiState: PlaybackUiState = PlaybackUiState()
+    playbackUiState: PlaybackUiState = PlaybackUiState(),
+    onAddToPlaylistClicked: ((SearchItemDomain.YoutubeTrackSearch) -> Unit)? = null
 ) {
     val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == domain.id
 
@@ -104,9 +111,10 @@ fun YoutubeSearchComponent(
             Spacer(Modifier.width(12.dp))
 
             Column(
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Row() {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     if (isCurrentTrackPlayed) {
                         SpotifyPlayingIndicator(
                             isPlaying = playbackUiState.isPlaying,
@@ -121,7 +129,9 @@ fun YoutubeSearchComponent(
                         style = TSDisplayMediumWhite().copy(
                             fontSize = 15.sp,
                             color = if (isCurrentTrackPlayed) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inversePrimary,
-                        )
+                        ),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
                     )
                 }
 
@@ -130,7 +140,23 @@ fun YoutubeSearchComponent(
                     style = TSLabelMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.outline,
-                    )
+                    ),
+                    maxLines = 1,
+                    overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                )
+            }
+        }
+
+        if (onAddToPlaylistClicked != null) {
+            IconButton(
+                onClick = { onAddToPlaylistClicked(domain) },
+                modifier = Modifier.size(40.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddCircle,
+                    contentDescription = "Add to playlist",
+                    tint = MaterialTheme.colorScheme.outline,
+                    modifier = Modifier.size(22.dp)
                 )
             }
         }

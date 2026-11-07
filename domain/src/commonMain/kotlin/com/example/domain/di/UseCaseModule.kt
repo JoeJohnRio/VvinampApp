@@ -43,6 +43,7 @@ val useCaseModule = module {
     singleOf(::GetPlaylistUseCase)
     singleOf(::GetRecommendedTracksUseCase)
     singleOf(::AddSongToPlaylistUseCase)
+    singleOf(::AddYoutubeTrackToPlaylistUseCase)
     singleOf(::EditPlaylistUseCase)
     singleOf(::UpdatePlaylistUseCase)
     singleOf(::UploadPlaylistCoverUseCase)

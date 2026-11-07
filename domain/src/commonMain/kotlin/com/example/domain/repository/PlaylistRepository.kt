@@ -27,6 +27,15 @@ interface PlaylistRepository {
 
     suspend fun getRecommendedTracks(): Result<List<RecommendedTrackDomain>>
     suspend fun addSongToPlaylist(playlistId: String, trackId: String): Result<Boolean>
+    suspend fun addYoutubeTrackToPlaylist(
+        playlistId: String,
+        youtubeId: String,
+        title: String,
+        artistName: String,
+        thumbnailUrl: String?,
+        duration: Int,
+        position: Int? = null
+    ): Result<Boolean>
     suspend fun uploadPlaylistCover(playlistId: String, fileName: String, contentType: String, content: ByteArray): Result<String>
     suspend fun updatePlaylist(
         id: String,

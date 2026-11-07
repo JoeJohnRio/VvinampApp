@@ -17,6 +17,7 @@ data class PlaylistUseCase(
     val getPlaylistUseCase: GetPlaylistUseCase,
     val getRecommendedTracksUseCase: GetRecommendedTracksUseCase,
     val addSongToPlaylistUseCase: AddSongToPlaylistUseCase,
+    val addYoutubeTrackToPlaylistUseCase: AddYoutubeTrackToPlaylistUseCase,
     val editPlaylistUseCase: EditPlaylistUseCase,
     val updatePlaylistUseCase: UpdatePlaylistUseCase,
     val uploadPlaylistCoverUseCase: UploadPlaylistCoverUseCase
@@ -67,6 +68,30 @@ class AddSongToPlaylistUseCase(
         return repository.addSongToPlaylist(
             playlistId = playlistId,
             trackId = trackId
+        )
+    }
+}
+
+class AddYoutubeTrackToPlaylistUseCase(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(
+        playlistId: String,
+        youtubeId: String,
+        title: String,
+        artistName: String,
+        thumbnailUrl: String?,
+        duration: Int,
+        position: Int? = null
+    ): Result<Boolean> {
+        return repository.addYoutubeTrackToPlaylist(
+            playlistId = playlistId,
+            youtubeId = youtubeId,
+            title = title,
+            artistName = artistName,
+            thumbnailUrl = thumbnailUrl,
+            duration = duration,
+            position = position
         )
     }
 }

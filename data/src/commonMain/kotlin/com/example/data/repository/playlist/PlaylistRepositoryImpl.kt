@@ -24,6 +24,7 @@ import com.example.domain.entity.song.RecommendedTrackDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.repository.PlaylistRepository
 import com.example.graphql.type.AddSongToPlaylistInput
+import com.example.graphql.type.AddYoutubeTrackToPlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
 import com.example.graphql.type.RepositionSongInput
@@ -101,6 +102,30 @@ class PlaylistRepositoryImpl(
             } else {
                 true
             }
+        }
+    }
+
+    override suspend fun addYoutubeTrackToPlaylist(
+        playlistId: String,
+        youtubeId: String,
+        title: String,
+        artistName: String,
+        thumbnailUrl: String?,
+        duration: Int,
+        position: Int?
+    ): Result<Boolean> {
+        return api.addYoutubeTrackToPlaylist(
+            input = AddYoutubeTrackToPlaylistInput(
+                playlistId = playlistId,
+                youtubeId = youtubeId,
+                title = title,
+                artistName = artistName,
+                thumbnailUrl = com.apollographql.apollo.api.Optional.presentIfNotNull(thumbnailUrl),
+                duration = duration,
+                position = com.apollographql.apollo.api.Optional.presentIfNotNull(position)
+            )
+        ).map {
+            !it.id.isNullOrBlank()
         }
     }
 

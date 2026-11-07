@@ -2,6 +2,7 @@ package com.example.data.api.playlist
 
 import com.apollographql.apollo.api.Upload
 import com.example.graphql.AddSongToPlaylistMutation
+import com.example.graphql.AddYoutubeTrackToPlaylistMutation
 import com.example.graphql.CreatePlaylistMutation
 import com.example.graphql.EditPlaylistMutation
 import com.example.graphql.GetMyPlaylistFeedQuery
@@ -13,6 +14,7 @@ import com.example.graphql.RecommendedTracksQuery
 import com.example.graphql.SavePlaylistMutation
 import com.example.graphql.UpdatePlaylistMutation
 import com.example.graphql.type.AddSongToPlaylistInput
+import com.example.graphql.type.AddYoutubeTrackToPlaylistInput
 import com.example.graphql.type.CreatePlaylistInput
 import com.example.graphql.type.EditPlaylistInput
 import com.example.graphql.type.PlaylistSortOrder
@@ -29,6 +31,7 @@ interface PlaylistApi {
     suspend fun savePlaylist(input: SavePlaylistInput): Result<SavePlaylistMutation.SavePlaylist>
     suspend fun removeSongFromPlaylist(input: RemoveSongFromPlaylistInput): Result<Boolean>
     suspend fun addSongToPlaylist(input: AddSongToPlaylistInput): Result<AddSongToPlaylistMutation.AddSongToPlaylist>
+    suspend fun addYoutubeTrackToPlaylist(input: AddYoutubeTrackToPlaylistInput): Result<AddYoutubeTrackToPlaylistMutation.AddYoutubeTrackToPlaylist>
     suspend fun deletePlaylist(id: String): Result<Boolean>
     suspend fun updatePlaylist(
         id: String,

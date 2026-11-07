@@ -11,5 +11,7 @@ data class SearchUiState(
     val error: String? = null,
     val searchText: String = "",
     val searchType: SearchType = SearchType.NORMAL,
-    val statusNotice: String? = null
+    val statusNotice: String? = null,
+    val trackForPlaylist: com.example.domain.entity.search.SearchItemDomain.YoutubeTrackSearch? = null,
+    val isAddingToPlaylist: Boolean = false
 )

@@ -65,7 +65,22 @@ fun SearchResultsScreen(
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
+    val playlists = viewModel.myPlaylists.collectAsLazyPagingItems()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
+
+    if (uiState.trackForPlaylist != null) {
+        AddToPlaylistBottomSheet(
+            track = uiState.trackForPlaylist!!,
+            playlists = playlists,
+            isAdding = uiState.isAddingToPlaylist,
+            onPlaylistSelected = { playlistId, playlistTitle ->
+                viewModel.addTrackToPlaylist(playlistId, playlistTitle)
+            },
+            onDismiss = {
+                viewModel.onDismissAddToPlaylist()
+            }
+        )
+    }
 
     ScreenWrapper(
         isLoading = uiState.isLoading,
@@ -86,6 +101,9 @@ fun SearchResultsScreen(
                 searchItems = searchItems,
                 onBackClicked = {
                     bottomNavRouter.navigateBack()
+                },
+                onAddToPlaylistClicked = {
+                    viewModel.onOpenAddToPlaylist(it)
                 },
                 onItemClicked = { searchItem ->
                     when (searchItem) {
@@ -129,6 +147,7 @@ fun SearchResultsContent(
     searchItems: LazyPagingItems<SearchItemDomain>,
     onBackClicked: () -> Unit = {},
     onItemClicked: (SearchItemDomain) -> Unit = {},
+    onAddToPlaylistClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit = {},
     playbackUiState: PlaybackUiState = PlaybackUiState(),
     onDismissNotice: () -> Unit = {}
 ) {
@@ -242,7 +261,12 @@ fun SearchResultsContent(
                         }
                     }
                 ) { index ->
-                    SearchItemComponent(searchItems[index], onItemClicked, playbackUiState)
+                    SearchItemComponent(
+                        domain = searchItems[index],
+                        onClicked = onItemClicked,
+                        playbackUiState = playbackUiState,
+                        onAddToPlaylistClicked = onAddToPlaylistClicked
+                    )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 

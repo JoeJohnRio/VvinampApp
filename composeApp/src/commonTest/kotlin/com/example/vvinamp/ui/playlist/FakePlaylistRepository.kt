@@ -60,6 +60,16 @@ class FakePlaylistRepository : PlaylistRepository {
     override suspend fun addSongToPlaylist(playlistId: String, trackId: String): Result<Boolean> =
         Result.success(true)
 
+    override suspend fun addYoutubeTrackToPlaylist(
+        playlistId: String,
+        youtubeId: String,
+        title: String,
+        artistName: String,
+        thumbnailUrl: String?,
+        duration: Int,
+        position: Int?
+    ): Result<Boolean> = Result.success(true)
+
     override suspend fun uploadPlaylistCover(
         playlistId: String,
         fileName: String,
@@ -93,6 +103,7 @@ fun buildPlaylistUseCase(repository: PlaylistRepository): PlaylistUseCase {
         getPlaylistUseCase = GetPlaylistUseCase(repository),
         getRecommendedTracksUseCase = GetRecommendedTracksUseCase(repository),
         addSongToPlaylistUseCase = AddSongToPlaylistUseCase(repository),
+        addYoutubeTrackToPlaylistUseCase = AddYoutubeTrackToPlaylistUseCase(repository),
         editPlaylistUseCase = EditPlaylistUseCase(repository),
         updatePlaylistUseCase = UpdatePlaylistUseCase(repository),
         uploadPlaylistCoverUseCase = UploadPlaylistCoverUseCase(repository)
