@@ -251,13 +251,13 @@ fun SearchResultsContent(
 
                 items(
                     count = searchItems.itemCount,
-                    key = searchItems.itemKey { item ->
-                        when (item) {
-                            is SearchItemDomain.TrackSearch -> "track_${item.id}"
-                            is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}"
-                            is SearchItemDomain.AlbumSearch -> "album_${item.id}"
-                            is SearchItemDomain.ArtistSearch -> "artist_${item.id}"
-                            else -> item.hashCode()
+                    key = { index ->
+                        when (val item = searchItems.peek(index)) {
+                            is SearchItemDomain.TrackSearch -> "track_${item.id}_$index"
+                            is SearchItemDomain.YoutubeTrackSearch -> "youtube_${item.id}_$index"
+                            is SearchItemDomain.AlbumSearch -> "album_${item.id}_$index"
+                            is SearchItemDomain.ArtistSearch -> "artist_${item.id}_$index"
+                            else -> "item_$index"
                         }
                     }
                 ) { index ->
