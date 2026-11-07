@@ -17,7 +17,6 @@ import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
-import com.example.domain.entity.youtube.YoutubeDownloadState
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import com.google.common.util.concurrent.MoreExecutors
@@ -228,51 +227,11 @@ constructor(
     }
 
     private fun playYoutube(track: TrackDomain) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoading = true,
-                    isDownloading = true,
-                    downloadProgress = 0,
-                    currentTrack = track,
-                    error = null
-                )
-            }
-            playbackRepository.playYoutube.downloadAndPlay(track.id).collect { state ->
-                when (state) {
-                    is YoutubeDownloadState.Progress -> {
-                        _uiState.update { it.copy(downloadProgress = state.progress) }
-                    }
-                    is YoutubeDownloadState.Completed -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isDownloading = false,
-                                playbackInfo = state.playbackInfo,
-                                currentTrack = track,
-                                error = null
-                            )
-                        }
-                        playbackRepository.saveCurrentTrack(track)
-                        val audioUrl = if (state.playbackInfo.hlsUrl.isNotBlank()) {
-                            state.playbackInfo.hlsUrl
-                        } else {
-                            state.playbackInfo.mp3Fallback.orEmpty()
-                        }
-                        start(resolveAudioUrl(audioUrl))
-                    }
-                    is YoutubeDownloadState.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isDownloading = false,
-                                error = state.message
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        trackClicked(
+            track = track,
+            contentTypeDomain = ContentTypeDomain.TRACK,
+            contentId = track.id
+        )
     }
 
     private fun skipToNext() {
@@ -472,7 +431,11 @@ constructor(
         contentId: String
     ) {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(
+                isLoading = true,
+                isDownloading = false,
+                currentTrack = track
+            )
 
             playbackRepository.playbackInfo.invoke(
                 trackId = track.id,
@@ -487,7 +450,12 @@ constructor(
                 )
                 Log.d("joel123", "trackClicked")
                 playbackRepository.saveCurrentTrack(track)
-                start(resolveAudioUrl(it.hlsUrl))
+                val audioUrl = if (it.hlsUrl.isNotBlank()) {
+                    it.hlsUrl
+                } else {
+                    it.mp3Fallback.orEmpty()
+                }
+                start(resolveAudioUrl(audioUrl))
             }.onFailure {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

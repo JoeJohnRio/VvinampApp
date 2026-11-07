@@ -11,7 +11,6 @@ import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
-import com.example.domain.entity.youtube.YoutubeDownloadState
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
 import kotlinx.coroutines.Job
@@ -252,49 +251,11 @@ actual class PlaybackViewModel(
     }
 
     private fun playYoutube(track: TrackDomain) {
-        primeAudioElement(audioElement)
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    isLoading = true,
-                    isDownloading = true,
-                    downloadProgress = 0,
-                    currentTrack = track,
-                    error = null
-                )
-            }
-            playbackRepository.playYoutube.downloadAndPlay(track.id).collect { state ->
-                when (state) {
-                    is YoutubeDownloadState.Progress -> {
-                        _uiState.update { it.copy(downloadProgress = state.progress) }
-                    }
-                    is YoutubeDownloadState.Completed -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isDownloading = false,
-                                playbackInfo = state.playbackInfo,
-                                currentTrack = track,
-                                error = null
-                            )
-                        }
-                        val primaryUrl = selectPlaybackUrl(state.playbackInfo)
-                        val fallback = state.playbackInfo.mp3Fallback?.let { resolveAudioUrl(it) } ?: ""
-                        start(primaryUrl, fallback)
-                        saveTrackInBackground(track)
-                    }
-                    is YoutubeDownloadState.Error -> {
-                        _uiState.update {
-                            it.copy(
-                                isLoading = false,
-                                isDownloading = false,
-                                error = state.message
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        trackClicked(
+            track = track,
+            type = ContentTypeDomain.TRACK,
+            id = track.id
+        )
     }
 
     private fun skipToNext() {
@@ -399,8 +360,16 @@ actual class PlaybackViewModel(
         type: ContentTypeDomain = ContentTypeDomain.TRACK,
         id: String = track.id
     ) {
+        primeAudioElement(audioElement)
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    isDownloading = false,
+                    currentTrack = track,
+                    error = null
+                )
+            }
             playbackRepository.playbackInfo(track.id, type, id).onSuccess { info ->
                 _uiState.update {
                     it.copy(
@@ -410,7 +379,9 @@ actual class PlaybackViewModel(
                         error = null
                     )
                 }
-                start(selectPlaybackUrl(info))
+                val primaryUrl = selectPlaybackUrl(info)
+                val fallback = info.mp3Fallback?.let { resolveAudioUrl(it) } ?: ""
+                start(primaryUrl, fallback)
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update {
