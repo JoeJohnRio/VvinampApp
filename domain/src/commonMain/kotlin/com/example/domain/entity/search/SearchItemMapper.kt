@@ -22,7 +22,7 @@ fun SearchItemDomain.YoutubeTrackSearch.toTrackDomain(): TrackDomain {
         duration = duration,
         albumCoverUrl = thumbnail,
         artistName = channel,
-        streamCount = viewCount.toInt(),
+        streamCount = viewCount.coerceAtMost(Int.MAX_VALUE.toLong()).toInt(),
         explicit = false,
         releaseDate = ""
     )

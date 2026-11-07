@@ -51,13 +51,6 @@ fun resolveArtistImageUrl(track: TrackDomain?): String {
         return "$baseArtistPath/$artistSlug.jpg"
     }
 
-    val slug = track.artistName.trim().lowercase()
-        .replace(Regex("""[^a-z0-9]+"""), "_")
-        .trim('_')
-    if (slug.isNotBlank()) {
-        return "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/$slug/$slug.jpg"
-    }
-
     return albumCover
 }
 
@@ -178,6 +171,7 @@ fun ImageAboutArtist(
             model = artistImageUrl.ifBlank { fallbackImageUrl },
             contentDescription = null,
             placeholder = previewSafePainter(Res.drawable.bg_image),
+            error = previewSafePainter(Res.drawable.bg_image),
             contentScale = ContentScale.Crop
         )
         Box(
