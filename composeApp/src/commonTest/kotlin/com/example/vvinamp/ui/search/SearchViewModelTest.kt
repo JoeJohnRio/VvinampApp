@@ -41,7 +41,7 @@ class SearchViewModelTest {
         viewModel.uiState.test {
             val state = awaitItem()
             assertEquals("", state.searchText)
-            assertEquals(SearchType.NORMAL, state.searchType)
+            assertEquals(SearchType.YOUTUBE, state.searchType)
             assertFalse(state.isLoading)
             assertNull(state.error)
         }
@@ -62,11 +62,11 @@ class SearchViewModelTest {
     @Test
     fun `onSearchTypeChanged emits updated searchType in uiState`() = runTest(testDispatcher) {
         viewModel.uiState.test {
-            assertEquals(SearchType.NORMAL, awaitItem().searchType)
+            assertEquals(SearchType.YOUTUBE, awaitItem().searchType)
 
-            viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+            viewModel.onSearchTypeChanged(SearchType.CATALOG)
 
-            assertEquals(SearchType.YOUTUBE_API, awaitItem().searchType)
+            assertEquals(SearchType.CATALOG, awaitItem().searchType)
             expectNoEvents()
         }
     }
@@ -106,16 +106,18 @@ class SearchViewModelTest {
             val pagingData = awaitItem()
             assertNotNull(pagingData)
 
-            assertEquals(1, fakeRepository.searchCallCount)
-            assertEquals("Mic", fakeRepository.lastSearchQuery)
-            assertEquals(10, fakeRepository.lastSearchPageSize)
+            assertEquals(1, fakeRepository.ytApiCallCount)
+            assertEquals("Mic", fakeRepository.lastYtApiQuery)
+            assertEquals(10, fakeRepository.lastYtApiPageSize)
 
             cancelAndIgnoreRemainingEvents()
         }
     }
 
     @Test
-    fun `routes search to normal repository when SearchType is NORMAL`() = runTest(testDispatcher) {
+    fun `routes search to catalog repository when SearchType is CATALOG`() = runTest(testDispatcher) {
+        viewModel.onSearchTypeChanged(SearchType.CATALOG)
+
         viewModel.searchResults.test {
             viewModel.onSearchInput("Rock with You")
             advanceTimeBy(600)
@@ -133,8 +135,8 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `routes search to YouTube API when SearchType is YOUTUBE_API`() = runTest(testDispatcher) {
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+    fun `routes search to YouTube API when SearchType is YOUTUBE`() = runTest(testDispatcher) {
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
 
         viewModel.searchResults.test {
             viewModel.onSearchInput("Billie Jean live")
@@ -153,33 +155,13 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `routes search to YT-DLP when SearchType is YOUTUBE_DL_P`() = runTest(testDispatcher) {
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_DL_P)
-
-        viewModel.searchResults.test {
-            viewModel.onSearchInput("Thriller 4k")
-            advanceTimeBy(600)
-
-            awaitItem()
-
-            assertEquals(1, fakeRepository.ytDlpCallCount)
-            assertEquals("Thriller 4k", fakeRepository.lastYtDlpQuery)
-            assertEquals(10, fakeRepository.lastYtDlpPageSize)
-            assertEquals(0, fakeRepository.searchCallCount)
-            assertEquals(0, fakeRepository.ytApiCallCount)
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
     fun `distinctUntilChanged does not re-trigger repository when same query is set`() = runTest(testDispatcher) {
         viewModel.searchResults.test {
             viewModel.onSearchInput("Smooth Criminal")
             advanceTimeBy(600)
 
             awaitItem()
-            assertEquals(1, fakeRepository.searchCallCount)
+            assertEquals(1, fakeRepository.ytApiCallCount)
 
             // Emit the exact same query again
             viewModel.onSearchInput("Smooth Criminal")
@@ -187,7 +169,7 @@ class SearchViewModelTest {
 
             // Turbine confirms no new emission occurred!
             expectNoEvents()
-            assertEquals(1, fakeRepository.searchCallCount)
+            assertEquals(1, fakeRepository.ytApiCallCount)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -199,7 +181,7 @@ class SearchViewModelTest {
             throw RuntimeException("403 Forbidden: quotaExceeded")
         }
 
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
 
         viewModel.searchResults.test {
             viewModel.onSearchInput("Bohemian Rhapsody")
@@ -222,7 +204,7 @@ class SearchViewModelTest {
             throw RuntimeException("403 Forbidden: quotaExceeded")
         }
 
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
 
         viewModel.searchResults.test {
             viewModel.onSearchInput("Bohemian Rhapsody")
@@ -239,12 +221,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `switching searchType away from YOUTUBE_API clears statusNotice`() = runTest(testDispatcher) {
+    fun `switching searchType away from YOUTUBE clears statusNotice`() = runTest(testDispatcher) {
         fakeRepository.ytApiFlowToReturn = flow {
             throw RuntimeException("403 Forbidden: quotaExceeded")
         }
 
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE_API)
+        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
 
         viewModel.searchResults.test {
             viewModel.onSearchInput("Bohemian Rhapsody")
@@ -253,7 +235,7 @@ class SearchViewModelTest {
             awaitItem()
             assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
 
-            viewModel.onSearchTypeChanged(SearchType.NORMAL)
+            viewModel.onSearchTypeChanged(SearchType.CATALOG)
             assertNull(viewModel.uiState.value.statusNotice)
 
             cancelAndIgnoreRemainingEvents()

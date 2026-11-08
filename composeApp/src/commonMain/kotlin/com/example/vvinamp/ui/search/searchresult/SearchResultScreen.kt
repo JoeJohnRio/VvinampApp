@@ -55,6 +55,7 @@ import com.example.vvinamp.ui.search.SearchViewModel
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonListWithState
+import com.example.vvinamp.ui.widget.ButtonVariableOutlined
 import com.example.vvinamp.ui.widget.TextFieldSearch
 
 @Composable
@@ -82,9 +83,15 @@ fun SearchResultsScreen(
         )
     }
 
+    val refreshError = (searchItems.loadState.refresh as? LoadState.Error)?.error?.message
+    val displayError = uiState.error ?: refreshError
+
     ScreenWrapper(
         isLoading = uiState.isLoading,
-        error = uiState.error,
+        error = displayError,
+        onRetry = {
+            searchItems.retry()
+        },
         content = {
             SearchResultsContent(
                 uiState = uiState,
@@ -275,6 +282,28 @@ fun SearchResultsContent(
                         CircularProgressIndicator(modifier = Modifier.fillMaxWidth())
                     }
                 }
+
+                if (searchItems.loadState.append is LoadState.Error) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = (searchItems.loadState.append as LoadState.Error).error.message ?: "Failed to load more results",
+                                color = MaterialTheme.colorScheme.error,
+                                style = TSDisplayMediumWhite().copy(fontSize = 12.sp)
+                            )
+                            Spacer(Modifier.height(8.dp))
+                            ButtonVariableOutlined(
+                                text = "Retry",
+                                onClick = { searchItems.retry() }
+                            )
+                        }
+                    }
+                }
             }
 
             when {
@@ -352,7 +381,7 @@ fun SearchResultsScreenPreview() {
         SearchResultsContent(
             uiState = SearchUiState(
                 searchText = "Sample",
-                searchType = SearchType.NORMAL
+                searchType = SearchType.CATALOG
             ),
             onTypeSearch = {},
             onSearchTypeChanged = {},
@@ -374,7 +403,7 @@ fun SearchResultsScreenEmptyPreview() {
         SearchResultsContent(
             uiState = SearchUiState(
                 searchText = "Unknown",
-                searchType = SearchType.NORMAL
+                searchType = SearchType.CATALOG
             ),
             onTypeSearch = {},
             onSearchTypeChanged = {},

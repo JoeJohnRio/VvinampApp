@@ -43,11 +43,11 @@ class SearchViewModel(
             if (searchText.isBlank()) return@flatMapLatest emptyFlow()
 
             when (searchType) {
-                SearchType.NORMAL -> repository.search(
+                SearchType.CATALOG -> repository.search(
                     query = searchText,
                     pageSize = 10
                 )
-                SearchType.YOUTUBE_API -> repository.searchYoutubeFromApi(
+                SearchType.YOUTUBE -> repository.searchYoutubeFromApi(
                     query = searchText,
                     pageSize = 10
                 ).map { pagingData ->
@@ -72,10 +72,6 @@ class SearchViewModel(
                         throw e
                     }
                 }
-                SearchType.YOUTUBE_DL_P -> repository.searchYoutubeFromYtDlp(
-                    query = searchText,
-                    pageSize = 10
-                )
             }
         }
         .cachedIn(viewModelScope)
@@ -93,7 +89,7 @@ class SearchViewModel(
         _uiState.update {
             it.copy(
                 searchType = type,
-                statusNotice = if (type == SearchType.YOUTUBE_API) it.statusNotice else null
+                statusNotice = if (type == SearchType.YOUTUBE) it.statusNotice else null
             )
         }
     }
@@ -136,7 +132,7 @@ class SearchViewModel(
     }
 
     companion object {
-        const val FALLBACK_NOTICE = "Daily API quota reached — results powered by fallback search"
+        const val FALLBACK_NOTICE = "YouTube API quota is all used up — redirecting to YT-DLP fallback"
 
         private fun isQuotaExceeded(e: Throwable): Boolean {
             val msg = e.message.orEmpty()
