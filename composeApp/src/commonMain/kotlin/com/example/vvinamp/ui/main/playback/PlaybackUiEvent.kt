@@ -29,4 +29,8 @@ sealed class PlaybackUiEvent {
     data class ToggleCreatePlaylistOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
     data class ToggleTrackOptionSheet(val isShow: Boolean) : PlaybackUiEvent()
     data class OnSleepTimerSelected(val option: SleepTimerOption) : PlaybackUiEvent()
+    data class OnEmbedPlayingChanged(val isPlaying: Boolean) : PlaybackUiEvent()
+    data object OnEmbedEnded : PlaybackUiEvent()
+    data class OnEmbedError(val code: Int) : PlaybackUiEvent()
+    data class SetEmbedPaused(val isPaused: Boolean) : PlaybackUiEvent()
 }

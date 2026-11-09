@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -256,19 +257,36 @@ fun PlayerSheetContent(
             modifier = Modifier
                 .height(maxHeight * 0.6f)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            AsyncImage(
-                model = uiState.currentTrack?.albumCoverUrl,
-                contentDescription = null,
-                placeholder = previewSafePainter(Res.drawable.bg_image),
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(RoundedCornerShape(8.dp))
+            val embedId = uiState.youtubeEmbedId
+            if (embedId != null) {
+                // Square, because 16:9 at phone width falls below YouTube's 200x200 minimum.
+                YoutubeEmbed(
+                    videoId = embedId,
+                    isPaused = uiState.isEmbedPaused,
+                    onPlayingChange = { onEvent(PlaybackUiEvent.OnEmbedPlayingChanged(it)) },
+                    onEnded = { onEvent(PlaybackUiEvent.OnEmbedEnded) },
+                    onError = { onEvent(PlaybackUiEvent.OnEmbedError(it)) },
+                    modifier = Modifier
+                        .widthIn(max = maxHeight * 0.6f)
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                )
+            } else {
+                AsyncImage(
+                    model = uiState.currentTrack?.albumCoverUrl,
+                    contentDescription = null,
+                    placeholder = previewSafePainter(Res.drawable.bg_image),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .clip(RoundedCornerShape(8.dp))
 
-            )
+                )
+            }
         }
 
         Spacer(Modifier.weight(1f))

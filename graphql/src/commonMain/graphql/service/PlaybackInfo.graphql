@@ -2,6 +2,7 @@ query PlaybackInfo($playbackInput: PlaybackInput!) {
     playbackInfo(input: $playbackInput) {
         hlsUrl
         mp3Fallback
+        youtubeId
         durationMs
     }
 }

@@ -15,10 +15,12 @@ import androidx.media3.session.SessionToken
 import com.example.data.BuildKonfig
 import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.enum.PlaybackContextType
+import com.example.domain.entity.playbackinfo.PlaybackInfoDomain
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
+import com.example.vvinamp.util.showToast
 import com.google.common.util.concurrent.MoreExecutors
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -202,7 +204,36 @@ constructor(
                 setSleepTimer(event.option)
                 hideSleepTimerSheet()
             }
+
+            is PlaybackUiEvent.OnEmbedPlayingChanged -> {
+                _uiState.update { it.copy(isPlaying = event.isPlaying) }
+            }
+
+            is PlaybackUiEvent.OnEmbedEnded -> skipToNext()
+
+            is PlaybackUiEvent.OnEmbedError -> {
+                showToast("This video can't be played here")
+                _uiState.update { it.copy(youtubeEmbedId = null, isPlaying = false) }
+                skipToNext()
+            }
+
+            is PlaybackUiEvent.SetEmbedPaused -> {
+                _uiState.update { it.copy(isEmbedPaused = event.isPaused) }
+            }
         }
+    }
+
+    private fun startPlayback(info: PlaybackInfoDomain) {
+        val youtubeId = info.youtubeId
+        if (youtubeId != null) {
+            pause()
+            _uiState.update { it.copy(youtubeEmbedId = youtubeId, isEmbedPaused = false, isPlaying = false) }
+            return
+        }
+
+        _uiState.update { it.copy(youtubeEmbedId = null, isEmbedPaused = false) }
+        val audioUrl = info.hlsUrl.ifBlank { info.mp3Fallback.orEmpty() }
+        start(resolveAudioUrl(audioUrl))
     }
 
     private fun setSleepTimer(option: SleepTimerOption?) {
@@ -248,9 +279,7 @@ constructor(
                 }
                 Log.d("joel123", "skiptonext")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
-                state.playbackInfo.let {
-                    start(resolveAudioUrl(it.hlsUrl))
-                }
+                startPlayback(state.playbackInfo)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
             }
@@ -271,9 +300,7 @@ constructor(
                 }
                 Log.d("joel123", "skiptoprevious")
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
-                state.playbackInfo.let {
-                    start(resolveAudioUrl(it.hlsUrl))
-                }
+                startPlayback(state.playbackInfo)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
             }
@@ -336,9 +363,7 @@ constructor(
                     )
                 }
                 trackDomain?.let { playbackRepository.saveCurrentTrack(it) }
-                state.playbackInfo.let {
-                    start(resolveAudioUrl(it.hlsUrl))
-                }
+                startPlayback(state.playbackInfo)
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(
@@ -386,6 +411,11 @@ constructor(
     }
 
     private fun togglePlayback() {
+        if (_uiState.value.youtubeEmbedId != null) {
+            _uiState.update { it.copy(isEmbedPaused = !it.isEmbedPaused) }
+            return
+        }
+
         if (isPlaying()) {
             pause()
         } else {
@@ -450,12 +480,7 @@ constructor(
                 )
                 Log.d("joel123", "trackClicked")
                 playbackRepository.saveCurrentTrack(track)
-                val audioUrl = if (it.hlsUrl.isNotBlank()) {
-                    it.hlsUrl
-                } else {
-                    it.mp3Fallback.orEmpty()
-                }
-                start(resolveAudioUrl(audioUrl))
+                startPlayback(it)
             }.onFailure {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

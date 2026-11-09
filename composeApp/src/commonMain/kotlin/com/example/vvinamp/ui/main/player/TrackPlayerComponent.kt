@@ -86,9 +86,12 @@ fun TrackPlayerComponent(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        PlayerProgressBar(player)
+        // shortcut: embedded tracks use YouTube's own seek bar. Poll getCurrentTime to drive this slider instead.
+        if (uiState.youtubeEmbedId == null) {
+            PlayerProgressBar(player)
 
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         PlayerControls(
             uiState = uiState,

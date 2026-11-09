@@ -21,7 +21,8 @@ fun PlaybackInfoQuery.PlaybackInfo.toDomain(): PlaybackInfoDomain {
     return PlaybackInfoDomain(
         hlsUrl = this.hlsUrl,
         mp3Fallback = this.mp3Fallback,
-        durationMs = this.durationMs
+        durationMs = this.durationMs,
+        youtubeId = this.youtubeId
     )
 }
 
@@ -81,7 +82,8 @@ fun SkipToNextMutation.PlaybackInfo.toDomain(): PlaybackInfoDomain {
     return PlaybackInfoDomain(
         hlsUrl = this.hlsUrl,
         mp3Fallback = this.mp3Fallback,
-        durationMs = this.durationMs
+        durationMs = this.durationMs,
+        youtubeId = this.youtubeId
     )
 }
 
@@ -104,7 +106,8 @@ fun SkipToPreviousMutation.PlaybackInfo.toDomain(): PlaybackInfoDomain {
     return PlaybackInfoDomain(
         hlsUrl = this.hlsUrl,
         mp3Fallback = this.mp3Fallback,
-        durationMs = this.durationMs
+        durationMs = this.durationMs,
+        youtubeId = this.youtubeId
     )
 }
 
@@ -135,7 +138,8 @@ fun PlayContextMutation.PlaybackInfo.toDomain(): PlaybackInfoDomain {
     return PlaybackInfoDomain(
         hlsUrl = this.hlsUrl,
         mp3Fallback = this.mp3Fallback,
-        durationMs = this.durationMs
+        durationMs = this.durationMs,
+        youtubeId = this.youtubeId
     )
 }
 

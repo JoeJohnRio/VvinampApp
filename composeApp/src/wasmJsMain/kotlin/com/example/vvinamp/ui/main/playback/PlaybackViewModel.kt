@@ -13,6 +13,7 @@ import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.playbackinfo.toTrackDomain
 import com.example.domain.usecase.PlaybackUseCase
 import com.example.vvinamp.ui.navigationbar.trackoption.TrackOptionsUiEvent
+import com.example.vvinamp.util.showToast
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -211,7 +212,32 @@ actual class PlaybackViewModel(
                 setSleepTimer(event.option)
                 hideSleepTimerSheet()
             }
+            is PlaybackUiEvent.OnEmbedPlayingChanged -> {
+                _uiState.update { it.copy(isPlaying = event.isPlaying) }
+            }
+            is PlaybackUiEvent.OnEmbedEnded -> skipToNext()
+            is PlaybackUiEvent.OnEmbedError -> {
+                showToast("This video can't be played here")
+                _uiState.update { it.copy(youtubeEmbedId = null, isPlaying = false) }
+                skipToNext()
+            }
+            is PlaybackUiEvent.SetEmbedPaused -> {
+                _uiState.update { it.copy(isEmbedPaused = event.isPaused) }
+            }
         }
+    }
+
+    private fun startPlayback(info: PlaybackInfoDomain) {
+        val youtubeId = info.youtubeId
+        if (youtubeId != null) {
+            pause()
+            _uiState.update { it.copy(youtubeEmbedId = youtubeId, isEmbedPaused = false, isPlaying = false) }
+            return
+        }
+
+        _uiState.update { it.copy(youtubeEmbedId = null, isEmbedPaused = false) }
+        val fallback = info.mp3Fallback?.let { resolveAudioUrl(it) } ?: ""
+        start(selectPlaybackUrl(info), fallback)
     }
 
     private fun setSleepTimer(option: SleepTimerOption?) {
@@ -270,7 +296,7 @@ actual class PlaybackViewModel(
                         error = null
                     )
                 }
-                start(selectPlaybackUrl(state.playbackInfo))
+                startPlayback(state.playbackInfo)
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -290,7 +316,7 @@ actual class PlaybackViewModel(
                         error = null
                     )
                 }
-                start(selectPlaybackUrl(state.playbackInfo))
+                startPlayback(state.playbackInfo)
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
@@ -342,7 +368,7 @@ actual class PlaybackViewModel(
                         error = null
                     )
                 }
-                start(selectPlaybackUrl(state.playbackInfo))
+                startPlayback(state.playbackInfo)
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update {
@@ -379,9 +405,7 @@ actual class PlaybackViewModel(
                         error = null
                     )
                 }
-                val primaryUrl = selectPlaybackUrl(info)
-                val fallback = info.mp3Fallback?.let { resolveAudioUrl(it) } ?: ""
-                start(primaryUrl, fallback)
+                startPlayback(info)
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update {
@@ -454,6 +478,11 @@ actual class PlaybackViewModel(
     }
 
     private fun togglePlayback() {
+        if (_uiState.value.youtubeEmbedId != null) {
+            _uiState.update { it.copy(isEmbedPaused = !it.isEmbedPaused) }
+            return
+        }
+
         if (isPlaying()) {
             pause()
         } else {

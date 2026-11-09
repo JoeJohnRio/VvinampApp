@@ -21,5 +21,7 @@ data class PlaybackUiState(
     val isSleepTimerSheetVisible: Boolean = false,
     val activeSleepTimer: SleepTimerOption? = null,
     val isDownloading: Boolean = false,
-    val downloadProgress: Int = 0
+    val downloadProgress: Int = 0,
+    val youtubeEmbedId: String? = null,
+    val isEmbedPaused: Boolean = false
 )

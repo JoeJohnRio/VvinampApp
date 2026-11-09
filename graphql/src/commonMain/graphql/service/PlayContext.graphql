@@ -32,6 +32,7 @@ mutation PlayContext($context: PlaybackContextInput!, $offsetTrackId: ID!) {
     playbackInfo {
       hlsUrl
       mp3Fallback
+      youtubeId
       durationMs
     }
   }

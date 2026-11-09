@@ -3,6 +3,7 @@ import vvinampapp.composeapp.generated.resources.*
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -67,18 +68,23 @@ fun PlayerTopBar(
             )
         }
 
-        IconButton(
-            modifier = Modifier
-                .size(24.dp),
-            onClick = {
-                onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(true))
+        // The options sheet would cover the embedded player, which YouTube's terms don't allow.
+        if (uiState.youtubeEmbedId == null) {
+            IconButton(
+                modifier = Modifier
+                    .size(24.dp),
+                onClick = {
+                    onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(true))
+                }
+            ) {
+                Icon(
+                    tint = MaterialTheme.colorScheme.inversePrimary,
+                    imageVector = Icons.Filled.MoreVert,
+                    contentDescription = "Detail",
+                )
             }
-        ) {
-            Icon(
-                tint = MaterialTheme.colorScheme.inversePrimary,
-                imageVector = Icons.Filled.MoreVert,
-                contentDescription = "Detail",
-            )
+        } else {
+            Spacer(Modifier.size(24.dp))
         }
     }
 }

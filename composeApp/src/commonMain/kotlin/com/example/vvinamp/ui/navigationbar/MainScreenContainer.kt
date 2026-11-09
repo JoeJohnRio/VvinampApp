@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -67,6 +68,18 @@ fun MainScreenContainer(
         bottomPadding > 24.dp // Usually gesture bars are ~16dp-20dp, buttons are ~48dp+
     }
 
+    val embedId = playbackUiState.youtubeEmbedId
+    val isPlayerExpanded = playerState.targetValue == BottomSheetState.EXPANDED
+
+    LaunchedEffect(embedId) {
+        if (embedId != null) playerState.animateTo(BottomSheetState.EXPANDED)
+    }
+
+    // The mini bar is too small for YouTube's minimum player size, so collapsing pauses the song.
+    LaunchedEffect(embedId, isPlayerExpanded) {
+        if (embedId != null) playbackViewModel.onEvent(PlaybackUiEvent.SetEmbedPaused(!isPlayerExpanded))
+    }
+
     ExtractDominantColorEffect(
         imageUrl = playbackUiState.currentTrack?.albumCoverUrl,
         onColorExtracted = { color ->
@@ -90,7 +103,11 @@ fun MainScreenContainer(
                 PlaybackCurrentSongComponent(
                     currentlyPlaying = it,
                     onClickPlay = {
-                        playbackViewModel.onEvent(PlaybackUiEvent.TogglePlayback)
+                        if (embedId != null) {
+                            scope.launch { playerState.animateTo(BottomSheetState.EXPANDED) }
+                        } else {
+                            playbackViewModel.onEvent(PlaybackUiEvent.TogglePlayback)
+                        }
                     },
                     backgroundColor = playbackUiState.dominantColor,
                     isPlaying = playbackUiState.isPlaying,
