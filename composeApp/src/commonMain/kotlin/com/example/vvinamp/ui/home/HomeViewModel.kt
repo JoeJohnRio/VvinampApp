@@ -3,7 +3,6 @@ package com.example.vvinamp.ui.home
 import androidx.lifecycle.viewModelScope
 import com.example.data.repository.auth.AuthStore
 import com.example.domain.entity.enum.ContentTypeDomain
-import com.example.domain.entity.playlist.playlistMinimalListDummy
 import com.example.domain.entity.song.dummyRecommendedTracks
 import com.example.domain.usecase.AuthUseCases
 import com.example.domain.usecase.GetRecommendedTracksUseCase
@@ -128,7 +127,6 @@ class HomeViewModel(
     fun loadHomeData() {
         getListeningHistory()
         getRecommendedTracks()
-        getFeaturedPlaylists()
     }
 
     fun getListeningHistory() {
@@ -175,14 +173,6 @@ class HomeViewModel(
                     if (it.recommendedTracks.isEmpty()) it.copy(recommendedTracks = dummyRecommendedTracks)
                     else it
                 }
-            }
-        }
-    }
-
-    fun getFeaturedPlaylists() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(featuredPlaylists = playlistMinimalListDummy)
             }
         }
     }
