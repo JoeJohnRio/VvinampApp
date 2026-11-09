@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.repository.SearchRepository
 import com.example.domain.entity.playlist.PlaylistMinimal
@@ -14,10 +13,8 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -36,9 +33,11 @@ class SearchViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     val searchResults: Flow<PagingData<SearchItemDomain>> = _uiState
-        .map { it.searchText to it.searchType }
+        .map { it.activeQuery to it.searchType }
         .distinctUntilChanged()
-        .debounce(500)
+        .debounce { (_, searchType) ->
+            if (searchType == SearchType.CATALOG) CATALOG_DEBOUNCE_MS else 0L
+        }
         .flatMapLatest { (searchText, searchType) ->
             if (searchText.isBlank()) return@flatMapLatest emptyFlow()
 
@@ -50,28 +49,7 @@ class SearchViewModel(
                 SearchType.YOUTUBE -> repository.searchYoutubeFromApi(
                     query = searchText,
                     pageSize = 10
-                ).map { pagingData ->
-                    pagingData.map { item ->
-                        if (item is SearchItemDomain.YoutubeTrackSearch &&
-                            (item.uploaderId.contains("fallback") || item.uploaderId.contains("quota"))
-                        ) {
-                            _uiState.update { it.copy(statusNotice = FALLBACK_NOTICE) }
-                        }
-                        item
-                    }
-                }.catch { e ->
-                    if (isQuotaExceeded(e)) {
-                        _uiState.update { it.copy(statusNotice = FALLBACK_NOTICE) }
-                        emitAll(
-                            repository.searchYoutubeFromYtDlp(
-                                query = searchText,
-                                pageSize = 10
-                            )
-                        )
-                    } else {
-                        throw e
-                    }
-                }
+                )
             }
         }
         .cachedIn(viewModelScope)
@@ -80,23 +58,21 @@ class SearchViewModel(
         _uiState.update {
             it.copy(
                 searchText = query,
-                statusNotice = if (query.isBlank()) null else it.statusNotice
+                submittedText = if (query.isBlank()) "" else it.submittedText
             )
         }
+    }
+
+    fun onSearchSubmit() {
+        _uiState.update { it.copy(submittedText = it.searchText.trim()) }
     }
 
     fun onSearchTypeChanged(type: SearchType) {
         _uiState.update {
             it.copy(
                 searchType = type,
-                statusNotice = if (type == SearchType.YOUTUBE) it.statusNotice else null
+                submittedText = it.searchText.trim()
             )
-        }
-    }
-
-    fun dismissStatusNotice() {
-        _uiState.update {
-            it.copy(statusNotice = null)
         }
     }
 
@@ -131,12 +107,7 @@ class SearchViewModel(
         }
     }
 
-    companion object {
-        const val FALLBACK_NOTICE = "YouTube API quota is all used up — redirecting to YT-DLP fallback"
-
-        private fun isQuotaExceeded(e: Throwable): Boolean {
-            val msg = e.message.orEmpty()
-            return msg.contains("403") || msg.contains("quota", ignoreCase = true)
-        }
+    private companion object {
+        const val CATALOG_DEBOUNCE_MS = 500L
     }
 }

@@ -3,7 +3,6 @@ package com.example.vvinamp.ui.search
 import app.cash.turbine.test
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
@@ -85,7 +84,35 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `debounces rapid search input and only executes last query after 500ms`() = runTest(testDispatcher) {
+    fun `typing alone does not search YouTube`() = runTest(testDispatcher) {
+        viewModel.searchResults.test {
+            viewModel.onSearchInput("Michael")
+            advanceTimeBy(1000)
+
+            expectNoEvents()
+            assertEquals(0, fakeRepository.ytApiCallCount)
+        }
+    }
+
+    @Test
+    fun `submitting searches YouTube with the trimmed text`() = runTest(testDispatcher) {
+        viewModel.searchResults.test {
+            viewModel.onSearchInput("  Michael Jackson ")
+            viewModel.onSearchSubmit()
+            advanceTimeBy(1)
+
+            assertNotNull(awaitItem())
+            assertEquals(1, fakeRepository.ytApiCallCount)
+            assertEquals("Michael Jackson", fakeRepository.lastYtApiQuery)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `catalog debounces rapid input and only executes last query after 500ms`() = runTest(testDispatcher) {
+        viewModel.onSearchTypeChanged(SearchType.CATALOG)
+
         viewModel.searchResults.test {
             viewModel.onSearchInput("M")
             advanceTimeBy(200)
@@ -96,19 +123,35 @@ class SearchViewModelTest {
             viewModel.onSearchInput("Mic")
             advanceTimeBy(200)
 
-            // Only 200ms passed since "Mic" -> debounce has not fired yet
             expectNoEvents()
             assertEquals(0, fakeRepository.searchCallCount)
 
-            // Advance remaining debounce delay (> 500ms from last input)
             advanceTimeBy(350)
 
-            val pagingData = awaitItem()
-            assertNotNull(pagingData)
+            assertNotNull(awaitItem())
+            assertEquals(1, fakeRepository.searchCallCount)
+            assertEquals("Mic", fakeRepository.lastSearchQuery)
+            assertEquals(0, fakeRepository.ytApiCallCount)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `switching to YouTube searches the typed text`() = runTest(testDispatcher) {
+        viewModel.onSearchTypeChanged(SearchType.CATALOG)
+        viewModel.onSearchInput("Thriller")
+
+        viewModel.searchResults.test {
+            advanceTimeBy(600)
+            awaitItem()
+
+            viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
+            advanceTimeBy(1)
+            awaitItem()
 
             assertEquals(1, fakeRepository.ytApiCallCount)
-            assertEquals("Mic", fakeRepository.lastYtApiQuery)
-            assertEquals(10, fakeRepository.lastYtApiPageSize)
+            assertEquals("Thriller", fakeRepository.lastYtApiQuery)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -140,6 +183,7 @@ class SearchViewModelTest {
 
         viewModel.searchResults.test {
             viewModel.onSearchInput("Billie Jean live")
+            viewModel.onSearchSubmit()
             advanceTimeBy(600)
 
             awaitItem()
@@ -155,88 +199,20 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `distinctUntilChanged does not re-trigger repository when same query is set`() = runTest(testDispatcher) {
+    fun `distinctUntilChanged does not re-trigger repository when same query is submitted`() = runTest(testDispatcher) {
         viewModel.searchResults.test {
             viewModel.onSearchInput("Smooth Criminal")
+            viewModel.onSearchSubmit()
             advanceTimeBy(600)
 
             awaitItem()
             assertEquals(1, fakeRepository.ytApiCallCount)
 
-            // Emit the exact same query again
-            viewModel.onSearchInput("Smooth Criminal")
+            viewModel.onSearchSubmit()
             advanceTimeBy(600)
 
-            // Turbine confirms no new emission occurred!
             expectNoEvents()
             assertEquals(1, fakeRepository.ytApiCallCount)
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `when YouTube API throws 403 quotaExceeded error, falls back to yt-dlp and sets statusNotice`() = runTest(testDispatcher) {
-        fakeRepository.ytApiFlowToReturn = flow {
-            throw RuntimeException("403 Forbidden: quotaExceeded")
-        }
-
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
-
-        viewModel.searchResults.test {
-            viewModel.onSearchInput("Bohemian Rhapsody")
-            advanceTimeBy(600)
-
-            awaitItem() // emits fallback yt-dlp PagingData
-
-            assertEquals(1, fakeRepository.ytApiCallCount)
-            assertEquals(1, fakeRepository.ytDlpCallCount)
-            assertEquals("Bohemian Rhapsody", fakeRepository.lastYtDlpQuery)
-            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `dismissStatusNotice clears statusNotice`() = runTest(testDispatcher) {
-        fakeRepository.ytApiFlowToReturn = flow {
-            throw RuntimeException("403 Forbidden: quotaExceeded")
-        }
-
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
-
-        viewModel.searchResults.test {
-            viewModel.onSearchInput("Bohemian Rhapsody")
-            advanceTimeBy(600)
-
-            awaitItem()
-            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
-
-            viewModel.dismissStatusNotice()
-            assertNull(viewModel.uiState.value.statusNotice)
-
-            cancelAndIgnoreRemainingEvents()
-        }
-    }
-
-    @Test
-    fun `switching searchType away from YOUTUBE clears statusNotice`() = runTest(testDispatcher) {
-        fakeRepository.ytApiFlowToReturn = flow {
-            throw RuntimeException("403 Forbidden: quotaExceeded")
-        }
-
-        viewModel.onSearchTypeChanged(SearchType.YOUTUBE)
-
-        viewModel.searchResults.test {
-            viewModel.onSearchInput("Bohemian Rhapsody")
-            advanceTimeBy(600)
-
-            awaitItem()
-            assertEquals(SearchViewModel.FALLBACK_NOTICE, viewModel.uiState.value.statusNotice)
-
-            viewModel.onSearchTypeChanged(SearchType.CATALOG)
-            assertNull(viewModel.uiState.value.statusNotice)
 
             cancelAndIgnoreRemainingEvents()
         }

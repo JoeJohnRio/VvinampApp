@@ -1,28 +1,20 @@
 package com.example.vvinamp.ui.search.searchresult
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -84,7 +76,14 @@ fun SearchResultsScreen(
     }
 
     val refreshError = (searchItems.loadState.refresh as? LoadState.Error)?.error?.message
-    val displayError = uiState.error ?: refreshError
+    val isYoutubeFailure = refreshError != null && uiState.searchType == SearchType.YOUTUBE
+    val displayError = uiState.error ?: refreshError.takeUnless { isYoutubeFailure }
+
+    LaunchedEffect(isYoutubeFailure) {
+        if (isYoutubeFailure) {
+            viewModel.onSearchTypeChanged(SearchType.CATALOG)
+        }
+    }
 
     ScreenWrapper(
         isLoading = uiState.isLoading,
@@ -99,11 +98,11 @@ fun SearchResultsScreen(
                 onTypeSearch = {
                     viewModel.onSearchInput(it)
                 },
+                onSearchSubmit = {
+                    viewModel.onSearchSubmit()
+                },
                 onSearchTypeChanged = {
                     viewModel.onSearchTypeChanged(it)
-                },
-                onDismissNotice = {
-                    viewModel.dismissStatusNotice()
                 },
                 searchItems = searchItems,
                 onBackClicked = {
@@ -156,7 +155,7 @@ fun SearchResultsContent(
     onItemClicked: (SearchItemDomain) -> Unit = {},
     onAddToPlaylistClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit = {},
     playbackUiState: PlaybackUiState = PlaybackUiState(),
-    onDismissNotice: () -> Unit = {}
+    onSearchSubmit: () -> Unit = {}
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -172,7 +171,8 @@ fun SearchResultsContent(
                         onTypeSearch(it)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    onBackClicked = onBackClicked
+                    onBackClicked = onBackClicked,
+                    onSearch = onSearchSubmit
                 )
 
                 ButtonListWithState(
@@ -195,44 +195,6 @@ fun SearchResultsContent(
                         }
                     }
                 )
-
-                if (!uiState.statusNotice.isNullOrBlank()) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 4.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.85f),
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = uiState.statusNotice,
-                                style = TSDisplayMediumWhite().copy(
-                                    fontSize = 12.sp,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                ),
-                                modifier = Modifier.weight(1f)
-                            )
-                            IconButton(
-                                onClick = onDismissNotice,
-                                modifier = Modifier.size(20.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = "Dismiss notice",
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                                    modifier = Modifier.size(16.dp)
-                                )
-                            }
-                        }
-                    }
-                }
             }
         }
     ) { contentPadding ->
@@ -242,12 +204,12 @@ fun SearchResultsContent(
                 .padding(contentPadding)
         ) {
             val isLoading = (searchItems.loadState.refresh is LoadState.Loading)
-                    && uiState.searchText.isNotEmpty()
+                    && uiState.activeQuery.isNotEmpty()
 
             val isEmpty = !isLoading
                     && searchItems.loadState.append.endOfPaginationReached
                     && searchItems.itemCount == 0
-                    && uiState.searchText.isNotEmpty()
+                    && uiState.activeQuery.isNotEmpty()
 
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 16.dp)
@@ -319,7 +281,7 @@ fun SearchResultsContent(
                             horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
                             Text(
-                                text = "No results found for \"${uiState.searchText}\"",
+                                text = "No results found for \"${uiState.activeQuery}\"",
                                 style = TSBodyMediumWhite().copy(
                                     fontSize = 22.sp,
                                     textAlign = TextAlign.Center

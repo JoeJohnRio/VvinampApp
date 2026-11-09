@@ -4,10 +4,12 @@ import vvinampapp.composeapp.generated.resources.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -30,8 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import org.jetbrains.compose.resources.painterResource
 import com.example.vvinamp.util.preview.previewSafeString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -190,11 +198,15 @@ fun TextFieldSearch(
     onValueChanged: (String) -> Unit = { },
     textFieldInfo: String? = null,
     isError: () -> Boolean = { false },
-    onBackClicked: () -> Unit = {}
+    onBackClicked: () -> Unit = {},
+    onSearch: () -> Unit = {}
 ) {
     Column {
         TextField(
             value = text,
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { onSearch() }),
             textStyle = TSDisplayMediumWhite().copy(
                 color = if (isError()) MaterialTheme.colorScheme.onError else MaterialTheme.colorScheme.inversePrimary
             ),
@@ -221,17 +233,29 @@ fun TextFieldSearch(
             ,
             trailingIcon = if (text.isNotEmpty()) {
                 @Composable {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            onValueChanged("")
-                        },
-                        contentDescription = "Clear",
-                        imageVector = Icons.Default.Close
-                    )
+                    Row {
+                        IconButton(onClick = { onValueChanged("") }) {
+                            Icon(
+                                contentDescription = "Clear",
+                                imageVector = Icons.Default.Close
+                            )
+                        }
+                        IconButton(onClick = onSearch) {
+                            Icon(
+                                contentDescription = "Search",
+                                imageVector = Icons.Default.Search
+                            )
+                        }
+                    }
                 }
             } else null,
             modifier = modifier
-                .padding(0.dp),
+                .padding(0.dp)
+                .onPreviewKeyEvent { event ->
+                    val isEnterDown = event.type == KeyEventType.KeyDown && event.key == Key.Enter
+                    if (isEnterDown) onSearch()
+                    isEnterDown
+                },
             shape = shape,
             colors = TextFieldDefaults.colors().copy(
                 focusedIndicatorColor = Color.Transparent,
