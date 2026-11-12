@@ -105,6 +105,18 @@ The project follows Clean Architecture separated into four distinct Gradle modul
 # Artifacts generated at: composeApp/build/dist/wasmJs/productionExecutable
 ```
 
+#### Previewing the production build locally
+The production build is a folder of static files (`index.html` plus `.js` and `.wasm`), the same files deployed to Vercel. Browsers won't load `.wasm` from a `file://` page, so serve the folder over HTTP:
+
+```bash
+./gradlew :composeApp:wasmJsBrowserDistribution
+python3 -m http.server 8080 --bind 127.0.0.1 --directory composeApp/build/dist/wasmJs/productionExecutable
+```
+
+Open http://localhost:8080 and stop the server with Ctrl+C. The local build talks to the live backend, and port 8080 is in the backend's CORS allowlist, so guest login and search work like on the deployed site.
+
+On wide windows the app renders as a centered phone-width column (`PhoneColumnMaxWidth` in `ui/theme/Theme.kt`). Narrow the window to see the full-width phone layout.
+
 ### Running the Android App
 ```bash
 # Install and run on connected Android device/emulator
