@@ -1,7 +1,6 @@
 package com.example.vvinamp.ui.widget.playback
 
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -95,7 +94,7 @@ actual fun CustomProgressSlider(
 
     val currentProgress = if (duration > 0) (position / duration).toFloat() else 0f
 
-    Slider(
+    PlayerSeekBar(
         value = if (isDragging) dragValue else currentProgress,
         onValueChange = {
             isDragging = true

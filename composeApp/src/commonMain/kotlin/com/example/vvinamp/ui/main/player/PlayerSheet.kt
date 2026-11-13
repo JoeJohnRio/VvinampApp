@@ -17,14 +17,12 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -58,6 +56,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 
 import coil3.compose.AsyncImage
 
@@ -253,13 +252,18 @@ fun PlayerSheetContent(
 
         Spacer(Modifier.weight(1f))
 
-        Column(
+        // Like Spotify: the cover sits under the top bar and the spare space goes above the title.
+        BoxWithConstraints(
             modifier = Modifier
-                .height(maxHeight * 0.6f)
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+                .height(maxHeight * 0.56f)
+                .fillMaxWidth()
+                .padding(top = 24.dp, bottom = 16.dp),
+            contentAlignment = Alignment.TopCenter
         ) {
+            // Square and as big as the space allows, so short windows get a smaller cover instead of
+            // one that runs into the title.
+            val coverSize = min(this.maxWidth, this.maxHeight)
+
             val embedId = uiState.youtubeEmbedId
             if (embedId != null) {
                 // Square, because 16:9 at phone width falls below YouTube's 200x200 minimum.
@@ -269,10 +273,7 @@ fun PlayerSheetContent(
                     onPlayingChange = { onEvent(PlaybackUiEvent.OnEmbedPlayingChanged(it)) },
                     onEnded = { onEvent(PlaybackUiEvent.OnEmbedEnded) },
                     onError = { onEvent(PlaybackUiEvent.OnEmbedError(it)) },
-                    modifier = Modifier
-                        .widthIn(max = maxHeight * 0.6f)
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
+                    modifier = Modifier.size(coverSize)
                 )
             } else {
                 AsyncImage(
@@ -281,10 +282,8 @@ fun PlayerSheetContent(
                     placeholder = previewSafePainter(Res.drawable.bg_image),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
+                        .size(coverSize)
                         .clip(RoundedCornerShape(8.dp))
-
                 )
             }
         }
@@ -330,7 +329,7 @@ fun ShareTrackComponent() {
             )
         }
 
-        Row {
+        Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
             IconButton(
                 modifier = Modifier
                     .size(24.dp),
