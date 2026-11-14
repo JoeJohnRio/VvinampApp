@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
@@ -60,7 +61,8 @@ fun PlaylistDetailComponent(
     playlist: PlaylistComplete?,
     paddingTop: PaddingValues,
     onClickShare: () -> Unit = {},
-    onClickMore: () -> Unit = {}
+    onClickMore: () -> Unit = {},
+    onClickEditDetails: () -> Unit = {}
 ) {
     val totalPaddingTop = paddingTop.calculateTopPadding() + NormalPadding
 
@@ -88,40 +90,36 @@ fun PlaylistDetailComponent(
 
         Spacer(Modifier.width(16.dp))
 
-        Column() {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .weight(1f, fill = false),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    text = playlist?.title.orEmpty(),
-                    style = TSHeadlineMediumWhite().copy(
-                        fontSize = 24.sp
-                    )
+        // The title gets the full width; sharing a row with the button squeezed it to a few letters.
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                text = playlist?.title.orEmpty(),
+                style = TSHeadlineMediumWhite().copy(
+                    fontSize = 24.sp
                 )
-
-                ButtonVariableSizeSolid(
-                    modifier = Modifier.height(36.dp),
-                    text = "Change",
-                    textColor = MaterialTheme.colorScheme.onSecondary,
-                    containerColor = MaterialTheme.colorScheme.secondary
-                )
-            }
+            )
 
             PlaylistCreatorComponent(playlist = playlist)
+
+            Spacer(Modifier.height(8.dp))
+
+            ButtonVariableSizeSolid(
+                modifier = Modifier.height(36.dp),
+                text = "Edit details",
+                textColor = MaterialTheme.colorScheme.onSecondary,
+                containerColor = MaterialTheme.colorScheme.secondary,
+                onClick = onClickEditDetails
+            )
         }
     }
 
     Spacer(Modifier.height(8.dp))
 
     Icon(
-        imageVector = Icons.Default.Public,
-        contentDescription = null,
+        imageVector = if (playlist?.isPublic == false) Icons.Default.Lock else Icons.Default.Public,
+        contentDescription = if (playlist?.isPublic == false) "Private playlist" else "Public playlist",
         tint = MaterialTheme.colorScheme.surfaceBright
     )
 

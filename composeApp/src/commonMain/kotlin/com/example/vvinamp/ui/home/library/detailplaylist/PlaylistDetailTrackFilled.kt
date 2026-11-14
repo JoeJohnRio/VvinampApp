@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Public
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,8 @@ import com.example.vvinamp.ui.auth.AuthPage
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.util.orErrorNoText
+import com.example.vvinamp.util.orZero
+import com.example.vvinamp.util.toDurationLabel
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.preview.navigatorDummy
 
@@ -72,8 +75,8 @@ fun PlaylistDetailTrackFilled(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Public,
-                contentDescription = null,
+                imageVector = if (playlist?.isPublic == false) Icons.Default.Lock else Icons.Default.Public,
+                contentDescription = if (playlist?.isPublic == false) "Private playlist" else "Public playlist",
                 tint = MaterialTheme.colorScheme.surfaceBright
             )
 
@@ -81,7 +84,8 @@ fun PlaylistDetailTrackFilled(
 
             Text(
                 modifier = Modifier,
-                text = "${playlist?.totalDuration}min" ,
+                // totalDuration is in seconds.
+                text = playlist?.totalDuration.orZero().toDurationLabel(),
                 style = TSDisplayMediumWhite().copy(
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.surfaceBright

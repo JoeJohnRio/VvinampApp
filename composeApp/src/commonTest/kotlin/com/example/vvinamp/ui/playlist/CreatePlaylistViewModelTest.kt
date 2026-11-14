@@ -126,4 +126,32 @@ class CreatePlaylistViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `blank name does not create a playlist`() = runTest(testDispatcher) {
+        viewModel.onEvent(CreatePlaylistUiEvent.onChangePlaylistName("   "))
+
+        viewModel.onEvent(CreatePlaylistUiEvent.onCreatePlaylistClick)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertEquals(0, fakeRepository.createPlaylistCallCount)
+        assertFalse(viewModel.uiState.value.isLoading)
+    }
+
+    @Test
+    fun `success trims the name and resets the form for the next playlist`() = runTest(testDispatcher) {
+        fakeRepository.createPlaylistResult = Result.success("new_playlist_123")
+        viewModel.onEvent(CreatePlaylistUiEvent.onChangePlaylistName("  Road Trip  "))
+
+        viewModel.events.test {
+            viewModel.onEvent(CreatePlaylistUiEvent.onCreatePlaylistClick)
+            awaitItem()
+
+            assertEquals("Road Trip", fakeRepository.lastCreatedPlaylistTitle)
+            assertEquals("", viewModel.uiState.value.playlistName)
+            assertFalse(viewModel.uiState.value.isLoading)
+
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

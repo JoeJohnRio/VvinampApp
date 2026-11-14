@@ -49,5 +49,6 @@ val useCaseModule = module {
     singleOf(::UploadPlaylistCoverUseCase)
     singleOf(::GetMyPlaylistFeedUseCase)
     singleOf(::CreatePlaylistUseCase)
+    singleOf(::DeletePlaylistUseCase)
     singleOf(::PlaylistUseCase)
 }

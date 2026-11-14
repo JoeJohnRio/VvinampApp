@@ -20,8 +20,17 @@ data class PlaylistUseCase(
     val addYoutubeTrackToPlaylistUseCase: AddYoutubeTrackToPlaylistUseCase,
     val editPlaylistUseCase: EditPlaylistUseCase,
     val updatePlaylistUseCase: UpdatePlaylistUseCase,
-    val uploadPlaylistCoverUseCase: UploadPlaylistCoverUseCase
+    val uploadPlaylistCoverUseCase: UploadPlaylistCoverUseCase,
+    val deletePlaylistUseCase: DeletePlaylistUseCase
 )
+
+class DeletePlaylistUseCase(
+    private val repository: PlaylistRepository
+) {
+    suspend operator fun invoke(id: String): Result<Boolean> {
+        return repository.deletePlaylist(id)
+    }
+}
 
 class GetMyPlaylistUseCase(
     private val repository: PlaylistRepository

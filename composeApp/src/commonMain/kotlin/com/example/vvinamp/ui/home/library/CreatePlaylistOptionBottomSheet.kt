@@ -75,22 +75,18 @@ fun CreatePlaylistBottomSheet(
 
             ActionMenuItem(
                 title = "Collaborative playlist",
-                description = "create a playlist together with friends",
+                description = "Create a playlist together with friends",
                 imageVector = Icons.Default.Group,
-                onClick = {
-
-                }
+                onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             )
 
             Spacer(Modifier.height(16.dp))
 
             ActionMenuItem(
                 title = "Blend",
-                description = "Combine your frineds' tastes into a playlist",
+                description = "Combine your friends' tastes into a playlist",
                 painter = previewSafePainter(Res.drawable.ic_venn),
-                onClick = {
-
-                }
+                onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             )
         }
     }

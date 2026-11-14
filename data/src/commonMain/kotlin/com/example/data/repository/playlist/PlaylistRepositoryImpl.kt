@@ -4,6 +4,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.map
 import com.apollographql.apollo.api.DefaultUpload
 import com.apollographql.apollo.api.Optional
@@ -13,6 +14,7 @@ import com.example.data.api.playlist.toDomain
 import com.example.data.api.playlist.toPlaylistMinimal
 import com.example.data.api.playlist.toRemote
 import com.example.data.db.music.MusicDatabase
+import com.example.data.entities.PlaylistTrackEntity
 import com.example.data.entities.toDomain
 import com.example.data.repository.pagination.GenericPagingSource
 import com.example.domain.entity.PageResponse
@@ -139,16 +141,20 @@ class PlaylistRepositoryImpl(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPlaylistTracks(id: String, pageSize: Int, sortBy: PlaylistTrackSortByDomain): Flow<PagingData<TrackDomain>> {
+        // On web the list didn't reload after the mediator saved new rows, so the mediator reloads it directly.
+        // On Android, Room already does this and the extra reload is harmless.
+        var latestSource: PagingSource<Int, PlaylistTrackEntity>? = null
         return Pager(
             config = PagingConfig(pageSize = pageSize),
             remoteMediator = PlaylistTracksRemoteMediator(
                 playlistId = id,
                 api = api,
                 database = database,
-                sortBy = sortBy.toRemote()
+                sortBy = sortBy.toRemote(),
+                onTracksSaved = { latestSource?.invalidate() }
             ),
             pagingSourceFactory = {
-                database.playlistTrackDao().getTracksByPlaylist(id)
+                database.playlistTrackDao().getTracksByPlaylist(id).also { latestSource = it }
             }
         ).flow.map { pagingData ->
             pagingData.map { it.toDomain() }
@@ -213,5 +219,9 @@ class PlaylistRepositoryImpl(
             })
         )
         return api.editPlaylist(input)
+    }
+
+    override suspend fun deletePlaylist(id: String): Result<Boolean> {
+        return api.deletePlaylist(id)
     }
 }

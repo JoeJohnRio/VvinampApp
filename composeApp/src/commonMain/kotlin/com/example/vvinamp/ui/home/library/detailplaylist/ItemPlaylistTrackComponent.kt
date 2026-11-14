@@ -89,8 +89,7 @@ fun ItemPlaylistTrackComponent(
 
         Icon(
             modifier = Modifier.clickable(
-                onClick = {
-                }
+                onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             ),
             imageVector = Icons.Filled.MoreVert,
             contentDescription = null,

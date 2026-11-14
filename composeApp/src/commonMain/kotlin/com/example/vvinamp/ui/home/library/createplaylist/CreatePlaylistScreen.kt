@@ -35,6 +35,8 @@ fun CreatePlaylistScreen(
         viewModel.events.collect { event ->
             when (event) {
                 is CreatePlaylistEvent.NavigateToPlaylistDetail -> {
+                    // Swap this screen for the new playlist so Back returns to where Create was opened.
+                    bottomNavRouter.navigateBack()
                     bottomNavRouter.navigateToPlaylistDetail(event.playlistId)
                 }
             }
@@ -130,6 +132,7 @@ fun CreatePlaylistContent(
                 ButtonVariableSizeSolid(
                     onClick = { onEvent(CreatePlaylistUiEvent.onCreatePlaylistClick) },
                     text = "Create",
+                    enabled = playlistName.isNotBlank(),
                 )
             }
         }

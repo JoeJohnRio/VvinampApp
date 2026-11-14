@@ -8,4 +8,7 @@ sealed class PlaylistEvent {
     data class PlayTrackRecommended(val track: TrackDomain): PlaylistEvent()
     data class NavigateToEditScreen(val playlistId: String): PlaylistEvent()
     object OnClickShuffle: PlaylistEvent()
+    object RefreshTracks: PlaylistEvent()
+    object NavigateToSearch: PlaylistEvent()
+    object PlaylistDeleted: PlaylistEvent()
 }

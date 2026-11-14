@@ -48,4 +48,5 @@ interface PlaylistRepository {
         deletedTrackIds: List<String>?,
         repositionedSongs: List<Pair<String, Int>>?
     ): Result<Boolean>
+    suspend fun deletePlaylist(id: String): Result<Boolean>
 }

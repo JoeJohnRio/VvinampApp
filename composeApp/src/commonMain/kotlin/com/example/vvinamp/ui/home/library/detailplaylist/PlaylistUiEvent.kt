@@ -44,4 +44,6 @@ sealed class PlaylistUiEvent {
     object onCancelEditDetail : PlaylistUiEvent()
     object onMakePrivate : PlaylistUiEvent()
     object onDeletePlaylist : PlaylistUiEvent()
+    object onConfirmDeletePlaylist : PlaylistUiEvent()
+    object onDismissDeletePlaylist : PlaylistUiEvent()
 }

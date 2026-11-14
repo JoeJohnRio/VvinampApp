@@ -12,6 +12,7 @@ import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.AuthUseCases
 import com.example.domain.usecase.PlaylistUseCase
 import com.example.vvinamp.ui.home.library.detailplaylist.PlaylistEvent.*
+import com.example.vvinamp.util.showToast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -96,15 +97,15 @@ class PlaylistViewModel(
             }
 
             PlaylistUiEvent.onClickChange -> {
-
+                showEditDetailSheet()
             }
 
             PlaylistUiEvent.onClickDetail -> {
-
+                showToast("Coming soon")
             }
 
             PlaylistUiEvent.onClickShare -> {
-
+                showToast("Coming soon")
             }
 
             PlaylistUiEvent.ToggleShuffleClicked -> {
@@ -112,7 +113,7 @@ class PlaylistViewModel(
             }
 
             PlaylistUiEvent.onRowClickAdd -> {
-
+                viewModelScope.launch { _events.emit(PlaylistEvent.NavigateToSearch) }
             }
 
             PlaylistUiEvent.onRowClickEditDetail -> {
@@ -144,12 +145,44 @@ class PlaylistViewModel(
             }
 
             PlaylistUiEvent.onMakePrivate -> {
-                // Implement make private logic
+                togglePrivacy()
             }
 
             PlaylistUiEvent.onDeletePlaylist -> {
-                // Implement delete playlist logic
+                _uiState.update { it.copy(isDeleteConfirmVisible = true) }
             }
+
+            PlaylistUiEvent.onConfirmDeletePlaylist -> {
+                deletePlaylist()
+            }
+
+            PlaylistUiEvent.onDismissDeletePlaylist -> {
+                _uiState.update { it.copy(isDeleteConfirmVisible = false) }
+            }
+        }
+    }
+
+    private fun togglePrivacy() {
+        val playlist = uiState.value.playlist ?: return
+        viewModelScope.launch {
+            useCase.updatePlaylistUseCase(id = playlist.id, isPublic = !playlist.isPublic)
+                .onSuccess { getPlaylist(playlist.id, showLoading = false) }
+                .onFailure { error -> _uiState.update { it.copy(error = error.message) } }
+        }
+    }
+
+    private fun deletePlaylist() {
+        val playlistId = uiState.value.playlist?.id ?: return
+        viewModelScope.launch {
+            _uiState.update { it.copy(isDeleteConfirmVisible = false, isSaving = true) }
+            useCase.deletePlaylistUseCase(playlistId)
+                .onSuccess {
+                    _uiState.update { it.copy(isSaving = false, isEditDetailSheetVisible = false) }
+                    _events.emit(PlaylistEvent.PlaylistDeleted)
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(isSaving = false, error = error.message) }
+                }
         }
     }
 
@@ -269,6 +302,9 @@ class PlaylistViewModel(
                         recommendedTracks = updatedTracks
                     )
                 }
+                // Reload the header (its length decides whether Play, Sort and Edit show) and the song list.
+                getPlaylist(playlistId, showLoading = false)
+                _events.emit(PlaylistEvent.RefreshTracks)
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(
@@ -279,9 +315,16 @@ class PlaylistViewModel(
         }
     }
 
-    fun getPlaylist(id: String) {
+    fun getPlaylist(id: String, showLoading: Boolean = true) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
+            // One view model serves every playlist page, so drop a different playlist instead of showing it while this one loads.
+            _uiState.update {
+                it.copy(
+                    isLoading = showLoading,
+                    error = null,
+                    playlist = it.playlist?.takeIf { current -> current.id == id }
+                )
+            }
 
             useCase.getPlaylistUseCase.invoke(id).onSuccess { data ->
                 _uiState.update {
@@ -290,8 +333,11 @@ class PlaylistViewModel(
                         isLoading = false
                     )
                 }
-                setIsPlaylistCreator()
-                getRecommendedTracks()
+                // A quiet reload keeps the current recommendations so their ticks stay put.
+                if (showLoading) {
+                    setIsPlaylistCreator()
+                    getRecommendedTracks()
+                }
             }.onFailure { error ->
                 _uiState.update {
                     it.copy(

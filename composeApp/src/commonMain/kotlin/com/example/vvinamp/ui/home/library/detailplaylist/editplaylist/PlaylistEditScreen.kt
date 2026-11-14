@@ -13,6 +13,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.paging.LoadState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,12 +46,14 @@ fun PlaylistEditScreen(
     viewModel: PlaylistEditViewModel = koinViewModel(),
     playbackViewModel: PlaybackViewModel = koinViewModel()
 ) {
-    LaunchedEffect(playlistId) {
-        viewModel.setPlaylistId(playlistId)
-    }
-
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
+
+    // The view model is shared across visits, so reload in case the songs changed since the last edit.
+    LaunchedEffect(playlistId) {
+        viewModel.setPlaylistId(playlistId)
+        playlistTracks.refresh()
+    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->
@@ -96,7 +103,8 @@ fun PlaylistEditScreen(
                 playlistId = playlistId,
                 onEvent = {
                     viewModel.onEvent(it)
-                }
+                },
+                onClose = { bottomNavRouter.navigateBack() }
             )
         }
     )
@@ -107,14 +115,18 @@ fun PlaylistEditScreen(
 fun EditPlaylistLibraryContent(
     playlistId: String,
     onEvent: (PlaylistEditUiEvent) -> Unit = {},
+    onClose: () -> Unit = {},
     playlistTracks: LazyPagingItems<TrackDomain>
 ) {
     val tracks = remember { mutableStateListOf<TrackDomain>() }
     val movedTrackIds = remember { mutableStateSetOf<String>() }
     val deletedTrackIds = remember { mutableStateSetOf<String>() }
 
-    LaunchedEffect(playlistTracks.itemCount) {
-        if (tracks.isEmpty() && playlistTracks.itemCount > 0) {
+    // Copy the loaded songs into the editable list each time fresh data arrives, until the first edit.
+    val refreshState = playlistTracks.loadState.refresh
+    LaunchedEffect(refreshState, playlistTracks.itemCount) {
+        if (refreshState is LoadState.NotLoading && movedTrackIds.isEmpty() && deletedTrackIds.isEmpty()) {
+            tracks.clear()
             for (i in 0 until playlistTracks.itemCount) {
                 playlistTracks[i]?.let { tracks.add(it) }
             }
@@ -132,6 +144,14 @@ fun EditPlaylistLibraryContent(
         topBar = {
             TopAppBar(
                 title = { Text("Edit Playlist") },
+                navigationIcon = {
+                    IconButton(onClick = onClose) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close without saving"
+                        )
+                    }
+                },
                 actions = {
                     TextButton(onClick = {
                         onEvent(

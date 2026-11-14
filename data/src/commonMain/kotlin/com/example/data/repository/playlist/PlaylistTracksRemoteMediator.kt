@@ -19,7 +19,8 @@ class PlaylistTracksRemoteMediator(
     private val playlistId: String,
     private val sortBy: PlaylistTrackSortBy,
     private val api: PlaylistApiImpl,
-    private val database: MusicDatabase
+    private val database: MusicDatabase,
+    private val onTracksSaved: () -> Unit = {}
 ) : RemoteMediator<Int, PlaylistTrackEntity>() {
 
     override suspend fun load(
@@ -75,6 +76,7 @@ class PlaylistTracksRemoteMediator(
                             database.playlistRemoteKeyDao().insertAll(keys)
                         }
                     }
+                    onTracksSaved()
                     MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
                 },
                 onFailure = {

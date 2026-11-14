@@ -10,6 +10,12 @@ class Navigator(val state: NavigationState){
     fun navigate(route: NavKey){
         if (route in state.backStacks.keys){
             // This is a top level route, just switch to it.
+            // Tapping the tab you're already on takes you back to its first screen.
+            if (route == state.topLevelRoute) {
+                state.backStacks[route]?.let { stack ->
+                    while (stack.size > 1) stack.removeLastOrNull()
+                }
+            }
             state.topLevelRoute = route
         } else {
             state.backStacks[state.topLevelRoute]?.add(route)

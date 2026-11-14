@@ -89,6 +89,13 @@ class FakePlaylistRepository : PlaylistRepository {
         deletedTrackIds: List<String>?,
         repositionedSongs: List<Pair<String, Int>>?
     ): Result<Boolean> = Result.success(true)
+
+    val deletedPlaylistIds = mutableListOf<String>()
+
+    override suspend fun deletePlaylist(id: String): Result<Boolean> {
+        deletedPlaylistIds += id
+        return Result.success(true)
+    }
 }
 
 /**
@@ -106,6 +113,7 @@ fun buildPlaylistUseCase(repository: PlaylistRepository): PlaylistUseCase {
         addYoutubeTrackToPlaylistUseCase = AddYoutubeTrackToPlaylistUseCase(repository),
         editPlaylistUseCase = EditPlaylistUseCase(repository),
         updatePlaylistUseCase = UpdatePlaylistUseCase(repository),
-        uploadPlaylistCoverUseCase = UploadPlaylistCoverUseCase(repository)
+        uploadPlaylistCoverUseCase = UploadPlaylistCoverUseCase(repository),
+        deletePlaylistUseCase = DeletePlaylistUseCase(repository)
     )
 }

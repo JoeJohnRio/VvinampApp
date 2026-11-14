@@ -20,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.PhoneColumnMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -185,7 +186,7 @@ fun EditPlaylistDetailBottomSheet(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
                 Text(
-                    text = "Make private",
+                    text = if (uiState.playlist?.isPublic == false) "Make public" else "Make private",
                     style = TSDisplayMediumWhite().copy(fontSize = 16.sp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -196,7 +197,7 @@ fun EditPlaylistDetailBottomSheet(
                     text = "Delete playlist",
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.error
+                        color = AppColours.DestructiveRed
                     ),
                     modifier = Modifier
                         .fillMaxWidth()

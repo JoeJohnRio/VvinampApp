@@ -13,8 +13,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -51,6 +55,8 @@ import com.example.vvinamp.util.ExtractDominantColorEffect
 import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.orZero
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.showToast
+import com.example.vvinamp.ui.theme.AppColours
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -64,8 +70,10 @@ fun PlaylistScreen(
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()
 
+    // Runs on every visit: the view model is shared, so its song list can be left over from an earlier visit.
     LaunchedEffect(playlistId) {
         viewModel.getPlaylist(playlistId)
+        playlistTracks.refresh()
     }
 
     LaunchedEffect(Unit) {
@@ -99,8 +107,41 @@ fun PlaylistScreen(
                     playbackViewModel.onEvent(ToggleShuffleClicked)
                 }
 
+                PlaylistEvent.RefreshTracks -> {
+                    playlistTracks.refresh()
+                }
+
+                PlaylistEvent.NavigateToSearch -> {
+                    bottomNavRouter.navigateToSearchResults()
+                }
+
+                PlaylistEvent.PlaylistDeleted -> {
+                    showToast("Playlist deleted")
+                    bottomNavRouter.navigateBack()
+                }
             }
         }
+    }
+
+    if (uiState.isDeleteConfirmVisible) {
+        AlertDialog(
+            onDismissRequest = { viewModel.onEvent(PlaylistUiEvent.onDismissDeletePlaylist) },
+            title = { Text("Delete this playlist?") },
+            text = { Text("\"${uiState.playlist?.title.orEmpty()}\" will be removed from your library. You can't undo this.") },
+            confirmButton = {
+                TextButton(
+                    onClick = { viewModel.onEvent(PlaylistUiEvent.onConfirmDeletePlaylist) },
+                    colors = ButtonDefaults.textButtonColors(contentColor = AppColours.DestructiveRed)
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(PlaylistUiEvent.onDismissDeletePlaylist) }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 
     ScreenWrapper(
@@ -305,7 +346,10 @@ fun PlaylistContent(
                 item {
                     PlaylistDetailComponent(
                         playlist = uiState.playlist,
-                        paddingTop = innerPadding
+                        paddingTop = innerPadding,
+                        onClickShare = { onEvent(PlaylistUiEvent.onClickShare) },
+                        onClickMore = { onEvent(PlaylistUiEvent.onClickDetail) },
+                        onClickEditDetails = { onEvent(PlaylistUiEvent.onClickChange) }
                     )
                 }
             }

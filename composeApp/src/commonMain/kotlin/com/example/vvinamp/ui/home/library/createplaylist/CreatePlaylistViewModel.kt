@@ -40,18 +40,23 @@ class CreatePlaylistViewModel(
     }
 
     fun createPlaylist(title: String) {
-        viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+        val trimmedTitle = title.trim()
+        if (trimmedTitle.isEmpty()) return
 
-            val result = useCase.createPlaylistUseCase(title)
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
+
+            val result = useCase.createPlaylistUseCase(trimmedTitle)
 
             result.onSuccess { data ->
+                // This view model is shared across visits, so clear it for the next playlist.
+                _uiState.value = CreatePlaylistUiState()
                 _events.emit(CreatePlaylistEvent.NavigateToPlaylistDetail(data))
             }.onFailure { exception ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        error = exception.message ?: "Failed to load artist data"
+                        error = exception.message ?: "Couldn't create the playlist"
                     )
                 }
             }

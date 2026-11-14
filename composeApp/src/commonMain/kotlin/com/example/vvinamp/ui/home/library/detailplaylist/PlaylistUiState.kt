@@ -16,6 +16,7 @@ data class PlaylistUiState(
     val sortBy: PlaylistTrackSortByDomain = PlaylistTrackSortByDomain.RECENTLY_ADDED,
     val isSortSheetVisible: Boolean = false,
     val isEditDetailSheetVisible: Boolean = false,
+    val isDeleteConfirmVisible: Boolean = false,
     val editName: String = "",
     val editDescription: String = "",
     val editCoverUri: String? = null,
