@@ -4,7 +4,6 @@ import androidx.compose.ui.graphics.Color
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
-import com.example.vvinamp.ui.theme.AppColours
 
 data class PlaylistUiState(
     val error: String? = null,
@@ -12,7 +11,7 @@ data class PlaylistUiState(
     val isSaving: Boolean = false,
     val playlist: PlaylistComplete? = null,
     val isPlaylistCreator: Boolean = false,
-    val dominantColor: Color = AppColours.BackgroundBlack,
+    val dominantColor: Color = Color.Unspecified,
     val sortBy: PlaylistTrackSortByDomain = PlaylistTrackSortByDomain.RECENTLY_ADDED,
     val isSortSheetVisible: Boolean = false,
     val isEditDetailSheetVisible: Boolean = false,

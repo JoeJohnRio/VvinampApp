@@ -53,7 +53,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.util.preview.PreviewTheme
@@ -477,15 +476,15 @@ private fun ButtonsPreview() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(AppColours.OnPrimaryBlack)
+                .background(MaterialTheme.colorScheme.background)
                 .padding(16.dp)
         ) {
             ButtonSolid(
                 text = "Sign up free",
-                textColor = AppColours.OnPrimaryBlack,
-                containerColor = AppColours.PrimaryGreen,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primary,
                 imageVector = Icons.Default.Email,
-                iconTint = AppColours.OnPrimaryBlack
+                iconTint = MaterialTheme.colorScheme.onPrimary
             )
             Spacer(
                 Modifier.height(12.dp)
@@ -535,37 +534,37 @@ private fun ButtonsPreview() {
             ButtonSolidCloseIconAndText(
                 modifier = Modifier.padding(top = 12.dp),
                 text = "Logout",
-                textColor = AppColours.error,
-                containerColor = AppColours.errorContainer,
+                textColor = MaterialTheme.colorScheme.error,
+                containerColor = MaterialTheme.colorScheme.errorContainer,
                 imageVector = Icons.AutoMirrored.Filled.Logout,
-                iconTint = AppColours.error
+                iconTint = MaterialTheme.colorScheme.error
             )
             ButtonOutlined(
                 text = "Continue with phone number",
                 modifier = Modifier.padding(top = 12.dp),
-                outlineColor = AppColours.Outline,
-                textColor = AppColours.OffWhite,
-                containerColor = AppColours.OnPrimaryBlack,
+                outlineColor = MaterialTheme.colorScheme.outline,
+                textColor = MaterialTheme.colorScheme.inversePrimary,
+                containerColor = MaterialTheme.colorScheme.background,
                 imageVector = Icons.Default.Smartphone,
-                iconTint = AppColours.OffWhite,
+                iconTint = MaterialTheme.colorScheme.inversePrimary,
                 contentDescription = "Log in"
             )
 
             ButtonVariableSizeSolid(
                 modifier = Modifier.padding(top = 12.dp),
                 text = "Sign up free",
-                textColor = AppColours.OnPrimaryBlack,
-                containerColor = AppColours.PrimaryGreen,
+                textColor = MaterialTheme.colorScheme.onPrimary,
+                containerColor = MaterialTheme.colorScheme.primary,
             )
 
             ButtonVariableOutlined(
                 text = "Continue with phone number",
                 modifier = Modifier.padding(top = 12.dp),
-                outlineColor = AppColours.Outline,
+                outlineColor = MaterialTheme.colorScheme.outline,
                 textStyle = TSDisplayMediumWhite().copy(
                     color = MaterialTheme.colorScheme.inversePrimary,
                 ),
-                containerColor = AppColours.OnPrimaryBlack,
+                containerColor = MaterialTheme.colorScheme.background,
             )
 
             ButtonListWithState(
@@ -579,9 +578,9 @@ private fun ButtonsPreview() {
                     "Other",
                     "Prefer not to say"
                 ),
-                outlineColor = AppColours.Outline,
-                textColor = AppColours.OffWhite,
-                containerColor = AppColours.OnPrimaryBlack,
+                outlineColor = MaterialTheme.colorScheme.outline,
+                textColor = MaterialTheme.colorScheme.inversePrimary,
+                containerColor = MaterialTheme.colorScheme.background,
                 onClick = {}
             )
 

@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.main.player
+import com.example.vvinamp.ui.theme.orThemeBackground
 import vvinampapp.composeapp.generated.resources.*
 
 import com.example.vvinamp.util.BackHandler
@@ -235,7 +236,7 @@ fun PlayerSheetContent(
             .fillMaxWidth()
             .background(
                 Brush.verticalGradient(
-                    0f to uiState.dominantColor,
+                    0f to uiState.dominantColor.orThemeBackground(),
                     0.5f to MaterialTheme.colorScheme.background
                 )
             )

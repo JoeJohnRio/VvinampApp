@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.home.album
 
+import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -152,7 +153,7 @@ fun AlbumContent(
                         translationY = offset
                     }
                     .background(Brush.verticalGradient(
-                        0f to uiState.dominantColor,
+                        0f to uiState.dominantColor.orThemeBackground(),
                         1f to MaterialTheme.colorScheme.background
                     )),
             )
@@ -189,7 +190,7 @@ fun AlbumContent(
                 title = uiState.album?.title.orErrorNoText(),
                 topBarAlpha = scrollProgress.topBarProgress,
                 topBarNameAlpha = scrollProgress.topBarNameProgress,
-                topBarColor = uiState.dominantColor,
+                topBarColor = uiState.dominantColor.orThemeBackground(),
                 onBackClick = {
                     bottomNavRouter.navigateBack()
                 }

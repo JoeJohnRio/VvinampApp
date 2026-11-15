@@ -23,7 +23,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 import com.example.vvinamp.navigation.router.AuthRouter
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonOutlined
@@ -106,7 +105,7 @@ fun LoginSelectionButtons(
         text = previewSafeString(Res.string.label_already_have_account, "Already have an account?"),
         style = TSDisplayMediumWhite().copy(
             textAlign = TextAlign.Center,
-            color = AppColours.Outline
+            color = MaterialTheme.colorScheme.outline
         )
     )
 
@@ -122,7 +121,7 @@ fun LoginSelectionButtons(
         text = previewSafeString(Res.string.label_log_in, "Log in"),
         style = TSBodyMediumWhite().copy(
             textAlign = TextAlign.Center,
-            color = AppColours.White
+            color = MaterialTheme.colorScheme.onBackground
         )
     )
 }

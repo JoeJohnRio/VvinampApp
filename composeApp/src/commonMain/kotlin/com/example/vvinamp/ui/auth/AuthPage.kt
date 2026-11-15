@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -20,7 +21,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,9 +33,7 @@ import androidx.compose.ui.unit.sp
 import com.example.domain.entity.user.User
 import com.example.vvinamp.navigation.router.AuthRouter
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.circularStdFontFamily
-import com.example.vvinamp.ui.theme.whiteBlackGradientBackground
 import com.example.vvinamp.ui.widget.ButtonOutlined
 import com.example.vvinamp.ui.widget.ButtonSolid
 import com.example.vvinamp.ui.widget.SnackbarStyledHost
@@ -66,7 +67,16 @@ fun AuthPage(
             SnackbarStyledHost(snackbarHostState)
         },
         containerColor = Color.Transparent,
-        modifier = Modifier.whiteBlackGradientBackground()
+        modifier = Modifier.background(
+            Brush.verticalGradient(
+                listOf(
+                    MaterialTheme.colorScheme.secondary,
+                    MaterialTheme.colorScheme.surfaceContainerLow,
+                    MaterialTheme.colorScheme.background,
+                    MaterialTheme.colorScheme.background
+                )
+            )
+        )
     ) { contentPadding ->
         Column(
             modifier = Modifier
@@ -93,8 +103,8 @@ fun AuthPage(
                     text = if (isLoggingIn) "Logging in as Guest..." else "Try as Guest (Demo)",
                     modifier = Modifier.fillMaxWidth(),
                     imageVector = Icons.Default.Person,
-                    containerColor = AppColours.PrimaryGreen,
-                    textColor = AppColours.OnPrimaryBlack,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    textColor = MaterialTheme.colorScheme.onPrimary,
                     enabled = !isLoggingIn,
                     onClick = {
                         viewModel.login(
@@ -109,8 +119,8 @@ fun AuthPage(
                 ButtonSolid(
                     text = "Sign up free",
                     modifier = Modifier.fillMaxWidth(),
-                    containerColor = AppColours.White,
-                    textColor = AppColours.OnPrimaryBlack,
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    textColor = MaterialTheme.colorScheme.onPrimary,
                     onClick = {
                         authRouter.navigateToAuthMethodSelectionPage()
                     }

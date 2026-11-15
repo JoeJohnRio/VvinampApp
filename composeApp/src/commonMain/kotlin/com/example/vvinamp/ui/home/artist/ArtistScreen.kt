@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.home.artist
 
+import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -172,7 +173,7 @@ fun ArtistProfileContent(
                     }
                     .background(
                         Brush.verticalGradient(
-                            0.3f to uiState.dominantColor,
+                            0.3f to uiState.dominantColor.orThemeBackground(),
                             0.45f to MaterialTheme.colorScheme.background
                         )
                     )
@@ -240,7 +241,7 @@ fun ArtistProfileContent(
                 title = artistProfile.name.orErrorNoText(),
                 topBarAlpha = scrollProgress.topBarProgress,
                 topBarNameAlpha = scrollProgress.topBarNameProgress,
-                topBarColor = uiState.dominantColor,
+                topBarColor = uiState.dominantColor.orThemeBackground(),
                 onBackClick = {
                     onBackClick()
                 }

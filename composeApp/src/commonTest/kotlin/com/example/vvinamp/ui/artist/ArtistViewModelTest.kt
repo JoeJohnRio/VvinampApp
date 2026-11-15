@@ -9,7 +9,6 @@ import com.example.domain.entity.song.topSongsDummy
 import com.example.domain.usecase.ArtistUseCase
 import com.example.domain.usecase.GetArtistScreenDataUseCase
 import com.example.vvinamp.ui.home.artist.ArtistViewModel
-import com.example.vvinamp.ui.theme.AppColours
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -63,7 +62,7 @@ class ArtistViewModelTest {
             assertNull(state.artistProfile)
             assertNull(state.topSongs)
             assertNull(state.topReleases)
-            assertEquals(AppColours.BackgroundBlack, state.dominantColor)
+            assertEquals(Color.Unspecified, state.dominantColor)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -160,7 +159,7 @@ class ArtistViewModelTest {
     fun `updateDominantColor updates dominantColor in uiState`() = runTest(testDispatcher) {
         viewModel.uiState.test {
             // Initial color
-            assertEquals(AppColours.BackgroundBlack, awaitItem().dominantColor)
+            assertEquals(Color.Unspecified, awaitItem().dominantColor)
 
             // Act
             viewModel.updateDominantColor(Color.Cyan)

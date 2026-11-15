@@ -4,7 +4,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import com.example.domain.entity.album.AlbumDomain
 import com.example.domain.entity.album.SimplifiedTrackDomain
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.util.preview.PreviewTheme
 
 data class AlbumUiState(
@@ -12,5 +11,5 @@ data class AlbumUiState(
     val error: String? = null,
     val album: AlbumDomain? = null,
     val tracks: List<SimplifiedTrackDomain> = listOf(),
-    val dominantColor: Color = AppColours.BackgroundBlack
+    val dominantColor: Color = Color.Unspecified
 )

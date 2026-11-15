@@ -46,7 +46,6 @@ import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.dummyPlaylists
 
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.widget.ButtonVariableSizeSolid
 import com.example.vvinamp.util.PaddingSizeUtil
@@ -76,7 +75,7 @@ fun PlaylistDetailComponent(
             modifier = Modifier
                 .size(PlaylistNoPhotoSize)
                 .background(
-                    color = AppColours.Black175,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
                     shape = RoundedCornerShape(4.dp)
                 )
         ) {

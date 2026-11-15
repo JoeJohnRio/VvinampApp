@@ -5,7 +5,9 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.unit.dp
 import com.example.vvinamp.util.SetStatusBarColor
 
@@ -31,7 +33,7 @@ val vvinampDarkColorScheme = darkColorScheme(
     surfaceDim = AppColours.PitchBlack,
     surfaceContainerLow = AppColours.SurfaceContainerLow,
 
-    error = AppColours.error,
+    error = AppColours.DestructiveRed,
     errorContainer = AppColours.errorContainer,
     onError = AppColours.onError,
     onErrorContainer = AppColours.onErrorContainer,
@@ -85,7 +87,12 @@ fun AppTheme(
 
     MaterialTheme(
         colorScheme = colors,
-        typography = appTypography(),
+        typography = appTypography(colors),
         content = content
     )
 }
+
+// Cover colours stay Unspecified until they're extracted; show the theme background until then.
+@Composable
+@ReadOnlyComposable
+fun Color.orThemeBackground(): Color = takeOrElse { MaterialTheme.colorScheme.background }

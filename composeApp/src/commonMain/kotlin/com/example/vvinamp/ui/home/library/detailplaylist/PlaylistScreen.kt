@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.home.library.detailplaylist
+import com.example.vvinamp.ui.theme.orThemeBackground
 import vvinampapp.composeapp.generated.resources.*
 
 import com.example.vvinamp.util.KmpLogger
@@ -56,7 +57,6 @@ import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.orZero
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.showToast
-import com.example.vvinamp.ui.theme.AppColours
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -131,7 +131,7 @@ fun PlaylistScreen(
             confirmButton = {
                 TextButton(
                     onClick = { viewModel.onEvent(PlaylistUiEvent.onConfirmDeletePlaylist) },
-                    colors = ButtonDefaults.textButtonColors(contentColor = AppColours.DestructiveRed)
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
                     Text("Delete")
                 }
@@ -210,7 +210,7 @@ fun PlaylistContent(
     val noSongsBackgroundColor =
         if (isSongExist) {
             Brush.verticalGradient(
-                0f to uiState.dominantColor,
+                0f to uiState.dominantColor.orThemeBackground(),
                 0.5f to MaterialTheme.colorScheme.background
             )
         } else {
@@ -381,7 +381,7 @@ fun PlaylistContent(
             title = uiState.playlist?.title.orErrorNoText(),
             topBarAlpha = scrollProgress.topBarProgress,
             titleProgress = scrollProgress.topBarNameProgress,
-            topBarColor = uiState.dominantColor,
+            topBarColor = uiState.dominantColor.orThemeBackground(),
             onBackClick = {
                 onBackClicked()
             }

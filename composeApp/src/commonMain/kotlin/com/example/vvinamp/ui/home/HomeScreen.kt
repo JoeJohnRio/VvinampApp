@@ -55,7 +55,6 @@ import com.example.vvinamp.ui.home.library.widget.image.PlaylistCover
 import com.example.vvinamp.ui.main.ScreenWrapper
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.theme.circularStdFontFamily
@@ -320,7 +319,7 @@ private fun RecommendedTrackCard(
             modifier = Modifier
                 .size(140.dp)
                 .clip(RoundedCornerShape(8.dp))
-                .background(AppColours.SurfaceContainerHighBlack)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
         ) {
             AsyncImage(
                 model = track.albumCoverUrl,
@@ -334,13 +333,13 @@ private fun RecommendedTrackCard(
                     .padding(8.dp)
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(AppColours.PrimaryGreen),
+                    .background(MaterialTheme.colorScheme.primary),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.PlayArrow,
                     contentDescription = "Play",
-                    tint = AppColours.OnPrimaryBlack,
+                    tint = MaterialTheme.colorScheme.onPrimary,
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -356,7 +355,7 @@ private fun RecommendedTrackCard(
             text = track.artistName,
             style = TSBodyMediumWhite().copy(
                 fontSize = 12.sp,
-                color = AppColours.SurfaceBrightBlack
+                color = MaterialTheme.colorScheme.surfaceBright
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -392,7 +391,7 @@ private fun FeaturedPlaylistCard(
             text = if (playlist.username.isNotEmpty()) "By ${playlist.username}" else "Curated playlist",
             style = TSBodyMediumWhite().copy(
                 fontSize = 12.sp,
-                color = AppColours.SurfaceBrightBlack
+                color = MaterialTheme.colorScheme.surfaceBright
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -411,7 +410,7 @@ private fun YouTubeStreamBanner(
             .clickable(onClick = onSearchClick),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(
-            containerColor = AppColours.SurfaceContainerHighBlack
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh
         )
     ) {
         Row(
@@ -424,13 +423,13 @@ private fun YouTubeStreamBanner(
                 modifier = Modifier
                     .size(46.dp)
                     .clip(CircleShape)
-                    .background(AppColours.SurfaceContainerBlack),
+                    .background(MaterialTheme.colorScheme.surfaceContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = null,
-                    tint = AppColours.PrimaryGreen,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
                 )
             }
@@ -445,7 +444,7 @@ private fun YouTubeStreamBanner(
                     text = "Search any song, artist, or paste a link to play instantly",
                     style = TSBodyMediumWhite().copy(
                         fontSize = 12.sp,
-                        color = AppColours.SurfaceBrightBlack
+                        color = MaterialTheme.colorScheme.surfaceBright
                     )
                 )
             }
@@ -473,7 +472,7 @@ private fun HomeTrackRow(
             modifier = Modifier
                 .size(44.dp)
                 .clip(RoundedCornerShape(6.dp))
-                .background(AppColours.SurfaceContainerHighBlack)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
         )
         Spacer(Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {
@@ -487,7 +486,7 @@ private fun HomeTrackRow(
                 text = track.artistName,
                 style = TSBodyMediumWhite().copy(
                     fontSize = 12.sp,
-                    color = AppColours.SurfaceBrightBlack
+                    color = MaterialTheme.colorScheme.surfaceBright
                 ),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -497,14 +496,14 @@ private fun HomeTrackRow(
             text = formatDuration(track.duration),
             style = TSBodyMediumWhite().copy(
                 fontSize = 12.sp,
-                color = AppColours.SurfaceContainerHighestBlack
+                color = MaterialTheme.colorScheme.surfaceContainerHighest
             )
         )
         Spacer(Modifier.width(12.dp))
         Icon(
             imageVector = Icons.Default.PlayArrow,
             contentDescription = "Play",
-            tint = AppColours.OffWhite,
+            tint = MaterialTheme.colorScheme.inversePrimary,
             modifier = Modifier.size(20.dp)
         )
     }

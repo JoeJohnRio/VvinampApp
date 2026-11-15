@@ -26,7 +26,7 @@ fun PreviewTheme(
     // Apply the custom theme here just for the preview
     MaterialTheme(
         colorScheme = vvinampDarkColorScheme,
-        typography = appTypography(),
+        typography = appTypography(vvinampDarkColorScheme),
     ) {
         content()
     }

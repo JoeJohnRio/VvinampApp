@@ -1,6 +1,7 @@
 package com.example.vvinamp.ui.theme
 import vvinampapp.composeapp.generated.resources.*
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -20,42 +21,42 @@ fun circularStdFontFamily() = FontFamily(
 )
 
 @Composable
-fun appTypography() = Typography(
+fun appTypography(colorScheme: ColorScheme) = Typography(
     bodyLarge = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     ),
     bodyMedium = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     ),
     labelMedium = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Light,
         fontSize = 14.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     ),
     displayMedium = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     ),
     headlineMedium = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     ),
     titleLarge = TextStyle(
         fontFamily = circularStdFontFamily(),
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
-        color = AppColours.OffWhite
+        color = colorScheme.inversePrimary
     )
 )
 

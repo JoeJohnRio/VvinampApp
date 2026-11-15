@@ -22,7 +22,6 @@ import com.example.domain.entity.Gender
 
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
 import com.example.vvinamp.navigation.router.AuthRouter
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.widget.ButtonListWithState
 import com.example.vvinamp.ui.widget.TopBarCustom
@@ -72,9 +71,9 @@ fun RegisterGenderPage(
                     previewSafeString(Res.string.label_other, "Other"),
                     previewSafeString(Res.string.label_prefer_not_to_say, "Prefer not to say"),
                 ),
-                outlineColor = AppColours.Outline,
-                textColor = AppColours.OffWhite,
-                containerColor = AppColours.OnPrimaryBlack,
+                outlineColor = MaterialTheme.colorScheme.outline,
+                textColor = MaterialTheme.colorScheme.inversePrimary,
+                containerColor = MaterialTheme.colorScheme.background,
                 onClick = { gender ->
                     viewModel.user = viewModel.user.copy(
                         gender = Gender.fromDisplayName(gender)

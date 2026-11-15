@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.navigationbar
 
+import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Box
@@ -109,7 +110,7 @@ fun MainScreenContainer(
                             playbackViewModel.onEvent(PlaybackUiEvent.TogglePlayback)
                         }
                     },
-                    backgroundColor = playbackUiState.dominantColor,
+                    backgroundColor = playbackUiState.dominantColor.orThemeBackground(),
                     isPlaying = playbackUiState.isPlaying,
                     onClickTrack = {
                         scope.launch {

@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.vvinamp.ui.theme.AppColours
 
 @Composable
 fun DownloadProgressDialog(
@@ -44,7 +43,7 @@ fun DownloadProgressDialog(
             modifier = Modifier
                 .width(280.dp)
                 .clip(RoundedCornerShape(16.dp))
-                .background(AppColours.SurfaceContainerHighBlack)
+                .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 .padding(24.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -56,7 +55,7 @@ fun DownloadProgressDialog(
                     text = "Downloading Track",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        color = AppColours.White
+                        color = MaterialTheme.colorScheme.onBackground
                     ),
                     textAlign = TextAlign.Center
                 )
@@ -66,7 +65,7 @@ fun DownloadProgressDialog(
                     Text(
                         text = trackTitle,
                         style = MaterialTheme.typography.bodySmall.copy(
-                            color = AppColours.Outline
+                            color = MaterialTheme.colorScheme.outline
                         ),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -85,8 +84,8 @@ fun DownloadProgressDialog(
                         progress = { coercedProgress },
                         modifier = Modifier.fillMaxSize(),
                         strokeWidth = 6.dp,
-                        color = AppColours.PrimaryGreen,
-                        trackColor = AppColours.Secondary
+                        color = MaterialTheme.colorScheme.primary,
+                        trackColor = MaterialTheme.colorScheme.secondary
                     )
 
                     Text(
@@ -94,7 +93,7 @@ fun DownloadProgressDialog(
                         style = MaterialTheme.typography.titleMedium.copy(
                             fontWeight = FontWeight.Bold,
                             fontSize = 18.sp,
-                            color = AppColours.White
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     )
                 }
@@ -104,7 +103,7 @@ fun DownloadProgressDialog(
                 Text(
                     text = if (progress >= 100) "Starting playback..." else "Downloading from YouTube...",
                     style = MaterialTheme.typography.bodySmall.copy(
-                        color = AppColours.Outline
+                        color = MaterialTheme.colorScheme.outline
                     ),
                     textAlign = TextAlign.Center
                 )

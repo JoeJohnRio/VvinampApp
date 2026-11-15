@@ -6,7 +6,6 @@ import com.example.domain.entity.album.dummyAlbumDomain
 import com.example.domain.usecase.AlbumUseCase
 import com.example.domain.usecase.GetAlbum
 import com.example.vvinamp.ui.home.album.AlbumViewModel
-import com.example.vvinamp.ui.theme.AppColours
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -52,7 +51,7 @@ class AlbumViewModelTest {
             assertNull(state.error)
             assertNull(state.album)
             assertTrue(state.tracks.isEmpty())
-            assertEquals(AppColours.BackgroundBlack, state.dominantColor)
+            assertEquals(Color.Unspecified, state.dominantColor)
 
             cancelAndIgnoreRemainingEvents()
         }
@@ -115,7 +114,7 @@ class AlbumViewModelTest {
     @Test
     fun `updateDominantColor updates dominantColor in uiState`() = runTest(testDispatcher) {
         viewModel.uiState.test {
-            assertEquals(AppColours.BackgroundBlack, awaitItem().dominantColor)
+            assertEquals(Color.Unspecified, awaitItem().dominantColor)
 
             viewModel.updateDominantColor(Color.Green)
 

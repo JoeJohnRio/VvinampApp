@@ -14,7 +14,8 @@ import coil3.ImageLoader
 import coil3.SingletonImageLoader
 import coil3.network.ktor3.KtorNetworkFetcherFactory
 import com.example.vvinamp.di.initKoin
-import com.example.vvinamp.ui.theme.AppColours
+import androidx.compose.material3.MaterialTheme
+import com.example.vvinamp.ui.theme.AppTheme
 import com.example.vvinamp.ui.theme.PhoneColumnMaxWidth
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -28,19 +29,22 @@ fun main() {
             .build()
     }
     ComposeViewport {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(AppColours.PitchBlack),
-            contentAlignment = Alignment.TopCenter
-        ) {
+        // App() applies the theme too; this outer one only colours the page around the phone column.
+        AppTheme {
             Box(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .widthIn(max = PhoneColumnMaxWidth)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surfaceDim),
+                contentAlignment = Alignment.TopCenter
             ) {
-                App()
+                Box(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .widthIn(max = PhoneColumnMaxWidth)
+                        .fillMaxWidth()
+                ) {
+                    App()
+                }
             }
         }
     }

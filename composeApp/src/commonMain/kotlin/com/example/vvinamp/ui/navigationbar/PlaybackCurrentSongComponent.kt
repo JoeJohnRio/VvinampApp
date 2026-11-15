@@ -38,7 +38,6 @@ import coil3.compose.rememberAsyncImagePainter
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.trackDummy
 
-import com.example.vvinamp.ui.theme.AppColours
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.util.ExtractDominantColorEffect
@@ -136,6 +135,6 @@ fun PlaybackCurrentSongComponent(
 @Composable
 fun PlaybackCurrentSongComponentPreview() {
     PreviewTheme {
-        PlaybackCurrentSongComponent(currentlyPlaying = trackDummy.first(), AppColours.PrimaryGreen)
+        PlaybackCurrentSongComponent(currentlyPlaying = trackDummy.first(), MaterialTheme.colorScheme.primary)
     }
 }
