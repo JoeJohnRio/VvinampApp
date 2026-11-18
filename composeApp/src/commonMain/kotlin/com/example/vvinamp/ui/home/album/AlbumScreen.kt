@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.album.SimplifiedTrackDomain
 import com.example.domain.entity.album.toTrackDomain
@@ -41,7 +42,7 @@ fun AlbumScreen(
     albumId: String,
     bottomNavRouter: BottomNavRouter,
     viewModel: AlbumViewModel = koinViewModel(),
-    playbackViewModel: PlaybackViewModel = koinViewModel()
+    playbackViewModel: PlaybackViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())

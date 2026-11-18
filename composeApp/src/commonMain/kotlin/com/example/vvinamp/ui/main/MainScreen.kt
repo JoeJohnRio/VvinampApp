@@ -2,7 +2,7 @@ package com.example.vvinamp.ui.main
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import com.example.vvinamp.navigation.BindBrowserNavigation
 import com.example.vvinamp.navigation.Navigator
 import com.example.vvinamp.navigation.graph.BottomNavDestination
@@ -16,7 +16,7 @@ import com.example.vvinamp.ui.navigationbar.MainScreenContainer
 
 @Composable
 fun MainScreen(
-    playbackViewModel: PlaybackViewModel = koinViewModel()
+    playbackViewModel: PlaybackViewModel = koinInject()
 ) {
     val appTopLevel =
         setOf(

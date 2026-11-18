@@ -81,7 +81,8 @@ fun EntryProviderScope<NavKey>.AuthGraph(
     entry<AuthDestination.LoginEmail> {
         LoginEmailPage(
             authRouter = authRouter,
-            parentMainRouter = parentMainRouter
+            parentMainRouter = parentMainRouter,
+            viewModel = viewModel
         )
     }
 }

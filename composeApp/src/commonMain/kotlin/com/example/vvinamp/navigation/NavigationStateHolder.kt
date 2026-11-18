@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
@@ -153,8 +154,10 @@ fun NavigationState.toEntries(
 ): SnapshotStateList<NavEntry<NavKey>> {
 
     val decoratedEntries = backStacks.mapValues { (_, stack) ->
+        // Each screen on the stack gets its own view models, cleared when the screen is popped.
         val decorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator<NavKey>(),
+            rememberViewModelStoreNavEntryDecorator<NavKey>(),
         )
         rememberDecoratedNavEntries(
             backStack = stack,

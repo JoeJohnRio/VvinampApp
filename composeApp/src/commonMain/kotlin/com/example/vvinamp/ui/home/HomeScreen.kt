@@ -60,13 +60,14 @@ import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import com.example.vvinamp.ui.theme.circularStdFontFamily
 import com.example.vvinamp.ui.widget.TopBar
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     bottomNavRouter: BottomNavRouter,
     viewModel: HomeViewModel = koinViewModel(),
-    playbackViewModel: PlaybackViewModel = koinViewModel()
+    playbackViewModel: PlaybackViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

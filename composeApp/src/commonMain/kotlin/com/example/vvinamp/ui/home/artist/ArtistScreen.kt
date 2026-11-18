@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.artistProfileDummy
@@ -44,7 +45,7 @@ import com.example.vvinamp.util.preview.PreviewTheme
 @Composable
 fun ArtistScreen(
     artistViewModel: ArtistViewModel = koinViewModel(),
-    playbackViewModel: PlaybackViewModel = koinViewModel(),
+    playbackViewModel: PlaybackViewModel = koinInject(),
     artistId: String,
     onBackClick: () -> Unit,
     bottomNavRouter: BottomNavRouter

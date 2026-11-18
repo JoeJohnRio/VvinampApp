@@ -16,6 +16,7 @@ mockitoAndroid = "5.0.0"
 mockitoInline = "5.2.0"
 mockitoKotlin = "5.4.0"
 multiplatformNav3Ui = "1.1.1"
+multiplatformLifecycleNav3 = "2.10.0"
 okhttp = "5.0.0-alpha.2"
 paging = "3.5.0"
 room = "3.0.0"
@@ -132,6 +133,7 @@ room-paging = { module = "androidx.room3:room3-paging", version.ref = "room" }
 # Navigation 3
 navigation3-ui = { module = "org.jetbrains.androidx.navigation3:navigation3-ui", version.ref = "multiplatformNav3Ui" }
 navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "multiplatformNav3Ui" }
+lifecycle-viewmodel-navigation3 = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "multiplatformLifecycleNav3" }
 
 # UniTest
 junit-junit = { module = "junit:junit", version.ref = "junit" }

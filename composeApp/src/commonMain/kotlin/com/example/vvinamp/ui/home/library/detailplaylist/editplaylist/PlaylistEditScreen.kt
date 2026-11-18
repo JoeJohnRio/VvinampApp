@@ -27,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -44,7 +45,7 @@ fun PlaylistEditScreen(
     playlistId: String,
     bottomNavRouter: BottomNavRouter,
     viewModel: PlaylistEditViewModel = koinViewModel(),
-    playbackViewModel: PlaybackViewModel = koinViewModel()
+    playbackViewModel: PlaybackViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playlistTracks = viewModel.playlistTracks.collectAsLazyPagingItems()

@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -64,7 +65,7 @@ fun PlaylistScreen(
     playlistId: String,
     bottomNavRouter: BottomNavRouter,
     viewModel: PlaylistViewModel = koinViewModel(),
-    playbackViewModel: PlaybackViewModel = koinViewModel()
+    playbackViewModel: PlaybackViewModel = koinInject()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())

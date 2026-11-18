@@ -28,6 +28,7 @@ import com.example.vvinamp.util.preview.PreviewContainer
 import kotlinx.coroutines.flow.flowOf
 import androidx.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
+import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -53,7 +54,7 @@ import com.example.vvinamp.ui.widget.TextFieldSearch
 @Composable
 fun SearchResultsScreen(
     bottomNavRouter: BottomNavRouter,
-    playbackViewModel: PlaybackViewModel = koinViewModel(),
+    playbackViewModel: PlaybackViewModel = koinInject(),
 ) {
     val viewModel: SearchViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
