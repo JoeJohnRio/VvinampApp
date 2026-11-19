@@ -360,8 +360,13 @@ fun PlaylistContent(
             }
 
             item {
+                // Leave out songs already in the playlist; ones just added here stay so their tick shows.
+                // shortcut: only songs on the pages loaded so far are checked.
+                val inPlaylist = playlistTracks.itemSnapshotList.items.mapTo(HashSet()) { it.id }
                 RecommendedTrackComponent(
-                    uiState = uiState,
+                    uiState = uiState.copy(
+                        recommendedTracks = uiState.recommendedTracks?.filter { it.isAdded || it.id !in inPlaylist }
+                    ),
                     onEvent = onEvent
                 )
             }
