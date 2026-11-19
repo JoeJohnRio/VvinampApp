@@ -11,7 +11,7 @@
     <string name="label_log_in">Log in</string>
     <string name="label_you_need_to_confirm_this">You'll need to confirm this email later.</string>
     <string name="label_this_appears_on_your">This appears on your Vvinamp profile.</string>
-    <string name="label_atleast_10_characters">Use at least 10 characters.</string>
+    <string name="label_atleast_10_characters">Use at least 10 characters, including a number or symbol.</string>
     <string name="label_continue">Next</string>
     <string name="label_female">Female</string>
     <string name="label_male">Male</string>

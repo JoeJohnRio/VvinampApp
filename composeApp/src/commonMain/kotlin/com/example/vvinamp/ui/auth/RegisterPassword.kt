@@ -70,10 +70,11 @@ fun RegisterPasswordPage(
                 onValueChanged = {
                     viewModel.user = viewModel.user.copy(password = it)
                 },
+                // Only flag the rule once something is typed, so the empty field doesn't open in an error state.
                 isError = {
-                    !isValidPassword(viewModel.user.password)
+                    viewModel.user.password.isNotEmpty() && !isValidPassword(viewModel.user.password)
                 },
-                textFieldInfo = previewSafeString(Res.string.label_atleast_10_characters, "Use at least 10 characters.")
+                textFieldInfo = previewSafeString(Res.string.label_atleast_10_characters, "Use at least 10 characters, including a number or symbol.")
             )
 
             Row(
