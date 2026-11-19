@@ -25,6 +25,16 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // While a text field is focused, Compose keeps the typing in a hidden textarea. A click on the
+        // page moved focus off it first, and Compose then dropped that click, so buttons like Next
+        // needed a second click. Keeping the focus where it is lets the first click through.
+        document.addEventListener('mousedown', function (e) {
+            var host = document.activeElement;
+            var input = host && host.shadowRoot && host.shadowRoot.activeElement;
+            if (input && input.tagName === 'TEXTAREA' && e.composedPath().indexOf(input) < 0) e.preventDefault();
+        }, true);
+    </script>
     <script src="composeApp.js"></script>
 </head>
 <body>
