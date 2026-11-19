@@ -52,7 +52,8 @@ class PlaylistEditViewModel(
         .filter { it.isNotBlank() }
         .distinctUntilChanged()
         .flatMapLatest { playlistId ->
-            useCase.getPlaylistTracksUseCase.invoke(playlistId, PlaylistTrackSortByDomain.RECENTLY_ADDED)
+            // Edit works on the playlist's own order, so saved positions match what was dragged.
+            useCase.getPlaylistTracksUseCase.invoke(playlistId, PlaylistTrackSortByDomain.CUSTOM)
         }
         .cachedIn(viewModelScope)
 

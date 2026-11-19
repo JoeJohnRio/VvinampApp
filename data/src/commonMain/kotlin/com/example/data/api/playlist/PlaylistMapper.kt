@@ -47,6 +47,7 @@ fun GetPlaylistQuery.GetPlaylist.toDomain(): PlaylistComplete {
 
 fun PlaylistTrackSortByDomain.toRemote(): PlaylistTrackSortBy {
     return when (this) {
+        PlaylistTrackSortByDomain.CUSTOM -> PlaylistTrackSortBy.CUSTOM
         PlaylistTrackSortByDomain.TITLE -> PlaylistTrackSortBy.TITLE
         PlaylistTrackSortByDomain.ARTIST_NAME -> PlaylistTrackSortBy.ARTIST_NAME
         PlaylistTrackSortByDomain.ALBUM_NAME -> PlaylistTrackSortBy.ALBUM_NAME

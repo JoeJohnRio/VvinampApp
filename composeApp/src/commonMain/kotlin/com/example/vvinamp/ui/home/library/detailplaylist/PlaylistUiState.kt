@@ -12,7 +12,7 @@ data class PlaylistUiState(
     val playlist: PlaylistComplete? = null,
     val isPlaylistCreator: Boolean = false,
     val dominantColor: Color = Color.Unspecified,
-    val sortBy: PlaylistTrackSortByDomain = PlaylistTrackSortByDomain.RECENTLY_ADDED,
+    val sortBy: PlaylistTrackSortByDomain = PlaylistTrackSortByDomain.CUSTOM,
     val isSortSheetVisible: Boolean = false,
     val isEditDetailSheetVisible: Boolean = false,
     val isDeleteConfirmVisible: Boolean = false,
