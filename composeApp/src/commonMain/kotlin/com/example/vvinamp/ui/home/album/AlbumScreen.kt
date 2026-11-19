@@ -25,11 +25,10 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.album.SimplifiedTrackDomain
-import com.example.domain.entity.album.toTrackDomain
-import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.home.artist.AnimatedTopNavigation
 import com.example.vvinamp.ui.main.ScreenWrapper
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
@@ -60,14 +59,13 @@ fun AlbumScreen(
                 playbackUiState = playbackUiState,
                 bottomNavRouter = bottomNavRouter,
                 viewModel = viewModel,
-                onSongClick = { searchItem ->
+                onSongClick = { track ->
+                    // The backend has no album context, so the album's songs go in as an explicit queue.
                     playbackViewModel.onEvent(
-                        PlaybackUiEvent.OnTrackClicked(
-                            track = searchItem.toTrackDomain().copy(
-                                artistProfileImageUrl = uiState.album?.artistImage
-                            ),
-                            contentTypeDomain = ContentTypeDomain.ALBUM,
-                            contentId = albumId
+                        PlaybackUiEvent.PlayContext(
+                            contextType = PlaybackContextType.SEARCH_RESULTS,
+                            trackIds = uiState.tracks.map { it.id },
+                            offsetTrackId = track.id
                         )
                     )
                 },

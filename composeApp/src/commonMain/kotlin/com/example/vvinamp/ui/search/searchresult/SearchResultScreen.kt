@@ -34,11 +34,11 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.search.SearchItemDomain
 import com.example.domain.entity.search.toTrackDomain
 import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.main.ScreenWrapper
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
@@ -115,11 +115,14 @@ fun SearchResultsScreen(
                 onItemClicked = { searchItem ->
                     when (searchItem) {
                         is SearchItemDomain.TrackSearch -> {
+                            // Queue the catalog songs loaded so far, starting at the tapped one.
                             playbackViewModel.onEvent(
-                                PlaybackUiEvent.OnTrackClicked(
-                                    track = searchItem.toTrackDomain(),
-                                    contentTypeDomain = ContentTypeDomain.TRACK,
-                                    contentId = searchItem.id,
+                                PlaybackUiEvent.PlayContext(
+                                    contextType = PlaybackContextType.SEARCH_RESULTS,
+                                    trackIds = searchItems.itemSnapshotList.items
+                                        .filterIsInstance<SearchItemDomain.TrackSearch>()
+                                        .map { it.id },
+                                    offsetTrackId = searchItem.id
                                 )
                             )
                         }

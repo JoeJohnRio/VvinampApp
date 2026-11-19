@@ -27,7 +27,6 @@ import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.domain.entity.artist.ArtistProfileDomain
 import com.example.domain.entity.artist.artistProfileDummy
-import com.example.domain.entity.enum.ContentTypeDomain
 import com.example.domain.entity.song.TopReleasesDomain
 import com.example.domain.entity.song.TopSongsDomain
 import com.example.domain.entity.song.TrackDomain
@@ -35,6 +34,7 @@ import com.example.domain.entity.song.topReleaseDummy
 import com.example.domain.entity.song.topSongsDummy
 import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.main.ScreenWrapper
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
@@ -74,15 +74,12 @@ fun ArtistScreen(
                         bottomNavRouter.navigateToAlbum(it)
                     },
                     onTrackClicked = { track ->
+                        // Play as a queue of the artist's songs so Next and Previous have somewhere to go.
                         playbackViewModel.onEvent(
-                            PlaybackUiEvent.OnTrackClicked(
-                                track = track.copy(
-                                    artistProfileImageUrl = it.profileImage,
-                                    artistBio = it.bio,
-                                    artistMonthlyListeners = it.monthlyListeners.toLong()
-                                ),
-                                contentTypeDomain = ContentTypeDomain.ARTIST,
-                                contentId = artistId
+                            PlaybackUiEvent.PlayContext(
+                                contextType = PlaybackContextType.ARTIST,
+                                contextId = artistId,
+                                offsetTrackId = track.id
                             )
                         )
                     },

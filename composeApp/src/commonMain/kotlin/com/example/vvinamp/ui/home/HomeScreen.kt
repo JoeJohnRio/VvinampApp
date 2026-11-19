@@ -53,6 +53,7 @@ import com.example.vvinamp.navigation.router.BottomNavRouter
 import com.example.vvinamp.ui.home.history.ListeningHistoryCard
 import com.example.vvinamp.ui.home.library.widget.image.PlaylistCover
 import com.example.vvinamp.ui.main.ScreenWrapper
+import com.example.domain.entity.enum.PlaybackContextType
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
@@ -93,11 +94,12 @@ fun HomeScreen(
                 }
 
                 is HomeEvent.PlayRecommendedTrack -> {
+                    // Queue the recommended list so Next moves through it.
                     playbackViewModel.onEvent(
-                        PlaybackUiEvent.OnTrackClicked(
-                            track = event.track.toTrackDomain(),
-                            contentTypeDomain = ContentTypeDomain.TRACK,
-                            contentId = event.track.id
+                        PlaybackUiEvent.PlayContext(
+                            contextType = PlaybackContextType.SEARCH_RESULTS,
+                            trackIds = viewModel.uiState.value.recommendedTracks.map { it.id },
+                            offsetTrackId = event.track.id
                         )
                     )
                 }
