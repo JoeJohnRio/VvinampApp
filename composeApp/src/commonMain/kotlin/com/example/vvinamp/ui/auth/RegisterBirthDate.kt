@@ -9,6 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DisplayMode
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 import androidx.compose.material3.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -68,14 +79,36 @@ fun RegisterBirthDatePage(
                 )
             )
 
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(top = 32.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                // TODO: Replace with a Multiplatform Date Picker. 
-                // WheelDatePicker is Android-only and requires java.time.LocalDate.
-                Text("Date Picker Placeholder", color = MaterialTheme.colorScheme.inversePrimary)
+            val today = remember { Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date }
+            // Typing mode first: entering a birth year is quicker than paging back through a calendar.
+            val datePickerState = rememberDatePickerState(
+                initialSelectedDateMillis = viewModel.user.birthDate.takeIf { it.isNotEmpty() }
+                    ?.let { LocalDate.parse(it).atStartOfDayIn(TimeZone.UTC).toEpochMilliseconds() },
+                yearRange = 1900..today.year,
+                initialDisplayMode = DisplayMode.Input
+            )
+            // The picker reports midnight UTC of the chosen day; keep it as yyyy-MM-dd like the rest of the app.
+            LaunchedEffect(datePickerState.selectedDateMillis) {
+                val birthDate = datePickerState.selectedDateMillis
+                    ?.let { Instant.fromEpochMilliseconds(it).toLocalDateTime(TimeZone.UTC).date.toString() }
+                    .orEmpty()
+                viewModel.user = viewModel.user.copy(birthDate = birthDate)
+            }
+
+            DatePicker(
+                state = datePickerState,
+                modifier = Modifier.padding(top = 16.dp),
+                title = null,
+                colors = DatePickerDefaults.colors(containerColor = MaterialTheme.colorScheme.onPrimary)
+            )
+
+            val isOldEnough = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld()
+            if (viewModel.user.birthDate.isNotEmpty() && !isOldEnough) {
+                Text(
+                    text = previewSafeString(Res.string.label_must_be_17, "You need to be at least 17 to sign up."),
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
 
             Row(
@@ -87,12 +120,9 @@ fun RegisterBirthDatePage(
                     modifierText = Modifier.padding(horizontal = 16.dp),
                     text = previewSafeString(Res.string.label_continue, "Next"),
                     containerColor = MaterialTheme.colorScheme.onBackground,
-                    enabled = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld(),
+                    enabled = isOldEnough,
                     onClick = {
-                        val isValid = viewModel.user.birthDate.toLocalDate().isAtLeast17YearsOld()
-                        if (isValid) {
-                            authRouter.navigateToRegisterGenderPage()
-                        }
+                        authRouter.navigateToRegisterGenderPage()
                     }
                 )
             }

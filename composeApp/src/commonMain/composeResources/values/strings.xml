@@ -51,4 +51,5 @@
     <string name="label_see_discography">See discography</string>
     <string name="title_recommended_songs">Recommended Songs</string>
 
+    <string name="label_must_be_17">You need to be at least 17 to sign up.</string>
 </resources>
