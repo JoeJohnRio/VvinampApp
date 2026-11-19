@@ -18,7 +18,8 @@ sealed class PlaybackUiEvent {
         val contextType: PlaybackContextType,
         val contextId: String? = null,
         val trackIds: List<String>? = null,
-        val offsetTrackId: String
+        val offsetTrackId: String,
+        val playingFrom: PlayingFrom? = null
     ) : PlaybackUiEvent()
 
     data object SkipToNext : PlaybackUiEvent()

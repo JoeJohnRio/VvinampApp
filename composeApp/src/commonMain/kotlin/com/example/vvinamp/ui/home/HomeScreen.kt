@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.home
 
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -99,7 +100,8 @@ fun HomeScreen(
                         PlaybackUiEvent.PlayContext(
                             contextType = PlaybackContextType.SEARCH_RESULTS,
                             trackIds = viewModel.uiState.value.recommendedTracks.map { it.id },
-                            offsetTrackId = event.track.id
+                            offsetTrackId = event.track.id,
+                            playingFrom = PlayingFrom("HOME", "Recommended Songs")
                         )
                     )
                 }

@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.home.artist
 
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -79,7 +80,8 @@ fun ArtistScreen(
                             PlaybackUiEvent.PlayContext(
                                 contextType = PlaybackContextType.ARTIST,
                                 contextId = artistId,
-                                offsetTrackId = track.id
+                                offsetTrackId = track.id,
+                                playingFrom = artistUiState.artistProfile?.let { PlayingFrom("ARTIST", it.name) }
                             )
                         )
                     },

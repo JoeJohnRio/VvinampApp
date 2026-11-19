@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.search.searchresult
 
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -122,7 +123,8 @@ fun SearchResultsScreen(
                                     trackIds = searchItems.itemSnapshotList.items
                                         .filterIsInstance<SearchItemDomain.TrackSearch>()
                                         .map { it.id },
-                                    offsetTrackId = searchItem.id
+                                    offsetTrackId = searchItem.id,
+                                    playingFrom = PlayingFrom("SEARCH", "\"${uiState.searchText}\"")
                                 )
                             )
                         }

@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.home.album
 
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -65,7 +66,8 @@ fun AlbumScreen(
                         PlaybackUiEvent.PlayContext(
                             contextType = PlaybackContextType.SEARCH_RESULTS,
                             trackIds = uiState.tracks.map { it.id },
-                            offsetTrackId = track.id
+                            offsetTrackId = track.id,
+                            playingFrom = uiState.album?.let { PlayingFrom("ALBUM", it.title) }
                         )
                     )
                 },

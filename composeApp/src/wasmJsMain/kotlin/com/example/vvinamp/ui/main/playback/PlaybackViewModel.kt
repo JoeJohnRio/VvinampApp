@@ -165,6 +165,13 @@ actual class PlaybackViewModel(
     }
 
     actual fun onEvent(event: PlaybackUiEvent) {
+        // Remember where a play started so the player header can say so.
+        when (event) {
+            is PlaybackUiEvent.PlayContext -> _uiState.update { it.copy(playingFrom = event.playingFrom) }
+            is PlaybackUiEvent.OnTrackClicked, is PlaybackUiEvent.OnYoutubeTrackClicked ->
+                _uiState.update { it.copy(playingFrom = null) }
+            else -> Unit
+        }
         when (event) {
             is PlaybackUiEvent.TogglePlayback -> togglePlayback()
             is PlaybackUiEvent.ToggleLoopClicked -> toggleLoopClicked()

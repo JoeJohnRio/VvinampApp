@@ -53,15 +53,16 @@ fun PlayerTopBar(
             modifier = Modifier.weight(1f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            val playingFrom = uiState.playingFrom
             Text(
-                text = "PLAYING FROM ARTIST",
+                text = if (playingFrom != null) "PLAYING FROM ${playingFrom.label}" else "NOW PLAYING",
                 style = TSLabelMediumWhite().copy(
                     fontSize = 12.sp
                 )
             )
 
             Text(
-                text = uiState.currentTrack?.artistName.orErrorNoText(),
+                text = playingFrom?.name ?: uiState.currentTrack?.artistName.orErrorNoText(),
                 style = TSDisplayMediumWhite().copy(
                     fontSize = 12.sp
                 )

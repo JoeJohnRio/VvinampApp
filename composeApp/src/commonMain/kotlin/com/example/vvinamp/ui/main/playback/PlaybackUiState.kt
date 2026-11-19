@@ -22,5 +22,6 @@ data class PlaybackUiState(
     val isDownloading: Boolean = false,
     val downloadProgress: Int = 0,
     val youtubeEmbedId: String? = null,
-    val isEmbedPaused: Boolean = false
+    val isEmbedPaused: Boolean = false,
+    val playingFrom: PlayingFrom? = null
 )

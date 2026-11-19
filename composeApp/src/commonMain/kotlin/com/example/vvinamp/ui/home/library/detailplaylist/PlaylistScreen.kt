@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.home.library.detailplaylist
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.ui.theme.orThemeBackground
 import vvinampapp.composeapp.generated.resources.*
 
@@ -85,7 +86,8 @@ fun PlaylistScreen(
                         PlayContext(
                             contextType = PlaybackContextType.PLAYLIST,
                             contextId = event.playlistId,
-                            offsetTrackId = event.trackId
+                            offsetTrackId = event.trackId,
+                            playingFrom = uiState.playlist?.let { PlayingFrom("PLAYLIST", it.title) }
                         )
                     )
                 }
