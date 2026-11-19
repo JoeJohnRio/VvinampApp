@@ -9,7 +9,7 @@
     <string name="label_already_have_account">Already have an account?</string>
     <string name="label_sign_up_free">Sign up free</string>
     <string name="label_log_in">Log in</string>
-    <string name="label_you_need_to_confirm_this">You\'ll need to confirm this email later.</string>
+    <string name="label_you_need_to_confirm_this">You'll need to confirm this email later.</string>
     <string name="label_this_appears_on_your">This appears on your Vvinamp profile.</string>
     <string name="label_atleast_10_characters">Use at least 10 characters.</string>
     <string name="label_continue">Next</string>
@@ -24,7 +24,7 @@
     <string name="label_terms_of_use">Terms of Use</string>
     <string name="label_privacy_policy">Privacy Policy</string>
     <string name="label_i_would_prefer_not">I would prefer not to receive marketing messages from Vvinamp.</string>
-    <string name="label_share_my_registration_data">Share my registration data with Vvinamp\'s content providers for marketing purposes.</string>
+    <string name="label_share_my_registration_data">Share my registration data with Vvinamp's content providers for marketing purposes.</string>
     <string name="label_login_without_password">Log in without password</string>
     <string name="label_start_browsing">Start browsing</string>
 
@@ -37,15 +37,15 @@
     <string name="title_login_to_vvinamp">Sign up to start listening</string>
     <string name="title_login">Login</string>
     <string name="title_create_account">Create account</string>
-    <string name="title_what_is_your_email">What\'s your email?</string>
+    <string name="title_what_is_your_email">What's your email?</string>
     <string name="title_email_or_username">Email or username</string>
-    <string name="title_what_is_your_name">What\'s your name?</string>
+    <string name="title_what_is_your_name">What's your name?</string>
     <string name="title_popular">Popular</string>
     <string name="title_popular_releases">Popular Releases</string>
     <string name="title_password">Password</string>
     <string name="title_create_a_password">Create a password</string>
-    <string name="title_what_is_your_date_of_birth">What\'s your date of birth?</string>
-    <string name="title_what_is_your_gender">What\'s your gender?</string>
+    <string name="title_what_is_your_date_of_birth">What's your date of birth?</string>
+    <string name="title_what_is_your_gender">What's your gender?</string>
     <string name="label_show_all">Show All</string>
     <string name="label_see_more">See More</string>
     <string name="label_see_discography">See discography</string>
