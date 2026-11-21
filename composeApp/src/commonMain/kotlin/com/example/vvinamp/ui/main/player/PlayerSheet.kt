@@ -10,8 +10,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -47,7 +47,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
@@ -237,49 +236,10 @@ fun PlayerSheet(
                     }
                 }
             }
-            .pointerInput(state) {
-                // Mouse drags. Compose's scrolling ignores the mouse, and the stock anchoredDraggable only
-                // closed the player past half the screen, so an ordinary drag sprang back. The player now
-                // follows the pointer and closes once pulled 15% of the way down or flicked down.
-                // Touch drags still go through the nested scroll connection above.
-                awaitEachGesture {
-                    val down = awaitFirstDown(requireUnconsumed = false, pass = PointerEventPass.Initial)
-                    if (down.type != PointerType.Mouse || scrollState.value != 0) return@awaitEachGesture
-                    // Positions are measured on screen (local y plus the sheet's offset), because the sheet
-                    // moves under the pointer while it's dragged.
-                    val startY = down.position.y + state.requireOffset()
-                    var dragging = false
-                    var lastY = startY
-                    var lastMs = down.uptimeMillis
-                    var velocity = 0f
-                    while (true) {
-                        val change = awaitPointerEvent(PointerEventPass.Initial).changes
-                            .firstOrNull { it.id == down.id } ?: break
-                        if (!change.pressed) break
-                        val y = change.position.y + state.requireOffset()
-                        if (!dragging) {
-                            val dx = kotlin.math.abs(change.position.x - down.position.x)
-                            // A few pixels of downward movement starts the drag, so clicks with a slight
-                            // wobble still count as clicks.
-                            dragging = y - startY > 6.dp.toPx() && y - startY > dx
-                        }
-                        if (dragging) {
-                            change.consume()
-                            state.dispatchRawDelta((y - startY).coerceAtLeast(0f) - state.requireOffset())
-                            val dt = (change.uptimeMillis - lastMs).coerceAtLeast(1L)
-                            velocity = (y - lastY) / dt * 1000f
-                        }
-                        lastY = y
-                        lastMs = change.uptimeMillis
-                    }
-                    if (dragging) {
-                        val collapse = state.requireOffset() > size.height * 0.15f || velocity > 1000f
-                        scope.launch {
-                            state.animateTo(if (collapse) BottomSheetState.COLLAPSED else BottomSheetState.EXPANDED)
-                        }
-                    }
-                }
-            }
+            .anchoredDraggable(
+                state = state,
+                orientation = Orientation.Vertical
+            )
             .clip(RoundedCornerShape(32.dp))
     ) {
         PlayerSheetContent(

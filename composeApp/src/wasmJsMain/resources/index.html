@@ -34,6 +34,37 @@
             var input = host && host.shadowRoot && host.shadowRoot.activeElement;
             if (input && input.tagName === 'TEXTAREA' && e.composedPath().indexOf(input) < 0) e.preventDefault();
         }, true);
+
+        // Compose for web only scrolls lists, carousels and sheets with touch; a mouse drag does nothing.
+        // While the left button is held on the app, its events are re-sent as touch so click-and-drag
+        // behaves like a finger. Hovering, the wheel and trackpad swipes are left alone.
+        (function () {
+            var pressedId = null;
+            function resend(e, type) {
+                e.stopImmediatePropagation();
+                var up = type === 'pointerup' || type === 'pointercancel';
+                e.composedPath()[0].dispatchEvent(new PointerEvent(type, {
+                    bubbles: true, cancelable: true, composed: true,
+                    pointerId: e.pointerId, pointerType: 'touch', isPrimary: true,
+                    clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY,
+                    width: 1, height: 1, pressure: up ? 0 : 0.5, button: 0, buttons: up ? 0 : 1
+                }));
+            }
+            window.addEventListener('pointerdown', function (e) {
+                if (!e.isTrusted || e.pointerType !== 'mouse' || e.button !== 0) return;
+                if (e.composedPath()[0].tagName !== 'CANVAS') return;
+                pressedId = e.pointerId;
+                resend(e, 'pointerdown');
+            }, true);
+            ['pointermove', 'pointerup', 'pointercancel', 'pointerenter', 'pointerleave'].forEach(function (type) {
+                window.addEventListener(type, function (e) {
+                    if (!e.isTrusted || e.pointerId !== pressedId) return;
+                    if (type === 'pointerenter' || type === 'pointerleave') { e.stopImmediatePropagation(); return; }
+                    resend(e, type);
+                    if (type !== 'pointermove') pressedId = null;
+                }, true);
+            });
+        })();
     </script>
     <script src="composeApp.js"></script>
 </head>
