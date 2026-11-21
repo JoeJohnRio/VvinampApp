@@ -1,13 +1,12 @@
 package com.example.vvinamp.ui.home.library
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -122,8 +121,9 @@ fun LibraryContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(contentPadding)
-                .padding(horizontal = 16.dp),
+                .padding(contentPadding),
+            // Same bottom room as Home, so the last playlist clears the mini player and the tab bar.
+            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, bottom = 120.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -168,8 +168,7 @@ fun LibraryContent(
                         onClick = { onEvent(LibraryUiEvent.onCreateNewPlaylistClicked) }
                     )
 
-                    // Keeps the last playlist clear of the mini player and bottom bar.
-                    else -> Spacer(Modifier.height(50.dp))
+                    else -> Unit
                 }
             }
         }

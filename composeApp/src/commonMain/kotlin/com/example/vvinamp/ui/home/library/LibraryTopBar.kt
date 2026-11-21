@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.home.library
+import androidx.compose.foundation.layout.statusBarsPadding
 import vvinampapp.composeapp.generated.resources.*
 
 import androidx.compose.foundation.background
@@ -29,9 +30,9 @@ import com.example.vvinamp.util.preview.PreviewTheme
 @Composable
 fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
     Column(
-        modifier = Modifier.background(
-            color = MaterialTheme.colorScheme.background
-        )
+        modifier = Modifier
+            .background(color = MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
     ) {
         TopNavigationWithButtons(
             title = previewSafeString(Res.string.title_your_library, "Your Library"),
