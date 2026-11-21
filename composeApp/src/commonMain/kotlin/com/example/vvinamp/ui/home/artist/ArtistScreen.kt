@@ -81,9 +81,36 @@ fun ArtistScreen(
                                 contextType = PlaybackContextType.ARTIST,
                                 contextId = artistId,
                                 offsetTrackId = track.id,
-                                playingFrom = artistUiState.artistProfile?.let { PlayingFrom("ARTIST", it.name) }
+                                playingFrom = PlayingFrom("ARTIST", it.name)
                             )
                         )
+                    },
+                    // shortcut: Play always starts from the first song, even if this artist is already playing.
+                    onPlayClick = {
+                        artistUiState.topSongs?.tracks?.firstOrNull()?.let { first ->
+                            playbackViewModel.onEvent(
+                                PlaybackUiEvent.PlayContext(
+                                    contextType = PlaybackContextType.ARTIST,
+                                    contextId = artistId,
+                                    offsetTrackId = first.id,
+                                    playingFrom = PlayingFrom("ARTIST", it.name)
+                                )
+                            )
+                        }
+                    },
+                    // The player's shuffle toggle doesn't reorder anything yet, so send the songs already shuffled.
+                    onShuffleClick = {
+                        val shuffled = artistUiState.topSongs?.tracks.orEmpty().map { track -> track.id }.shuffled()
+                        shuffled.firstOrNull()?.let { first ->
+                            playbackViewModel.onEvent(
+                                PlaybackUiEvent.PlayContext(
+                                    contextType = PlaybackContextType.SEARCH_RESULTS,
+                                    trackIds = shuffled,
+                                    offsetTrackId = first,
+                                    playingFrom = PlayingFrom("ARTIST", it.name)
+                                )
+                            )
+                        }
                     },
                     updateDominantColor = { color ->
                         artistViewModel.updateDominantColor(color)
@@ -104,6 +131,8 @@ fun ArtistProfileContent(
     onClickAlbum: (String) -> Unit = {},
     updateDominantColor: (Color) -> Unit,
     onTrackClicked: (TrackDomain) -> Unit,
+    onPlayClick: () -> Unit = {},
+    onShuffleClick: () -> Unit = {},
     playbackUiState: PlaybackUiState = PlaybackUiState()
 ) {
     val scrollState = rememberLazyListState()
@@ -200,8 +229,8 @@ fun ArtistProfileContent(
                         artistProfile = artistProfile,
                         isFollowing = true,
                         onFollowClick = { /* Handle follow click */ },
-                        onPlayClick = { /* Handle play click */ },
-                        onShuffleClick = { /* Handle shuffle click */ }
+                        onPlayClick = onPlayClick,
+                        onShuffleClick = onShuffleClick
                     )
 
                     Spacer(Modifier.height(16.dp))
