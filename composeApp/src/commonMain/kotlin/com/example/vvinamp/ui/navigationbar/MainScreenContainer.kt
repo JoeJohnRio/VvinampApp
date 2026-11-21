@@ -1,5 +1,6 @@
 package com.example.vvinamp.ui.navigationbar
 
+import com.example.vvinamp.util.showToast
 import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
@@ -198,8 +199,24 @@ fun MainScreenContainer(
         onEvent = {
             playbackViewModel.onEvent(it)
         },
-        onTrackOptionsEvent = {
-            playbackViewModel.onEventTrackOptions(it)
+        onTrackOptionsEvent = { event ->
+            val track = playbackUiState.currentTrack
+            when (event) {
+                TrackOptionsUiEvent.OnGoToAlbumClick -> track?.albumId?.let { id ->
+                    openFromPlayer { bottomNavRouter.navigateToAlbum(id) }
+                }
+                TrackOptionsUiEvent.OnGoToArtistClick -> track?.artistId?.let { id ->
+                    openFromPlayer { bottomNavRouter.navigateToArtistPage(id) }
+                }
+                TrackOptionsUiEvent.OnAddToQueueClick -> track?.let {
+                    playbackViewModel.onEvent(PlaybackUiEvent.AddToQueue(listOf(it.id)))
+                    playbackViewModel.onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(false))
+                    showToast("Added to queue")
+                }
+                // shortcut: sharing and adding to a playlist from here aren't built yet.
+                TrackOptionsUiEvent.OnShareClick, TrackOptionsUiEvent.OnAddToPlaylistClick -> showToast("Coming soon")
+                else -> playbackViewModel.onEventTrackOptions(event)
+            }
         },
         sheetState = trackOptionSheetState,
         uiState = playbackUiState

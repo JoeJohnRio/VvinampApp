@@ -7,7 +7,6 @@ sealed class TrackOptionsUiEvent {
     object OnShareClick : TrackOptionsUiEvent()
     object OnAddToPlaylistClick : TrackOptionsUiEvent()
     object OnAddToQueueClick : TrackOptionsUiEvent()
-    object OnHideTrackClick : TrackOptionsUiEvent()
     object OnGoToAlbumClick : TrackOptionsUiEvent()
     object OnGoToArtistClick : TrackOptionsUiEvent()
     object OnSleepTimerClick : TrackOptionsUiEvent()

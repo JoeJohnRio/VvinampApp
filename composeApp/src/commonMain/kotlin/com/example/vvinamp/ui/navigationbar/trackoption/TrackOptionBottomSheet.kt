@@ -125,7 +125,9 @@ fun TrackOptionBottomSheetComponent(
         )
 
         TrackOptionsContent(
-            onEvent = onEvent
+            onEvent = onEvent,
+            canGoToAlbum = uiState.currentTrack?.albumId != null,
+            canGoToArtist = uiState.currentTrack?.artistId != null
         )
     }
 }

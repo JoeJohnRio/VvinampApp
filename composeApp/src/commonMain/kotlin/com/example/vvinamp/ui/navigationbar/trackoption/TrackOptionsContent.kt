@@ -10,7 +10,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.QueueMusic
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Album
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Timer
@@ -30,6 +29,8 @@ import com.example.vvinamp.util.preview.PreviewTheme
 @Composable
 fun TrackOptionsContent(
     onEvent: (TrackOptionsUiEvent) -> Unit,
+    canGoToAlbum: Boolean = true,
+    canGoToArtist: Boolean = true,
 ) {
     Column {
         ImageVectorWithTextOnly(
@@ -48,20 +49,20 @@ fun TrackOptionsContent(
             text = "Add to Queue"
         ) { onEvent(TrackOptionsUiEvent.OnAddToQueueClick) }
 
-        ImageVectorWithTextOnly(
-            imageVector = Icons.Default.Close,
-            text = "Hide in this playlist"
-        ) { onEvent(TrackOptionsUiEvent.OnHideTrackClick) }
+        // Only songs that came through the play queue know their album and artist.
+        if (canGoToAlbum) {
+            ImageVectorWithTextOnly(
+                imageVector = Icons.Default.Album,
+                text = "Go to album"
+            ) { onEvent(TrackOptionsUiEvent.OnGoToAlbumClick) }
+        }
 
-        ImageVectorWithTextOnly(
-            imageVector = Icons.Default.Album,
-            text = "Go to album"
-        ) { onEvent(TrackOptionsUiEvent.OnGoToAlbumClick) }
-
-        ImageVectorWithTextOnly(
-            imageVector = Icons.Default.Person,
-            text = "Go to artist"
-        ) { onEvent(TrackOptionsUiEvent.OnGoToArtistClick) }
+        if (canGoToArtist) {
+            ImageVectorWithTextOnly(
+                imageVector = Icons.Default.Person,
+                text = "Go to artist"
+            ) { onEvent(TrackOptionsUiEvent.OnGoToArtistClick) }
+        }
 
         ImageVectorWithTextOnly(
             imageVector = Icons.Default.Timer,
