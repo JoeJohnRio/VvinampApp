@@ -9,6 +9,8 @@ mutation PlayContext($context: PlaybackContextInput!, $offsetTrackId: ID!) {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
       upcomingTrack {
         trackId
@@ -18,6 +20,8 @@ mutation PlayContext($context: PlaybackContextInput!, $offsetTrackId: ID!) {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
       previousTrack {
         trackId
@@ -27,6 +31,8 @@ mutation PlayContext($context: PlaybackContextInput!, $offsetTrackId: ID!) {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
     }
     playbackInfo {

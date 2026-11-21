@@ -9,6 +9,8 @@ mutation SkipToPrevious {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
       previousTrack {
         trackId
@@ -18,6 +20,8 @@ mutation SkipToPrevious {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
       upcomingTrack {
         trackId
@@ -27,6 +31,8 @@ mutation SkipToPrevious {
         artistBio
         artistProfileImageUrl
         artistMonthlyListeners
+        artistId
+        albumId
       }
     }
     playbackInfo {

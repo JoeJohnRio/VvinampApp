@@ -8,6 +8,8 @@ mutation AddToQueue($ids: [ID!]!) {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
     previousTrack {
       trackId
@@ -17,6 +19,8 @@ mutation AddToQueue($ids: [ID!]!) {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
     upcomingTrack {
       trackId
@@ -26,6 +30,8 @@ mutation AddToQueue($ids: [ID!]!) {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
   }
 }

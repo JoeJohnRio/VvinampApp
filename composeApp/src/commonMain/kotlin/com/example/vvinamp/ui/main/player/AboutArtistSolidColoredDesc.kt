@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.main.player
+import androidx.compose.foundation.clickable
 import vvinampapp.composeapp.generated.resources.*
 
 import androidx.compose.foundation.background
@@ -56,16 +57,19 @@ fun resolveArtistImageUrl(track: TrackDomain?): String {
 
 @Composable
 fun AboutArtistSolidColoredDesc(
-    uiState: PlaybackUiState
+    uiState: PlaybackUiState,
+    onOpenArtist: (String) -> Unit = {}
 ) {
     val currentTrack = uiState.currentTrack
     val artistImageUrl = resolveArtistImageUrl(currentTrack)
     val fallbackImageUrl = currentTrack?.albumCoverUrl.orEmpty()
 
+    val artistId = currentTrack?.artistId
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
+            .then(if (artistId != null) Modifier.clickable { onOpenArtist(artistId) } else Modifier)
     ) {
         ImageAboutArtist(
             artistImageUrl = artistImageUrl,

@@ -8,4 +8,6 @@ data class TrackMinimalDomain(
     val artistBio: String? = null,
     val artistProfileImageUrl: String? = null,
     val artistMonthlyListeners: Long? = null,
+    val artistId: String? = null,
+    val albumId: String? = null,
 )

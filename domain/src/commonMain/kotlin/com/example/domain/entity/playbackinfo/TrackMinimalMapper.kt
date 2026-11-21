@@ -14,6 +14,8 @@ fun TrackMinimalDomain.toTrackDomain(): TrackDomain {
         releaseDate = "",
         artistProfileImageUrl = this.artistProfileImageUrl,
         artistBio = this.artistBio,
-        artistMonthlyListeners = this.artistMonthlyListeners
+        artistMonthlyListeners = this.artistMonthlyListeners,
+        artistId = this.artistId,
+        albumId = this.albumId
     )
 }

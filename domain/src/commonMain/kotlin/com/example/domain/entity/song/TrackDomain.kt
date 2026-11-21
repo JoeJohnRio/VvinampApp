@@ -16,6 +16,9 @@ data class TrackDomain(
     val artistProfileImageUrl: String? = null,
     val artistBio: String? = null,
     val artistMonthlyListeners: Long? = null,
+    // Only set for songs that came through the play queue, which is what the player shows.
+    val artistId: String? = null,
+    val albumId: String? = null,
 )
 //joel456 Temporary
 fun ListeningHistoryDomain.toTrackDomain(): TrackDomain {

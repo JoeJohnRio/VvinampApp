@@ -8,6 +8,8 @@ query GetPlayerQueue {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
     upcomingTrack {
       trackId
@@ -17,6 +19,8 @@ query GetPlayerQueue {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
     previousTrack {
       trackId
@@ -26,6 +30,8 @@ query GetPlayerQueue {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
   }
 }

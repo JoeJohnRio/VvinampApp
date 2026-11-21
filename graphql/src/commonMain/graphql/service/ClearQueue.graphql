@@ -8,6 +8,8 @@ mutation ClearQueue {
       artistBio
       artistProfileImageUrl
       artistMonthlyListeners
+      artistId
+      albumId
     }
   }
 }

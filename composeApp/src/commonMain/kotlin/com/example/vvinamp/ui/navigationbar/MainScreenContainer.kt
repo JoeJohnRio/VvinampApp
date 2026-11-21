@@ -175,13 +175,21 @@ fun MainScreenContainer(
 
     ScrimAlphaBoxAnchored(playerState)
 
+    // Leaving the player for another screen: close the menu and the player, then go there.
+    fun openFromPlayer(navigate: () -> Unit) {
+        playbackViewModel.onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(false))
+        scope.launch { playerState.animateTo(BottomSheetState.COLLAPSED) }
+        navigate()
+    }
+
     PlayerSheet(
         playbackUiState = playbackUiState,
         player = mediaController,
         state = playerState,
         onEvent = { event ->
             playbackViewModel.onEvent(event)
-        }
+        },
+        onOpenArtist = { artistId -> openFromPlayer { bottomNavRouter.navigateToArtistPage(artistId) } }
     )
 
 //    ScrimAlphaBoxAnchored(trackOptionState)

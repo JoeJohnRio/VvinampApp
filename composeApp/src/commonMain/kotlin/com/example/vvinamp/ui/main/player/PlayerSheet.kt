@@ -82,6 +82,7 @@ fun PlayerSheet(
     playbackUiState: PlaybackUiState,
     player: Any?,
     state: AnchoredDraggableState<BottomSheetState>,
+    onOpenArtist: (String) -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val entranceOffset = remember { Animatable(0f) }
@@ -251,7 +252,8 @@ fun PlayerSheet(
                 scope.launch { state.animateTo(BottomSheetState.COLLAPSED) }
             },
             onEvent = onEvent,
-            maxHeight = maxHeight
+            maxHeight = maxHeight,
+            onOpenArtist = onOpenArtist
         )
     }
 }
@@ -263,7 +265,8 @@ fun PlayerSheetContent(
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
     player: Any?,
-    maxHeight: Dp
+    maxHeight: Dp,
+    onOpenArtist: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -339,7 +342,8 @@ fun PlayerSheetContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         AboutArtistSolidColoredDesc(
-            uiState = uiState
+            uiState = uiState,
+            onOpenArtist = onOpenArtist
         )
 
         Spacer(modifier = Modifier.height(50.dp))
