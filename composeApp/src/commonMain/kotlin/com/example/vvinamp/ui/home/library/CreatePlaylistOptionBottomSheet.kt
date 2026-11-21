@@ -60,7 +60,7 @@ fun CreatePlaylistBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(vertical = 8.dp)
         ) {
             ActionMenuItem(
                 title = "Playlist",
@@ -71,16 +71,12 @@ fun CreatePlaylistBottomSheet(
                 }
             )
 
-            Spacer(Modifier.height(16.dp))
-
             ActionMenuItem(
                 title = "Collaborative playlist",
                 description = "Create a playlist together with friends",
                 imageVector = Icons.Default.Group,
                 onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             )
-
-            Spacer(Modifier.height(16.dp))
 
             ActionMenuItem(
                 title = "Blend",
@@ -100,10 +96,12 @@ fun ActionMenuItem(
     imageVector: ImageVector? = null,
     onClick: () -> Unit = {}
 ) {
+    // The whole row is the tap target and highlights edge to edge, not just the text.
     Row(
-        modifier = Modifier.clickable{
-            onClick()
-        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
