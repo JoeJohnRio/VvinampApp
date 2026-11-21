@@ -307,6 +307,8 @@ actual class PlaybackViewModel(
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
+                // The player stays on the current song, so say why nothing changed.
+                showToast("Couldn't play the next song")
             }
         }
     }
@@ -327,6 +329,8 @@ actual class PlaybackViewModel(
                 saveTrackInBackground(track)
             }.onFailure { error ->
                 _uiState.update { it.copy(error = error.message) }
+                // The player stays on the current song, so say why nothing changed.
+                showToast("Couldn't play the previous song")
             }
         }
     }
