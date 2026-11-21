@@ -45,6 +45,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.material.icons.Icons
@@ -201,6 +204,37 @@ fun PlayerSheet(
                 )
             }
             .nestedScroll(nestedScrollConnection)
+            .pointerInput(state) {
+                // Trackpad and mouse-wheel swipes arrive as scroll events, not drags, so the drag handling
+                // never saw them. Pulling down from the top of the player closes it, like a touch swipe.
+                var pulled = 0f
+                var lastEventMs = 0L
+                var startedAtTop = false
+                awaitPointerEventScope {
+                    while (true) {
+                        val event = awaitPointerEvent(PointerEventPass.Initial)
+                        if (event.type != PointerEventType.Scroll) continue
+                        val change = event.changes.first()
+                        // A pause longer than this starts a new swipe, so momentum from scrolling back up
+                        // through the player doesn't close it on arrival at the top.
+                        if (change.uptimeMillis - lastEventMs > 300) {
+                            pulled = 0f
+                            startedAtTop = scrollState.value == 0
+                        }
+                        lastEventMs = change.uptimeMillis
+                        val dy = change.scrollDelta.y // pixels on web; negative means pulling down
+                        if (startedAtTop && dy < 0) {
+                            pulled -= dy
+                            if (pulled > 150f) {
+                                startedAtTop = false
+                                scope.launch { state.animateTo(BottomSheetState.COLLAPSED) }
+                            }
+                        } else if (dy > 0) {
+                            pulled = 0f
+                        }
+                    }
+                }
+            }
             .anchoredDraggable(
                 state = state,
                 orientation = Orientation.Vertical
