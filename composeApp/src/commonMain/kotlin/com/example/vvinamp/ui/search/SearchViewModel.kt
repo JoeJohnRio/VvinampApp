@@ -20,6 +20,8 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.vvinamp.util.isDuplicateTrackError
+import com.example.vvinamp.util.showToast
 
 class SearchViewModel(
     private val repository: SearchRepository,
@@ -76,8 +78,21 @@ class SearchViewModel(
         }
     }
 
-    fun onOpenAddToPlaylist(track: com.example.domain.entity.search.SearchItemDomain.YoutubeTrackSearch) {
-        _uiState.update { it.copy(trackForPlaylist = track) }
+    fun setTargetPlaylist(playlistId: String?, playlistTitle: String?) {
+        _uiState.update { it.copy(targetPlaylistId = playlistId, targetPlaylistTitle = playlistTitle) }
+    }
+
+    // Catalog and YouTube songs take the same path: straight into the target playlist, or the picker without one.
+    fun onAddClicked(item: SearchItemDomain) {
+        val state = _uiState.value
+        val targetId = state.targetPlaylistId
+        if (item.addKey() in state.addingIds) return
+
+        if (targetId == null) {
+            _uiState.update { it.copy(trackForPlaylist = item) }
+        } else if (!state.isAddedToTarget(item.addKey())) {
+            addToPlaylist(item, targetId, state.targetPlaylistTitle ?: "playlist")
+        }
     }
 
     fun onDismissAddToPlaylist() {
@@ -86,23 +101,44 @@ class SearchViewModel(
 
     fun addTrackToPlaylist(playlistId: String, playlistTitle: String) {
         val track = _uiState.value.trackForPlaylist ?: return
-        val useCase = playlistUseCase?.addYoutubeTrackToPlaylistUseCase ?: return
+        addToPlaylist(track, playlistId, playlistTitle)
+    }
+
+    private fun addToPlaylist(item: SearchItemDomain, playlistId: String, playlistTitle: String) {
+        val useCase = playlistUseCase ?: return
+        val id = item.addKey()
 
         viewModelScope.launch {
-            _uiState.update { it.copy(isAddingToPlaylist = true) }
-            useCase.invoke(
-                playlistId = playlistId,
-                youtubeId = track.id,
-                title = track.title,
-                artistName = track.channel,
-                thumbnailUrl = track.thumbnail,
-                duration = track.duration
-            ).onSuccess {
-                com.example.vvinamp.util.showToast("Added to $playlistTitle")
-                _uiState.update { it.copy(trackForPlaylist = null, isAddingToPlaylist = false) }
-            }.onFailure { error ->
-                com.example.vvinamp.util.showToast("Failed to add: ${error.message ?: "Unknown error"}")
-                _uiState.update { it.copy(isAddingToPlaylist = false) }
+            _uiState.update { it.copy(isAddingToPlaylist = true, addingIds = it.addingIds + id) }
+            val result = when (item) {
+                is SearchItemDomain.TrackSearch -> useCase.addSongToPlaylistUseCase.invoke(
+                    playlistId = playlistId,
+                    trackId = item.id
+                )
+                is SearchItemDomain.YoutubeTrackSearch -> useCase.addYoutubeTrackToPlaylistUseCase.invoke(
+                    playlistId = playlistId,
+                    youtubeId = item.id,
+                    title = item.title,
+                    artistName = item.channel,
+                    thumbnailUrl = item.thumbnail,
+                    duration = item.duration
+                )
+                else -> return@launch
+            }
+
+            val added = result.isSuccess || result.exceptionOrNull()?.isDuplicateTrackError() == true
+            _uiState.update {
+                it.copy(
+                    isAddingToPlaylist = false,
+                    addingIds = it.addingIds - id,
+                    trackForPlaylist = if (added) null else it.trackForPlaylist,
+                    addedKeys = if (added) it.addedKeys + "$playlistId/$id" else it.addedKeys
+                )
+            }
+            when {
+                result.isSuccess -> showToast("Added to $playlistTitle")
+                added -> showToast("Already in $playlistTitle")
+                else -> showToast("Couldn't add: ${result.exceptionOrNull()?.message ?: "try again"}")
             }
         }
     }

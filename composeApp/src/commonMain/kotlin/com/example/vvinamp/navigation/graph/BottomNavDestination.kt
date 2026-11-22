@@ -22,7 +22,11 @@ sealed interface BottomNavDestination: NavKey {
     @Serializable
     data class PlaylistEdit(val id: String): BottomNavDestination
     @Serializable
-    data object SearchResults : BottomNavDestination
+    // With a target playlist, adding a song puts it straight into that playlist.
+    data class SearchResults(
+        val targetPlaylistId: String? = null,
+        val targetPlaylistTitle: String? = null
+    ) : BottomNavDestination
 
     @Serializable
     data object Create : BottomNavDestination

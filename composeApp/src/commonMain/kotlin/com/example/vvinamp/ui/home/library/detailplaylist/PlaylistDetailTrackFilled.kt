@@ -37,13 +37,14 @@ import com.example.vvinamp.util.preview.navigatorDummy
 
 @Composable
 fun PlaylistDetailTrackFilled(
-    playlist: PlaylistComplete?
+    playlist: PlaylistComplete?,
+    titleModifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
-            modifier = Modifier,
+            modifier = titleModifier,
             text = playlist?.title.orErrorNoText(),
             style = TSHeadlineMediumWhite().copy(
                 fontSize = 22.sp
@@ -52,21 +53,7 @@ fun PlaylistDetailTrackFilled(
 
         Spacer(Modifier.height(8.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            PlaylistCreatorComponent(playlist)
-
-            Spacer(Modifier.width(8.dp))
-
-            Text(
-                modifier = Modifier,
-                text = playlist?.creator?.username.orErrorNoText(),
-                style = TSHeadlineMediumWhite().copy(
-                    fontSize = 16.sp
-                )
-            )
-        }
+        PlaylistCreatorRow(playlist)
 
         Spacer(Modifier.height(8.dp))
 

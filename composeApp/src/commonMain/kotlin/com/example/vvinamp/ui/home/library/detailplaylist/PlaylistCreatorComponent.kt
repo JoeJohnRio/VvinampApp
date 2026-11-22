@@ -6,6 +6,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Text
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
+import com.example.vvinamp.ui.theme.TSHeadlineMediumWhite
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -87,5 +93,20 @@ fun PlaylistCreatorComponent(playlist: PlaylistComplete?) {
                 )
             }
         }
+    }
+}
+@Composable
+fun PlaylistCreatorRow(playlist: PlaylistComplete?) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        PlaylistCreatorComponent(playlist)
+
+        Spacer(Modifier.width(8.dp))
+
+        Text(
+            text = playlist?.creator?.username.orEmpty(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = TSHeadlineMediumWhite().copy(fontSize = 16.sp)
+        )
     }
 }

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +38,7 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.ui.widget.SpotifyPlayingIndicator
 import com.example.vvinamp.util.preview.PreviewTheme
+import com.example.vvinamp.util.showToast
 import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
 
@@ -44,10 +47,19 @@ fun SearchItemComponent(
     domain: SearchItemDomain?,
     onClicked: (SearchItemDomain) -> Unit = {},
     playbackUiState: PlaybackUiState = PlaybackUiState(),
-    onAddToPlaylistClicked: ((SearchItemDomain.YoutubeTrackSearch) -> Unit)? = null
+    onAddToPlaylistClicked: ((SearchItemDomain) -> Unit)? = null,
+    isAdded: Boolean = false,
+    isAdding: Boolean = false
 ) {
     when (domain) {
-        is SearchItemDomain.TrackSearch -> TrackSearchComponent(domain, onClicked, playbackUiState)
+        is SearchItemDomain.TrackSearch -> TrackSearchComponent(
+            domain = domain,
+            onClicked = onClicked,
+            playbackUiState = playbackUiState,
+            onAddToPlaylistClicked = onAddToPlaylistClicked,
+            isAdded = isAdded,
+            isAdding = isAdding
+        )
 
         is SearchItemDomain.AlbumSearch -> AlbumSearchComponent(domain, onClicked)
 
@@ -69,7 +81,9 @@ fun SearchItemComponent(
             domain = domain,
             onClicked = onClicked,
             playbackUiState = playbackUiState,
-            onAddToPlaylistClicked = onAddToPlaylistClicked
+            onAddToPlaylistClicked = onAddToPlaylistClicked,
+            isAdded = isAdded,
+            isAdding = isAdding
         )
 
         null -> Text(
@@ -83,7 +97,9 @@ fun YoutubeSearchComponent(
     domain: SearchItemDomain.YoutubeTrackSearch,
     onClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit,
     playbackUiState: PlaybackUiState = PlaybackUiState(),
-    onAddToPlaylistClicked: ((SearchItemDomain.YoutubeTrackSearch) -> Unit)? = null
+    onAddToPlaylistClicked: ((SearchItemDomain) -> Unit)? = null,
+    isAdded: Boolean = false,
+    isAdding: Boolean = false
 ) {
     val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == domain.id
 
@@ -148,17 +164,7 @@ fun YoutubeSearchComponent(
         }
 
         if (onAddToPlaylistClicked != null) {
-            IconButton(
-                onClick = { onAddToPlaylistClicked(domain) },
-                modifier = Modifier.size(40.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.AddCircle,
-                    contentDescription = "Add to playlist",
-                    tint = MaterialTheme.colorScheme.outline,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
+            AddToPlaylistButton(isAdded = isAdded, isAdding = isAdding, onClick = { onAddToPlaylistClicked(domain) })
         }
     }
 }
@@ -167,7 +173,10 @@ fun YoutubeSearchComponent(
 fun TrackSearchComponent(
     domain: SearchItemDomain.TrackSearch,
     onClicked: (SearchItemDomain.TrackSearch) -> Unit,
-    playbackUiState: PlaybackUiState = PlaybackUiState()
+    playbackUiState: PlaybackUiState = PlaybackUiState(),
+    onAddToPlaylistClicked: ((SearchItemDomain) -> Unit)? = null,
+    isAdded: Boolean = false,
+    isAdding: Boolean = false
 ) {
     val isCurrentTrackPlayed = playbackUiState.currentTrack?.id == domain.id
 
@@ -230,31 +239,19 @@ fun TrackSearchComponent(
             modifier = Modifier.weight(0.3f),
         ) {
             IconButton(
-                onClick = {
-                    //add to liked song
-                },
-                modifier = Modifier.size(48.dp) // Standard IconButton size
+                onClick = { showToast("Coming soon") },
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "",
+                    contentDescription = "More options",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
                 )
             }
 
-            IconButton(
-                onClick = {
-                    //add to liked song
-                },
-                modifier = Modifier.size(48.dp) // Standard IconButton size
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AddCircle,
-                    contentDescription = "",
-                    tint = MaterialTheme.colorScheme.inversePrimary,
-                    modifier = Modifier.size(24.dp)
-                )
+            if (onAddToPlaylistClicked != null) {
+                AddToPlaylistButton(isAdded = isAdded, isAdding = isAdding, onClick = { onAddToPlaylistClicked(domain) })
             }
         }
     }
@@ -380,28 +377,24 @@ fun ArtistSearchComponent(
 
         Row() {
             IconButton(
-                onClick = {
-                    //add to liked song
-                },
-                modifier = Modifier.size(48.dp) // Standard IconButton size
+                onClick = { showToast("Coming soon") },
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "",
+                    contentDescription = "More options",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
                 )
             }
 
             IconButton(
-                onClick = {
-                    //add to liked song
-                },
-                modifier = Modifier.size(48.dp) // Standard IconButton size
+                onClick = { showToast("Coming soon") },
+                modifier = Modifier.size(48.dp)
             ) {
                 Icon(
                     imageVector = Icons.Filled.AddCircle,
-                    contentDescription = "",
+                    contentDescription = "Add",
                     tint = MaterialTheme.colorScheme.inversePrimary,
                     modifier = Modifier.size(24.dp)
                 )
@@ -425,5 +418,26 @@ fun SearchItemComponentPreview() {
                 Spacer(modifier = Modifier.height(16.dp))
             }
         }
+    }
+}
+// Shared by catalog and YouTube rows so both add the same way; a tick once the song is in the target playlist.
+// A YouTube add takes a few seconds on the server, so the button spins meanwhile.
+@Composable
+private fun AddToPlaylistButton(isAdded: Boolean, isAdding: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick, enabled = !isAdding, modifier = Modifier.size(48.dp)) {
+        if (isAdding) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                color = MaterialTheme.colorScheme.outline,
+                strokeWidth = 2.dp
+            )
+            return@IconButton
+        }
+        Icon(
+            imageVector = if (isAdded) Icons.Default.CheckCircle else Icons.Default.AddCircle,
+            contentDescription = if (isAdded) "Added to playlist" else "Add to playlist",
+            tint = if (isAdded) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }

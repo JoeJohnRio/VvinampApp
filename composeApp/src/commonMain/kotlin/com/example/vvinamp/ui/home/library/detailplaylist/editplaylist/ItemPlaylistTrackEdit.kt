@@ -25,6 +25,7 @@ import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
 import com.example.domain.entity.song.TrackDomain
 import com.example.domain.entity.song.trackDummy
 
@@ -52,7 +53,9 @@ fun LazyItemScope.ItemPlaylistTrackEdit(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Takes the leftover width so a long title wraps or cuts off instead of pushing the drag handle out.
         Row(
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -81,6 +84,8 @@ fun LazyItemScope.ItemPlaylistTrackEdit(
             ) {
                 Text(
                     text = track.title,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.inversePrimary
@@ -91,6 +96,8 @@ fun LazyItemScope.ItemPlaylistTrackEdit(
 
                 Text(
                     text = track.artistName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSHeadlineMediumWhite().copy(
                         fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.surfaceBright
@@ -98,6 +105,8 @@ fun LazyItemScope.ItemPlaylistTrackEdit(
                 )
             }
         }
+
+        Spacer(Modifier.width(12.dp))
 
         Icon(
             modifier = draggableHandle.clickable(

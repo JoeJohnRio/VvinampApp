@@ -6,6 +6,7 @@ import vvinampapp.composeapp.generated.resources.*
 import com.example.vvinamp.util.KmpLogger
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,11 +26,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -57,6 +61,9 @@ import com.example.vvinamp.ui.main.playback.PlaybackViewModel
 import com.example.vvinamp.util.ExtractDominantColorEffect
 import com.example.vvinamp.util.orErrorNoText
 import com.example.vvinamp.util.orZero
+import com.example.vvinamp.util.PaddingSizeUtil
+import com.example.vvinamp.util.PaddingSizeUtil.TopBarHeight
+import com.example.vvinamp.util.PaddingSizeUtil.PlaylistNoPhotoSize
 import com.example.vvinamp.util.preview.PreviewTheme
 import com.example.vvinamp.util.showToast
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -115,7 +122,11 @@ fun PlaylistScreen(
                 }
 
                 PlaylistEvent.NavigateToSearch -> {
-                    bottomNavRouter.navigateToSearchResults()
+                    // Search adds straight to this playlist instead of asking which one.
+                    bottomNavRouter.navigateToSearchResults(
+                        targetPlaylistId = playlistId,
+                        targetPlaylistTitle = uiState.playlist?.title
+                    )
                 }
 
                 PlaylistEvent.PlaylistDeleted -> {
@@ -150,6 +161,10 @@ fun PlaylistScreen(
     ScreenWrapper(
         isLoading = uiState.isLoading,
         error = uiState.error,
+        onRetry = {
+            viewModel.getPlaylist(playlistId)
+            playlistTracks.refresh()
+        },
         content = {
             PlaylistContent(
                 uiState = uiState,
@@ -201,52 +216,25 @@ fun PlaylistContent(
     //this is the temporary way
     val isSongExist = uiState.playlist?.totalDuration.orZero() > 0
 
-    val headerHeightPx = with(LocalDensity.current) { 400.dp.toPx() }
-    val topBarStartPx = with(LocalDensity.current) { (215).dp.toPx() }
-    val topBarEndPx = with(LocalDensity.current) { (255).dp.toPx() }
-    val topBarNameStartPx = with(LocalDensity.current) { (230).dp.toPx() }
-    val topBarNameEndPx = with(LocalDensity.current) { (260).dp.toPx() }
+    // Empty playlists use a fixed grey, as Spotify does, so the bar matches the background.
+    val headerColor = if (isSongExist) uiState.dominantColor.orThemeBackground() else Color(0xff474747)
 
-    val topBarRange = remember { topBarEndPx - topBarStartPx }
-    val topBarNameRange = remember { topBarNameEndPx - topBarNameStartPx }
-
-    val noSongsBackgroundColor =
-        if (isSongExist) {
-            Brush.verticalGradient(
-                0f to uiState.dominantColor.orThemeBackground(),
-                0.5f to MaterialTheme.colorScheme.background
-            )
-        } else {
-            Brush.verticalGradient(
-                0f to Color(0xff474747),
-                0.5f to MaterialTheme.colorScheme.background
-            )
-        }
-
-    data class ScrollProgress(
-        val topBarProgress: Float,
-        val topBarNameProgress: Float,
+    val headerBackground = Brush.verticalGradient(
+        0f to headerColor,
+        0.5f to MaterialTheme.colorScheme.background
     )
 
-    val scrollProgress by remember {
+    // Real height of the header item, so the animation follows the actual layout instead of fixed dp guesses.
+    var headerHeightPx by remember { mutableIntStateOf(0) }
+    // Height of the title text under the hero; it can wrap to two lines.
+    var filledTitleHeightPx by remember { mutableIntStateOf(0) }
+
+    val headerScrolledPx by remember {
         derivedStateOf {
-            val isScrolledPastFirst = scrollState.firstVisibleItemIndex > 0
-
-            if (isScrolledPastFirst) {
-                ScrollProgress(1f, 1f)
+            if (scrollState.firstVisibleItemIndex == 0) {
+                scrollState.firstVisibleItemScrollOffset
             } else {
-                val currentScroll = scrollState.firstVisibleItemScrollOffset.toFloat()
-
-                ScrollProgress(
-                    topBarProgress = ((currentScroll - topBarStartPx) / topBarRange).coerceIn(
-                        0f,
-                        1f
-                    ),
-                    topBarNameProgress = ((currentScroll - topBarNameStartPx) / topBarNameRange).coerceIn(
-                        0f,
-                        1f
-                    ),
-                )
+                headerHeightPx
             }
         }
     }
@@ -261,20 +249,51 @@ fun PlaylistContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
     ) { innerPadding ->
+        val density = LocalDensity.current
+        val barBottomPx = with(density) { (innerPadding.calculateTopPadding() + TopBarHeight).toPx() }
+        val barFadePx = with(density) { 64.dp.toPx() }
+        val titleSlidePx = with(density) { 32.dp.toPx() }
+
+        // Empty playlist: the bar is solid once it reaches the middle of the cover. The cover sits centered in
+        // the row under the top spacer, so its middle is that spacer plus half the cover.
+        val emptyCoverMiddlePx = with(density) {
+            (innerPadding.calculateTopPadding() + TopBarHeight + 8.dp + PlaylistNoPhotoSize / 2).toPx()
+        }
+
+        // Playlist with songs: the title sits under the hero (status bar + 16dp + hero + 16dp spacer).
+        // The change runs from the title's top edge reaching the bar's bottom to its bottom edge reaching it.
+        // Measured from the real layout, so Android's status bar and font size are taken into account.
+        val filledTitleTopPx = with(density) {
+            (innerPadding.calculateTopPadding() + 16.dp + PaddingSizeUtil.PlaylistHeroSize + 16.dp).toPx()
+        }
+
+        // Empty playlist: bar fades in over the last 64dp before the cover's middle reaches the bar; title over the last 32dp.
+        val scrollProgress by remember(barBottomPx, emptyCoverMiddlePx, filledTitleTopPx, isSongExist) {
+            derivedStateOf {
+                if (headerHeightPx == 0) {
+                    ScrollProgress(0f, 0f)
+                } else if (isSongExist && filledTitleHeightPx > 0) {
+                    val titleTopOnScreen = filledTitleTopPx - headerScrolledPx
+                    val progress = ((barBottomPx - titleTopOnScreen) / filledTitleHeightPx).coerceIn(0f, 1f)
+                    ScrollProgress(topBarProgress = progress, topBarNameProgress = progress)
+                } else {
+                    val solidPointPx = if (isSongExist) headerHeightPx.toFloat() else emptyCoverMiddlePx
+                    val distanceToBar = solidPointPx - headerScrolledPx - barBottomPx
+                    ScrollProgress(
+                        topBarProgress = (1f - distanceToBar / barFadePx).coerceIn(0f, 1f),
+                        topBarNameProgress = (1f - distanceToBar / titleSlidePx).coerceIn(0f, 1f),
+                    )
+                }
+            }
+        }
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .graphicsLayer {
-                    val offset = if (scrollState.firstVisibleItemIndex == 0) {
-                        -scrollState.firstVisibleItemScrollOffset.toFloat()
-                    } else {
-                        -headerHeightPx
-                    }
-                    translationY = offset
+                    translationY = -headerScrolledPx.toFloat()
                 }
-                .background(
-                    noSongsBackgroundColor
-                )
+                .background(headerBackground)
         )
 
         LazyColumn(
@@ -283,28 +302,42 @@ fun PlaylistContent(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
+            // One keyed header item in both states. A 0dp first item made the list report index 1 on open,
+            // which showed the bar fully before any scroll.
+            item(key = HEADER_KEY) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .onSizeChanged { headerHeightPx = it.height }
+                ) {
+                    if (isSongExist) {
+                        PlaylistHeroImage(
+                            playlist = uiState.playlist,
+                            modifier = Modifier,
+                            scrollStateProvider = { headerScrolledPx.toFloat() },
+                            innerPadding = innerPadding
+                        )
+
+                        Spacer(Modifier.height(16.dp))
+
+                        PlaylistDetailTrackFilled(
+                            playlist = uiState.playlist,
+                            titleModifier = Modifier.onSizeChanged { filledTitleHeightPx = it.height }
+                        )
+                    } else {
+                        // Starts below the top bar so the back button never sits on the cover.
+                        Spacer(Modifier.height(innerPadding.calculateTopPadding() + TopBarHeight + 8.dp))
+
+                        PlaylistDetailComponent(
+                            playlist = uiState.playlist,
+                            isCreator = uiState.isPlaylistCreator,
+                            onClickEditDetails = { onEvent(PlaylistUiEvent.onClickChange) }
+                        )
+                    }
+                }
+            }
+
             if (isSongExist) {
-                item {
-                    PlaylistHeroImage(
-                        playlist = uiState.playlist,
-                        modifier = Modifier,
-                        scrollStateProvider = {
-                            scrollState.firstVisibleItemScrollOffset.toFloat()
-                        },
-                        innerPadding = innerPadding
-                    )
-                }
-
-                item {
-                    Spacer(Modifier.height(16.dp))
-                }
-
-                item {
-                    PlaylistDetailTrackFilled(
-                        uiState.playlist
-                    )
-                }
-
                 item {
                     Spacer(Modifier.height(16.dp))
                 }
@@ -343,16 +376,11 @@ fun PlaylistContent(
 
             } else {
                 item {
-                    Spacer(Modifier.height(innerPadding.calculateTopPadding()))
-                }
-
-                item {
-                    PlaylistDetailComponent(
+                    PlaylistEmptyActions(
                         playlist = uiState.playlist,
-                        paddingTop = innerPadding,
+                        isCreator = uiState.isPlaylistCreator,
                         onClickShare = { onEvent(PlaylistUiEvent.onClickShare) },
-                        onClickMore = { onEvent(PlaylistUiEvent.onClickDetail) },
-                        onClickEditDetails = { onEvent(PlaylistUiEvent.onClickChange) }
+                        onClickAdd = { onEvent(PlaylistUiEvent.onRowClickAdd) }
                     )
                 }
             }
@@ -389,13 +417,21 @@ fun PlaylistContent(
             title = uiState.playlist?.title.orErrorNoText(),
             topBarAlpha = scrollProgress.topBarProgress,
             titleProgress = scrollProgress.topBarNameProgress,
-            topBarColor = uiState.dominantColor.orThemeBackground(),
+            topBarColor = headerColor,
             onBackClick = {
                 onBackClicked()
-            }
+            },
+            onMoreClick = { onEvent(PlaylistUiEvent.onClickDetail) }
         )
     }
 }
+
+private const val HEADER_KEY = "playlist_header"
+
+private data class ScrollProgress(
+    val topBarProgress: Float,
+    val topBarNameProgress: Float,
+)
 
 @Preview
 @Composable

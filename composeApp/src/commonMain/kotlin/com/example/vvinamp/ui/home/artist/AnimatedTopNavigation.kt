@@ -1,7 +1,13 @@
 package com.example.vvinamp.ui.home.artist
 import vvinampapp.composeapp.generated.resources.*
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -93,7 +99,8 @@ fun AnimatedTopSlidingNameNavigation(
     imageVector: ImageVector = Icons.AutoMirrored.Filled.KeyboardArrowLeft,
     onBackClick: () -> Unit,
     titleProgress: Float,
-    topBarColor: Color
+    topBarColor: Color,
+    onMoreClick: (() -> Unit)? = null
 ) {
     val surfaceHeight = TopBarHeight + innerPadding.calculateTopPadding()
     Surface(
@@ -110,33 +117,68 @@ fun AnimatedTopSlidingNameNavigation(
     ) {
         Box(
             modifier = Modifier
-                .clipToBounds() // CRITICAL: This hides the text when it gets pushed down
+                .fillMaxSize()
+                .clipToBounds() // hides the title while it sits below the bar
                 .padding(top = innerPadding.calculateTopPadding()),
-            contentAlignment = Alignment.BottomCenter
         ) {
-            IconButton(
-                onClick = onBackClick,
+            TopBarCircleButton(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-            ) {
-                Icon(
-                    imageVector = imageVector,
-                    contentDescription = "Back"
-                )
-            }
+                    .padding(start = 8.dp),
+                imageVector = imageVector,
+                contentDescription = "Back",
+                circleAlpha = 1f - topBarAlpha,
+                onClick = onBackClick
+            )
 
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
+                    .padding(horizontal = 64.dp)
                     .graphicsLayer {
                         val hiddenOffset = 40.dp.toPx()
                         this.translationY = hiddenOffset * (1f - titleProgress)
                     },
                 text = title,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 style = TSHeadlineMediumWhite().copy(
                     fontSize = 18.sp
                 )
             )
+
+            if (onMoreClick != null) {
+                TopBarCircleButton(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 8.dp),
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = "More options",
+                    circleAlpha = 1f - topBarAlpha,
+                    onClick = onMoreClick
+                )
+            }
+        }
+    }
+}
+
+// Dark circle keeps the icon readable over a bright cover; it fades out as the bar fills in.
+@Composable
+private fun TopBarCircleButton(
+    imageVector: ImageVector,
+    contentDescription: String,
+    circleAlpha: Float,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    IconButton(onClick = onClick, modifier = modifier) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(Color.Black.copy(alpha = 0.35f * circleAlpha), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(imageVector = imageVector, contentDescription = contentDescription)
         }
     }
 }

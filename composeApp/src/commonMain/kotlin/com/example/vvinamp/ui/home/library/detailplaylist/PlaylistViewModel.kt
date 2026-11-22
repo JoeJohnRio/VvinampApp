@@ -12,6 +12,9 @@ import com.example.domain.entity.song.TrackDomain
 import com.example.domain.usecase.AuthUseCases
 import com.example.domain.usecase.PlaylistUseCase
 import com.example.vvinamp.ui.home.library.detailplaylist.PlaylistEvent.*
+import com.example.vvinamp.util.checkCoverImage
+import com.example.vvinamp.util.isDuplicateTrackError
+import com.example.vvinamp.util.readBytesFromUri
 import com.example.vvinamp.util.showToast
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -133,7 +136,7 @@ class PlaylistViewModel(
             }
 
             is PlaylistUiEvent.onCoverImageChanged -> {
-                _uiState.update { it.copy(editCoverUri = event.uri) }
+                event.uri?.let { pickCover(it) }
             }
 
             PlaylistUiEvent.onSaveEditDetail -> {
@@ -167,7 +170,7 @@ class PlaylistViewModel(
         viewModelScope.launch {
             useCase.updatePlaylistUseCase(id = playlist.id, isPublic = !playlist.isPublic)
                 .onSuccess { getPlaylist(playlist.id, showLoading = false) }
-                .onFailure { error -> _uiState.update { it.copy(error = error.message) } }
+                .onFailure { error -> showToast("Couldn't change privacy: ${error.message ?: "try again"}") }
         }
     }
 
@@ -181,7 +184,8 @@ class PlaylistViewModel(
                     _events.emit(PlaylistEvent.PlaylistDeleted)
                 }
                 .onFailure { error ->
-                    _uiState.update { it.copy(isSaving = false, error = error.message) }
+                    _uiState.update { it.copy(isSaving = false) }
+                    showToast("Couldn't delete: ${error.message ?: "try again"}")
                 }
         }
     }
@@ -209,8 +213,7 @@ class PlaylistViewModel(
                 isEditDetailSheetVisible = true,
                 editName = it.playlist?.title.orEmpty(),
                 editDescription = it.playlist?.description.orEmpty(),
-                editCoverUri = null,
-                error = null
+                editCover = null
             )
         }
     }
@@ -219,39 +222,52 @@ class PlaylistViewModel(
         _uiState.update { it.copy(isEditDetailSheetVisible = false) }
     }
 
-    private fun savePlaylistDetail() {
+    private fun pickCover(uri: String) {
         viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true, error = null) }
-            val currentState = uiState.value
-            val playlistId = currentState.playlist?.id ?: return@launch
+            val bytes = runCatching { readBytesFromUri(uri) }.getOrDefault(ByteArray(0))
+            checkCoverImage(bytes)
+                .onSuccess { image -> _uiState.update { it.copy(editCover = image) } }
+                .onFailure { showToast(it.message ?: "Couldn't read that image") }
+        }
+    }
 
-            try {
-                // 1. Upload cover if changed
-                currentState.editCoverUri?.let { uriString ->
-                    val bytes = com.example.vvinamp.util.readBytesFromUri(uriString)
+    private fun savePlaylistDetail() {
+        val state = uiState.value
+        val playlistId = state.playlist?.id ?: return
+        if (state.isSaving) return
 
-                    val fileName = "cover_${kotlin.time.Clock.System.now().toEpochMilliseconds()}.jpg"
-                    useCase.uploadPlaylistCoverUseCase(
-                        playlistId = playlistId,
-                        fileName = fileName,
-                        contentType = "image/jpeg",
-                        content = bytes
-                    ).onFailure { throw Exception(it.message ?: "Upload failed") }
-                }
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSaving = true, isUploadingCover = state.editCover != null) }
 
-                // 2. Update playlist details
-                useCase.updatePlaylistUseCase(
-                    id = playlistId,
-                    title = currentState.editName,
-                    description = currentState.editDescription
-                ).onSuccess {
+            // 1. Upload the cover first, so a failed upload leaves the name and description unsaved too.
+            state.editCover?.let { cover ->
+                val fileName = "cover_${kotlin.time.Clock.System.now().toEpochMilliseconds()}.${cover.extension}"
+                val uploaded = useCase.uploadPlaylistCoverUseCase(
+                    playlistId = playlistId,
+                    fileName = fileName,
+                    contentType = cover.contentType,
+                    content = cover.bytes
+                )
+                _uiState.update { it.copy(isUploadingCover = false) }
+                uploaded.onFailure { error ->
                     _uiState.update { it.copy(isSaving = false) }
-                    getPlaylist(playlistId) // Refresh playlist data
-                    hideEditDetailSheet()
-                }.onFailure { throw Exception(it.message ?: "Update failed") }
+                    showToast("Cover upload failed: ${error.message ?: "try again"}")
+                    return@launch
+                }
+            }
 
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isSaving = false, error = e.message) }
+            // 2. Update name and description.
+            useCase.updatePlaylistUseCase(
+                id = playlistId,
+                title = state.editName,
+                description = state.editDescription
+            ).onSuccess {
+                _uiState.update { it.copy(isSaving = false, isEditDetailSheetVisible = false, editCover = null) }
+                if (state.editCover != null) showToast("Cover updated")
+                getPlaylist(playlistId, showLoading = false)
+            }.onFailure { error ->
+                _uiState.update { it.copy(isSaving = false) }
+                showToast("Couldn't save: ${error.message ?: "try again"}")
             }
         }
     }
@@ -264,13 +280,8 @@ class PlaylistViewModel(
                         isPlaylistCreator = it.playlist?.creator?.id == data.id
                     )
                 }
-            }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        error = error.message
-                    )
-                }
             }
+            // A failed creator check just hides the owner controls; no need to block the page.
         }
     }
 
@@ -288,30 +299,41 @@ class PlaylistViewModel(
         playlistId: String,
         trackId: String
     ) {
+        val state = uiState.value
+        val alreadyAdded = state.recommendedTracks?.any { it.id == trackId && it.isAdded } == true
+        if (alreadyAdded || trackId in state.addingTrackIds) return
+
+        _uiState.update { it.copy(addingTrackIds = it.addingTrackIds + trackId) }
         viewModelScope.launch {
-            useCase.addSongToPlaylistUseCase.invoke(
+            val result = useCase.addSongToPlaylistUseCase.invoke(
                 playlistId = playlistId,
                 trackId = trackId
-            ).onSuccess { data ->
-                val updatedTracks = uiState.value.recommendedTracks?.map { track ->
-                    if (track.id == trackId) track.toChecked() else track
-                }
+            )
+            _uiState.update { it.copy(addingTrackIds = it.addingTrackIds - trackId) }
 
-                _uiState.update {
-                    it.copy(
-                        recommendedTracks = updatedTracks
-                    )
-                }
+            result.onSuccess {
+                markRecommendedAdded(trackId)
                 // Reload the header (its length decides whether Play, Sort and Edit show) and the song list.
                 getPlaylist(playlistId, showLoading = false)
                 _events.emit(PlaylistEvent.RefreshTracks)
             }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        error = error.message
-                    )
+                if (error.isDuplicateTrackError()) {
+                    markRecommendedAdded(trackId)
+                    showToast("Already in ${uiState.value.playlist?.title ?: "this playlist"}")
+                } else {
+                    showToast("Couldn't add song: ${error.message ?: "try again"}")
                 }
             }
+        }
+    }
+
+    private fun markRecommendedAdded(trackId: String) {
+        _uiState.update { state ->
+            state.copy(
+                recommendedTracks = state.recommendedTracks?.map { track ->
+                    if (track.id == trackId) track.toChecked() else track
+                }
+            )
         }
     }
 
@@ -339,11 +361,11 @@ class PlaylistViewModel(
                     getRecommendedTracks()
                 }
             }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        error = error.message,
-                        isLoading = false
-                    )
+                if (showLoading) {
+                    // Only a failed first load blocks the page; there's nothing to show without the playlist.
+                    _uiState.update { it.copy(error = error.message, isLoading = false) }
+                } else {
+                    showToast("Couldn't refresh playlist: ${error.message ?: "try again"}")
                 }
             }
         }
@@ -357,13 +379,8 @@ class PlaylistViewModel(
                         recommendedTracks = data,
                     )
                 }
-            }.onFailure { error ->
-                _uiState.update {
-                    it.copy(
-                        error = error.message,
-                    )
-                }
             }
+            // Recommendations are optional; if they fail the section just doesn't show.
         }
     }
 }

@@ -86,17 +86,7 @@ fun PlaylistActionTopRow(
         IconButton(onClick = { com.example.vvinamp.util.showToast("Coming soon") }) {
             Icon(
                 imageVector = Icons.Default.Share,
-                contentDescription = "More",
-                tint = Color.Gray
-            )
-        }
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        IconButton(onClick = { com.example.vvinamp.util.showToast("Coming soon") }) {
-            Icon(
-                imageVector = Icons.Default.MoreVert,
-                contentDescription = "More",
+                contentDescription = "Share",
                 tint = Color.Gray
             )
         }

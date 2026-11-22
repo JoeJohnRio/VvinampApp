@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
@@ -33,6 +34,8 @@ fun LibraryTopBar(onEvent: (LibraryUiEvent) -> Unit) {
         modifier = Modifier
             .background(color = MaterialTheme.colorScheme.background)
             .statusBarsPadding()
+            // Same 16dp side margin as the playlist list below, so the avatar and chips line up with it.
+            .padding(horizontal = 16.dp)
     ) {
         TopNavigationWithButtons(
             title = previewSafeString(Res.string.title_your_library, "Your Library"),

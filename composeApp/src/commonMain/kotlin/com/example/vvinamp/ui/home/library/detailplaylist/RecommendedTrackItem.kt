@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import com.example.data.api.playlist.toTrackDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
@@ -58,7 +59,9 @@ fun RecommendedTrackItem(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Takes the leftover width so a long title wraps or cuts off instead of pushing the add button out.
         Row(
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
@@ -78,6 +81,8 @@ fun RecommendedTrackItem(
             ) {
                 Text(
                     text = track.title,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.inversePrimary
@@ -88,6 +93,8 @@ fun RecommendedTrackItem(
 
                 Text(
                     text = track.artistName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSHeadlineMediumWhite().copy(
                         fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.surfaceBright
@@ -95,6 +102,8 @@ fun RecommendedTrackItem(
                 )
             }
         }
+
+        Spacer(Modifier.width(12.dp))
 
         if (track.isAdded) {
             Icon(

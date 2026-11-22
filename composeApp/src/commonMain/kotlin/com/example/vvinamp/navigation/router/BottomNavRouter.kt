@@ -7,7 +7,7 @@ interface BottomNavRouter {
     fun navigateToHome()
     fun navigateToAlbum(albumId: String)
     fun navigateToSearch()
-    fun navigateToSearchResults()
+    fun navigateToSearchResults(targetPlaylistId: String? = null, targetPlaylistTitle: String? = null)
     fun navigateToLibrary()
     fun navigateToCreatePlaylist()
     fun navigateToPlaylistDetail(playlistId: String)
@@ -32,8 +32,8 @@ class BottomNavRouterImpl(
         navigator.navigate(BottomNavDestination.Search)
     }
 
-    override fun navigateToSearchResults() {
-        navigator.navigate(BottomNavDestination.SearchResults)
+    override fun navigateToSearchResults(targetPlaylistId: String?, targetPlaylistTitle: String?) {
+        navigator.navigate(BottomNavDestination.SearchResults(targetPlaylistId, targetPlaylistTitle))
     }
 
     override fun navigateToLibrary() {

@@ -48,7 +48,7 @@ import vvinampapp.composeapp.generated.resources.bg_image
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddToPlaylistBottomSheet(
-    track: SearchItemDomain.YoutubeTrackSearch,
+    track: SearchItemDomain,
     playlists: LazyPagingItems<PlaylistMinimal>,
     isAdding: Boolean,
     onPlaylistSelected: (playlistId: String, playlistTitle: String) -> Unit,
@@ -80,7 +80,11 @@ fun AddToPlaylistBottomSheet(
             Spacer(Modifier.height(4.dp))
 
             Text(
-                text = track.title,
+                text = when (track) {
+                    is SearchItemDomain.TrackSearch -> track.title
+                    is SearchItemDomain.YoutubeTrackSearch -> track.title
+                    else -> ""
+                },
                 style = TSLabelMediumWhite().copy(
                     fontSize = 13.sp,
                     color = MaterialTheme.colorScheme.outline

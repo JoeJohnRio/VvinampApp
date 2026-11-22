@@ -30,10 +30,8 @@ fun PlaylistHeroImage(
     scrollStateProvider: () -> Float,
     innerPadding: PaddingValues
 ) {
-    val scrollOffset = scrollStateProvider()
     val totalTopPadding = innerPadding.calculateTopPadding()
     val heroSize = PaddingSizeUtil.PlaylistHeroSize
-    val heroSizePx = heroSize.value * 3 // Approximation
 
     Box(
         modifier = modifier
@@ -49,8 +47,8 @@ fun PlaylistHeroImage(
             modifier = Modifier
                 .size(PaddingSizeUtil.PlaylistNoPhotoSize)
                 .graphicsLayer {
-                    // Parallax & Fade
-                    val progress = (scrollOffset / heroSizePx).coerceIn(0f, 1f)
+                    // Read the scroll here, not in composition, so scrolling only redraws the layer.
+                    val progress = (scrollStateProvider() / heroSize.toPx()).coerceIn(0f, 1f)
                     alpha = 1f - progress
                     scaleX = 1f - (progress * 0.2f)
                     scaleY = 1f - (progress * 0.2f)

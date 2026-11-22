@@ -46,6 +46,7 @@ import com.example.vvinamp.ui.main.playback.PlaybackViewModel
 import com.example.vvinamp.ui.search.SearchType
 import com.example.vvinamp.ui.search.SearchUiState
 import com.example.vvinamp.ui.search.SearchViewModel
+import com.example.vvinamp.ui.search.addKey
 import com.example.vvinamp.ui.theme.TSBodyMediumWhite
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.widget.ButtonListWithState
@@ -55,6 +56,8 @@ import com.example.vvinamp.ui.widget.TextFieldSearch
 @Composable
 fun SearchResultsScreen(
     bottomNavRouter: BottomNavRouter,
+    targetPlaylistId: String? = null,
+    targetPlaylistTitle: String? = null,
     playbackViewModel: PlaybackViewModel = koinInject(),
 ) {
     val viewModel: SearchViewModel = koinViewModel()
@@ -62,6 +65,11 @@ fun SearchResultsScreen(
     val searchItems = viewModel.searchResults.collectAsLazyPagingItems()
     val playlists = viewModel.myPlaylists.collectAsLazyPagingItems()
     val playbackUiState by playbackViewModel.uiState.collectAsStateWithLifecycle(PlaybackUiState())
+
+    // Set on every visit: the view model can outlive this screen, so a target from an earlier visit must be cleared.
+    LaunchedEffect(targetPlaylistId, targetPlaylistTitle) {
+        viewModel.setTargetPlaylist(targetPlaylistId, targetPlaylistTitle)
+    }
 
     if (uiState.trackForPlaylist != null) {
         AddToPlaylistBottomSheet(
@@ -111,7 +119,7 @@ fun SearchResultsScreen(
                     bottomNavRouter.navigateBack()
                 },
                 onAddToPlaylistClicked = {
-                    viewModel.onOpenAddToPlaylist(it)
+                    viewModel.onAddClicked(it)
                 },
                 onItemClicked = { searchItem ->
                     when (searchItem) {
@@ -159,7 +167,7 @@ fun SearchResultsContent(
     searchItems: LazyPagingItems<SearchItemDomain>,
     onBackClicked: () -> Unit = {},
     onItemClicked: (SearchItemDomain) -> Unit = {},
-    onAddToPlaylistClicked: (SearchItemDomain.YoutubeTrackSearch) -> Unit = {},
+    onAddToPlaylistClicked: (SearchItemDomain) -> Unit = {},
     playbackUiState: PlaybackUiState = PlaybackUiState(),
     onSearchSubmit: () -> Unit = {}
 ) {
@@ -201,6 +209,19 @@ fun SearchResultsContent(
                         }
                     }
                 )
+
+                uiState.targetPlaylistTitle?.let { title ->
+                    Text(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        text = "Adding to $title",
+                        style = TSBodyMediumWhite().copy(
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.outline
+                        ),
+                        maxLines = 1,
+                        overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis
+                    )
+                }
             }
         }
     ) { contentPadding ->
@@ -236,11 +257,14 @@ fun SearchResultsContent(
                         }
                     }
                 ) { index ->
+                    val item = searchItems[index]
                     SearchItemComponent(
-                        domain = searchItems[index],
+                        domain = item,
                         onClicked = onItemClicked,
                         playbackUiState = playbackUiState,
-                        onAddToPlaylistClicked = onAddToPlaylistClicked
+                        onAddToPlaylistClicked = onAddToPlaylistClicked,
+                        isAdded = item?.let { uiState.isAddedToTarget(it.addKey()) } == true,
+                        isAdding = item?.let { it.addKey() in uiState.addingIds } == true
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }

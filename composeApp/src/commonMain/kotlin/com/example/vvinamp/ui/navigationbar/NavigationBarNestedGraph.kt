@@ -80,6 +80,8 @@ fun EntryProviderScope<NavKey>.MainNavGraph(
 
     entry<BottomNavDestination.SearchResults> {
         SearchResultsScreen(
+            targetPlaylistId = it.targetPlaylistId,
+            targetPlaylistTitle = it.targetPlaylistTitle,
             bottomNavRouter = bottomNavRouter,
             playbackViewModel = playbackViewModel
         )

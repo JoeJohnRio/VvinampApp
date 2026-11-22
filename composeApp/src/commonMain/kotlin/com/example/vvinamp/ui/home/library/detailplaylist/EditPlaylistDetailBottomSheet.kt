@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.BottomSheetDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +31,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -60,13 +65,7 @@ fun EditPlaylistDetailBottomSheet(
 
     val isChanged = uiState.editName != (uiState.playlist?.title ?: "") || 
                     uiState.editDescription != (uiState.playlist?.description ?: "") ||
-                    uiState.editCoverUri != null
-
-    LaunchedEffect(uiState.error) {
-        if (uiState.error != null && uiState.isEditDetailSheetVisible) {
-            showToast("Update failed: ${uiState.error}")
-        }
-    }
+                    uiState.editCover != null
 
     ModalBottomSheet(
         sheetMaxWidth = PhoneColumnMaxWidth,
@@ -122,19 +121,36 @@ fun EditPlaylistDetailBottomSheet(
                 verticalAlignment = Alignment.Top
             ) {
                 Box(modifier = Modifier.size(PaddingSizeUtil.PlaylistEditPhotoSize)) {
-                    if (uiState.editCoverUri != null) {
+                    // The current cover stays underneath: on web the picked image takes a moment to decode,
+                    // and without it the box sits empty until it does.
+                    PlaylistCover(
+                        coverImage = uiState.playlist?.coverImage.orEmpty(),
+                        covers = uiState.playlist?.albumCovers ?: emptyList(),
+                        modifier = Modifier.size(PaddingSizeUtil.PlaylistEditPhotoSize)
+                    )
+
+                    if (uiState.editCover != null) {
                         AsyncImage(
-                            model = uiState.editCoverUri,
+                            model = uiState.editCover.bytes,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                             modifier = Modifier.size(PaddingSizeUtil.PlaylistEditPhotoSize)
                         )
-                    } else {
-                        PlaylistCover(
-                            coverImage = uiState.playlist?.coverImage.orEmpty(),
-                            covers = uiState.playlist?.albumCovers ?: emptyList(),
-                            modifier = Modifier.size(PaddingSizeUtil.PlaylistEditPhotoSize)
-                        )
+                    }
+
+                    if (uiState.isUploadingCover) {
+                        Box(
+                            modifier = Modifier
+                                .matchParentSize()
+                                .background(Color.Black.copy(alpha = 0.5f)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(32.dp),
+                                color = Color.White,
+                                strokeWidth = 3.dp
+                            )
+                        }
                     }
 
                     Box(
@@ -143,7 +159,7 @@ fun EditPlaylistDetailBottomSheet(
                             .padding(4.dp)
                             .size(32.dp)
                             .background(Color.Black.copy(alpha = 0.5f), CircleShape)
-                            .clickable {
+                            .clickable(enabled = !uiState.isSaving, onClickLabel = "Change cover") {
                                 launcher.launch()
                             },
                         contentAlignment = Alignment.Center
@@ -184,25 +200,43 @@ fun EditPlaylistDetailBottomSheet(
             Column(
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                Text(
-                    text = if (uiState.playlist?.isPublic == false) "Make public" else "Make private",
-                    style = TSDisplayMediumWhite().copy(fontSize = 16.sp),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onEvent(PlaylistUiEvent.onMakePrivate) }
+                val isPrivate = uiState.playlist?.isPublic == false
+                PlaylistSheetAction(
+                    icon = if (isPrivate) Icons.Default.Public else Icons.Default.Lock,
+                    text = if (isPrivate) "Make public" else "Make private",
+                    onClick = { onEvent(PlaylistUiEvent.onMakePrivate) }
                 )
 
-                Text(
+                PlaylistSheetAction(
+                    icon = Icons.Default.Delete,
                     text = "Delete playlist",
-                    style = TSDisplayMediumWhite().copy(
-                        fontSize = 16.sp,
-                        color = MaterialTheme.colorScheme.error
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onEvent(PlaylistUiEvent.onDeletePlaylist) }
+                    onClick = { onEvent(PlaylistUiEvent.onDeletePlaylist) }
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun PlaylistSheetAction(
+    icon: ImageVector,
+    text: String,
+    onClick: () -> Unit
+) {
+    val grey = MaterialTheme.colorScheme.surfaceBright
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(imageVector = icon, contentDescription = null, tint = grey)
+
+        Spacer(Modifier.width(16.dp))
+
+        Text(
+            text = text,
+            style = TSDisplayMediumWhite().copy(fontSize = 16.sp, color = grey)
+        )
     }
 }

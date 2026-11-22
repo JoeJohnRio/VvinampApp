@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import org.jetbrains.compose.resources.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextOverflow
 import coil3.compose.AsyncImage
 import com.example.domain.entity.song.TrackDomain
 
@@ -49,7 +50,9 @@ fun ItemPlaylistTrackComponent(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        // Takes the leftover width so a long title wraps or cuts off instead of pushing the menu button out.
         Row(
+            modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
@@ -69,6 +72,8 @@ fun ItemPlaylistTrackComponent(
             ) {
                 Text(
                     text = track.title,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSDisplayMediumWhite().copy(
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.inversePrimary
@@ -79,6 +84,8 @@ fun ItemPlaylistTrackComponent(
 
                 Text(
                     text = track.artistName,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = TSHeadlineMediumWhite().copy(
                         fontSize = 10.sp,
                         color = MaterialTheme.colorScheme.surfaceBright
@@ -87,12 +94,14 @@ fun ItemPlaylistTrackComponent(
             }
         }
 
+        Spacer(Modifier.width(12.dp))
+
         Icon(
             modifier = Modifier.clickable(
                 onClick = { com.example.vvinamp.util.showToast("Coming soon") }
             ),
             imageVector = Icons.Filled.MoreVert,
-            contentDescription = null,
+            contentDescription = "More options",
             tint = MaterialTheme.colorScheme.surfaceBright
         )
     }

@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.example.domain.entity.playlist.PlaylistComplete
 import com.example.domain.entity.playlist.PlaylistTrackSortByDomain
 import com.example.domain.entity.song.RecommendedTrackDomain
+import com.example.vvinamp.util.PickedImage
 
 data class PlaylistUiState(
     val error: String? = null,
@@ -18,6 +19,9 @@ data class PlaylistUiState(
     val isDeleteConfirmVisible: Boolean = false,
     val editName: String = "",
     val editDescription: String = "",
-    val editCoverUri: String? = null,
+    val editCover: PickedImage? = null,
+    val isUploadingCover: Boolean = false,
+    // Songs whose add request is still running, so a second tap can't send a duplicate.
+    val addingTrackIds: Set<String> = emptySet(),
     val recommendedTracks: List<RecommendedTrackDomain>? = null
 )

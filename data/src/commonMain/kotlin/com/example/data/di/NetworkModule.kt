@@ -1,7 +1,6 @@
 package com.example.data.di
 
 import com.apollographql.apollo.ApolloClient
-import com.apollographql.ktor.http.KtorHttpEngine
 import com.example.data.BuildKonfig
 import com.example.data.repository.auth.AuthStore
 import com.example.graphql.RefreshTokenMutation
@@ -37,7 +36,7 @@ val networkModule = module {
     single(named("unauthenticatedApolloClient")) {
         ApolloClient.Builder()
             .serverUrl(BuildKonfig.BASE_URL + BuildKonfig.BASE_URL_GRAPHQL)
-            .httpEngine(KtorHttpEngine(get<HttpClient>(named("unauthenticatedHttpClient"))))
+            .httpEngine(ByteSafeKtorHttpEngine(get<HttpClient>(named("unauthenticatedHttpClient"))))
             .build()
     }
 
@@ -100,7 +99,7 @@ val networkModule = module {
         ApolloClient.Builder()
             .serverUrl(httpUrl)
             .webSocketServerUrl(wsUrl)
-            .httpEngine(KtorHttpEngine(get<HttpClient>()))
+            .httpEngine(ByteSafeKtorHttpEngine(get<HttpClient>()))
             .build()
     }
 }
