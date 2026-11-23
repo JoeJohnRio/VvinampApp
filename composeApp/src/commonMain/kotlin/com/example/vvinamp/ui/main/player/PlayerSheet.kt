@@ -84,6 +84,7 @@ fun PlayerSheet(
     player: Any?,
     state: AnchoredDraggableState<BottomSheetState>,
     onOpenArtist: (String) -> Unit = {},
+    onAddToPlaylist: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
     val entranceOffset = remember { Animatable(0f) }
@@ -255,7 +256,8 @@ fun PlayerSheet(
             onEvent = onEvent,
             maxHeight = maxHeight,
             onOpenArtist = onOpenArtist,
-            isExpanded = state.targetValue == BottomSheetState.EXPANDED
+            isExpanded = state.targetValue == BottomSheetState.EXPANDED,
+            onAddToPlaylist = onAddToPlaylist
         )
     }
 }
@@ -269,7 +271,8 @@ fun PlayerSheetContent(
     player: Any?,
     maxHeight: Dp,
     onOpenArtist: (String) -> Unit = {},
-    isExpanded: Boolean = true
+    isExpanded: Boolean = true,
+    onAddToPlaylist: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -341,7 +344,7 @@ fun PlayerSheetContent(
             uiState = uiState,
             onEvent = onEvent,
             player = player,
-            onAddToPlaylistClicked = { com.example.vvinamp.util.showToast("Coming soon") }
+            onAddToPlaylistClicked = onAddToPlaylist
         )
 
         Spacer(modifier = Modifier.height(24.dp))

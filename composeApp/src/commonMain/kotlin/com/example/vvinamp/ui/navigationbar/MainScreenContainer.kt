@@ -1,5 +1,10 @@
 package com.example.vvinamp.ui.navigationbar
 
+import org.koin.compose.viewmodel.koinViewModel
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.domain.entity.search.SearchItemDomain
+import com.example.vvinamp.ui.search.searchresult.AddToPlaylistBottomSheet
+import com.example.vvinamp.ui.main.player.AddToPlaylistViewModel
 import com.example.vvinamp.util.showToast
 import com.example.vvinamp.ui.theme.orThemeBackground
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -62,6 +67,10 @@ fun MainScreenContainer(
         skipPartiallyExpanded = true
     )
 
+    val addToPlaylistViewModel: AddToPlaylistViewModel = koinViewModel()
+    val trackToAdd by addToPlaylistViewModel.track.collectAsStateWithLifecycle()
+    val isAddingToPlaylist by addToPlaylistViewModel.isAdding.collectAsStateWithLifecycle()
+
     val playerState = remember {
         AnchoredDraggableState(initialValue = BottomSheetState.COLLAPSED)
     }
@@ -114,6 +123,7 @@ fun MainScreenContainer(
                     },
                     backgroundColor = playbackUiState.dominantColor.orThemeBackground(),
                     isPlaying = playbackUiState.isPlaying,
+                    onClickAdd = { addToPlaylistViewModel.open(it) },
                     onClickTrack = {
                         scope.launch {
                             playerState.animateTo(BottomSheetState.EXPANDED)
@@ -191,7 +201,8 @@ fun MainScreenContainer(
         onEvent = { event ->
             playbackViewModel.onEvent(event)
         },
-        onOpenArtist = { artistId -> openFromPlayer { bottomNavRouter.navigateToArtistPage(artistId) } }
+        onOpenArtist = { artistId -> openFromPlayer { bottomNavRouter.navigateToArtistPage(artistId) } },
+        onAddToPlaylist = { playbackUiState.currentTrack?.let { addToPlaylistViewModel.open(it) } }
     )
 
 //    ScrimAlphaBoxAnchored(trackOptionState)
@@ -214,12 +225,32 @@ fun MainScreenContainer(
                     playbackViewModel.onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(false))
                     showToast("Added to queue")
                 }
-                // shortcut: sharing and adding to a playlist from here aren't built yet.
-                TrackOptionsUiEvent.OnShareClick, TrackOptionsUiEvent.OnAddToPlaylistClick -> showToast("Coming soon")
+                TrackOptionsUiEvent.OnAddToPlaylistClick -> track?.let {
+                    playbackViewModel.onEvent(PlaybackUiEvent.ToggleTrackOptionSheet(false))
+                    addToPlaylistViewModel.open(it)
+                }
+                // shortcut: sharing from here isn't built yet.
+                TrackOptionsUiEvent.OnShareClick -> showToast("Coming soon")
                 else -> playbackViewModel.onEventTrackOptions(event)
             }
         },
         sheetState = trackOptionSheetState,
         uiState = playbackUiState
     )
+
+    trackToAdd?.let { track ->
+        AddToPlaylistBottomSheet(
+            track = SearchItemDomain.TrackSearch(
+                id = track.id,
+                title = track.title,
+                duration = track.duration,
+                albumCoverUrl = track.albumCoverUrl,
+                artistName = track.artistName
+            ),
+            playlists = addToPlaylistViewModel.myPlaylists.collectAsLazyPagingItems(),
+            isAdding = isAddingToPlaylist,
+            onPlaylistSelected = { playlistId, playlistTitle -> addToPlaylistViewModel.add(playlistId, playlistTitle) },
+            onDismiss = { addToPlaylistViewModel.dismiss() }
+        )
+    }
 }

@@ -51,7 +51,8 @@ fun PlaybackCurrentSongComponent(
     backgroundColor: Color,
     onClickPlay: () -> Unit = {},
     onClickTrack: (TrackDomain) -> Unit = {},
-    isPlaying: Boolean = false
+    isPlaying: Boolean = false,
+    onClickAdd: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -105,12 +106,17 @@ fun PlaybackCurrentSongComponent(
 
         Spacer(Modifier.width(8.dp))
 
-        Icon(
-            modifier = Modifier.size(24.dp),
-            imageVector = Icons.Filled.AddCircle,
-            tint = MaterialTheme.colorScheme.inversePrimary,
-            contentDescription = null,
-        )
+        IconButton(
+            onClick = onClickAdd,
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                modifier = Modifier.size(24.dp),
+                imageVector = Icons.Filled.AddCircle,
+                tint = MaterialTheme.colorScheme.inversePrimary,
+                contentDescription = "Add to playlist",
+            )
+        }
 
         Spacer(Modifier.width(18.dp))
 

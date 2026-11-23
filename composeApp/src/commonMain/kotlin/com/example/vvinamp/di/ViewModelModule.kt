@@ -1,6 +1,7 @@
 @file:JvmName("AndroidViewModelModuleKt")
 package com.example.vvinamp.di
 
+import com.example.vvinamp.ui.main.player.AddToPlaylistViewModel
 import com.example.vvinamp.ui.auth.viewmodel.AuthViewModel
 import com.example.vvinamp.ui.home.HomeViewModel
 import com.example.vvinamp.ui.home.album.AlbumViewModel
@@ -26,6 +27,7 @@ val commonViewModelModule = module {
     viewModelOf(::PlaylistViewModel)
     viewModelOf(::PlaylistEditViewModel)
     viewModelOf(::MainViewModel)
+    viewModelOf(::AddToPlaylistViewModel)
     viewModelOf(::SearchViewModel)
     viewModelOf(::SettingsViewModel)
 }
