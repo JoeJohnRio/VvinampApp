@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="graphql">
-    <output-path>$PROJECT_DIR$/graphql/build/libs</output-path>
-    <root id="archive" name="graphql.jar" />
-  </artifact>
-</component>

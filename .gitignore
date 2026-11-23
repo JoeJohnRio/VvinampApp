@@ -18,3 +18,7 @@ kotlin-js-store/
 .artifacts/
 .vercel
 .env*
+
+# IDE settings, except the shared code style
+/.idea/*
+!/.idea/codeStyles/

@@ -1,130 +1,115 @@
-# 🎵 Vvinamp — Cross-Platform Music Streaming Client
+# Vvinamp
 
-[![Live Demo](https://img.shields.io/badge/Demo-vvinamp.cirio.my.id-brightgreen?style=for-the-badge&logo=vercel)](https://vvinamp.cirio.my.id)
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.1.0-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
-[![Compose Multiplatform](https://img.shields.io/badge/Compose_Multiplatform-1.7.0-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://www.jetbrains.com/lp/compose-multiplatform/)
-[![GraphQL](https://img.shields.io/badge/GraphQL-Apollo_Kotlin-E10098?style=for-the-badge&logo=graphql&logoColor=white)](https://www.apollographql.com/docs/kotlin/)
-[![Platform](https://img.shields.io/badge/Platforms-Android_%7C_Wasm_(Web)-black?style=for-the-badge)](https://vvinamp.cirio.my.id)
+A music streaming app built with Kotlin Multiplatform and Compose Multiplatform. One shared Kotlin codebase runs as a native Android app and as a web app compiled to WebAssembly, backed by a Go GraphQL server.
 
-> A Spotify and Winamp-inspired music streaming application built with **Compose Multiplatform (Android & WebAssembly)**. Features a 100% shared Kotlin UI, a dual-engine streaming player, and resilient search pagination backed by a Go GraphQL backend.
+**Live web app:** [vvinamp.cirio.my.id](https://vvinamp.cirio.my.id)
 
-🌐 **Live Web Application:** [https://vvinamp.cirio.my.id](https://vvinamp.cirio.my.id)
+Built with Kotlin 2.4, Compose Multiplatform 1.11, Koin, Apollo Kotlin 5 (GraphQL), Ktor, Room, Paging 3, Coil 3 and Media3 ExoPlayer.
 
----
+## What it does
 
-## 🏗️ Architecture & Data Flow
+- **Browse and play music** from a catalog of albums, artists and playlists, with a mini player, a full-screen player, a play queue and a sleep timer.
+- **Search** the catalog or YouTube, switching between them on the search screen, with infinite scrolling through Paging 3.
+- **Playlists:** create them, upload a cover, and add catalog songs or YouTube results side by side.
+- **Listening history** and a personal library.
+- **Background playback on Android** through a Media3 `MediaSessionService`, with HLS audio.
+- **Web playback** in the browser through an HTML5 audio bridge written with Kotlin/Wasm JS interop.
+
+## Architecture
+
+The app follows Clean Architecture across Gradle modules. UI state flows one way: screens send events to a ViewModel, the ViewModel exposes a single `StateFlow` of UI state.
 
 ```mermaid
 graph TD
-    subgraph Client["Vvinamp Client (Compose Multiplatform)"]
-        UI[":composeApp (Presentation)\nCompose UI • Navigation • Koin DI"]
-        Domain[":domain (Domain Layer)\nEntities • UseCases • Repositories"]
-        Data[":data (Data Layer)\nApollo Client • Room SQLite Cache • Mappers"]
-        GQL[":graphql (Schema & Types)\nCompiled Apollo Queries & Mutations"]
+    subgraph Client["Vvinamp client (Kotlin Multiplatform)"]
+        App[":presentation\nAndroid app shell"]
+        UI[":composeApp\nCompose UI, ViewModels, navigation, Koin"]
+        Domain[":domain\nEntities, use cases, repository contracts"]
+        Data[":data\nRepositories, Apollo client, Room cache"]
+        GQL[":graphql\nSchema and generated Apollo types"]
     end
 
-    subgraph Backend["Backend Services"]
-        GoAPI["Go GraphQL Backend\n(gqlgen • Gin • Uber Fx)"]
-        DB[("Supabase PostgreSQL\nCatalog & Relational Store")]
-        RedisCache[("Redis Cache\nStream URLs & Quota Tracking")]
-        YTDLP["On-Demand Stream Resolver\n(yt-dlp 192kbps)"]
+    subgraph Backend["Backend (separate repository)"]
+        GoAPI["Go GraphQL API (gqlgen)"]
+        DB[("PostgreSQL catalog")]
+        Cache[("Redis cache")]
+        Resolver["On-demand stream resolver (yt-dlp)"]
     end
 
+    App --> UI
     UI --> Domain
-    Domain --> Data
+    Data --> Domain
     Data --> GQL
     Data -->|"GraphQL over HTTP"| GoAPI
     GoAPI --> DB
-    GoAPI --> RedisCache
-    GoAPI --> YTDLP
+    GoAPI --> Cache
+    GoAPI --> Resolver
 ```
 
----
-
-## 🛠️ Multi-Module Structure
-
-The project follows Clean Architecture separated into four distinct Gradle modules:
-
-| Module | Role | Key Technologies |
+| Module | Role | Key libraries |
 | :--- | :--- | :--- |
-| [`:composeApp`](file:///Users/joel/Programming/jerman/VvinampApp/composeApp) | UI & Presentation layer. Shared Composable screens, design tokens, navigation, platform playback bindings. | Jetpack Compose Multiplatform, Koin ViewModel, Coil 3, Paging 3 Compose |
-| [`:domain`](file:///Users/joel/Programming/jerman/VvinampApp/domain) | Pure Kotlin business logic. Platform-agnostic entities, repository contracts, and UseCases. | Kotlin Coroutines, Kotlin Flow |
-| [`:data`](file:///Users/joel/Programming/jerman/VvinampApp/data) | Data orchestration. Implements domain repositories, manages local Room SQLite caching, and calls GraphQL endpoints. | Apollo Kotlin, Room (KSP Multiplatform), SQLite |
-| [`:graphql`](file:///Users/joel/Programming/jerman/VvinampApp/graphql) | Schema definitions, operations (`.graphql`), and generated Apollo query/mutation types. | Apollo Compiler |
+| [`:composeApp`](composeApp) | Shared UI for every platform: screens, design tokens, navigation, ViewModels, plus the platform playback code in `androidMain` and `wasmJsMain` | Compose Multiplatform, Koin, Coil 3, Paging 3, Media3 |
+| [`:domain`](domain) | Pure Kotlin business logic: entities, use cases, repository interfaces | Coroutines, Flow |
+| [`:data`](data) | Implements the domain repositories, calls the GraphQL API, caches locally | Apollo Kotlin, Ktor, Room |
+| [`:graphql`](graphql) | GraphQL schema, `.graphql` operations and the generated Apollo types | Apollo compiler |
+| [`:presentation`](presentation) | Android application module that hosts the shared UI, with `prod` and `mock` build flavors | Android Gradle Plugin |
 
----
+Platform-specific behaviour lives behind `expect`/`actual` declarations, so the shared code never branches on the platform.
 
-## ⚙️ Core Engineering Challenges & Solutions
+## Engineering notes
 
-### 1. WebAssembly (Wasm) Autoplay & Audio Priming
-* **Challenge:** Modern desktop and mobile web browsers enforce strict autoplay policies. If audio playback (`HTMLAudioElement.play()`) is initiated after an asynchronous network call (e.g., waiting 1.5s for GraphQL stream resolution), browsers throw `NotAllowedError: play() failed because the user didn't interact with the document first`.
-* **Solution:** Implemented synchronous audio gesture priming in `wasmJsMain`. When a track click event is detected, a lightweight `@JsFun` bridge invokes `audioElement.load()` synchronously during the user click gesture before launching the coroutine. Once the backend returns the streaming URL, `.play()` executes without triggering browser autoplay blocks.
+### Playing audio in the browser after a network call
+Browsers block `HTMLAudioElement.play()` unless it happens during a user gesture. Resolving a stream URL takes a GraphQL round trip, which is long enough for the browser to stop treating the click as the trigger. The Wasm player calls `load()` on the audio element synchronously inside the click handler, through a small `@JsFun` bridge, and only then starts the coroutine that fetches the URL. When the URL arrives, `play()` is allowed.
 
-### 2. Dual-Engine Playback Resolver
-* **Challenge:** The application plays both pre-hosted MP3 catalog tracks and on-demand YouTube streams without hard-coded client branching.
-* **Solution:** The client queries a unified `playbackInfo(trackId, contentType, contentId)` GraphQL endpoint. The backend evaluates whether the identifier is a catalog UUID (serving direct Supabase MP3 CDN URLs in $< 2\text{ ms}$) or a YouTube ID (extracting signed 192kbps streams on demand with 4-hour caching). The client seamlessly selects the primary stream or fallback endpoint.
+### One playback endpoint for two kinds of tracks
+Some tracks are hosted MP3 files and some are YouTube videos. The client does not branch on this: it asks a single `playbackInfo(trackId, contentType, contentId)` query, and the backend returns either a direct file URL or a freshly resolved stream URL, plus a fallback.
 
-### 3. Resilient Search with 403 Quota Fallback
-* **Challenge:** The YouTube Data API v3 enforces a daily quota limit of 10,000 units. When exhausted, direct API search queries fail with HTTP 403 `quotaExceeded`.
-* **Solution:** Wired Paging 3 multiplatform streams in `SearchViewModel`. If a 403 error is detected, the UI gracefully switches to the backend's optimized `--flat-playlist` `yt-dlp` pagination stream without crashing or dropping pagination state, and displays an informative banner to the user.
+### One list for two kinds of search results
+Catalog songs and YouTube results can share IDs, so the search list keys each row by its kind and ID (`youtube_<id>`). Both kinds go through the same "add to playlist" path in `SearchViewModel`, straight into the target playlist or through a playlist picker.
 
-### 4. Just-in-Time (JIT) Playlist Bookmarking
-* **Challenge:** Users want to bookmark YouTube tracks into their playlists alongside existing catalog songs without uploading or hosting audio files.
-* **Solution:** Built the `AddToPlaylistBottomSheet` flow. When saving a YouTube search result, the client sends track metadata (video ID, title, channel, duration, thumbnail) via `addYoutubeTrackToPlaylist`. The backend verifies or registers a relational track record (`audio_file_url = NULL`, indexed `youtube_id`) and binds it to `playlist_track` with strict foreign key integrity.
+### Saving YouTube results into playlists
+Adding a YouTube result to a playlist sends its metadata (video ID, title, channel, duration, thumbnail) with `addYoutubeTrackToPlaylist`. The backend creates or reuses a track record keyed by the YouTube ID, so playlists can mix catalog songs and YouTube results without storing any audio.
 
----
+### Browser navigation
+On the web, the browser's back and forward buttons are kept in sync with Compose navigation through a JS interop bridge to the History API.
 
-## 💻 Tech Stack & Libraries
+## Tests
 
-- **UI Toolkit:** [Compose Multiplatform](https://www.jetbrains.com/lp/compose-multiplatform/) (Desktop/Android/Wasm)
-- **Language:** [Kotlin 2.1.0](https://kotlinlang.org/)
-- **Architecture:** Clean Architecture + MVI/MVVM
-- **Dependency Injection:** [Koin Multiplatform](https://insert-koin.io/)
-- **API Client:** [Apollo Kotlin 4](https://www.apollographql.com/docs/kotlin/) (GraphQL)
-- **Image Loading:** [Coil 3 Multiplatform](https://coil-kt.github.io/coil/)
-- **Local Persistence:** [Room Multiplatform](https://developer.android.com/kotlin/multiplatform/room) (SQLite via KSP)
-- **Pagination:** [AndroidX Paging 3 Multiplatform](https://developer.android.com/topic/libraries/architecture/paging/v3-overview)
-- **Web Deployment:** [Vercel](https://vercel.com/) with custom MIME routing (`vercel.json`) for `.wasm` assets
+ViewModel and logic tests live in `composeApp` (`commonTest`) and `domain`, written with `kotlinx-coroutines-test` and Turbine. They cover the Home, Search, Library, Album, Artist, Auth, Main, Settings and Create Playlist ViewModels, plus helpers such as duration formatting and cover colours.
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-- **JDK 17+** (JDK 21 recommended)
-- **Android Studio Ladybug / Fleet / IntelliJ IDEA**
-- **Node.js 18+** (for Wasm browser webpack tooling)
-
-### Running the Web Version (WasmJs)
 ```bash
-# Start local development server with hot-reload
-./gradlew :composeApp:wasmJsBrowserDevelopmentRun
-
-# Build production distribution
-./gradlew :composeApp:wasmJsBrowserDistribution
-# Artifacts generated at: composeApp/build/dist/wasmJs/productionExecutable
+./gradlew :domain:testAndroidHostTest :composeApp:testAndroidHostTest
 ```
 
-#### Previewing the production build locally
-The production build is a folder of static files (`index.html` plus `.js` and `.wasm`), the same files deployed to Vercel. Browsers won't load `.wasm` from a `file://` page, so serve the folder over HTTP:
+Static analysis runs with Detekt (`detekt.gradle`).
+
+## Running it
+
+Requirements: JDK 17 or newer and Android Studio (or IntelliJ IDEA with the Android plugin).
+
+**Web (Wasm), development server with hot reload:**
+
+```bash
+./gradlew :composeApp:wasmJsBrowserDevelopmentRun
+```
+
+**Web, production build:** the output is a folder of static files (`index.html`, `.js`, `.wasm`), the same files deployed to Vercel. Browsers refuse to load `.wasm` from `file://`, so serve the folder over HTTP:
 
 ```bash
 ./gradlew :composeApp:wasmJsBrowserDistribution
 python3 -m http.server 8080 --bind 127.0.0.1 --directory composeApp/build/dist/wasmJs/productionExecutable
 ```
 
-Open http://localhost:8080 and stop the server with Ctrl+C. The local build talks to the live backend, and port 8080 is in the backend's CORS allowlist, so guest login and search work like on the deployed site.
+Then open http://localhost:8080. The local build talks to the live backend, whose CORS allowlist includes port 8080, so guest login and search work as on the deployed site. On wide windows the app renders as a centred phone-width column; narrow the window to see the phone layout.
 
-On wide windows the app renders as a centered phone-width column (`PhoneColumnMaxWidth` in `ui/theme/Theme.kt`). Narrow the window to see the full-width phone layout.
+**Android:**
 
-### Running the Android App
 ```bash
-# Install and run on connected Android device/emulator
-./gradlew :composeApp:installDebug
+./gradlew :presentation:installProdDebug
 ```
 
-### Running Unit Tests
-```bash
-# Run unit tests across domain and presentation modules
-./gradlew :domain:testAndroidHostTest :composeApp:testAndroidHostTest
-```
+## Status
+
+- Android and web are the working targets. The web version is deployed on Vercel.
+- The build also declares iOS targets (`iosArm64`, `iosSimulatorArm64`); the iOS app has not been released.
+- Planned: continuous integration on GitHub Actions, UI tests, and a Google Play release.
