@@ -11,5 +11,7 @@ actual fun YoutubeEmbed(
     onEnded: () -> Unit,
     onError: (Int) -> Unit,
     modifier: Modifier,
+    startSeconds: Int,
+    onPosition: (Int) -> Unit,
 ) {
 }

@@ -34,4 +34,5 @@ sealed class PlaybackUiEvent {
     data object OnEmbedEnded : PlaybackUiEvent()
     data class OnEmbedError(val code: Int) : PlaybackUiEvent()
     data class SetEmbedPaused(val isPaused: Boolean) : PlaybackUiEvent()
+    data class OnEmbedPosition(val seconds: Int) : PlaybackUiEvent()
 }

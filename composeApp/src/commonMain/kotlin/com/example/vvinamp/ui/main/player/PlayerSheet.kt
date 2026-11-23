@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -253,7 +254,8 @@ fun PlayerSheet(
             },
             onEvent = onEvent,
             maxHeight = maxHeight,
-            onOpenArtist = onOpenArtist
+            onOpenArtist = onOpenArtist,
+            isExpanded = state.targetValue == BottomSheetState.EXPANDED
         )
     }
 }
@@ -266,7 +268,8 @@ fun PlayerSheetContent(
     onCollapse: () -> Unit,
     player: Any?,
     maxHeight: Dp,
-    onOpenArtist: (String) -> Unit = {}
+    onOpenArtist: (String) -> Unit = {},
+    isExpanded: Boolean = true
 ) {
     Column(
         modifier = modifier
@@ -303,16 +306,22 @@ fun PlayerSheetContent(
             val coverSize = min(this.maxWidth, this.maxHeight)
 
             val embedId = uiState.youtubeEmbedId
-            if (embedId != null) {
-                // Square, because 16:9 at phone width falls below YouTube's 200x200 minimum.
-                YoutubeEmbed(
-                    videoId = embedId,
-                    isPaused = uiState.isEmbedPaused,
-                    onPlayingChange = { onEvent(PlaybackUiEvent.OnEmbedPlayingChanged(it)) },
-                    onEnded = { onEvent(PlaybackUiEvent.OnEmbedEnded) },
-                    onError = { onEvent(PlaybackUiEvent.OnEmbedError(it)) },
-                    modifier = Modifier.size(coverSize)
-                )
+            // The video only exists while the player is open. YouTube's terms don't allow playing it hidden,
+            // and a fresh player on reopening gets the right size (one kept off-screen could come back shrunk).
+            if (embedId != null && isExpanded) {
+                key(uiState.embedSession) {
+                    // Square, because 16:9 at phone width falls below YouTube's 200x200 minimum.
+                    YoutubeEmbed(
+                        videoId = embedId,
+                        isPaused = uiState.isEmbedPaused,
+                        onPlayingChange = { onEvent(PlaybackUiEvent.OnEmbedPlayingChanged(it)) },
+                        onEnded = { onEvent(PlaybackUiEvent.OnEmbedEnded) },
+                        onError = { onEvent(PlaybackUiEvent.OnEmbedError(it)) },
+                        modifier = Modifier.size(coverSize),
+                        startSeconds = uiState.embedPositionSeconds,
+                        onPosition = { onEvent(PlaybackUiEvent.OnEmbedPosition(it)) }
+                    )
+                }
             } else {
                 AsyncImage(
                     model = uiState.currentTrack?.albumCoverUrl,

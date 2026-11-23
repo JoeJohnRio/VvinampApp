@@ -228,6 +228,10 @@ actual class PlaybackViewModel(
                 _uiState.update { it.copy(youtubeEmbedId = null, isPlaying = false) }
                 skipToNext()
             }
+            is PlaybackUiEvent.OnEmbedPosition -> {
+                _uiState.update { it.copy(embedPositionSeconds = event.seconds) }
+            }
+
             is PlaybackUiEvent.SetEmbedPaused -> {
                 _uiState.update { it.copy(isEmbedPaused = event.isPaused) }
             }
@@ -238,7 +242,15 @@ actual class PlaybackViewModel(
         val youtubeId = info.youtubeId
         if (youtubeId != null) {
             pause()
-            _uiState.update { it.copy(youtubeEmbedId = youtubeId, isEmbedPaused = false, isPlaying = false) }
+            _uiState.update {
+                it.copy(
+                    youtubeEmbedId = youtubeId,
+                    embedSession = it.embedSession + 1,
+                    embedPositionSeconds = 0,
+                    isEmbedPaused = false,
+                    isPlaying = false
+                )
+            }
             return
         }
 

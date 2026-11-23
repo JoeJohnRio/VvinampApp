@@ -36,4 +36,8 @@ expect fun YoutubeEmbed(
     onEnded: () -> Unit,
     onError: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    /** Where to start, in seconds, so reopening the player continues instead of restarting. */
+    startSeconds: Int = 0,
+    /** Reports the playback position about once a second. */
+    onPosition: (Int) -> Unit = {},
 )

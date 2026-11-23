@@ -73,7 +73,8 @@ fun MainScreenContainer(
     val embedId = playbackUiState.youtubeEmbedId
     val isPlayerExpanded = playerState.targetValue == BottomSheetState.EXPANDED
 
-    LaunchedEffect(embedId) {
+    // Keyed on the session too, so starting the same YouTube song again also opens the player.
+    LaunchedEffect(embedId, playbackUiState.embedSession) {
         if (embedId != null) playerState.animateTo(BottomSheetState.EXPANDED)
     }
 

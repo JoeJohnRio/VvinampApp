@@ -23,5 +23,8 @@ data class PlaybackUiState(
     val downloadProgress: Int = 0,
     val youtubeEmbedId: String? = null,
     val isEmbedPaused: Boolean = false,
-    val playingFrom: PlayingFrom? = null
+    val playingFrom: PlayingFrom? = null,
+    // Bumped each time a YouTube song is started, so starting the same song again makes a fresh player.
+    val embedSession: Int = 0,
+    val embedPositionSeconds: Int = 0
 )
