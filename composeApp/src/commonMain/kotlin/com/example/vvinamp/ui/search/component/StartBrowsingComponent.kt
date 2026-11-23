@@ -45,29 +45,30 @@ import com.example.vvinamp.util.preview.previewSafePainter
 
 @Composable
 fun StartBrowsingComponent() {
+    // Covers from the app's own catalogue, so every card shows music that is actually in the app.
     val listStartBrowsing = listOf(
         StartBrowsingDomain(
             title = "Music",
             idPlaylist = "1",
-            imageUrl = "https://www.inikepri.com/wp-content/uploads/2021/09/IMG_20210930_202214.jpg",
+            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/charlie_puth/album/charlie/charlie.jpg",
             colorHex = 0xffdb148b
         ),
         StartBrowsingDomain(
-            title = "Podcast",
+            title = "Indonesian Pop",
             idPlaylist = "1",
-            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/bernadya/bernadya.jpg",
+            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/bernadya/album/sialnya_hidup_harus_tetap_berjalan/sialnya_hidup_harus_tetap_berjalan.jpg",
             colorHex = 0xff016450
         ),
         StartBrowsingDomain(
-            title = "Live Events",
+            title = "Throwback",
             idPlaylist = "1",
-            imageUrl = "https://shop.creatorset.com/cdn/shop/files/preview_images/Screenshot_2023-05-21_062318_530x@2x.png?v=1684639601",
+            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/st12/album/p_u_s_p_a/p_u_s_p_a.jpg",
             colorHex = 0xff8400e7
         ),
         StartBrowsingDomain(
-            title = "K-POP ON! (★) HUB",
+            title = "K-Pop",
             idPlaylist = "1",
-            imageUrl = "https://avatars.githubusercontent.com/u/42718154?v=4",
+            imageUrl = "https://bumcqqhbtmmrkeiwlsyy.supabase.co/storage/v1/object/public/media/artist/treasure/album/last_night/last_night.jpg",
             colorHex = 0xff2d46ba
         ),
     )
