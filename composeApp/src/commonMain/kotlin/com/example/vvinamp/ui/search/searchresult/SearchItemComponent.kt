@@ -15,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,7 +37,6 @@ import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.ui.widget.SpotifyPlayingIndicator
 import com.example.vvinamp.util.preview.PreviewTheme
-import com.example.vvinamp.util.showToast
 import com.example.vvinamp.util.preview.previewSafePainter
 import org.jetbrains.compose.resources.painterResource
 
@@ -235,21 +233,11 @@ fun TrackSearchComponent(
             }
         }
 
+        // Only the add button: the song menu isn't built, and a button that only says "Coming soon" reads as broken.
         Row(
             modifier = Modifier.weight(0.3f),
+            horizontalArrangement = Arrangement.End,
         ) {
-            IconButton(
-                onClick = { showToast("Coming soon") },
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "More options",
-                    tint = MaterialTheme.colorScheme.inversePrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
             if (onAddToPlaylistClicked != null) {
                 AddToPlaylistButton(isAdded = isAdded, isAdding = isAdding, onClick = { onAddToPlaylistClicked(domain) })
             }
@@ -375,31 +363,6 @@ fun ArtistSearchComponent(
             }
         }
 
-        Row() {
-            IconButton(
-                onClick = { showToast("Coming soon") },
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "More options",
-                    tint = MaterialTheme.colorScheme.inversePrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-
-            IconButton(
-                onClick = { showToast("Coming soon") },
-                modifier = Modifier.size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.AddCircle,
-                    contentDescription = "Add",
-                    tint = MaterialTheme.colorScheme.inversePrimary,
-                    modifier = Modifier.size(24.dp)
-                )
-            }
-        }
     }
 }
 
