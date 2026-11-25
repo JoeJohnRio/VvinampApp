@@ -74,7 +74,7 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadHomeData()
+        viewModel.onHomeShown()
     }
 
     LaunchedEffect(Unit) {
@@ -130,7 +130,8 @@ fun HomeScreen(
     }
 
     ScreenWrapper(
-        isLoading = uiState.isLoading && uiState.recommendedTracks.isEmpty(),
+        // Each section shows its own placeholders instead of a full-screen spinner.
+        isLoading = false,
         error = uiState.error,
         onRetry = {
             viewModel.loadHomeData()
@@ -170,8 +171,10 @@ private fun HomeContent(
             contentPadding = PaddingValues(top = 8.dp, bottom = 120.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // 1. Recently Played Grid (only if history exists)
-            if (uiState.listHistory.isNotEmpty()) {
+            // 1. Recently Played Grid (placeholders on first load, hidden if there's no history)
+            if (uiState.isHistoryLoading) {
+                item { RecentlyPlayedPlaceholder() }
+            } else if (uiState.listHistory.isNotEmpty()) {
                 item {
                     Column(
                         modifier = Modifier
@@ -211,7 +214,9 @@ private fun HomeContent(
             }
 
             // 3. Recommended For You Horizontal Carousel
-            if (uiState.recommendedTracks.isNotEmpty()) {
+            if (uiState.isRecommendedLoading) {
+                item { RecommendedPlaceholder() }
+            } else if (uiState.recommendedTracks.isNotEmpty()) {
                 item {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Text(
@@ -280,7 +285,9 @@ private fun HomeContent(
             }
 
             // 6. More Songs to Discover (compact track rows)
-            if (uiState.recommendedTracks.size > 4) {
+            if (uiState.isRecommendedLoading) {
+                item { MoreToExplorePlaceholder() }
+            } else if (uiState.recommendedTracks.size > 4) {
                 item {
                     Column(
                         modifier = Modifier
@@ -518,4 +525,82 @@ private fun formatDuration(seconds: Int): String {
     val m = seconds / 60
     val s = seconds % 60
     return "$m:${if (s < 10) "0$s" else "$s"}"
+}
+
+// Loading placeholders, shaped like the cards they stand in for so the page keeps its layout.
+
+@Composable
+private fun PlaceholderBlock(modifier: Modifier, shape: RoundedCornerShape = RoundedCornerShape(4.dp)) {
+    Box(modifier.clip(shape).background(MaterialTheme.colorScheme.surfaceContainerHigh))
+}
+
+@Composable
+private fun SectionTitle(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text = text,
+        style = TSHeadlineMediumWhite().copy(fontSize = 18.sp, fontWeight = FontWeight.Bold),
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun RecentlyPlayedPlaceholder() {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        SectionTitle("Recently Played")
+        Spacer(Modifier.height(10.dp))
+        repeat(3) {
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(2) {
+                    PlaceholderBlock(Modifier.weight(1f).height(56.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun RecommendedPlaceholder() {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        SectionTitle("Recommended for you", Modifier.padding(horizontal = 16.dp))
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            repeat(3) {
+                Column(modifier = Modifier.width(140.dp)) {
+                    PlaceholderBlock(Modifier.size(140.dp), RoundedCornerShape(8.dp))
+                    Spacer(Modifier.height(8.dp))
+                    PlaceholderBlock(Modifier.width(100.dp).height(12.dp))
+                    Spacer(Modifier.height(6.dp))
+                    PlaceholderBlock(Modifier.width(64.dp).height(10.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun MoreToExplorePlaceholder() {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)) {
+        SectionTitle("More to Explore")
+        Spacer(Modifier.height(8.dp))
+        repeat(4) {
+            Row(
+                modifier = Modifier.fillMaxWidth().height(56.dp).padding(vertical = 6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                PlaceholderBlock(Modifier.size(44.dp), RoundedCornerShape(6.dp))
+                Spacer(Modifier.width(12.dp))
+                Column {
+                    PlaceholderBlock(Modifier.width(140.dp).height(12.dp))
+                    Spacer(Modifier.height(6.dp))
+                    PlaceholderBlock(Modifier.width(90.dp).height(10.dp))
+                }
+            }
+        }
+    }
 }

@@ -124,6 +124,18 @@ class HomeViewModel(
             .launchIn(viewModelScope)
     }
 
+    private var recommendedRequested = false
+
+    /**
+     * Called each time Home appears. Recently Played refreshes, because something may have just been played.
+     * Recommendations load once: the server shuffles them on every request, so refetching would reorder the
+     * carousel each time Home is shown.
+     */
+    fun onHomeShown() {
+        getListeningHistory()
+        if (!recommendedRequested) getRecommendedTracks()
+    }
+
     fun loadHomeData() {
         getListeningHistory()
         getRecommendedTracks()
@@ -131,14 +143,12 @@ class HomeViewModel(
 
     fun getListeningHistory() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-
             val result = historyUseCase.getListRecentHistoryUseCase.invoke()
 
             result.onSuccess { data ->
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
+                        isHistoryLoading = false,
                         listHistory = data,
                         error = null
                     )
@@ -146,8 +156,9 @@ class HomeViewModel(
             }.onFailure {
                 _uiState.update {
                     it.copy(
-                        isLoading = false,
-                        error = it.error ?: "Failed to get history data",
+                        isHistoryLoading = false,
+                        // A failed refresh keeps the list already on screen; only a failed first load is an error.
+                        error = if (it.listHistory.isEmpty()) it.error ?: "Failed to get history data" else it.error,
                     )
                 }
             }
@@ -155,23 +166,30 @@ class HomeViewModel(
     }
 
     fun getRecommendedTracks() {
+        recommendedRequested = true
         viewModelScope.launch {
             val result = getRecommendedTracksUseCase?.invoke()
             result?.onSuccess { tracks ->
                 if (tracks.isNotEmpty()) {
-                    _uiState.update { it.copy(recommendedTracks = tracks) }
+                    _uiState.update { it.copy(recommendedTracks = tracks, isRecommendedLoading = false) }
                 } else {
-                    _uiState.update { it.copy(recommendedTracks = dummyRecommendedTracks) }
+                    _uiState.update { it.copy(recommendedTracks = dummyRecommendedTracks, isRecommendedLoading = false) }
                 }
             }?.onFailure {
                 _uiState.update {
-                    if (it.recommendedTracks.isEmpty()) it.copy(recommendedTracks = dummyRecommendedTracks)
-                    else it
+                    if (it.recommendedTracks.isEmpty()) {
+                        it.copy(recommendedTracks = dummyRecommendedTracks, isRecommendedLoading = false)
+                    } else {
+                        it.copy(isRecommendedLoading = false)
+                    }
                 }
             } ?: run {
                 _uiState.update {
-                    if (it.recommendedTracks.isEmpty()) it.copy(recommendedTracks = dummyRecommendedTracks)
-                    else it
+                    if (it.recommendedTracks.isEmpty()) {
+                        it.copy(recommendedTracks = dummyRecommendedTracks, isRecommendedLoading = false)
+                    } else {
+                        it.copy(isRecommendedLoading = false)
+                    }
                 }
             }
         }

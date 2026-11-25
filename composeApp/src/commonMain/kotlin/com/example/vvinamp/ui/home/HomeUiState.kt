@@ -5,7 +5,9 @@ import com.example.domain.entity.playlist.PlaylistMinimal
 import com.example.domain.entity.song.RecommendedTrackDomain
 
 data class HomeUiState(
-    val isLoading: Boolean = false,
+    // True until each section's first load finishes; later refreshes keep showing the current content.
+    val isHistoryLoading: Boolean = true,
+    val isRecommendedLoading: Boolean = true,
     val error: String? = null,
     val listHistory: List<ListeningHistoryDomain> = listOf(),
     val recommendedTracks: List<RecommendedTrackDomain> = listOf(),

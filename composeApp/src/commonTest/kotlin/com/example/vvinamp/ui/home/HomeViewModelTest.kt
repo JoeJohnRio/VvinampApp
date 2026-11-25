@@ -81,7 +81,7 @@ class HomeViewModelTest {
 
         viewModel.uiState.test {
             val state = awaitItem()
-            assertFalse(state.isLoading)
+            assertTrue(state.isHistoryLoading)
             assertNull(state.error)
             assertTrue(state.listHistory.isEmpty())
 
@@ -95,14 +95,12 @@ class HomeViewModelTest {
         val viewModel = createViewModel()
 
         viewModel.uiState.test {
-            assertFalse(awaitItem().isLoading)
+            assertTrue(awaitItem().isHistoryLoading)
 
             viewModel.getListeningHistory()
 
-            assertTrue(awaitItem().isLoading)
-
             val successState = awaitItem()
-            assertFalse(successState.isLoading)
+            assertFalse(successState.isHistoryLoading)
             assertEquals(listeningHistoryDummy, successState.listHistory)
             assertNull(successState.error)
 
@@ -123,10 +121,8 @@ class HomeViewModelTest {
 
             viewModel.getListeningHistory()
 
-            assertTrue(awaitItem().isLoading)
-
             val errorState = awaitItem()
-            assertFalse(errorState.isLoading)
+            assertFalse(errorState.isHistoryLoading)
             assertEquals("Failed to get history data", errorState.error)
 
             cancelAndIgnoreRemainingEvents()
