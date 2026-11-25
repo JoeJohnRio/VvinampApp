@@ -1,4 +1,6 @@
 package com.example.vvinamp.ui.search.component
+import androidx.compose.foundation.clickable
+import com.example.vvinamp.util.showToast
 import vvinampapp.composeapp.generated.resources.*
 
 import androidx.compose.foundation.Image
@@ -112,7 +114,9 @@ fun FlowRowScope.CategoryCard(
         modifier = modifier
             .weight(1f)
             .height(80.dp)
-            .clip(RoundedCornerShape(6.dp)),
+            .clip(RoundedCornerShape(6.dp))
+            // shortcut: browsing by category isn't built yet.
+            .clickable { showToast("Coming soon") },
         colors = CardDefaults.cardColors(containerColor = backgroundColor)
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {

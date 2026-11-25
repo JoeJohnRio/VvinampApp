@@ -1,4 +1,5 @@
 package com.example.vvinamp.ui.search
+import com.example.vvinamp.util.showToast
 import vvinampapp.composeapp.generated.resources.*
 
 
@@ -74,9 +75,8 @@ fun SearchContent(uiState: SearchUiState, router: BottomNavRouter, onClickSearch
                     listOfButtons = listOf(
                         ButtonData(
                             imageVector = Icons.Default.PhotoCamera,
-                            onClick = {
-
-                            }
+                            // shortcut: searching by photo isn't built yet.
+                            onClick = { showToast("Coming soon") }
                         )
                     )
                 )
