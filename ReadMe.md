@@ -2,7 +2,7 @@
 
 A music streaming app built with Kotlin Multiplatform and Compose Multiplatform. One shared Kotlin codebase runs as a native Android app and as a web app compiled to WebAssembly, backed by a Go GraphQL server.
 
-**Live web app:** [vvinamp.cirio.my.id](https://vvinamp.cirio.my.id)
+**Live web app:** [vvinamp.vercel.app](https://vvinamp.vercel.app)
 
 Built with Kotlin 2.4, Compose Multiplatform 1.11, Koin, Apollo Kotlin 5 (GraphQL), Ktor, Room, Paging 3, Coil 3 and Media3 ExoPlayer.
 
