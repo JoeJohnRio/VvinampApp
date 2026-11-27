@@ -128,8 +128,8 @@ class HomeViewModel(
 
     /**
      * Called each time Home appears. Recently Played refreshes, because something may have just been played.
-     * Recommendations load once: the server shuffles them on every request, so refetching would reorder the
-     * carousel each time Home is shown.
+     * Recommendations load once: the server picks a new random set on every request, so refetching would
+     * swap the songs each time Home is shown.
      */
     fun onHomeShown() {
         getListeningHistory()

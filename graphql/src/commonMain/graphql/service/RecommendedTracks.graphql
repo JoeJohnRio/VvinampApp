@@ -1,5 +1,5 @@
 query RecommendedTracks {
-    recommendedTracks(limit: 10) {
+    recommendedTracks(limit: 14) {
         id
         title
         duration

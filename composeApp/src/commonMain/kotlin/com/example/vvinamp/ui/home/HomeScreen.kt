@@ -64,6 +64,9 @@ import com.example.vvinamp.ui.widget.TopBar
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.compose.koinInject
 
+/** Recommended for you shows this many songs; More to Explore shows the rest, so no song appears in both. */
+private const val RECOMMENDED_COUNT = 8
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
@@ -232,7 +235,7 @@ private fun HomeContent(
                             horizontalArrangement = Arrangement.spacedBy(14.dp),
                             contentPadding = PaddingValues(horizontal = 16.dp)
                         ) {
-                            items(uiState.recommendedTracks.take(8)) { track ->
+                            items(uiState.recommendedTracks.take(RECOMMENDED_COUNT)) { track ->
                                 RecommendedTrackCard(
                                     track = track,
                                     onClick = {
@@ -287,7 +290,7 @@ private fun HomeContent(
             // 6. More Songs to Discover (compact track rows)
             if (uiState.isRecommendedLoading) {
                 item { MoreToExplorePlaceholder() }
-            } else if (uiState.recommendedTracks.size > 4) {
+            } else if (uiState.recommendedTracks.size > RECOMMENDED_COUNT) {
                 item {
                     Column(
                         modifier = Modifier
@@ -302,7 +305,7 @@ private fun HomeContent(
                             )
                         )
                         Spacer(Modifier.height(8.dp))
-                        uiState.recommendedTracks.drop(4).take(6).forEach { track ->
+                        uiState.recommendedTracks.drop(RECOMMENDED_COUNT).forEach { track ->
                             HomeTrackRow(
                                 track = track,
                                 onClick = {
