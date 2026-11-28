@@ -9,8 +9,8 @@ export default defineConfig({
     ...devices['Pixel 7'],
     // Use the Chrome already installed instead of downloading Playwright's own browser.
     channel: 'chrome',
-    // VIDEO=off skips recording.
-    video: process.env.VIDEO === 'off' ? 'off' : { mode: 'on', size: { width: 412, height: 839 } },
+    // VIDEO=off skips recording. The video is window-sized (412 px wide): good for checking runs, too soft for a demo.
+    video: process.env.VIDEO === 'off' ? 'off' : { mode: 'on', size: devices['Pixel 7'].viewport },
     trace: 'retain-on-failure',
   },
 });

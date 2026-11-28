@@ -1,5 +1,8 @@
 import { test, expect, type Locator, type Page } from '@playwright/test';
 
+// DEMO=1 waits for Home to finish loading and pauses before each tap, so the recording reads like a person using the app.
+const demo = process.env.DEMO === '1';
+
 // Compose draws the app on a canvas that sits above its accessibility elements, so a normal
 // click lands on the canvas and Playwright refuses it. Find the element, then touch its spot.
 // A mouse click shows the press on a song tile but doesn't play it in phone mode; a touch tap does.
@@ -10,18 +13,55 @@ async function tap(page: Page, target: Locator) {
   await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height / 2);
 }
 
+async function pause(page: Page, ms: number) {
+  if (demo) await page.waitForTimeout(ms);
+}
+
+/** Resolves once no request has been in flight for `quietMs`, so covers have finished loading. */
+function trackNetwork(page: Page) {
+  let inFlight = 0;
+  let lastChange = Date.now();
+  const change = (delta: number) => { inFlight += delta; lastChange = Date.now(); };
+  page.on('request', () => change(1));
+  page.on('requestfinished', () => change(-1));
+  page.on('requestfailed', () => change(-1));
+  return async (quietMs = 1_000) => {
+    await expect
+      .poll(() => inFlight <= 0 && Date.now() - lastChange >= quietMs, { timeout: 30_000, intervals: [250] })
+      .toBe(true);
+  };
+}
+
 test('guest logs in and plays the first recommended song', async ({ page }) => {
   const started = Date.now();
   const step = (name: string) => console.log(`${name}: ${((Date.now() - started) / 1000).toFixed(1)}s`);
+  const networkQuiet = trackNetwork(page);
 
   await page.goto('/');
   const guest = page.getByRole('button', { name: 'Try as Guest (Demo)' });
   await guest.waitFor();
+  if (demo) await networkQuiet();
   step('Landing page ready');
+  await pause(page, 1_500);
 
   await tap(page, guest);
   await expect(page.getByText('Recommended for you')).toBeVisible({ timeout: 60_000 });
   step('Home loaded');
+
+  if (demo) {
+    // Recently Played tiles are the Home buttons that aren't songs ("…, Play") or the YouTube card.
+    const home = page.getByRole('list').first();
+    await expect
+      .poll(async () =>
+        (await home.getByRole('button').count()) -
+        (await home.getByRole('button', { name: /, Play$/ }).count()) -
+        (await home.getByRole('button', { name: /^Stream from YouTube/ }).count()),
+        { timeout: 30_000 })
+      .toBeGreaterThan(0);
+    await networkQuiet();
+    step('Home finished loading');
+    await pause(page, 2_000);
+  }
 
   const firstSong = page.getByRole('list').getByRole('list').getByRole('button').first();
   const label = (await firstSong.getAttribute('aria-label')) ?? (await firstSong.textContent()) ?? '';
