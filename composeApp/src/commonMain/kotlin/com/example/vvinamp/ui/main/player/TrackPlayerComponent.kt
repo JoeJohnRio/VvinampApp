@@ -1,6 +1,7 @@
 package com.example.vvinamp.ui.main.player
 import vvinampapp.composeapp.generated.resources.*
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,6 +48,7 @@ fun TrackPlayerComponent(
     onEvent: (PlaybackUiEvent) -> Unit,
     onAddToPlaylistClicked: () -> Unit,
     player: Any?,
+    onOpenArtist: (String) -> Unit = {},
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -63,7 +65,9 @@ fun TrackPlayerComponent(
                     )
                 )
 
+                val artistId = uiState.currentTrack?.artistId
                 Text(
+                    modifier = if (artistId != null) Modifier.clickable { onOpenArtist(artistId) } else Modifier,
                     text = uiState.currentTrack?.artistName.orErrorNoText(),
                     style = TSLabelMediumWhite().copy(
                         fontSize = 16.sp

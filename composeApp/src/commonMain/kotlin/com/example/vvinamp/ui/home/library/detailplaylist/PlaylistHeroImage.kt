@@ -45,7 +45,7 @@ fun PlaylistHeroImage(
             coverImage = playlist?.coverImage ?: "",
             covers = playlist?.albumCovers ?: emptyList(),
             modifier = Modifier
-                .size(PaddingSizeUtil.PlaylistNoPhotoSize)
+                .size(PaddingSizeUtil.PlaylistCoverSize)
                 .graphicsLayer {
                     // Read the scroll here, not in composition, so scrolling only redraws the layer.
                     val progress = (scrollStateProvider() / heroSize.toPx()).coerceIn(0f, 1f)

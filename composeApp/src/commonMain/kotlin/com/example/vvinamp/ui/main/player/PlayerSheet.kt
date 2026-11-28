@@ -292,6 +292,7 @@ fun PlayerSheetContent(
             onEvent = onEvent,
             uiState = uiState,
             onCollapse = onCollapse,
+            onOpenArtist = onOpenArtist,
         )
 
         Spacer(Modifier.weight(1f))
@@ -344,7 +345,8 @@ fun PlayerSheetContent(
             uiState = uiState,
             onEvent = onEvent,
             player = player,
-            onAddToPlaylistClicked = onAddToPlaylist
+            onAddToPlaylistClicked = onAddToPlaylist,
+            onOpenArtist = onOpenArtist
         )
 
         Spacer(modifier = Modifier.height(24.dp))

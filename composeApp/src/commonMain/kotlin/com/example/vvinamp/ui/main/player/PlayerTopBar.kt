@@ -1,6 +1,7 @@
 package com.example.vvinamp.ui.main.player
 import vvinampapp.composeapp.generated.resources.*
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,6 +32,7 @@ fun PlayerTopBar(
     onEvent: (PlaybackUiEvent) -> Unit,
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
+    onOpenArtist: (String) -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -61,7 +63,10 @@ fun PlayerTopBar(
                 )
             )
 
+            // Without a source, this line is the artist's name, so it opens the artist page like Spotify.
+            val artistId = uiState.currentTrack?.artistId.takeIf { playingFrom == null }
             Text(
+                modifier = if (artistId != null) Modifier.clickable { onOpenArtist(artistId) } else Modifier,
                 text = playingFrom?.name ?: uiState.currentTrack?.artistName.orErrorNoText(),
                 style = TSDisplayMediumWhite().copy(
                     fontSize = 12.sp

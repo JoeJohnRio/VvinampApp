@@ -34,6 +34,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.domain.entity.enum.PlaybackContextType
 import com.example.domain.entity.song.TrackDomain
 import com.example.vvinamp.navigation.router.BottomNavRouter
+import com.example.vvinamp.ui.home.library.detailplaylist.TrackPlaceholder
 import com.example.vvinamp.ui.main.ScreenWrapper
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent.PlayContext
 import com.example.vvinamp.ui.main.playback.PlaybackViewModel
@@ -176,6 +177,12 @@ fun EditPlaylistLibraryContent(
             contentPadding = PaddingValues(vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            // Placeholder rows until the songs arrive, so the screen isn't blank while they load.
+            val loaded = refreshState is LoadState.NotLoading && playlistTracks.loadState.append.endOfPaginationReached
+            if (tracks.isEmpty() && !loaded && refreshState !is LoadState.Error) {
+                items(6) { TrackPlaceholder() }
+            }
+
             items(tracks.size, key = { tracks[it].id }) { index ->
                 val track = tracks[index]
                 ReorderableItem(reorderableState, key = track.id) { isDragging ->

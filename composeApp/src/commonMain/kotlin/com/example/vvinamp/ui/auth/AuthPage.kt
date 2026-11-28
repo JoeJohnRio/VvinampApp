@@ -88,7 +88,7 @@ fun AuthPage(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(0.62f),
-                titleText = previewSafeString(Res.string.title_millions_of_songs, "Millions of songs.\nFor Free.")
+                titleText = previewSafeString(Res.string.title_millions_of_songs, "Hundreds of songs.\nFor Free.")
             )
 
             Column(
