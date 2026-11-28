@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,7 +66,10 @@ fun ListeningHistoryCard(
                     text = history.contentName,
                     style = TSBodyMediumWhite().copy(
                         fontSize = 11.sp
-                    )
+                    ),
+                    // Two lines keeps every tile the cover's height, so a long title can't stretch its row.
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
                 )
 
                 if (history.progress > 0 && history.progress < 100) {
