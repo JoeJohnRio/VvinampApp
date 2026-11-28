@@ -32,7 +32,10 @@ function trackNetwork(page: Page) {
   };
 }
 
-test('guest logs in and plays the first recommended song', async ({ page }) => {
+test('guest logs in and plays the first recommended song', async ({ page, headless }) => {
+  // DEMO=1 with --headed is for screen recording: time to start recording first, and the window stays open at the end.
+  const recording = demo && !headless;
+  if (recording) test.setTimeout(0);
   const started = Date.now();
   const step = (name: string) => console.log(`${name}: ${((Date.now() - started) / 1000).toFixed(1)}s`);
   const networkQuiet = trackNetwork(page);
@@ -42,6 +45,12 @@ test('guest logs in and plays the first recommended song', async ({ page }) => {
   await guest.waitFor();
   if (demo) await networkQuiet();
   step('Landing page ready');
+  if (recording) {
+    for (let s = 10; s > 0; s--) {
+      console.log(`Start recording now. Tapping in ${s}...`);
+      await page.waitForTimeout(1_000);
+    }
+  }
   await pause(page, 1_500);
 
   await tap(page, guest);
@@ -78,7 +87,12 @@ test('guest logs in and plays the first recommended song', async ({ page }) => {
   expect(response.status()).toBeLessThan(400);
 
   // Leave a few seconds of playback in the recording.
-  await page.waitForTimeout(8_000);
+  await page.waitForTimeout(recording ? 10_000 : 8_000);
   await page.screenshot({ path: test.info().outputPath('playing.png') });
   step('Done');
+
+  if (recording) {
+    console.log('Stop your recording, then close the Chrome window to finish.');
+    await page.waitForEvent('close', { timeout: 0 });
+  }
 });

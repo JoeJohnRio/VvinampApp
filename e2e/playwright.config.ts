@@ -9,6 +9,8 @@ export default defineConfig({
     ...devices['Pixel 7'],
     // Use the Chrome already installed instead of downloading Playwright's own browser.
     channel: 'chrome',
+    // Same window spot every headed run, so a screen-recording selection lines up again.
+    launchOptions: { args: ['--window-position=80,60'] },
     // VIDEO=off skips recording. The video is window-sized (412 px wide): good for checking runs, too soft for a demo.
     video: process.env.VIDEO === 'off' ? 'off' : { mode: 'on', size: devices['Pixel 7'].viewport },
     trace: 'retain-on-failure',
