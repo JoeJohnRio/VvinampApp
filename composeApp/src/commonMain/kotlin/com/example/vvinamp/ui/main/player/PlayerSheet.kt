@@ -67,6 +67,7 @@ import coil3.compose.AsyncImage
 
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.util.lockOrientation
 import com.example.vvinamp.util.preview.PreviewTheme
 import kotlinx.coroutines.launch
@@ -84,6 +85,7 @@ fun PlayerSheet(
     player: Any?,
     state: AnchoredDraggableState<BottomSheetState>,
     onOpenArtist: (String) -> Unit = {},
+    onOpenSource: (PlayingFrom) -> Unit = {},
     onAddToPlaylist: () -> Unit = {},
 ) {
     val scope = rememberCoroutineScope()
@@ -256,6 +258,7 @@ fun PlayerSheet(
             onEvent = onEvent,
             maxHeight = maxHeight,
             onOpenArtist = onOpenArtist,
+            onOpenSource = onOpenSource,
             isExpanded = state.targetValue == BottomSheetState.EXPANDED,
             onAddToPlaylist = onAddToPlaylist
         )
@@ -271,6 +274,7 @@ fun PlayerSheetContent(
     player: Any?,
     maxHeight: Dp,
     onOpenArtist: (String) -> Unit = {},
+    onOpenSource: (PlayingFrom) -> Unit = {},
     isExpanded: Boolean = true,
     onAddToPlaylist: () -> Unit = {}
 ) {
@@ -293,6 +297,7 @@ fun PlayerSheetContent(
             uiState = uiState,
             onCollapse = onCollapse,
             onOpenArtist = onOpenArtist,
+            onOpenSource = onOpenSource,
         )
 
         Spacer(Modifier.weight(1f))

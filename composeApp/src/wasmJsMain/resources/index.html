@@ -35,33 +35,56 @@
             if (input && input.tagName === 'TEXTAREA' && e.composedPath().indexOf(input) < 0) e.preventDefault();
         }, true);
 
-        // Compose for web only scrolls lists, carousels and sheets with touch; a mouse drag does nothing.
-        // While the left button is held on the app, its events are re-sent as touch so click-and-drag
-        // behaves like a finger. Hovering, the wheel and trackpad swipes are left alone.
+        // Compose for web scrolls with the wheel and trackpad, but a mouse drag does nothing. So a
+        // left-button press is held back until it's clear what it is: if it starts to drag, the drag is
+        // re-sent as wheel scrolling (the same path a two-finger trackpad swipe takes), so click-and-drag
+        // scrolls lists, carousels and the player; if it's released without moving, it's replayed as a
+        // plain mouse click. An earlier version re-sent presses as touch, which Compose sometimes
+        // ignored, so a click or a drag needed a second try. Hovering and the wheel itself are left alone.
         (function () {
-            var pressedId = null;
-            function resend(e, type) {
-                e.stopImmediatePropagation();
-                var up = type === 'pointerup' || type === 'pointercancel';
-                e.composedPath()[0].dispatchEvent(new PointerEvent(type, {
+            var DRAG_START_PX = 6;
+            var press = null; // { target, start, lastX, lastY, dragging }
+            function sendPointer(target, from, type, pressed) {
+                target.dispatchEvent(new PointerEvent(type, {
                     bubbles: true, cancelable: true, composed: true,
-                    pointerId: e.pointerId, pointerType: 'touch', isPrimary: true,
-                    clientX: e.clientX, clientY: e.clientY, screenX: e.screenX, screenY: e.screenY,
-                    width: 1, height: 1, pressure: up ? 0 : 0.5, button: 0, buttons: up ? 0 : 1
+                    pointerId: from.pointerId, pointerType: 'mouse', isPrimary: true,
+                    clientX: from.clientX, clientY: from.clientY, screenX: from.screenX, screenY: from.screenY,
+                    button: 0, buttons: pressed ? 1 : 0
                 }));
             }
             window.addEventListener('pointerdown', function (e) {
                 if (!e.isTrusted || e.pointerType !== 'mouse' || e.button !== 0) return;
                 if (e.composedPath()[0].tagName !== 'CANVAS') return;
-                pressedId = e.pointerId;
-                resend(e, 'pointerdown');
+                e.stopImmediatePropagation();
+                press = { target: e.composedPath()[0], start: e, lastX: e.clientX, lastY: e.clientY, dragging: false };
             }, true);
-            ['pointermove', 'pointerup', 'pointercancel', 'pointerenter', 'pointerleave'].forEach(function (type) {
+            window.addEventListener('pointermove', function (e) {
+                if (!press || !e.isTrusted || e.pointerId !== press.start.pointerId) return;
+                e.stopImmediatePropagation();
+                if (!press.dragging) {
+                    var dx0 = e.clientX - press.start.clientX, dy0 = e.clientY - press.start.clientY;
+                    if (dx0 * dx0 + dy0 * dy0 < DRAG_START_PX * DRAG_START_PX) return;
+                    press.dragging = true;
+                }
+                // Dragging content up scrolls down, like a finger, so the wheel delta is the opposite of the move.
+                press.target.dispatchEvent(new WheelEvent('wheel', {
+                    bubbles: true, cancelable: true, composed: true,
+                    clientX: press.start.clientX, clientY: press.start.clientY,
+                    screenX: press.start.screenX, screenY: press.start.screenY,
+                    deltaX: press.lastX - e.clientX, deltaY: press.lastY - e.clientY, deltaMode: 0
+                }));
+                press.lastX = e.clientX;
+                press.lastY = e.clientY;
+            }, true);
+            ['pointerup', 'pointercancel'].forEach(function (type) {
                 window.addEventListener(type, function (e) {
-                    if (!e.isTrusted || e.pointerId !== pressedId) return;
-                    if (type === 'pointerenter' || type === 'pointerleave') { e.stopImmediatePropagation(); return; }
-                    resend(e, type);
-                    if (type !== 'pointermove') pressedId = null;
+                    if (!press || !e.isTrusted || e.pointerId !== press.start.pointerId) return;
+                    e.stopImmediatePropagation();
+                    if (!press.dragging && type === 'pointerup') {
+                        sendPointer(press.target, press.start, 'pointerdown', true);
+                        sendPointer(press.target, e, 'pointerup', false);
+                    }
+                    press = null;
                 }, true);
             });
         })();

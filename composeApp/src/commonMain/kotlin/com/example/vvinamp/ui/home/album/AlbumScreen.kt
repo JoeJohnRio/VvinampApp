@@ -67,7 +67,7 @@ fun AlbumScreen(
                             contextType = PlaybackContextType.SEARCH_RESULTS,
                             trackIds = uiState.tracks.map { it.id },
                             offsetTrackId = track.id,
-                            playingFrom = uiState.album?.let { PlayingFrom("ALBUM", it.title) }
+                            playingFrom = uiState.album?.let { PlayingFrom(PlayingFrom.ALBUM, it.title, it.id) }
                         )
                     )
                 },

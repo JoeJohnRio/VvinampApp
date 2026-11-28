@@ -46,6 +46,7 @@ import com.example.vvinamp.ui.navigationbar.util.ScrimAlphaBoxAnchored
 import com.example.vvinamp.util.ExtractDominantColorEffect
 import kotlinx.coroutines.launch
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.ui.widget.playback.DownloadProgressDialog
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
@@ -202,6 +203,14 @@ fun MainScreenContainer(
             playbackViewModel.onEvent(event)
         },
         onOpenArtist = { artistId -> openFromPlayer { bottomNavRouter.navigateToArtistPage(artistId) } },
+        onOpenSource = { source ->
+            val id = source.id ?: return@PlayerSheet
+            when (source.label) {
+                PlayingFrom.PLAYLIST -> openFromPlayer { bottomNavRouter.navigateToPlaylistDetail(id) }
+                PlayingFrom.ALBUM -> openFromPlayer { bottomNavRouter.navigateToAlbum(id) }
+                PlayingFrom.ARTIST -> openFromPlayer { bottomNavRouter.navigateToArtistPage(id) }
+            }
+        },
         onAddToPlaylist = { playbackUiState.currentTrack?.let { addToPlaylistViewModel.open(it) } }
     )
 

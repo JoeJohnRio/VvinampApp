@@ -81,7 +81,7 @@ fun ArtistScreen(
                                 contextType = PlaybackContextType.ARTIST,
                                 contextId = artistId,
                                 offsetTrackId = track.id,
-                                playingFrom = PlayingFrom("ARTIST", it.name)
+                                playingFrom = PlayingFrom(PlayingFrom.ARTIST, it.name, artistId)
                             )
                         )
                     },
@@ -93,7 +93,7 @@ fun ArtistScreen(
                                     contextType = PlaybackContextType.ARTIST,
                                     contextId = artistId,
                                     offsetTrackId = first.id,
-                                    playingFrom = PlayingFrom("ARTIST", it.name)
+                                    playingFrom = PlayingFrom(PlayingFrom.ARTIST, it.name, artistId)
                                 )
                             )
                         }
@@ -107,7 +107,7 @@ fun ArtistScreen(
                                     contextType = PlaybackContextType.SEARCH_RESULTS,
                                     trackIds = shuffled,
                                     offsetTrackId = first,
-                                    playingFrom = PlayingFrom("ARTIST", it.name)
+                                    playingFrom = PlayingFrom(PlayingFrom.ARTIST, it.name, artistId)
                                 )
                             )
                         }

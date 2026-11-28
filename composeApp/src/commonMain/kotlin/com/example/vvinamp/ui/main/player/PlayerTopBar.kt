@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 
 import com.example.vvinamp.ui.main.playback.PlaybackUiEvent
 import com.example.vvinamp.ui.main.playback.PlaybackUiState
+import com.example.vvinamp.ui.main.playback.PlayingFrom
 import com.example.vvinamp.ui.theme.TSDisplayMediumWhite
 import com.example.vvinamp.ui.theme.TSLabelMediumWhite
 import com.example.vvinamp.util.orErrorNoText
@@ -33,6 +34,7 @@ fun PlayerTopBar(
     uiState: PlaybackUiState,
     onCollapse: () -> Unit,
     onOpenArtist: (String) -> Unit = {},
+    onOpenSource: (PlayingFrom) -> Unit = {},
 ) {
     Row(
         modifier = Modifier
@@ -51,11 +53,21 @@ fun PlayerTopBar(
             )
         }
 
+        val playingFrom = uiState.playingFrom
+        // Tapping opens where the song is playing from (playlist, album or artist), like Spotify.
+        // Without a source the second line is the artist's name, so it opens the artist page.
+        val artistId = uiState.currentTrack?.artistId
+        val openTarget: (() -> Unit)? = when {
+            playingFrom?.id != null -> { { onOpenSource(playingFrom) } }
+            playingFrom == null && artistId != null -> { { onOpenArtist(artistId) } }
+            else -> null
+        }
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .then(if (openTarget != null) Modifier.clickable(onClick = openTarget) else Modifier),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            val playingFrom = uiState.playingFrom
             Text(
                 text = if (playingFrom != null) "PLAYING FROM ${playingFrom.label}" else "NOW PLAYING",
                 style = TSLabelMediumWhite().copy(
@@ -63,10 +75,7 @@ fun PlayerTopBar(
                 )
             )
 
-            // Without a source, this line is the artist's name, so it opens the artist page like Spotify.
-            val artistId = uiState.currentTrack?.artistId.takeIf { playingFrom == null }
             Text(
-                modifier = if (artistId != null) Modifier.clickable { onOpenArtist(artistId) } else Modifier,
                 text = playingFrom?.name ?: uiState.currentTrack?.artistName.orErrorNoText(),
                 style = TSDisplayMediumWhite().copy(
                     fontSize = 12.sp

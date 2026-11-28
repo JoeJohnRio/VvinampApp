@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.compose.koinInject
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -94,7 +95,7 @@ fun PlaylistScreen(
                             contextType = PlaybackContextType.PLAYLIST,
                             contextId = event.playlistId,
                             offsetTrackId = event.trackId,
-                            playingFrom = uiState.playlist?.let { PlayingFrom("PLAYLIST", it.title) }
+                            playingFrom = uiState.playlist?.let { PlayingFrom(PlayingFrom.PLAYLIST, it.title, event.playlistId) }
                         )
                     )
                 }
@@ -352,6 +353,14 @@ fun PlaylistContent(
 
                 item {
                     Spacer(Modifier.height(16.dp))
+                }
+
+                // The playlist header arrives before its songs, so fill the gap with placeholder rows.
+                if (playlistTracks.itemCount == 0 && playlistTracks.loadState.refresh is LoadState.Loading) {
+                    items(6) {
+                        TrackPlaceholder()
+                        Spacer(Modifier.height(16.dp))
+                    }
                 }
 
                 items(

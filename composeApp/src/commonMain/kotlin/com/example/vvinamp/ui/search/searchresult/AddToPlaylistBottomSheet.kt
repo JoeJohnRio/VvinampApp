@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
 import com.example.domain.entity.playlist.PlaylistMinimal
@@ -102,7 +103,8 @@ fun AddToPlaylistBottomSheet(
 
             Spacer(Modifier.height(12.dp))
 
-            if (isAdding) {
+            // While the playlists load, show the spinner rather than "No playlists found".
+            if (isAdding || (playlists.itemCount == 0 && playlists.loadState.refresh is LoadState.Loading)) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
